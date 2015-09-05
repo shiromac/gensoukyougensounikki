@@ -1,0 +1,64 @@
+$>5000
+	$>FullNameBase
+		レミリア・スカーレット
+	$<
+	$>FullNameSubBase
+		Remilia Scarlet
+	$<
+	$>ShortNameBase
+		レミリア
+	$<
+	$>ShortNameSubBase
+		Remilia
+	$<
+	$/二つ名
+	$>titleName
+		永遠に紅い幼き月
+	$<
+	$>SpellName
+		呪詛「ブラド・ツェペシュの呪い」
+		遊戯「ファイブオブアカインド」
+		魔符「全世界ナイトメア」
+	$<
+$<
+$>5001
+	$>FullNameBase
+		フランドール・スカーレット
+	$<
+	$>FullNameSubBase
+		Frandle Scarlet
+	$<
+	$>ShortNameBase
+		フランドール
+	$<
+	$>ShortNameSubBase
+		Frandle
+	$<
+	$/二つ名
+	$>titleName
+		悪魔の妹
+	$<
+$<
+$>5002
+	$>FullNameBase
+		因幡てゐ
+	$<
+	$>FullNameSubBase
+		Inaba Tewi
+	$<
+	$>ShortNameBase
+		てゐ
+	$<
+	$>ShortNameSubBase
+		Tewi
+	$<
+	$/二つ名
+	$>titleName
+		幸運の素兎
+	$<
+	$>SpellName
+		企符「アテンプトエスケープ」
+		「エンシェントデューパー」
+		借符「大穴牟遅様の薬」
+	$<
+$<

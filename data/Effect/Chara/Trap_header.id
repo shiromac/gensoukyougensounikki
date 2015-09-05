@@ -1,0 +1,6 @@
+$>Attack
+	$:Attack/Attack_header.id
+$<
+$>Special
+	$:Special/Special_header.id
+$<

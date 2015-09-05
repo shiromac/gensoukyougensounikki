@@ -1,0 +1,322 @@
+$/メインメニューのサブウィンドウ用
+$>メインメニューサブウィンドウテキスト
+	$/>
+	武器の強さ	#*ArmP		4桁
+	攻撃力		#*AtkP		4桁
+	満腹度		#*StmP		3桁
+	最大満腹度	#*StmPMAX	3桁
+	防具の強さ	#*ShdP		4桁
+	防御力		#*DefP		4桁
+	経験値		#*ExpP		8桁
+	ターン		#*Turn		6桁
+	経過時間_秒	#*TimeSec	2桁
+	経過時間_分	#*TimeMin	2桁
+	経過時間_時間	#*TimeHour	3桁
+	$/<
+	#px16
+	武器_
+	#*ArmP
+	#px216
+	攻撃力_
+	#*AtkP
+	#px416
+	満腹度___
+	#*StmP
+	/
+	#*StmPMAX
+	#n
+	#px16
+	防具_
+	#*ShdP
+	#px216
+	防御力_
+	#*DefP
+	#px416
+	経験値__
+	#*ExpP
+	#n
+	#px16
+	#*TimeHour
+	_時間__
+	#*TimeMin
+	_分__
+	#*TimeSec
+	_秒__
+	#px416
+	#*Turn
+	__ターン
+$<
+$/リザルト画面のレイアウト用
+$>リザルトウィンドウテキスト1
+	$/>
+	武器の強さ	#*ArmP		4桁
+	武器の名前	#*ArmName	一行保障
+	最大満腹度	#*StmPMAX	3桁
+	防具の強さ	#*ShdP		4桁
+	防具の名前	#*ShdName	一行保障
+	経験値		#*ExpP		8桁
+	倒した敵の数	#*DefeatNum	5桁
+	ターン		#*Turn		6桁
+	実経過時間_秒	#*RealTimeSec	2桁
+	実経過時間_分	#*RealTimeMin	2桁
+	実経過時間_時間	#*RealTimeHour	3桁
+	ゲーム内経過時間_秒	#*GameTimeSec	2桁
+	ゲーム内経過時間_分	#*GameTimeMin	2桁
+	ゲーム内経過時間_時間	#*GameTimeHour	3桁
+	日付_秒		#*DateSec	2桁
+	日付_分		#*DateMin	2桁
+	日付_時間	#*DateHour	2桁
+	日付_日		#*DateDay	2桁
+	日付_月		#*DateMon	2桁
+	日付_年		#*DateYear	2桁
+	スコア		#*Score		9桁
+	レベル		#*LV		3桁
+	処理落ち率	#*DropFrame	6桁
+	最終階層	#*FloorNum	2桁
+	ダンジョン名	#*Dungeon
+	キャラ名	#*Chara
+	クリアメッセージ	#*ClearMassage 	二行以内保障
+	最後のメッセージ	#*LastMassage1~10 	一行保障
+	プレイヤーのサイン	#*PlayerSigns
+	お金		#*Money
+	異常終了回数		#*XXX
+	バージョン情報		#*Ver
+	$/<
+
+	#*ClearMassage
+	#n
+
+	#cdNOTICE
+	◆プレイヤー◆__
+	#i
+	#*PlayerSigns
+	#n
+
+	#i
+	#cdNOTICE
+	◆記録◆
+	#i
+	#*Score
+	#cdNOTICE2
+	点__
+	#i
+	#*Turn
+	#cdNOTICE2
+	ターン__
+	#i
+	#*RealTimeHour
+	#cdNOTICE2
+	時間
+	#i
+	#*RealTimeMin
+	#cdNOTICE2
+	分
+	#i
+	#*RealTimeSec
+	#cdNOTICE2
+	秒
+	#n
+
+	#i
+	――――――――――――――――――――――――
+	#n
+
+	#cdNOTICE
+	レベル__
+	#i
+	#*LV
+	#px150
+	#cdNOTICE
+	経験値__
+	#i
+	#*ExpP
+	#cdNOTICE
+	#px350
+	お金____
+	#i
+	#*Money
+	#n
+
+	#cdNOTICE
+	最大HP__
+	#i
+	#*MHP
+	#px150
+	#cdNOTICE
+	最大満腹度__
+	#i
+	#*StmPMAX
+	#cdNOTICE
+	#px350
+	撃退数__
+	#i
+	#*DefeatNum
+	#n
+
+	#cvFFFF5555
+	◆武器◆__
+	#i
+	（武器力：
+	#*ArmP
+	__熟練度：
+	#*ArmMaster
+	%）
+	#n
+	__
+	#*ArmName
+	#n
+
+	#cvFF5599FF
+	◆防具◆__
+	#i
+	（防具力：
+	#*ShdP
+	__熟練度：
+	#*ShdMaster
+	%）
+	#n
+	__
+	#*ShdName
+	#n
+	
+	#cdNOTICE
+	◆持込◆__
+	#px150
+	#cdNOTICE2
+	道具：
+	#i
+	#*FirstItemNum
+	個
+	#px350
+	#cdNOTICE2
+	お金：
+	#i
+	#*FirstMoney
+$<
+$>リザルトウィンドウテキスト2
+	#cdNOTICE
+	◆最後のメッセージ◆
+	#i
+	#n
+	――――――――――――――――――――――――
+	#n
+	#*LastMassage10
+	#*LastMassage9
+	#*LastMassage8
+	#*LastMassage7
+	#*LastMassage6
+	#*LastMassage5
+	#*LastMassage4
+	#*LastMassage3
+	#*LastMassage2
+	#*LastMassage1
+$<
+$>リザルトウィンドウテキスト3
+	#cdNOTICE
+	◆その他の情報◆
+	#n
+	#cdNOTICE2
+	クリア日時_
+	#i
+	#i
+	#*DateYear
+	年
+	#*DateMon
+	月
+	#*DateDay
+	日__
+	#*DateHour
+	:
+	#*DateMin
+	:
+	#*DateSec
+	#n
+	#cdNOTICE2
+	処理落ち率_
+	#i
+	#*DropFrame
+	%
+	#n
+	__（フレームから算出したプレイ時間：
+	#*GameTimeHour
+	時間_
+	#*GameTimeMin
+	分_
+	#*GameTimeSec
+	秒
+	）
+	#n
+	#cdNOTICE2
+	異常終了回数__
+	#i
+	#*XXX
+	回
+	#n
+	#cdNOTICE2
+	本体バージョン__
+	#i
+	#*Ver
+$<
+$>リザルトクリアメッセージ
+	「
+	#*Chara
+	__は__
+	#*Dungeon
+	#*FirstItemSentence
+	
+	全
+	#cvFFCCFFEE
+	#*FloorNum
+	階層
+	#i
+	を__
+	#cvFF00DDEE
+	踏破した！
+	#i
+	」
+$<
+$>リザルト失敗メッセージ
+	「
+	#*Chara
+	__は__
+	#*Dungeon
+	#*FirstItemSentence
+
+	#cvFFCCFFEE
+	第
+	#*FloorNum
+	階層
+	#i
+	__で__
+	#cvFFFF8888
+	道半ばにして倒れた…
+	#i
+	」
+$<
+$>リザルト引き揚げメッセージ
+	「
+	#*Chara
+	__は__
+	#*Dungeon
+	#*FirstItemSentence
+
+	#cvFFCCFFEE
+	第
+	#*FloorNum
+	階層
+	#i
+	__で__
+	#cvFF88FF88
+	詰め所に引き揚げた。
+	#i
+	」
+$<
+$>持ち込み有り文節
+	__の
+	#n
+$<
+$>持ち込み無し文節
+	__に
+	#n
+	持込なしで挑み__
+$<

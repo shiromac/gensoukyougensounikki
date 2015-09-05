@@ -1,0 +1,147 @@
+
+$>御霊Expresstions
+	<御霊の気配>
+	#n
+$<
+$>EquipmentAttributeExpresstions
+	<種別と性質>
+	#n
+$<
+$>剣Expresstions
+	-剣-
+	#n
+	これは剣として扱えます。一般には長い剣身を持つ手持ちの刃物。
+	#n
+$<
+$>DrinkAttributeExpresstions
+	<ラベル>
+	#n
+$<
+$>薬Expresstions
+	-薬-
+	#n
+	これは薬です。お子様の手の届かないところに保管し、用法、用量を守って正しくお使いください。
+	#n
+$<
+$>酒Expresstions
+	-酒-
+	#n
+	これはお酒です。お酒は二十歳になってから。
+	#n
+$<
+$>DrinkAttributeShortTag
+	<ラベル>__:
+$<
+$>薬ShortTag
+	_(薬)_
+$<
+$>酒ShortTag
+	_(酒)_
+$<
+$>火消しExpresstions
+	-火消し-
+	#n
+	火柱に投げ込むと火柱を消すことが出来ます。
+	#n
+$<
+$>DrinkMaterialExpresstions
+	<カクテル材料>
+	#n
+$<
+$>BookAttributeExpresstions
+	<難度>
+	#n
+$<
+$>魔法難度1Expresstions
+	-魔法難度１-
+	#n
+	とっても簡単な魔法です。
+	#n
+	魔導書で使う分には失敗することはありません。
+	#n
+$<
+$>魔法難度2Expresstions
+	-魔法難度２-
+	#n
+	比較的簡単な魔法です。
+	#n
+	魔導書で使う分には失敗することはありません。
+	#n
+$<
+$>魔法難度3Expresstions
+	-魔法難度３-
+	#n
+	ちょっと難しい魔法です。
+	#n
+	魔導書で使う分には失敗することはありません。
+	#n
+$<
+$>魔法難度4Expresstions
+	-魔法難度４-
+	#n
+	難しい魔法です。
+	#n
+	魔導書で使う分には失敗することはありません。
+	#n
+$<
+$>魔法難度5Expresstions
+	-魔法難度５-
+	#n
+	すごく難しい魔法です。
+	#n
+	魔導書で使う分には失敗することはありません。
+	#n
+$<
+$>BulletAttributeExpresstions
+	<弾幕属性>
+	#n
+$<
+$>爆発Expresstions
+	-爆発-
+	#n
+	爆発します。
+	爆発物注意。
+	#n
+$<
+$>火Expresstions
+	-火-
+	#n
+	とても熱いです。
+	やけど注意。
+	#n
+$<
+$>水Expresstions
+	-水-
+	#n
+	水です。
+	水気注意。
+	#n
+$<
+$>冷気Expresstions
+	-冷気-
+	#n
+	すごく冷たいです。
+	凍傷注意。
+	#n
+$<
+$>電気Expresstions
+	-電気-
+	#n
+	ビリビリします。
+	感電注意
+	#n
+$<
+$>気Expresstions
+	-気-
+	#n
+	霊気とか、妖気とか。
+	よくわからないけど注意
+	#n
+$<
+$>毒Expresstions
+	-毒-
+	#n
+	体に毒です。
+	劇物注意
+	#n
+$<

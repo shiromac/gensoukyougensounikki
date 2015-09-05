@@ -1,0 +1,75 @@
+
+$>10000
+	$>FullNameBase
+		階段
+	$<
+	$>ShortNameBase
+		階段
+	$<
+	$>shortExplanationBase
+		次のフロアにいける。
+	$<
+	$>longExplanationBase
+		階段（かいだん）
+		#n
+		次のフロアにいける。
+	$<
+$<
+$>11000
+	$>FullNameBase
+		火柱
+	$<
+	$>ShortNameBase
+		火柱
+	$<
+	$>shortExplanationBase
+		入るとすごく熱い。
+		#n
+		すぐに外に出よう。
+	$<
+	$>longExplanationBase
+		火柱（ひばしら）
+		#n
+		入るとすごく熱い。
+		#n
+		すぐに外に出よう。
+	$<
+$<
+$>11001
+	$>FullNameBase
+		境内
+	$<
+	$>ShortNameBase
+		境内
+	$<
+	$>shortExplanationBase
+		敵はこの中に踏み込むことができない。
+		#n
+		敵の通常攻撃と侵入を防ぐことができる。
+	$<
+	$>longExplanationBase
+		境内（けいだい）
+		#n
+		敵はこの中に踏み込むことができない。
+		#n
+		敵の通常攻撃と侵入を防ぐことができる。
+	$<
+$<
+$>11002
+	$>FullNameBase
+		出口
+	$<
+	$>ShortNameBase
+		出口
+	$<
+	$>shortExplanationBase
+		出口。
+		#n
+		うん。出口。
+	$<
+	$>longExplanationBase
+		出口（でぐち）
+		#n
+		出口。
+	$<
+$<

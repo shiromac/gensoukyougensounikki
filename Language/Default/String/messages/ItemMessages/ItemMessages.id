@@ -1,0 +1,37 @@
+$>Item未識別shortExplanation
+	__-__
+	#*Item
+	__-__
+	#n
+	識別されていないので、 どんな効果なのかわからない。
+	#n
+$<
+$>Item未識別longExplanationBase
+	__-__
+	#*Item
+	__-__
+	#n
+	識別されていないので、 どんな効果なのかわからない。
+	#n
+$<
+$>買い値段Caption
+	#cvFFFFEE00
+	[
+	#*Value
+	]__
+$<
+$>売り値段Caption
+	#cvFF00FF33
+	[
+	#*Value
+	]__
+$<
+$>厄ポイント
+	厄ポイント
+$<
+$>厄ポイントCaption
+	#cvFFEE00FF
+	(
+	#*Value
+	P)__
+$<

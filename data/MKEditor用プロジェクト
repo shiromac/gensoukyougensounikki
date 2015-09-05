@@ -1,0 +1,424 @@
+// MKEditor for Windows Project
+// Version 3.8
+// ProjectFile: F:\program\laug_th\data\MKEditor用プロジェクト
+
+/* ProjectItem */
+Type=ntBox
+Level=0
+Name=基礎
+Lock=0
+Comment=
+Ext=
+begin/*
+*/end
+
+/* ProjectItem */
+Type=ntLink
+Level=1
+Name=inport_Item.id
+Lock=0
+Comment=
+Ext=
+begin/*
+F:\program\laug_th\data\inport_Item.id
+*/end
+
+/* ProjectItem */
+Type=ntLink
+Level=1
+Name=inport_enemy.id
+Lock=0
+Comment=
+Ext=
+begin/*
+F:\program\laug_th\data\inport_enemy.id
+*/end
+
+/* ProjectItem */
+Type=ntFolder
+Level=1
+Name=Ｉｔｅｍ
+Lock=0
+Comment=
+Ext=
+begin/*
+*/end
+
+/* ProjectItem */
+Type=ntImport
+Level=2
+Name=Book.id
+Lock=0
+Comment=
+Ext=*.id
+begin/*
+\/---コメント----
+\/\>[ID]
+\/	\>[name]
+\/		data
+\/	\<
+\/\<
+
+
+\>6000
+	\>FullNameBase
+		メランコリーブック
+	\<
+	\>ShortNameBase
+		メランコリーブック
+	\<
+	\>usefulNameBase
+		メランコリーブック
+	\<
+	\>値段基礎値
+		BOK_D
+	\<
+	\>レア度
+		D
+	\<
+	\>imagecolorConcrete
+		FFAA44FF
+	\<
+	\>shortExplanationBase
+		
+		#n
+	\<
+	\>longExplanationBase
+		#n
+	\<
+\<
+
+
+
+\>6001
+
+
+	\>FullNameBase
+		健脚の魔導書
+	\<
+	\>ShortNameBase
+		健脚の魔導書
+	\<
+	\>usefulNameBase
+		健脚の魔導書
+	\<
+	\>値段基礎値
+		BOK_D
+	\<
+	\>レア度
+		D
+	\<
+	\>imagecolorConcrete
+		FFEEFFFF
+	\<
+	\>shortExplanationBase
+		健脚の魔導書shortExplanationBase
+		#n
+	\<
+	\>longExplanationBase
+		健脚の魔導書longExplanationBase
+		#n
+	\<
+\<
+*/end
+
+/* ProjectItem */
+Type=ntImport
+Level=2
+Name=Drink.id
+Lock=0
+Comment=
+Ext=*.id
+begin/*
+\/---コメント----
+\/\>[ID]
+\/	\>[name]
+\/		data
+\/	\<
+\/\<
+\/のように書く
+
+\>5000
+	\>FullNameBase
+		水道水
+	\<
+	\>ShortNameBase
+		水道水
+	\<
+	\>usefulNameBase
+		水道水
+	\<
+	\>値段基礎値
+		DRK_E
+	\<
+	\>レア度
+		F
+	\<
+	\>shortExplanationBase
+		水道というところを通って来たらしい水。
+		#cdNOTICE
+		#n飲むとHPが回復する。
+		#i
+		#nHPが最大の時に飲むと最大HPが増える。
+		#n
+	\<
+	\>longExplanationBase
+		水道というところを通って来たらしい水。
+		#n外の世界の主流な飲み物らしい。希少品。
+		#nわずかにカルキの匂いがする。あんまりおい
+		#nしいものではない。良薬は口に苦し。
+		#cdNOTICE
+		#n飲むとHPが回復する。
+		#i
+		#nHPが最大の時に飲むと最大HPが増える。
+		#n
+		#n
+		#n
+		#sx0.5
+		#sy0.5
+		#n良く見るとチルノのサインが入ってる。なぜだろう・・・
+		#n
+	\<
+\<
+
+\>5001
+	\>FullNameBase
+		鬼の酒「火炎櫻」
+	\<
+	\>ShortNameBase
+		火炎櫻
+	\<
+	\>usefulNameBase
+		火炎桜
+	\<
+	\>値段基礎値
+		DRK_B
+	\<
+	\>レア度
+		D
+	\<
+	\>shortExplanationBase
+		鬼が飲む酒。超辛口。
+		#cdNOTICE
+		#n飲むと火を噴いて目の前の敵を攻撃する。
+		#i
+		#n投げて当てると敵にダメージ。
+		#n
+	\<
+	\>longExplanationBase
+		鬼が飲む酒。超辛口。
+		#nアルコール濃度が99％を超えるので
+		#n容易に火がつく。
+		#nそのまま飲むのは
+		#n鬼でも無い限り止めた方がいいだろう。
+		#cdNOTICE
+		#n飲むと火を噴いて目の前の敵を攻撃する。
+		#i
+		#n投げて当てると敵が火だるまになる。
+		#n
+		#nお酒は二十歳になってから。
+		#n
+	\<
+\<
+
+
+\>5002
+	\>FullNameBase
+		毒水
+	\<
+	\>ShortNameBase
+		毒水
+	\<
+	\>usefulNameBase
+		毒水
+	\<
+	\>値段基礎値
+		DRK_D
+	\<
+	\>レア度
+		D
+	\<
+	\>shortExplanationBase
+		毒水。正体はただの炭酸水。
+		#nプラシーボ効果で
+		#cdNOTICE
+		鬱になる。
+		#i
+		#n鬱状態では２ターンに１回しか行動できない。
+		#n
+	\<
+	\>longExplanationBase
+		有馬温泉の銀泉から湧き出る水と同成分の水。
+		#n毒水の沸く洞穴に鳥や虫が入るとたちまち
+		#n死んでしまう。
+		#n毒水の正体は良質の炭酸水。飲用可。
+		#nしかしその名前が余りにも毒々しいので
+		#cdNOTICE
+		#n飲むと気が重くなり、鬱状態になる。
+		#i
+                #n
+		#n
+		#nところで有馬ってどこ？
+		#n
+	\<
+\<
+
+\>5003
+	\>FullNameBase
+		天狗水
+	\<
+	\>ShortNameBase
+		天狗水
+	\<
+	\>usefulNameBase
+		天狗水
+	\<
+	\>値段基礎値
+		DRK_D
+	\<
+	\>レア度
+		D
+	\<
+	\>shortExplanationBase
+		妖怪の山の麓に湧き出る水。らしい。
+		#cdNOTICE
+		#n飲むと倍速状態になる。
+		#i
+		#n倍速状態では１ターンに２回行動できる。
+		#n
+	\<
+	\>longExplanationBase
+		妖怪の山の麓に湧き出る水らしい。
+		#n妖怪の山の麓は天狗の縄張りなので実際に湧き
+		#n出ているところは天狗にしか見られない。
+		#n天狗から買い付けることが可能。
+		#nしかしこの飲み物、色がついている上に甘味までする。
+		#n中には発泡するものまであるらしい。
+		#nこれが沸いて出る泉があるというのも怪しい話である。
+		#cdNOTICE
+		#n飲むと元気が出てきて、倍速状態になる。
+		#i
+                #nしばらくすると元にもどる。
+		#n
+	\<
+\<
+
+*/end
+
+/* ProjectItem */
+Type=ntImport
+Level=2
+Name=Spell.id
+Lock=0
+Comment=
+Ext=*.id
+begin/*
+\/---コメント----
+\/\>[ID]
+\/	\>[name]
+\/		data
+\/	\<
+\/\<
+\/のように書く
+
+\>3000
+	\/コーリンの符
+	\*3000_NameEtc
+
+	\>値段基礎値
+		SPL_E
+	\<
+	\>レア度
+		F
+	\<
+
+\/\/>
+	\<通常時最悪耐久回数
+		5
+		\/デフォルト 5
+	\>
+	\<亀裂時最悪耐久回数
+		0
+		\/デフォルト 10
+	\>
+	\<通常時破損率
+		1
+		\/デフォルト 0.02	
+	\>
+	\<亀裂時破損率
+		1
+		\/デフォルト 0.04		
+	\>
+\/\/<
+
+	\>shortExplanationBase
+		\*3000_ShortExp
+	\<
+	\>longExplanationBase
+		\*3000_LongExp
+	\<
+\<
+
+\>3001
+	\/リグルの符
+	\*3001_NameEtc
+
+	\>値段基礎値
+		SPL_D
+	\<
+	\>レア度
+		E
+	\<
+
+	\>shortExplanationBase
+		\*3000_ShortExp
+	\<
+	\>longExplanationBase
+		\*3000_LongExp
+	\<
+\<
+*/end
+
+/* ProjectItem */
+Type=ntFolder
+Level=1
+Name=ItemExpressions
+Lock=0
+Comment=
+Ext=
+begin/*
+*/end
+
+/* ProjectItem */
+Type=ntImport
+Level=2
+Name=ItemExpressions.id
+Lock=0
+Comment=
+Ext=*.id
+begin/*
+
+
+\:SpellExpressions.id
+*/end
+
+/* ProjectItem */
+Type=ntImport
+Level=2
+Name=SpellExpressions.id
+Lock=0
+Comment=
+Ext=*.id
+begin/*
+*/end
+
+/* ProjectItem */
+Type=ntTrash
+Level=0
+Name=ゴミ箱
+Lock=0
+Comment=
+Ext=
+begin/*
+*/end
+

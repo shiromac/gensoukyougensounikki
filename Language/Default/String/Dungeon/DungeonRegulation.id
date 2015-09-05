@@ -1,0 +1,39 @@
+$>DungeonRegulation_NoRegulation
+	キャラクター：
+	#*chara
+	#n
+	持ち込み：あり
+$<
+$>DungeonRegulation_NoRegulation_FreeCharacter
+	キャラクター：自由
+	#n
+	持ち込み：あり
+$<
+$>DungeonRegulation_NoItemNoManey_FreeCharacter
+	キャラクター：自由
+	#n
+	持ち込み：なし
+$<
+$>DungeonRegulation_AnyItemFreeManey_FreeCharacter
+	キャラクター：自由
+	#n
+	持ち込み：アイテム__
+	#*ItemNum
+	個、所持金自由
+	#n
+	
+$<
+$>DungeonRegulation_NoItemNoManey_FreeCharacter_ErrorMessage
+	このダンジョンには_アイテム_と_所持金_の持ち込みはできません。
+$<
+$>DungeonRegulation_AnyItemFreeManey_FreeCharacter_ErrorMessage
+	このダンジョンには_アイテム_を_
+	#cdNOTICE
+	箱の中身を含めて__
+	#*ItemNum
+	個
+	#i
+	_だけ持ち込むことが出来ます。
+	#n
+	所持金_の持ち込みは自由です。
+$<

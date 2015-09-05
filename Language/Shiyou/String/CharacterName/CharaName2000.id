@@ -1,0 +1,887 @@
+$#>;
+	$:CharaName2000table.csv
+$#<
+$>2000
+	$>FullNameBase
+		のら毛玉
+	$<
+	$>FullNameSubBase
+		Norakedama
+	$<
+	$>ShortNameBase
+		のら毛玉
+	$<
+	$>ShortNameSubBase
+		Norakedama
+	$<
+	$/二つ名
+	$>titleName
+		ふわりふわり
+	$<
+	$>CLASSName
+		のら毛玉
+		あなぐら毛玉
+		どうくつ毛玉
+		そら毛玉
+		じごく毛玉
+		だいおう毛玉
+	$<
+$<
+$>2001
+	$>FullNameBase
+		ザコ妖精
+	$<
+	$>FullNameSubBase
+		Zakoyousei
+	$<
+	$>ShortNameBase
+		ザコ妖精
+	$<
+	$>ShortNameSubBase
+		Zakoyousei
+	$<
+	$/二つ名
+	$>titleName
+		自然の化身
+	$<
+	$>CLASSName
+		ザコ妖精
+		並妖精
+		梅妖精
+		竹妖精
+		松妖精
+		特上妖精
+	$<
+$<
+$>2002
+	$>FullNameBase
+		妖精メイド
+	$<
+	$>FullNameSubBase
+		Youseimeido
+	$<
+	$>ShortNameBase
+		妖精メイド
+	$<
+	$>ShortNameSubBase
+		Youseimeido
+	$<
+	$/二つ名
+	$>titleName
+		きままな従者
+	$<
+	$>CLASSName
+		みならい妖精メイド
+		下っ端妖精メイド
+		ひら妖精メイド
+		妖精メイド
+		妖精メイドチーフ
+		妖精メイドリーダー
+	$<
+$<
+$>2003
+	$>FullNameBase
+		大妖精
+	$<
+	$>FullNameSubBase
+		Daiyousei
+	$<
+	$>ShortNameBase
+		大妖精
+	$<
+	$>ShortNameSubBase
+		Daiyousei
+	$<
+	$/二つ名
+	$>titleName
+		陽気な_いたずら妖精
+	$<
+	$>CLASSName
+		大妖精Easy
+		大妖精Normal
+		大妖精Hard
+		大妖精Lunatic
+		大妖精Extra
+		大妖精Phantasm
+	$<
+$<
+$>2004
+	$>FullNameBase
+		レミリア・スカーレット
+	$<
+	$>FullNameSubBase
+		Remilia Scarlet
+	$<
+	$>ShortNameBase
+		レミリア
+	$<
+	$>ShortNameSubBase
+		Remilia
+	$<
+	$/二つ名
+	$>titleName
+		永遠に紅い幼き月
+	$<
+	$>CLASSName
+		レミリアEasy
+		レミリアNormal
+		レミリアHard
+		レミリアLunatic
+		レミリアExtra
+		レミリアPhantasm
+	$<
+$<
+$>2005
+	$>FullNameBase
+		フランドール・スカーレット
+	$<
+	$>FullNameSubBase
+		Flandre Scarlet
+	$<
+	$>ShortNameBase
+		フランドール
+	$<
+	$>ShortNameSubBase
+		Flandre
+	$<
+	$/二つ名
+	$>titleName
+		悪魔の妹
+	$<
+	$>CLASSName
+		フランドールEasy
+		フランドールNormal
+		フランドールHard
+		フランドールLunatic
+		フランドールExtra
+		フランドールPhantasm
+	$<
+$<
+$>2006
+	$>FullNameBase
+		十六夜咲夜
+	$<
+	$>FullNameSubBase
+		Izayoi Sakuya
+	$<
+	$>ShortNameBase
+		咲夜
+	$<
+	$>ShortNameSubBase
+		Sakuya
+	$<
+	$/二つ名
+	$>titleName
+		完全で瀟洒なメイド
+	$<
+	$>CLASSName
+		咲夜Easy
+		咲夜Normal
+		咲夜Hard
+		咲夜Lunatic
+		咲夜Extra
+		咲夜Phantasm
+	$<
+$<
+$>2007
+	$>FullNameBase
+		ルーミア
+	$<
+	$>FullNameSubBase
+		Rumia
+	$<
+	$>ShortNameBase
+		ルーミア
+	$<
+	$>ShortNameSubBase
+		Rumia
+	$<
+	$/二つ名
+	$>titleName
+		宵闇の妖怪
+	$<
+	$>CLASSName
+		ルーミアEasy
+		ルーミアNormal
+		ルーミアHard
+		ルーミアLunatic
+		ルーミアExtra
+		ルーミアPhantasm
+	$<
+$<
+$>2008
+	$>FullNameBase
+		河城にとり
+	$<
+	$>FullNameSubBase
+		Kawashiro Nitori
+	$<
+	$>ShortNameBase
+		にとり
+	$<
+	$>ShortNameSubBase
+		Nitori
+	$<
+	$/二つ名
+	$>titleName
+		超妖怪弾頭
+	$<
+	$>CLASSName
+		にとりEasy
+		にとりNormal
+		にとりHard
+		にとりLunatic
+		にとりExtra
+		にとりPhantasm
+	$<
+$<
+$>2009
+	$>FullNameBase
+		四季映姫・ヤマザナドゥ
+	$<
+	$>FullNameSubBase
+		Sikieiki Yamaxanadu
+	$<
+	$>ShortNameBase
+		映姫
+	$<
+	$>ShortNameSubBase
+		Sikieiki Yamaxanadu
+	$<
+	$/二つ名
+	$>titleName
+		楽園の最高裁判長
+	$<
+	$>CLASSName
+		映姫Easy
+		映姫Normal
+		映姫Hard
+		映姫Lunatic
+		映姫Extra
+		映姫Phantasm
+	$<
+$<
+$>2010
+	$>FullNameBase
+		鍵山雛
+	$<
+	$>FullNameSubBase
+		Kagiyama Hina
+	$<
+	$>ShortNameBase
+		雛
+	$<
+	$>ShortNameSubBase
+		Hina
+	$<
+	$/二つ名
+	$>titleName
+		秘神流し雛
+	$<
+	$>CLASSName
+		雛Easy
+		雛Normal
+		雛Hard
+		雛Lunatic
+		雛Extra
+		雛Phantasm
+	$<
+$<
+$>2011
+	$>FullNameBase
+		西行寺幽々子
+	$<
+	$>FullNameSubBase
+		Saigyouji Yuyuko
+	$<
+	$>ShortNameBase
+		幽々子
+	$<
+	$>ShortNameSubBase
+		Yuyuko
+	$<
+	$/二つ名
+	$>titleName
+		死を操る程度の能力
+	$<
+	$>CLASSName
+		幽々子Easy
+		幽々子Normal
+		幽々子Hard
+		幽々子Lunatic
+		幽々子Extra
+		幽々子Phantasm
+	$<
+$<
+$>2012
+	$>FullNameBase
+		魂魄妖夢
+	$<
+	$>FullNameSubBase
+		Konpaku Youmu
+	$<
+	$>ShortNameBase
+		妖夢
+	$<
+	$>ShortNameSubBase
+		Youmu
+	$<
+	$/二つ名
+	$>titleName
+		剣術を扱う程度の能力
+	$<
+	$>CLASSName
+		妖夢Easy
+		妖夢Normal
+		妖夢Hard
+		妖夢Lunatic
+		妖夢Extra
+		妖夢Phantasm
+	$<
+$<
+$>2013
+	$>FullNameBase
+		チルノ
+	$<
+	$>FullNameSubBase
+		Cirno
+	$<
+	$>ShortNameBase
+		チルノ
+	$<
+	$>ShortNameSubBase
+		Cirno
+	$<
+	$/二つ名
+	$>titleName
+		冷気を操る程度の能力
+	$<
+	$>CLASSName
+		チルノEasy
+		チルノNormal
+		チルノHard
+		チルノLunatic
+		チルノExtra
+		チルノPhantasm
+	$<
+$<
+$>2014
+	$>FullNameBase
+		霧雨魔理沙
+	$<
+	$>FullNameSubBase
+		Kirisame Marisa
+	$<
+	$>ShortNameBase
+		魔理沙
+	$<
+	$>ShortNameSubBase
+		Marisa
+	$<
+	$/二つ名
+	$>titleName
+		普通の魔法使い
+	$<
+	$>CLASSName
+		魔理沙Easy
+		魔理沙Normal
+		魔理沙Hard
+		魔理沙Lunatic
+		魔理沙Extra
+		魔理沙Phantasm
+	$<
+$<
+$>2015
+	$>FullNameBase
+		パチュリー・ノーレッジ
+	$<
+	$>FullNameSubBase
+		Patchouli Knowledge
+	$<
+	$>ShortNameBase
+		パチュリー
+	$<
+	$>ShortNameSubBase
+		Patchouli
+	$<
+	$/二つ名
+	$>titleName
+		死を操る程度の能力
+	$<
+	$>CLASSName
+		パチュリーEasy
+		パチュリーNormal
+		パチュリーHard
+		パチュリーLunatic
+		パチュリーExtra
+		パチュリーPhantasm
+	$<
+$<
+$>2016
+	$>FullNameBase
+		小悪魔
+	$<
+	$>FullNameSubBase
+		koakuma
+	$<
+	$>ShortNameBase
+		小悪魔
+	$<
+	$>ShortNameSubBase
+		koakuma
+	$<
+	$/二つ名
+	$>titleName
+		気まぐれを起こす程度の能力
+	$<
+	$>CLASSName
+		小悪魔Easy
+		小悪魔Normal
+		小悪魔Hard
+		小悪魔Lunatic
+		小悪魔Extra
+		小悪魔Phantasm
+	$<
+$<
+$>2017
+	$>FullNameBase
+		鈴仙・優曇華院・イナバ
+	$<
+	$>FullNameSubBase
+		Reisen Udongein Inaba
+	$<
+	$>ShortNameBase
+		優曇華
+	$<
+	$>ShortNameSubBase
+		Udonge
+	$<
+	$/二つ名
+	$>titleName
+		狂気の月の兎
+	$<
+	$>CLASSName
+		優曇華Easy
+		優曇華Normal
+		優曇華Hard
+		優曇華Lunatic
+		優曇華Extra
+		優曇華Phantasm
+	$<
+$<
+$>2018
+	$>FullNameBase
+		射命丸文
+	$<
+	$>FullNameSubBase
+		Syameimaru Aya
+	$<
+	$>ShortNameBase
+		文
+	$<
+	$>ShortNameSubBase
+		Aya
+	$<
+	$/二つ名
+	$>titleName
+		風を操る程度の能力
+	$<
+	$>CLASSName
+		文Easy
+		文Normal
+		文Hard
+		文Lunatic
+		文Extra
+		文Phantasm
+	$<
+$<
+$>2019
+	$>FullNameBase
+		博麗霊夢
+	$<
+	$>FullNameSubBase
+		Hakurei Reimu
+	$<
+	$>ShortNameBase
+		霊夢
+	$<
+	$>ShortNameSubBase
+		Reimu
+	$<
+	$/二つ名
+	$>titleName
+		宙に浮く程度の能力
+	$<
+	$>CLASSName
+		霊夢Easy
+		霊夢Normal
+		霊夢Hard
+		霊夢Lunatic
+		霊夢Extra
+		霊夢Phantasm
+	$<
+$<
+$>2020
+	$>FullNameBase
+		森近霖之助
+	$<
+	$>FullNameSubBase
+		Morichika Rinnosuke
+	$<
+	$>ShortNameBase
+		香霖
+	$<
+	$>ShortNameSubBase
+		Korin
+	$<
+	$/二つ名
+	$>titleName
+		香霖堂店主
+	$<
+	$>CLASSName
+		香霖Easy
+		香霖Normal
+		香霖Hard
+		香霖Lunatic
+		香霖Extra
+		香霖Phantasm
+	$<
+$<
+$>2021
+	$>FullNameBase
+		くろがね毛玉
+	$<
+	$>FullNameSubBase
+		Kurogane Kedama
+	$<
+	$>ShortNameBase
+		くろがね毛玉
+	$<
+	$>ShortNameSubBase
+		Kurogane Kedama
+	$<
+	$/二つ名
+	$>titleName
+		もう一つの形
+	$<
+	$>CLASSName
+		くろがね毛玉
+		しろがね毛玉
+		おうごん毛玉
+		白金毛玉
+		金剛毛玉
+		緋々色金毛玉
+	$<
+$<
+$>2022
+	$>FullNameBase
+		東風谷早苗
+	$<
+	$>FullNameSubBase
+		Kochiya Sanae
+	$<
+	$>ShortNameBase
+		早苗
+	$<
+	$>ShortNameSubBase
+		Sanae
+	$<
+	$/二つ名
+	$>titleName
+		祀られる風の人間
+	$<
+	$>CLASSName
+		早苗Easy
+		早苗Normal
+		早苗Hard
+		早苗Lunatic
+		早苗Extra
+		早苗Phantasm
+	$<
+$<
+$>2023
+	$>FullNameBase
+		紅美鈴
+	$<
+	$>FullNameSubBase
+		Hong Meirin
+	$<
+	$>ShortNameBase
+		中国
+	$<
+	$>ShortNameSubBase
+		Tyugoku
+	$<
+	$/二つ名
+	$>titleName
+		華人小娘
+	$<
+	$>CLASSName
+		中国Easy
+		中国Normal
+		中国Hard
+		中国Lunatic
+		中国Extra
+		中国Phantasm
+	$<
+$<
+$>2024
+	$>FullNameBase
+		本読み妖怪
+	$<
+	$>FullNameSubBase
+		Honyomiyoukai
+	$<
+	$>ShortNameBase
+		本読み妖怪
+	$<
+	$>ShortNameSubBase
+		Honyomiyoukai
+	$<
+	$/二つ名
+	$>titleName
+		$/
+	$<
+	$>CLASSName
+		本読み妖怪Easy
+		本読み妖怪Normal
+		本読み妖怪Hard
+		本読み妖怪Lunatic
+		本読み妖怪Extra
+		本読み妖怪Phantasm
+	$<
+$<
+$>2025
+	$>FullNameBase
+		永江衣玖
+	$<
+	$>FullNameSubBase
+		Nagae Iku
+	$<
+	$>ShortNameBase
+		衣玖
+	$<
+	$>ShortNameSubBase
+		Iku
+	$<
+	$/二つ名
+	$>titleName
+		美しき緋の衣
+	$<
+	$>CLASSName
+		衣玖Easy
+		衣玖Normal
+		衣玖Hard
+		衣玖Lunatic
+		衣玖Extra
+		衣玖Phantasm
+	$<
+$<
+$>2026
+	$>FullNameBase
+		秋静葉
+	$<
+	$>FullNameSubBase
+		Aki Shizuha
+	$<
+	$>ShortNameBase
+		静葉
+	$<
+	$>ShortNameSubBase
+		Shizuha
+	$<
+	$/二つ名
+	$>titleName
+		寂しさと終焉の象徴
+	$<
+	$>CLASSName
+		静葉Easy
+		静葉Normal
+		静葉Hard
+		静葉Lunatic
+		静葉Extra
+		静葉Phantasm
+	$<
+$<
+$>2027
+	$>FullNameBase
+		伊吹萃香
+	$<
+	$>FullNameSubBase
+		Ibuki Suika
+	$<
+	$>ShortNameBase
+		萃香
+	$<
+	$>ShortNameSubBase
+		Suika
+	$<
+	$/二つ名
+	$>titleName
+		小さな百鬼夜行
+	$<
+	$>CLASSName
+		萃香Easy
+		萃香Normal
+		萃香Hard
+		萃香Lunatic
+		萃香Extra
+		萃香Phantasm
+	$<
+$<
+$>2028
+	$>FullNameBase
+		洩矢諏訪子
+	$<
+	$>FullNameSubBase
+		Moriya Suwako
+	$<
+	$>ShortNameBase
+		諏訪子
+	$<
+	$>ShortNameSubBase
+		Moriya Suwako
+	$<
+	$/二つ名
+	$>titleName
+		土着神の頂点
+	$<
+	$>CLASSName
+		諏訪子Easy
+		諏訪子Normal
+		諏訪子Hard
+		諏訪子Lunatic
+		諏訪子Extra
+		諏訪子Phantasm
+	$<
+$<
+$>2029
+	$>FullNameBase
+		比那名居天子
+	$<
+	$>FullNameSubBase
+		Hinanai Tenshi
+	$<
+	$>ShortNameBase
+		天子
+	$<
+	$>ShortNameSubBase
+		Tenshi
+	$<
+	$/二つ名
+	$>titleName
+		非想非非想天の娘
+	$<
+	$>CLASSName
+		天子Easy
+		天子Normal
+		天子Hard
+		天子Lunatic
+		天子Extra
+		天子Phantasm
+	$<
+$<
+$>2030
+	$>FullNameBase
+		水橋パルスィ
+	$<
+	$>FullNameSubBase
+		Mizuhashi Parsee
+	$<
+	$>ShortNameBase
+		パルスィ
+	$<
+	$>ShortNameSubBase
+		Parsee
+	$<
+	$/二つ名
+	$>titleName
+		地殻の下の嫉妬心
+	$<
+	$>CLASSName
+		パルスィEasy
+		パルスィNormal
+		パルスィHard
+		パルスィLunatic
+		パルスィExtra
+		パルスィPhantasm
+	$<
+$<
+$>2031
+	$>FullNameBase
+		秋穣子
+	$<
+	$>FullNameSubBase
+		Aki Minoriko
+	$<
+	$>ShortNameBase
+		穣子
+	$<
+	$>ShortNameSubBase
+		Minoriko
+	$<
+	$/二つ名
+	$>titleName
+		豊かさと稔りの象徴
+	$<
+	$>CLASSName
+		穣子Easy
+		穣子Normal
+		穣子Hard
+		穣子Lunatic
+		穣子Extra
+		穣子Phantasm
+	$<
+$<
+$>2032
+	$>FullNameBase
+		犬走椛
+	$<
+	$>FullNameSubBase
+		Inubashiri Momizi
+	$<
+	$>ShortNameBase
+		椛
+	$<
+	$>ShortNameSubBase
+		Momizi
+	$<
+	$/二つ名
+	$>titleName
+		下っ端哨戒天狗
+	$<
+	$>CLASSName
+		椛Easy
+		椛Normal
+		椛Hard
+		椛Lunatic
+		椛Extra
+		椛Phantasm
+	$<
+$<
+$>2033
+	$>FullNameBase
+		星熊勇儀
+	$<
+	$>FullNameSubBase
+		Hoshiguma Yugi
+	$<
+	$>ShortNameBase
+		勇儀
+	$<
+	$>ShortNameSubBase
+		Yugi
+	$<
+	$/二つ名
+	$>titleName
+		語られる怪力乱神
+	$<
+	$>CLASSName
+		勇儀Easy
+		勇儀Normal
+		勇儀Hard
+		勇儀Lunatic
+		勇儀Extra
+		勇儀Phantasm
+	$<
+$<

@@ -1,0 +1,75 @@
+
+$>FRAMEFILENAME
+	$/フレームのファイルネーム
+	interface/frame1_.png
+$<
+$>MAPDRAWCENTER
+	$/キャラ中心X
+	400
+	$/キャラ中心Y
+	328
+$<
+$>STILE_FLOOR
+	$/階層X座標
+	20
+	$/階層Y座標
+	4
+	$/margin
+	8
+	$/fontsize
+	32
+$<
+$>STILE_MONEY
+	$/お金X座標
+	780
+	$/お金Y座標
+	4
+	$/margin
+	8
+	$/fontsize
+	32
+$<
+$>STILE_HP
+	$/HPX座標
+	256
+	$/HPY座標
+	4
+	$/margin
+	8
+	$/fontsize
+	32
+$<
+$>STILE_HP_BAR
+	$/HPX座標
+	256
+	$/HPY座標
+	40
+	$/EDGE
+	2
+	$/MEASURE
+	2
+	$/HEIGHT
+	20
+$<
+$>STILE_SP_BAR
+	$/SPX座標
+	256
+	$/SPY座標
+	48
+	$/EDGE
+	2
+	$/MEASURE
+	2
+	$/HEIGHT
+	4
+$<
+$>STILE_VP
+	$/HPX座標
+	464
+	$/HPY座標
+	4
+	$/margin
+	10
+	$/fontsize
+	32
+$<

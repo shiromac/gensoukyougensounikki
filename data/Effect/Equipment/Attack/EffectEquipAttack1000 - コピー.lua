@@ -1,0 +1,22 @@
+--ë≈ìÅ
+life = 15
+hab = AnimeChip_Hab()
+chara_anime = AnimeChip_Chara(attacker,life*8)
+hab:addAnimeChip(chara_anime)
+sound = AnimeChip_Sound("freeze.wav",PositionPerGrid(toPlaceX,toPlaceY,0),1.0)
+hab:addAnimeChip(sound)
+chara_anime:setWorldRotation(direction)
+chara_anime.scaleX:addCascade(1,3,1,life)
+chara_anime.scaleY:addCascade(1,life)
+chara_anime.scaleY:addCascade(1,3,1,life)
+chara_anime.pitching:addCascade(0,life*2)
+chara_anime.pitching:addCascade(0,360,life)
+chara_anime.yawing:addCascade(0,life*3)
+chara_anime.yawing:addCascade(0,360,life)
+chara_anime.position:addCascade(PositionPerGrid(0,0,0),life*4)
+chara_anime.position:addCascade(PositionPerGrid(0,0,0),PositionPerGrid(1,0,0),life)
+chara_anime.position:addCascade(PositionPerGrid(1,0,0),PositionPerGrid(0,1,0),life)
+chara_anime.position:addCascade(PositionPerGrid(0,1,0),PositionPerGrid(0,0,1),life)
+chara_anime.position:addCascade(PositionPerGrid(0,0,1),PositionPerGrid(0,0,0),life)
+
+setAnimation_parallel(hab)

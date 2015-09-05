@@ -1,0 +1,57 @@
+REM  *****  BASIC  *****
+
+Sub Main
+  Dim oDoc As Object
+  Dim oSheet As Object
+  Dim oReplaceDesc As Object
+  Dim oFromCell As Object
+  Dim oToCell As Object
+  Dim oRange As Object
+  Dim i As Integer
+  oDoc = ThisComponent
+  oSheet = oDoc.getSheets().getByIndex(0)
+  
+  oRange = oSheet.getCellRangeByPosition(2,0,80,100)
+  oRanges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+  oRanges.insertByName("range_1",oRange)
+
+  FOR i = 0 to 200
+  	oFromCell = oSheet.getCellByPosition(1,i)
+  	oToCell = oSheet.getCellByPosition(0,i)
+    oReplaceDesc = oSheet.createReplaceDescriptor()
+    oReplaceDesc.SearchString = oFromCell.getString
+    oReplaceDesc.ReplaceString = oToCell.getString
+
+    oRanges.replaceAll(oReplaceDesc)
+  NEXT
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "E:"
+  oReplaceDesc.ReplaceString = "|0|0|"
+  oRanges.replaceAll(oReplaceDesc)
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "N:"
+  oReplaceDesc.ReplaceString = "|1|0|"
+  oRanges.replaceAll(oReplaceDesc)
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "H:"
+  oReplaceDesc.ReplaceString = "|2|0|"
+  oRanges.replaceAll(oReplaceDesc)
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "L:"
+  oReplaceDesc.ReplaceString = "|3|0|"
+  oRanges.replaceAll(oReplaceDesc)
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "X:"
+  oReplaceDesc.ReplaceString = "|4|0|"
+  oRanges.replaceAll(oReplaceDesc)
+  
+  oReplaceDesc = oSheet.createReplaceDescriptor()
+  oReplaceDesc.SearchString = "P:"
+  oReplaceDesc.ReplaceString = "|5|0|"
+  oRanges.replaceAll(oReplaceDesc)
+End Sub

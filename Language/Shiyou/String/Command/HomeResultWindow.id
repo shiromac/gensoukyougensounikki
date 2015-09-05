@@ -1,0 +1,38 @@
+$/拠点での経験値表示用
+$>HomeResultText
+	$/>
+	現在の厄Ｐ	#*now_yaku		6桁
+	加算中の厄Ｐ	#*retain_yaku		6桁
+	現在のプレイヤー経験値		#*now_experience	6桁
+	加算中のプレイヤー経験値	#*retain_experience	6桁
+	次のランクまでのプレイヤー経験値#*next_experience	6桁
+	プレイヤーランク		#*playerRank		3桁
+	$/<
+
+	#n
+
+	プレイヤーランク
+	__
+	#*playerRank
+	#n
+	____
+	#*now_experience
+	__/__
+	#*next_experience
+	#n
+	+ 
+	#*retain_experience
+	#n
+
+	#n
+
+	#n
+
+	#cvFFEE00FF
+	__ 厄ポイント
+	#n
+	#*now_yaku
+	__P __ +__
+	#*retain_yaku
+	__P
+$<

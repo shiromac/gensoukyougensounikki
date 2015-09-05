@@ -1,0 +1,101 @@
+$>ダンジョンshortExplanationText
+	$/ 最大階層  #*MaxFloor  3桁
+	最大階層 :__
+	#*MaxFloor
+	_階
+	#n
+$<
+$>つづきからshortExplanationText
+	$/>
+	キャラ名	#*Chara
+	現在階層  	#*Floor  3桁
+	実経過時間_秒	#*RealTimeSec	2桁
+	実経過時間_分	#*RealTimeMin	2桁
+	実経過時間_時間	#*RealTimeHour	3桁
+	経過ターン	#*Turn		6桁
+	レベル		#*LV		3桁
+	HP		#*HP		3桁
+	最大HP		#*MHP		3桁
+	武器の名前	#*ArmName	一行保障
+	防具の名前	#*ShdName	一行保障
+	持ちこみアイテム数	#*FirstItemNum	3桁
+	持ちこみお金		#*FirstMoney	
+	$/<
+	#cdNOTICE2
+	◆キャラ◆
+	________
+	#i
+	#*Chara
+	#n
+	#cdNOTICE2
+	________HP__
+	#i
+	#*HP
+	/
+	#*MHP
+	______________
+	#cdNOTICE2
+	レベル
+	#i
+	__
+	#*LV
+	______________
+	#cdNOTICE2
+	現在の階層 :
+	#i
+	#*Floor
+	#cdNOTICE2
+	_階
+	#i
+	#n
+	$/--
+	#cdNOTICE
+	◆経過◆____
+	#i
+	#*Turn
+	#cdNOTICE
+	____ターン____
+	#i
+	#*RealTimeHour
+	#cdNOTICE
+	時間
+	#i
+	#*RealTimeMin
+	#cdNOTICE
+	分
+	#i
+	#*RealTimeSec
+	#cdNOTICE
+	秒
+	#n
+	$/--
+	#cdNOTICE2
+	◆持込◆
+	________
+	#cdNOTICE2
+	__道具：
+	#i
+	#*FirstItemNum
+	_個
+	________
+	#cdNOTICE2
+	お金：
+	#i
+	#*FirstMoney
+	#n
+	
+	$/>
+	$/--
+	#cvFFFF5555
+	◆武器◆__
+	#i
+	#*ArmName
+	#n
+	$/--
+	#cvFF5599FF
+	◆防具◆__
+	#*ShdName
+	#i
+	#n
+	$/<
+$<

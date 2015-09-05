@@ -1,0 +1,113 @@
+--1052 要石
+
+-- 数値型 fromPlaceX : 攻撃者のX位置（マス）
+-- 数値型 fromPlaceY : 攻撃者のY位置（マス）
+-- 数値型 toPlaceX : 攻撃先のX位置（マス）
+-- 数値型 toPlaceY : 攻撃先のY位置（マス）
+-- 数値型 direction : 攻撃者の向き（０～３６０）
+-- 数値型 distance : 攻撃者と攻撃先の距離（マス）
+-- 数値型 isValidAttack : 攻撃が壁に向かっていたら０、そうでなければ１
+-- pcCharacter型 attacker : 攻撃者のキャラクター
+
+
+hab = AnimeChip_Hab(PositionPerGrid(toPlaceX, toPlaceY, 0))
+
+
+-- fumikiri
+fumikiri_life = 16
+fumikomi_distance = isValidAttack * sqrt((fromPlaceX - toPlaceX)*(fromPlaceX - toPlaceX) + (fromPlaceY - toPlaceY)*(fromPlaceY - toPlaceY))/ distance 
+
+chara_anime = AnimeChip_Chara(attacker,fumikiri_life)
+hab:addAnimeChip(chara_anime)
+chara_anime: setWorldRotation(direction)
+chara_anime.position: addCascade(PositionPerGrid(0, 0, 0), PositionPerGrid(0, -0.1, 0), PositionPerGrid(0, -0.1, 0), fumikiri_life*0.5)
+chara_anime.position: addCascade(PositionPerGrid(0, -0.1, 0), PositionPerGrid(0, -0.8*fumikomi_distance, 0), PositionPerGrid(0, -0.4*fumikomi_distance, 0), PositionPerGrid(0, 0, 0), fumikiri_life*0.5)
+chara_anime.yawing: addCascade(0, 45, fumikiri_life*0.5)
+chara_anime.yawing: addCascade(45, -90, 0, fumikiri_life*0.5)
+--
+
+-- sound
+sound = AnimeChip_Sound("swing1052.wav",PositionPerGrid(toPlaceX,toPlaceY,0),1.0)
+hab:addAnimeChip(sound)
+sound: setDelay(fumikiri_life*0.5+1)
+
+--
+hab_parallel = AnimeChip_Hab(PositionPerGrid(toPlaceX, toPlaceY, 0))
+
+syougeki_life = 8
+-- =============================================================
+-- 要石
+momizi11 = AnimeChip_Perticle("effect\\equip\\kaname.png",D3DXVECTOR2(60,60), syougeki_life)
+momizi11.color: addCascade(Color(255,255,255,255), syougeki_life)
+momizi11.drawMode: setDefault(DrawMode_normal)
+--momizi11.rotationBefore: addCascade(360, 0, syougeki_life)
+momizi11.scaleX:	addCascade(1, 1, syougeki_life)
+momizi11.scaleY:	addCascade(1, 1, syougeki_life)
+--momizi11:setWorldRotation(direction)
+momizi11: setDelay(2)
+momizi11.position: addCascade( PositionPerGrid(0, 0, 2.2), PositionPerGrid(0, 0, 0), syougeki_life)
+
+-- コピーして加算合成
+momizi12 = AnimeChip_Perticle(momizi11)
+momizi12.color: clear()
+momizi12.color: addCascade(Color(120,255,255,255), syougeki_life)
+momizi12: setDelay(4)
+momizi12.drawMode: setDefault(DrawMode_addition)
+
+hab_parallel: addAnimeChip(momizi11);
+hab_parallel: addAnimeChip(momizi12);
+-- =============================================================
+
+
+syougeki_life = 8
+-- =============================================================
+-- 衝撃波1
+syougeki11 = AnimeChip_Perticle("effect\\basic\\ring_radio.png",D3DXVECTOR2(120,120), syougeki_life)
+syougeki11.color: addCascade(Color(180,230,230,255), syougeki_life)
+syougeki11.drawMode: setDefault(DrawMode_normal)
+syougeki11.rotationBefore: addCascade(360, 0, syougeki_life)
+syougeki11.scaleX:	addCascade(0.1, 1, syougeki_life)
+syougeki11.scaleY:	addCascade(0.1, 1, syougeki_life)
+--syougeki11:setWorldRotation(direction)
+syougeki11: setDelay(10)
+syougeki11.position: addCascade( PositionPerGrid(0, 0, 0.5), syougeki_life)
+
+-- コピーして加算合成
+syougeki12 = AnimeChip_Perticle(syougeki11)
+syougeki12: setDelay(12)
+syougeki12.color: clear()
+syougeki12.color: addCascade(Color(140,255,255,255), syougeki_life)
+syougeki12.drawMode: setDefault(DrawMode_addition)
+
+hab_parallel: addAnimeChip(syougeki11);
+hab_parallel: addAnimeChip(syougeki12);
+-- =============================================================
+
+
+syougeki_life = 8
+-- =============================================================
+-- 衝撃波2
+syougeki21 = AnimeChip_Perticle("effect\\basic\\ring_out.png",D3DXVECTOR2(80,80), syougeki_life)
+syougeki21.color: addCascade(Color(180,230,230,255), syougeki_life)
+syougeki21.drawMode: setDefault(DrawMode_normal)
+syougeki21.rotationBefore: addCascade(360, 0, syougeki_life)
+syougeki21.scaleX:	addCascade(0.1, 1, syougeki_life)
+syougeki21.scaleY:	addCascade(0.1, 1, syougeki_life)
+--syougeki21:setWorldRotation(direction)
+syougeki21: setDelay(11)
+syougeki21.position: addCascade( PositionPerGrid(0, 0, 0.5), syougeki_life)
+
+-- コピーして加算合成
+syougeki22 = AnimeChip_Perticle(syougeki21)
+syougeki22: setDelay(10)
+syougeki22.color: clear()
+syougeki22.color: addCascade(Color(130,255,255,255), syougeki_life)
+syougeki22.drawMode: setDefault(DrawMode_addition)
+
+hab_parallel: addAnimeChip(syougeki21);
+hab_parallel: addAnimeChip(syougeki22);
+-- =============================================================
+
+
+setAnimation_parallel(hab_parallel)
+setAnimation_wait(hab)

@@ -1,0 +1,108 @@
+$>4000
+	$>FullNameBase
+		警備メイド
+	$<
+	$>FullNameSubBase
+		Keibi Maid
+	$<
+	$>ShortNameBase
+		警子
+	$<
+	$>ShortNameSubBase
+		Keibi Maid
+	$<
+	$/二つ名
+	$>titleName
+		警備の要
+	$<
+$<
+$>4001
+	$>FullNameBase
+		鍵山雛
+	$<
+	$>FullNameSubBase
+		Kagiyama Hina
+	$<
+	$>ShortNameBase
+		雛
+	$<
+	$>ShortNameSubBase
+		Hina
+	$<
+	$/二つ名
+	$>titleName
+		秘神流し雛
+	$<
+$<
+$>4002
+	$>FullNameBase
+		霧雨魔理沙
+	$<
+	$>FullNameSubBase
+		Kirisame Marisa
+	$<
+	$>ShortNameBase
+		魔理沙
+	$<
+	$>ShortNameSubBase
+		Marisa
+	$<
+	$/二つ名
+	$>titleName
+		普通の魔法使い
+	$<
+$<
+$>4003
+	$>FullNameBase
+		十六夜咲夜
+	$<
+	$>FullNameSubBase
+		Izayoi Sakuya
+	$<
+	$>ShortNameBase
+		咲夜
+	$<
+	$>ShortNameSubBase
+		Sakuya
+	$<
+	$/二つ名
+	$>titleName
+		完全で瀟洒なメイド
+	$<
+$<
+$>4004
+	$>FullNameBase
+		射命丸文
+	$<
+	$>FullNameSubBase
+		Syameimaru Aya
+	$<
+	$>ShortNameBase
+		文
+	$<
+	$>ShortNameSubBase
+		Aya
+	$<
+	$/二つ名
+	$>titleName
+		伝統の幻想ブン屋
+	$<
+$<
+$>4005
+	$>FullNameBase
+		河城にとり
+	$<
+	$>FullNameSubBase
+		Kawashiro Nitori
+	$<
+	$>ShortNameBase
+		にとり
+	$<
+	$>ShortNameSubBase
+		Nitori
+	$<
+	$/二つ名
+	$>titleName
+		超妖怪弾頭
+	$<
+$<

@@ -1,0 +1,1255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject">
+      <UniqueIdentifier>{f0859766-97ee-41ec-809e-5f07de15982f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject\basic">
+      <UniqueIdentifier>{eff99be6-7eb3-4097-a83c-60ca42e2af08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject\chara">
+      <UniqueIdentifier>{8a50dd4f-cd5f-4fee-81c0-f047a9eb0f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject\chara\conchara">
+      <UniqueIdentifier>{a3c29f71-1bff-414e-ba94-539b02e6bde6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject\item">
+      <UniqueIdentifier>{8cf20671-c258-4c0c-b81a-cfa3aa43fe04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\gameobject\item\concrete">
+      <UniqueIdentifier>{20b10b8f-94dd-4b49-ae92-f19693bcad13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\anime">
+      <UniqueIdentifier>{0180845a-dee3-4c7f-a2cb-00d38855e6c4}</UniqueIdentifier>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="ソース ファイル\anime\cas">
+      <UniqueIdentifier>{98097205-0861-45d3-abad-e761f5f97305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\anime\cas\Effect">
+      <UniqueIdentifier>{80d0306d-d463-4719-9cb4-f2212602d3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\control">
+      <UniqueIdentifier>{43cb2e19-9d7e-4146-afcc-09f0423010f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DungeonSystem">
+      <UniqueIdentifier>{f3d29b2e-31cd-49ad-a1f3-5538b17db8f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\AI">
+      <UniqueIdentifier>{5cbb1b42-34f6-42fb-891b-7a6512b8a424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DungeonMaps">
+      <UniqueIdentifier>{5e0ca30f-f64b-4bb8-8b44-1daab0411d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Gameutility">
+      <UniqueIdentifier>{bc2cb52a-0cfc-4ea4-aea3-4df64caab108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\script">
+      <UniqueIdentifier>{9c538c04-e3ed-41bb-a0c8-9935affb9531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{ceea5f75-5c14-4567-ab38-f20f41e89cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\LuaSystem">
+      <UniqueIdentifier>{f6418d01-384e-4d87-a322-2703fd689a9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\LuaSystem\LuaUtility">
+      <UniqueIdentifier>{9a57129c-c6d1-4887-afb1-afb46ca448b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\game">
+      <UniqueIdentifier>{a35575d2-e46a-46cf-8945-d796a5f6fdc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\utility">
+      <UniqueIdentifier>{b6fab26e-4ce0-4a36-a0cc-4c25047bba8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\system">
+      <UniqueIdentifier>{f406f289-a4ce-45ee-9430-1e75b63b9470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\system\Wiicon">
+      <UniqueIdentifier>{20a00eba-ff94-4080-91dc-a8032e0e6bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\system">
+      <UniqueIdentifier>{16af150f-87ad-497b-ad23-7a0bbf45ec81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\system\wiicon">
+      <UniqueIdentifier>{a8dda95c-65a5-43b1-bde5-deb2fc74a3a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\system\filemanage">
+      <UniqueIdentifier>{65503b87-0bcf-4356-ba38-bc0217f05608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\utility">
+      <UniqueIdentifier>{f6815e2c-6c89-4f34-8f8d-3d32610cbb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DrawClass">
+      <UniqueIdentifier>{3bbf96c1-4c1c-4ccf-8043-43af056ea9bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DrawClass">
+      <UniqueIdentifier>{5a7dcd19-1f88-4ba9-8584-ebe42e223361}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\cGameScreenInterface.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cParameterGage.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSaveStore.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cShortCuts.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonInstance.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectFunctions.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FindUtility.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FireCommand.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GameIdiom.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Language.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\menuCommand.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SpellEffects.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMagic.cpp">
+      <Filter>ソース ファイル\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cStair.cpp">
+      <Filter>ソース ファイル\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cThing.cpp">
+      <Filter>ソース ファイル\gameobject</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCharacter.cpp">
+      <Filter>ソース ファイル\gameobject\basic</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDroping.cpp">
+      <Filter>ソース ファイル\gameobject\basic</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cGameObject.cpp">
+      <Filter>ソース ファイル\gameobject\basic</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cItem.cpp">
+      <Filter>ソース ファイル\gameobject\basic</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cLandform.cpp">
+      <Filter>ソース ファイル\gameobject\basic</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cBoss.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCondition.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMob.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cObjectChara.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cOtherchara.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cPlayerChara.cpp">
+      <Filter>ソース ファイル\gameobject\chara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Boss1.cpp">
+      <Filter>ソース ファイル\gameobject\chara\conchara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mob1.cpp">
+      <Filter>ソース ファイル\gameobject\chara\conchara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\OtherChara1.cpp">
+      <Filter>ソース ファイル\gameobject\chara\conchara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PlayerChara1.cpp">
+      <Filter>ソース ファイル\gameobject\chara\conchara</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cBook.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cBox.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cBullet.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDrink.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cEquipment.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cFood.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMoneyBag.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSpell.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cTrap.cpp">
+      <Filter>ソース ファイル\gameobject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Book1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Box1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Bullet1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Drink1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Equipment1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Food1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MoneyBag1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Spell1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Trap1.cpp">
+      <Filter>ソース ファイル\gameobject\item\concrete</Filter>
+    </ClCompile>
+    <ClCompile Include="source\AnimationS.cpp">
+      <Filter>ソース ファイル\anime</Filter>
+    </ClCompile>
+    <ClCompile Include="source\AnimeChips.cpp">
+      <Filter>ソース ファイル\anime</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caEchipS.cpp">
+      <Filter>ソース ファイル\anime</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cAnimation.cpp">
+      <Filter>ソース ファイル\anime</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cAnimationManager.cpp">
+      <Filter>ソース ファイル\anime</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caAttack.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caCamara.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caDamage.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caDisplayChange.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caDropMS.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caFade.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caFunction.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caMessage.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caMessageWait.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caMove.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caquake.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caRetire.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caSoundPlay.cpp">
+      <Filter>ソース ファイル\anime\cas</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caECustom.cpp">
+      <Filter>ソース ファイル\anime\cas\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caEfireS.cpp">
+      <Filter>ソース ファイル\anime\cas\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="source\caEspellS.cpp">
+      <Filter>ソース ファイル\anime\cas\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCocktailWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCommand.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCommandDroping.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cControl.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cControlLayer.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cGameWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cHomeResultWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cListWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cListWindowAdv.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cLuaFunctionCommand.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMessageWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cNumSetWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cPadConfigWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cResultWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSelectWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cStringWindow.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cVectorOfControlLayer.cpp">
+      <Filter>ソース ファイル\control</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDungeonSystem.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonAttacks.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonCharaStates.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonDashProcess.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonDropingMs.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonDropStates.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonMappings.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonMoves.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonObjMakes.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonUtilitys.cpp">
+      <Filter>ソース ファイル\DungeonSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiActive.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiDanmaku.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiEscape.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiLoot.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiNegative.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ceaiShopOwner.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cEnemyAI.cpp">
+      <Filter>ソース ファイル\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDungeonMakeBase.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMap.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMapChipRule.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMiniMap.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cRoom.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DungeonMake.cpp">
+      <Filter>ソース ファイル\DungeonMaps</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cAttackinformation.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCutInManager.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDatabaseOfGame.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDropingDistribution.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDropingFunc.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cFloor.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMessageDroping.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cMoney.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSoundManager.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cStateDroping.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\valiableField\SharedValiable.cpp">
+      <Filter>ソース ファイル\Gameutility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\AnimationScript.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\cLuaBindModuleLoading.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\DropsScript.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\DungeonMakeScript.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\DungeonScriptFunction.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\DungeonStoryScript.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScriptDecodeFunction.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\scriptprocesser\StoryScriptCommunicater.cpp">
+      <Filter>ソース ファイル\script</Filter>
+    </ClCompile>
+    <ClCompile Include="source\csDungeonFirst.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\csHomeFirst.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\csLoading.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\csTitle.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\LuaUtility\LuaEnvironment.cpp">
+      <Filter>ソース ファイル\LuaSystem\LuaUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\LuaUtility\LuaScript.cpp">
+      <Filter>ソース ファイル\LuaSystem\LuaUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\LuaUtility\LuaStringURL.cpp">
+      <Filter>ソース ファイル\LuaSystem\LuaUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\LuaUtility\LuaStringUtility.cpp">
+      <Filter>ソース ファイル\LuaSystem\LuaUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\ATLcompati\CString.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cEnvironment.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cInput.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cObject.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cPlayerInput.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cResourseManage.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cSceneManager.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cSceneVirtual.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\cScreen.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TexSeBgmFilepack\DirectSound.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TexSeBgmFilepack\DirectSoundStream.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\laug_th.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\patInput.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\sound.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\SoundBufferItem.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\SoundDecodeItem.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\SoundDecodeItemWav.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\stdafx.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\System.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\TimeControl.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\Utility_K.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sound\UtilityStruct.cpp">
+      <Filter>ソース ファイル\system</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Wiicon\cWiiconState.cpp">
+      <Filter>ソース ファイル\system\wiicon</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Wiicon\cWiiconStateCustum.cpp">
+      <Filter>ソース ファイル\system\wiicon</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Wiicon\CWiimote.cpp">
+      <Filter>ソース ファイル\system\wiicon</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Wiicon\CWiimoteManager.cpp">
+      <Filter>ソース ファイル\system\wiicon</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\Wiicon\WiiconInput.cpp">
+      <Filter>ソース ファイル\system\wiicon</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cAutoSaveClass.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cDataConverter.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cFileManager.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cSaveClass.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptRContent.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptReader.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptRLayer.cpp">
+      <Filter>ソース ファイル\system\filemanage</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\4Dvector.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cAltaMatter.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cAltaMatterPlus.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cColor.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cCurveTrack.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cDiscreteProbability.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cNumField.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cRandomGen.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\cRectObj.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\valiableField\cValiableField.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\debug.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\valiableField\SafePointerObject.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\SpriteText.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\StyleString.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\sVertexes.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utility\VariationNumber.cpp">
+      <Filter>ソース ファイル\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDrawingObject.cpp">
+      <Filter>ソース ファイル\DrawClass</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDrawingObject_belt.cpp">
+      <Filter>ソース ファイル\DrawClass</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cDrawingObject_ring.cpp">
+      <Filter>ソース ファイル\DrawClass</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\AnimationS.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\AnimationScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\AnimeChips.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\AttackAnimeAttriDEF.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Book1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Boss1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Box1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Bullet1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caAttack.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caDamage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caDisplayChange.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caDropMS.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caEchipS.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caECustom.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caEfireS.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caEspellS.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caFade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caFunction.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caMessage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caMessageWait.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caMove.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cAnimation.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cAnimationManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caquake.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caRetire.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\caSoundPlay.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cAttackinformation.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cAutoSaveClass.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cBook.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cBoss.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cBox.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCocktailWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCommand.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCommandDroping.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCondition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cControl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cControlLayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cCurveTrack.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCutInManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDatabaseOfGame.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cDataConverter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cDiscreteProbability.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDrink.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDropingDistribution.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDropingFunc.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDungeonMakeBase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDungeonSystem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiActive.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiDanmaku.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiEscape.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiLoot.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiNegative.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ceaiShopOwner.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cEnemyAI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cEquipment.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cFileManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TexSeBgmFilepack\CFilePack.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cFloor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cGameScreenInterface.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cGameWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cHomeResultWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cListWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cListWindowAdv.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cLuaFunctionCommand.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMapChipRule.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMessageDroping.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMessageWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMiniMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMoney.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMoneyBag.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cNumField.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cNumSetWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cObjectChara.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\common.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\controls_ph.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cOtherchara.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cPadConfigWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cParameterGage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cRandomGen.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cResultWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cRoom.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cSaveClass.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cSaveStore.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptRContent.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptReader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptRLayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\csDungeonFirst.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cSelectWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\csHomeFirst.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cShortCuts.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\csLoading.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cSoundManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cSpell.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cStair.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cStateDroping.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\csTitle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cStringWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\valiableField\cValiableField.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cVectorOfControlLayer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\cZpack.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\debug.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\detectmemoryleak.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TexSeBgmFilepack\DirectSound.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TexSeBgmFilepack\DirectSoundStream.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Drink1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\DropsScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DungeonInstance.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\DungeonMakeScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\DungeonScriptFunction.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\DungeonStoryScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectFunctions.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Equipment1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\filemanage\fileManage_ph.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\FindUtility.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GameIdiom.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gameobjects.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Language.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\LuaBindModuleLoading.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\LuaUtility\LuaEnvironment.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\LuaUtility\LuaScript.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\LuaUtility\LuaStringURL.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\LuaUtility\LuaStringUtility.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\menuCommand.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MoneyBag1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\OtherChara1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\valiableField\SafePointerObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScriptDecodeFunction.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\valiableField\SharedValiable.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\SoundBufferItem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\SoundDecodeItem.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\SoundDecodeItemWav.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Spell1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\scriptprocesser\StoryScriptCommunicater.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\timingEnum.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Trap1.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\Utility_K.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\UtilityStruct.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\VariationNumber.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCharacter.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDroping.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cFood.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cGameObject.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cItem.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cLandform.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMagic.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cMob.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cPlayerChara.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cThing.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cTrap.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Food1.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Mob1.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerChars1.h">
+      <Filter>ヘッダー ファイル\game</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\4Dvector.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cAltaMatter.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cAltaMatterPlus.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cColor.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\cRectObj.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\SpriteText.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\StyleString.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\sVertexes.h">
+      <Filter>ヘッダー ファイル\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cenvironment.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cinput.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cObject.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cPlayerInput.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cResourseManage.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cSceneManager.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cSceneVirtual.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\cscreen.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\laug_th.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Main.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\patInput.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sound\sound.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\stdafx.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\System.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\TimeControl.h">
+      <Filter>ヘッダー ファイル\system</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\cWiiconState.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\cWiiconStateCustum.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\CWiimote.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\CWiimoteManager.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\Wiicondefph.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gameMainSystem\Wiicon\WiiconInput.h">
+      <Filter>ヘッダー ファイル\system\Wiicon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utility\ATLcompati\CString.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cDrawingObject.h">
+      <Filter>ヘッダー ファイル\DrawClass</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="laug_th.ico">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="small.ico">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="laug_th.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

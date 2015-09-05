@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "laug_th", "laug_th.vcxproj", "{496CEECA-DCE5-4217-9567-DF5758CFDAA8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7162A273-4B2E-4E62-A32E-1B176BFD1622} = {7162A273-4B2E-4E62-A32E-1B176BFD1622}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lang_th_lib", "lang_th_lib\lang_th_lib.vcxproj", "{7162A273-4B2E-4E62-A32E-1B176BFD1622}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{496CEECA-DCE5-4217-9567-DF5758CFDAA8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{496CEECA-DCE5-4217-9567-DF5758CFDAA8}.Debug|Win32.Build.0 = Debug|Win32
+		{496CEECA-DCE5-4217-9567-DF5758CFDAA8}.Release|Win32.ActiveCfg = Release|Win32
+		{496CEECA-DCE5-4217-9567-DF5758CFDAA8}.Release|Win32.Build.0 = Release|Win32
+		{7162A273-4B2E-4E62-A32E-1B176BFD1622}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7162A273-4B2E-4E62-A32E-1B176BFD1622}.Debug|Win32.Build.0 = Debug|Win32
+		{7162A273-4B2E-4E62-A32E-1B176BFD1622}.Release|Win32.ActiveCfg = Release|Win32
+		{7162A273-4B2E-4E62-A32E-1B176BFD1622}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

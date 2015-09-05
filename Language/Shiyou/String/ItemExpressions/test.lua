@@ -1,0 +1,8 @@
+sstr = StyleString()
+textSetPath(sstr, "../../5001/FullNameBase")
+sstr: addstring(StyleString(_T("../../5001/FullNameBase \n ")))
+textPrint(sstr)
+--textPrintRaw("hallo world.\n")
+--textPrintPath("../../5001/FullNameBase")
+--textPrintRaw("hallo world.\n",colorARGB(255,6,255,0),1.0,1.0)
+--textPrintPath("../../5001/FullNameBase")

@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{496CEECA-DCE5-4217-9567-DF5758CFDAA8}</ProjectGuid>
+    <RootNamespace>laug_th</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\DataHDDall\program\laug_th\source\gameMainSystem;D:\DataHDDall\program\laug_th\source\gameMainSystem\filemanage;$(IncludePath)</IncludePath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ggn_d</TargetName>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\DataHDDall\program\laug_th\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\DataHDDall\program\laug_th\Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <CompileAsManaged>false</CompileAsManaged>
+      <ProgramDataBaseFileName>$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/NODEFAULTLIB:libcmtd.lib  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>dxguid.lib;d3dx9.lib;d3d9.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)ggn_d.exe</OutputFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+      <AssemblyDebug>
+      </AssemblyDebug>
+      <MapFileName>
+      </MapFileName>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>dxguid.lib;d3dx9.lib;d3d9.lib;dinput8.lib;LIBCMT.lib;lang_th_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)ggn.exe</OutputFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\cDrawingObject.cpp" />
+    <ClCompile Include="source\cDrawingObject_belt.cpp" />
+    <ClCompile Include="source\cDrawingObject_ring.cpp" />
+    <ClCompile Include="source\cGameScreenInterface.cpp" />
+    <ClCompile Include="source\cParameterGage.cpp" />
+    <ClCompile Include="source\cSaveStore.cpp" />
+    <ClCompile Include="source\cShortCuts.cpp" />
+    <ClCompile Include="source\DungeonInstance.cpp" />
+    <ClCompile Include="source\EffectFunctions.cpp" />
+    <ClCompile Include="source\FindUtility.cpp" />
+    <ClCompile Include="source\FireCommand.cpp" />
+    <ClCompile Include="source\GameIdiom.cpp" />
+    <ClCompile Include="source\gameMainSystem\cEnvironment.cpp" />
+    <ClCompile Include="source\gameMainSystem\cInput.cpp" />
+    <ClCompile Include="source\gameMainSystem\cObject.cpp" />
+    <ClCompile Include="source\gameMainSystem\cPlayerInput.cpp" />
+    <ClCompile Include="source\gameMainSystem\cResourseManage.cpp" />
+    <ClCompile Include="source\gameMainSystem\cSceneManager.cpp" />
+    <ClCompile Include="source\gameMainSystem\cSceneVirtual.cpp" />
+    <ClCompile Include="source\gameMainSystem\cScreen.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cAutoSaveClass.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cDataConverter.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cFileManager.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cSaveClass.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptRContent.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptReader.cpp" />
+    <ClCompile Include="source\gameMainSystem\filemanage\cScriptRLayer.cpp" />
+    <ClCompile Include="source\gameMainSystem\Main.cpp" />
+    <ClCompile Include="source\gameMainSystem\patInput.cpp" />
+    <ClCompile Include="source\gameMainSystem\System.cpp" />
+    <ClCompile Include="source\gameMainSystem\TimeControl.cpp" />
+    <ClCompile Include="source\gameMainSystem\Wiicon\cWiiconState.cpp" />
+    <ClCompile Include="source\gameMainSystem\Wiicon\cWiiconStateCustum.cpp" />
+    <ClCompile Include="source\gameMainSystem\Wiicon\CWiimote.cpp" />
+    <ClCompile Include="source\gameMainSystem\Wiicon\CWiimoteManager.cpp" />
+    <ClCompile Include="source\gameMainSystem\Wiicon\WiiconInput.cpp" />
+    <ClCompile Include="source\Language.cpp" />
+    <ClCompile Include="source\laug_th.cpp" />
+    <ClCompile Include="source\menuCommand.cpp" />
+    <ClCompile Include="source\sound\sound.cpp" />
+    <ClCompile Include="source\sound\SoundBufferItem.cpp" />
+    <ClCompile Include="source\sound\SoundDecodeItem.cpp" />
+    <ClCompile Include="source\sound\SoundDecodeItemWav.cpp" />
+    <ClCompile Include="source\sound\UtilityStruct.cpp" />
+    <ClCompile Include="source\sound\Utility_K.cpp" />
+    <ClCompile Include="source\SpellEffects.cpp" />
+    <ClCompile Include="source\cMagic.cpp" />
+    <ClCompile Include="source\cStair.cpp" />
+    <ClCompile Include="source\cThing.cpp" />
+    <ClCompile Include="source\cCharacter.cpp" />
+    <ClCompile Include="source\cDroping.cpp" />
+    <ClCompile Include="source\cGameObject.cpp" />
+    <ClCompile Include="source\cItem.cpp" />
+    <ClCompile Include="source\cLandform.cpp" />
+    <ClCompile Include="source\cBoss.cpp" />
+    <ClCompile Include="source\cCondition.cpp" />
+    <ClCompile Include="source\cMob.cpp" />
+    <ClCompile Include="source\cObjectChara.cpp" />
+    <ClCompile Include="source\cOtherchara.cpp" />
+    <ClCompile Include="source\cPlayerChara.cpp" />
+    <ClCompile Include="source\Boss1.cpp" />
+    <ClCompile Include="source\Mob1.cpp" />
+    <ClCompile Include="source\OtherChara1.cpp" />
+    <ClCompile Include="source\PlayerChara1.cpp" />
+    <ClCompile Include="source\cBook.cpp" />
+    <ClCompile Include="source\cBox.cpp" />
+    <ClCompile Include="source\cBullet.cpp" />
+    <ClCompile Include="source\cDrink.cpp" />
+    <ClCompile Include="source\cEquipment.cpp" />
+    <ClCompile Include="source\cFood.cpp" />
+    <ClCompile Include="source\cMoneyBag.cpp" />
+    <ClCompile Include="source\cSpell.cpp" />
+    <ClCompile Include="source\cTrap.cpp" />
+    <ClCompile Include="source\Book1.cpp" />
+    <ClCompile Include="source\Box1.cpp" />
+    <ClCompile Include="source\Bullet1.cpp" />
+    <ClCompile Include="source\Drink1.cpp" />
+    <ClCompile Include="source\Equipment1.cpp" />
+    <ClCompile Include="source\Food1.cpp" />
+    <ClCompile Include="source\MoneyBag1.cpp" />
+    <ClCompile Include="source\Spell1.cpp" />
+    <ClCompile Include="source\stdafx.cpp" />
+    <ClCompile Include="source\TexSeBgmFilepack\DirectSound.cpp" />
+    <ClCompile Include="source\TexSeBgmFilepack\DirectSoundStream.cpp" />
+    <ClCompile Include="source\Trap1.cpp" />
+    <ClCompile Include="source\utility\4Dvector.cpp" />
+    <ClCompile Include="source\utility\ATLcompati\CString.cpp" />
+    <ClCompile Include="source\AnimationS.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\AnimeChips.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\caEchipS.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cAnimation.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cAnimationManager.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\caAttack.cpp" />
+    <ClCompile Include="source\caCamara.cpp" />
+    <ClCompile Include="source\caDamage.cpp" />
+    <ClCompile Include="source\caDisplayChange.cpp" />
+    <ClCompile Include="source\caDropMS.cpp" />
+    <ClCompile Include="source\caFade.cpp" />
+    <ClCompile Include="source\caFunction.cpp" />
+    <ClCompile Include="source\caMessage.cpp" />
+    <ClCompile Include="source\caMessageWait.cpp" />
+    <ClCompile Include="source\caMove.cpp" />
+    <ClCompile Include="source\caquake.cpp" />
+    <ClCompile Include="source\caRetire.cpp" />
+    <ClCompile Include="source\caSoundPlay.cpp" />
+    <ClCompile Include="source\caECustom.cpp" />
+    <ClCompile Include="source\caEfireS.cpp" />
+    <ClCompile Include="source\caEspellS.cpp" />
+    <ClCompile Include="source\cCocktailWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cCommand.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cCommandDroping.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cControl.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cControlLayer.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cGameWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cHomeResultWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cListWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cListWindowAdv.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cLuaFunctionCommand.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cMessageWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cNumSetWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cPadConfigWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cResultWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cSelectWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cStringWindow.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cVectorOfControlLayer.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cDungeonSystem.cpp" />
+    <ClCompile Include="source\DungeonAttacks.cpp" />
+    <ClCompile Include="source\DungeonCharaStates.cpp" />
+    <ClCompile Include="source\DungeonDashProcess.cpp" />
+    <ClCompile Include="source\DungeonDropingMs.cpp" />
+    <ClCompile Include="source\DungeonDropStates.cpp" />
+    <ClCompile Include="source\DungeonMappings.cpp" />
+    <ClCompile Include="source\DungeonMoves.cpp" />
+    <ClCompile Include="source\DungeonObjMakes.cpp" />
+    <ClCompile Include="source\DungeonUtilitys.cpp" />
+    <ClCompile Include="source\ceaiActive.cpp" />
+    <ClCompile Include="source\ceaiDanmaku.cpp" />
+    <ClCompile Include="source\ceaiEscape.cpp" />
+    <ClCompile Include="source\ceaiLoot.cpp" />
+    <ClCompile Include="source\ceaiNegative.cpp" />
+    <ClCompile Include="source\ceaiShopOwner.cpp" />
+    <ClCompile Include="source\cEnemyAI.cpp" />
+    <ClCompile Include="source\cDungeonMakeBase.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cMap.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cMapChipRule.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cMiniMap.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cRoom.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\DungeonMake.cpp">
+      <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ClCompile Include="source\cAttackinformation.cpp" />
+    <ClCompile Include="source\cCutInManager.cpp" />
+    <ClCompile Include="source\cDatabaseOfGame.cpp" />
+    <ClCompile Include="source\cDropingDistribution.cpp" />
+    <ClCompile Include="source\cDropingFunc.cpp" />
+    <ClCompile Include="source\cFloor.cpp" />
+    <ClCompile Include="source\cMessageDroping.cpp" />
+    <ClCompile Include="source\cMoney.cpp" />
+    <ClCompile Include="source\cSoundManager.cpp" />
+    <ClCompile Include="source\cStateDroping.cpp" />
+    <ClCompile Include="source\utility\cAltaMatter.cpp" />
+    <ClCompile Include="source\utility\cAltaMatterPlus.cpp" />
+    <ClCompile Include="source\utility\cColor.cpp" />
+    <ClCompile Include="source\utility\cCurveTrack.cpp" />
+    <ClCompile Include="source\utility\cDiscreteProbability.cpp" />
+    <ClCompile Include="source\utility\cNumField.cpp" />
+    <ClCompile Include="source\utility\cRandomGen.cpp" />
+    <ClCompile Include="source\utility\cRectObj.cpp" />
+    <ClCompile Include="source\utility\debug.cpp" />
+    <ClCompile Include="source\utility\SpriteText.cpp" />
+    <ClCompile Include="source\utility\StyleString.cpp" />
+    <ClCompile Include="source\utility\sVertexes.cpp" />
+    <ClCompile Include="source\utility\valiableField\cValiableField.cpp" />
+    <ClCompile Include="source\utility\valiableField\SafePointerObject.cpp" />
+    <ClCompile Include="source\utility\valiableField\SharedValiable.cpp" />
+    <ClCompile Include="source\scriptprocesser\AnimationScript.cpp" />
+    <ClCompile Include="source\scriptprocesser\cLuaBindModuleLoading.cpp" />
+    <ClCompile Include="source\scriptprocesser\DropsScript.cpp" />
+    <ClCompile Include="source\scriptprocesser\DungeonMakeScript.cpp" />
+    <ClCompile Include="source\scriptprocesser\DungeonScriptFunction.cpp" />
+    <ClCompile Include="source\scriptprocesser\DungeonStoryScript.cpp" />
+    <ClCompile Include="source\ScriptDecodeFunction.cpp" />
+    <ClCompile Include="source\scriptprocesser\StoryScriptCommunicater.cpp" />
+    <ClCompile Include="source\csDungeonFirst.cpp" />
+    <ClCompile Include="source\csHomeFirst.cpp" />
+    <ClCompile Include="source\csLoading.cpp" />
+    <ClCompile Include="source\csTitle.cpp" />
+    <ClCompile Include="source\utility\LuaUtility\LuaEnvironment.cpp" />
+    <ClCompile Include="source\utility\LuaUtility\LuaScript.cpp" />
+    <ClCompile Include="source\utility\LuaUtility\LuaStringURL.cpp" />
+    <ClCompile Include="source\utility\LuaUtility\LuaStringUtility.cpp" />
+    <ClCompile Include="source\utility\VariationNumber.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\AnimationS.h" />
+    <ClInclude Include="source\cDrawingObject.h" />
+    <ClInclude Include="source\scriptprocesser\AnimationScript.h" />
+    <ClInclude Include="source\AnimeChips.h" />
+    <ClInclude Include="source\AttackAnimeAttriDEF.h" />
+    <ClInclude Include="source\Book1.h" />
+    <ClInclude Include="source\Boss1.h" />
+    <ClInclude Include="source\Box1.h" />
+    <ClInclude Include="source\Bullet1.h" />
+    <ClInclude Include="source\caAttack.h" />
+    <ClInclude Include="source\caCamera.h" />
+    <ClInclude Include="source\caDamage.h" />
+    <ClInclude Include="source\caDisplayChange.h" />
+    <ClInclude Include="source\caDropMS.h" />
+    <ClInclude Include="source\caEchipS.h" />
+    <ClInclude Include="source\caECustom.h" />
+    <ClInclude Include="source\caEfireS.h" />
+    <ClInclude Include="source\caEspellS.h" />
+    <ClInclude Include="source\caFade.h" />
+    <ClInclude Include="source\caFunction.h" />
+    <ClInclude Include="source\caMessage.h" />
+    <ClInclude Include="source\caMessageWait.h" />
+    <ClInclude Include="source\caMove.h" />
+    <ClInclude Include="source\cAnimation.h" />
+    <ClInclude Include="source\cAnimationManager.h" />
+    <ClInclude Include="source\caquake.h" />
+    <ClInclude Include="source\caRetire.h" />
+    <ClInclude Include="source\caSoundPlay.h" />
+    <ClInclude Include="source\cAttackinformation.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cAutoSaveClass.h" />
+    <ClInclude Include="source\cBook.h" />
+    <ClInclude Include="source\cBoss.h" />
+    <ClInclude Include="source\cBox.h" />
+    <ClInclude Include="source\cBullet.h" />
+    <ClInclude Include="source\cCocktailWindow.h" />
+    <ClInclude Include="source\cCommand.h" />
+    <ClInclude Include="source\cCommandDroping.h" />
+    <ClInclude Include="source\cCondition.h" />
+    <ClInclude Include="source\cControl.h" />
+    <ClInclude Include="source\cControlLayer.h" />
+    <ClInclude Include="source\utility\ATLcompati\CString.h" />
+    <ClInclude Include="source\utility\cCurveTrack.h" />
+    <ClInclude Include="source\cCutInManager.h" />
+    <ClInclude Include="source\cDatabaseOfGame.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cDataConverter.h" />
+    <ClInclude Include="source\utility\cDiscreteProbability.h" />
+    <ClInclude Include="source\cDrink.h" />
+    <ClInclude Include="source\cDropingDistribution.h" />
+    <ClInclude Include="source\cDropingFunc.h" />
+    <ClInclude Include="source\cDungeonMakeBase.h" />
+    <ClInclude Include="source\cDungeonSystem.h" />
+    <ClInclude Include="source\ceaiActive.h" />
+    <ClInclude Include="source\ceaiDanmaku.h" />
+    <ClInclude Include="source\ceaiEscape.h" />
+    <ClInclude Include="source\ceaiLoot.h" />
+    <ClInclude Include="source\ceaiNegative.h" />
+    <ClInclude Include="source\ceaiShopOwner.h" />
+    <ClInclude Include="source\cEnemyAI.h" />
+    <ClInclude Include="source\cEquipment.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cFileManager.h" />
+    <ClInclude Include="source\TexSeBgmFilepack\CFilePack.h" />
+    <ClInclude Include="source\cFloor.h" />
+    <ClInclude Include="source\cGameScreenInterface.h" />
+    <ClInclude Include="source\cGameWindow.h" />
+    <ClInclude Include="source\cHomeResultWindow.h" />
+    <ClInclude Include="source\cListWindow.h" />
+    <ClInclude Include="source\cListWindowAdv.h" />
+    <ClInclude Include="source\cLuaFunctionCommand.h" />
+    <ClInclude Include="source\cMap.h" />
+    <ClInclude Include="source\cMapChipRule.h" />
+    <ClInclude Include="source\cMessageDroping.h" />
+    <ClInclude Include="source\cMessageWindow.h" />
+    <ClInclude Include="source\cMiniMap.h" />
+    <ClInclude Include="source\cMoney.h" />
+    <ClInclude Include="source\cMoneyBag.h" />
+    <ClInclude Include="source\utility\cNumField.h" />
+    <ClInclude Include="source\cNumSetWindow.h" />
+    <ClInclude Include="source\cObjectChara.h" />
+    <ClInclude Include="source\utility\common.h" />
+    <ClInclude Include="source\controls_ph.h" />
+    <ClInclude Include="source\cOtherchara.h" />
+    <ClInclude Include="source\cPadConfigWindow.h" />
+    <ClInclude Include="source\cParameterGage.h" />
+    <ClInclude Include="source\utility\cRandomGen.h" />
+    <ClInclude Include="source\cResultWindow.h" />
+    <ClInclude Include="source\cRoom.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cSaveClass.h" />
+    <ClInclude Include="source\cSaveStore.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptRContent.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptReader.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cScriptRLayer.h" />
+    <ClInclude Include="source\csDungeonFirst.h" />
+    <ClInclude Include="source\cSelectWindow.h" />
+    <ClInclude Include="source\csHomeFirst.h" />
+    <ClInclude Include="source\cShortCuts.h" />
+    <ClInclude Include="source\csLoading.h" />
+    <ClInclude Include="source\cSoundManager.h" />
+    <ClInclude Include="source\cSpell.h" />
+    <ClInclude Include="source\cStair.h" />
+    <ClInclude Include="source\cStateDroping.h" />
+    <ClInclude Include="source\csTitle.h" />
+    <ClInclude Include="source\cStringWindow.h" />
+    <ClInclude Include="source\utility\valiableField\cValiableField.h" />
+    <ClInclude Include="source\cVectorOfControlLayer.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\cZpack.h" />
+    <ClInclude Include="source\utility\debug.h" />
+    <ClInclude Include="source\utility\detectmemoryleak.h" />
+    <ClInclude Include="source\TexSeBgmFilepack\DirectSound.h" />
+    <ClInclude Include="source\TexSeBgmFilepack\DirectSoundStream.h" />
+    <ClInclude Include="source\Drink1.h" />
+    <ClInclude Include="source\scriptprocesser\DropsScript.h" />
+    <ClInclude Include="source\DungeonInstance.h" />
+    <ClInclude Include="source\scriptprocesser\DungeonMakeScript.h" />
+    <ClInclude Include="source\scriptprocesser\DungeonScriptFunction.h" />
+    <ClInclude Include="source\scriptprocesser\DungeonStoryScript.h" />
+    <ClInclude Include="source\EffectFunctions.h" />
+    <ClInclude Include="source\Equipment1.h" />
+    <ClInclude Include="source\gameMainSystem\filemanage\fileManage_ph.h" />
+    <ClInclude Include="source\FindUtility.h" />
+    <ClInclude Include="source\GameIdiom.h" />
+    <ClInclude Include="source\Gameobjects.h" />
+    <ClInclude Include="source\Language.h" />
+    <ClInclude Include="source\scriptprocesser\LuaBindModuleLoading.h" />
+    <ClInclude Include="source\utility\LuaUtility\LuaEnvironment.h" />
+    <ClInclude Include="source\utility\LuaUtility\LuaScript.h" />
+    <ClInclude Include="source\utility\LuaUtility\LuaStringURL.h" />
+    <ClInclude Include="source\utility\LuaUtility\LuaStringUtility.h" />
+    <ClInclude Include="source\menuCommand.h" />
+    <ClInclude Include="source\MoneyBag1.h" />
+    <ClInclude Include="source\OtherChara1.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="source\utility\valiableField\SafePointerObject.h" />
+    <ClInclude Include="source\ScriptDecodeFunction.h" />
+    <ClInclude Include="source\utility\valiableField\SharedValiable.h" />
+    <ClInclude Include="source\sound\SoundBufferItem.h" />
+    <ClInclude Include="source\sound\SoundDecodeItem.h" />
+    <ClInclude Include="source\sound\SoundDecodeItemWav.h" />
+    <ClInclude Include="source\Spell1.h" />
+    <ClInclude Include="source\scriptprocesser\StoryScriptCommunicater.h" />
+    <ClInclude Include="source\timingEnum.h" />
+    <ClInclude Include="source\Trap1.h" />
+    <ClInclude Include="source\sound\Utility_K.h" />
+    <ClInclude Include="source\sound\UtilityStruct.h" />
+    <ClInclude Include="source\utility\VariationNumber.h" />
+    <ClInclude Include="source\cCharacter.h" />
+    <ClInclude Include="source\cDroping.h" />
+    <ClInclude Include="source\cFood.h" />
+    <ClInclude Include="source\cGameObject.h" />
+    <ClInclude Include="source\cItem.h" />
+    <ClInclude Include="source\cLandform.h" />
+    <ClInclude Include="source\cMagic.h" />
+    <ClInclude Include="source\cMob.h" />
+    <ClInclude Include="source\cPlayerChara.h" />
+    <ClInclude Include="source\cThing.h" />
+    <ClInclude Include="source\cTrap.h" />
+    <ClInclude Include="source\Food1.h" />
+    <ClInclude Include="source\Mob1.h" />
+    <ClInclude Include="source\PlayerChars1.h" />
+    <ClInclude Include="source\utility\4Dvector.h" />
+    <ClInclude Include="source\utility\cAltaMatter.h" />
+    <ClInclude Include="source\utility\cAltaMatterPlus.h" />
+    <ClInclude Include="source\utility\cColor.h" />
+    <ClInclude Include="source\utility\cRectObj.h" />
+    <ClInclude Include="source\utility\SpriteText.h" />
+    <ClInclude Include="source\utility\StyleString.h" />
+    <ClInclude Include="source\utility\sVertexes.h" />
+    <ClInclude Include="source\gameMainSystem\cenvironment.h" />
+    <ClInclude Include="source\gameMainSystem\cinput.h" />
+    <ClInclude Include="source\gameMainSystem\cObject.h" />
+    <ClInclude Include="source\gameMainSystem\cPlayerInput.h" />
+    <ClInclude Include="source\gameMainSystem\cResourseManage.h" />
+    <ClInclude Include="source\gameMainSystem\cSceneManager.h" />
+    <ClInclude Include="source\gameMainSystem\cSceneVirtual.h" />
+    <ClInclude Include="source\gameMainSystem\cscreen.h" />
+    <ClInclude Include="source\laug_th.h" />
+    <ClInclude Include="source\gameMainSystem\Main.h" />
+    <ClInclude Include="source\gameMainSystem\patInput.h" />
+    <ClInclude Include="source\Resource.h" />
+    <ClInclude Include="source\sound\sound.h" />
+    <ClInclude Include="source\stdafx.h" />
+    <ClInclude Include="source\gameMainSystem\System.h" />
+    <ClInclude Include="source\gameMainSystem\TimeControl.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\cWiiconState.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\cWiiconStateCustum.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\CWiimote.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\CWiimoteManager.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\Wiicondefph.h" />
+    <ClInclude Include="source\gameMainSystem\Wiicon\WiiconInput.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="laug_th.ico" />
+    <None Include="small.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="laug_th.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

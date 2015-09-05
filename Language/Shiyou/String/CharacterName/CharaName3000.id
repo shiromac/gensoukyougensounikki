@@ -1,0 +1,40 @@
+$#>;
+	$:CharaName3000table.csv
+$#<
+
+$>3000
+	$>FullNameBase
+		やりすごしの箱
+	$<
+	$>FullNameSubBase
+		Yarisugoshi no Hako
+	$<
+	$>ShortNameBase
+		やりすごしの箱
+	$<
+	$>ShortNameSubBase
+		Yarisugoshi no Hako
+	$<
+	$/二つ名
+	$>titleName
+		スニーキンググッツ
+	$<
+$<
+$>3001
+	$>FullNameBase
+		身代わり人形
+	$<
+	$>FullNameSubBase
+		Migawari ningyou
+	$<
+	$>ShortNameBase
+		身代わり人形
+	$<
+	$>ShortNameSubBase
+		Migawari ningyou
+	$<
+	$/二つ名
+	$>titleName
+		本来の形
+	$<
+$<

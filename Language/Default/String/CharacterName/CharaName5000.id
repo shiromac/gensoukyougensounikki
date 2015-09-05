@@ -1,0 +1,312 @@
+$>5000
+	$>FullNameBase
+		レミリア・スカーレット
+	$<
+	$>FullNameSubBase
+		Remilia Scarlet
+	$<
+	$>ShortNameBase
+		レミリア
+	$<
+	$>ShortNameSubBase
+		Remilia
+	$<
+	$/二つ名
+	$>titleName
+		永遠に紅い幼き月
+	$<
+	$>SpellName
+		呪詛「ブラド・ツェペシュの呪い」
+		遊戯「ファイブオブアカインド」
+		魔符「全世界ナイトメア」
+	$<
+$<
+$>5001
+	$>FullNameBase
+		フランドール・スカーレット
+	$<
+	$>FullNameSubBase
+		Frandle Scarlet
+	$<
+	$>ShortNameBase
+		フランドール
+	$<
+	$>ShortNameSubBase
+		Frandle
+	$<
+	$/二つ名
+	$>titleName
+		悪魔の妹
+	$<
+$<
+$>5002
+	$>FullNameBase
+		因幡てゐ
+	$<
+	$>FullNameSubBase
+		Inaba Tewi
+	$<
+	$>ShortNameBase
+		てゐ
+	$<
+	$>ShortNameSubBase
+		Tewi
+	$<
+	$/二つ名
+	$>titleName
+		幸運の素兎
+	$<
+	$>SpellName
+		企符「アテンプトエスケープ」
+		「エンシェントデューパー」
+		借符「大穴牟遅様の薬」
+	$<
+$<
+$>5003
+	$>FullNameBase
+		八坂神奈子
+	$<
+	$>FullNameSubBase
+		Yasaka Kanako
+	$<
+	$>ShortNameBase
+		神奈子
+	$<
+	$>ShortNameSubBase
+		Kanako
+	$<
+	$/二つ名
+	$>titleName
+		山坂と湖の権化
+	$<
+	$>SpellName
+		神祭「エクスパンデッド・オンバシラ」
+		縁故「オオクニヌシ・コンプレックス」
+		「マウンテン・オブ・フェイス」
+	$<
+$<
+$>5004
+	$>FullNameBase
+		魂魄妖夢
+	$<
+	$>FullNameSubBase
+		Konpaku Youmu
+	$<
+	$>ShortNameBase
+		妖夢
+	$<
+	$>ShortNameSubBase
+		Youmu
+	$<
+	$/二つ名
+	$>titleName
+		半人半霊の庭師
+	$<
+	$>SpellName
+		人符「現世斬」
+		魂符「幽明の苦輪」
+		断迷剣「迷津慈航斬」
+	$<
+$<
+$>5005
+	$>FullNameBase
+		妖夢の半霊
+	$<
+	$>FullNameSubBase
+		Youmu no Hanrei
+	$<
+	$>ShortNameBase
+		半霊
+	$<
+	$>ShortNameSubBase
+		Hanrei
+	$<
+	$/二つ名
+	$>titleName
+		半人半霊の庭師
+	$<
+	$>SpellName
+		
+	$<
+$<
+$>5006
+	$>FullNameBase
+		グリモワールオブアリス
+	$<
+	$>FullNameSubBase
+		Grimoire of Alice
+	$<
+	$>ShortNameBase
+		グリモワールオブアリス
+	$<
+	$>ShortNameSubBase
+		Grimoire of Alice
+	$<
+	$/二つ名
+	$>titleName
+		幻想郷幻想日記
+	$<
+	$>SpellName
+		「童の誘いに沈む紅陽」
+		「火に入らずんば青天の霹靂」
+		「さに乱れても散らぬ紫陽花」
+		「千夜一夜に罹る翠簾」
+		「玉虫色の不思議な幻想」
+	$<
+$<
+$>5007
+	$>FullNameBase
+		レミリア・スカーレット
+	$<
+	$>FullNameSubBase
+		Remilia Scarlet
+	$<
+	$>ShortNameBase
+		レミリア
+	$<
+	$>ShortNameSubBase
+		Remilia
+	$<
+	$/二つ名
+	$>titleName
+		永遠に紅い幼き月
+	$<
+	$>SpellName
+		呪詛「ブラド・ツェペシュの呪い」
+		遊戯「ファイブオブアカインド」
+		魔符「全世界ナイトメア」
+	$<
+$<
+$>5008
+	$>FullNameBase
+		フランドール・スカーレット
+	$<
+	$>FullNameSubBase
+		Frandle Scarlet
+	$<
+	$>ShortNameBase
+		フランドール
+	$<
+	$>ShortNameSubBase
+		Frandle
+	$<
+	$/二つ名
+	$>titleName
+		悪魔の妹
+	$<
+$<
+$>5009
+	$>FullNameBase
+		因幡てゐ
+	$<
+	$>FullNameSubBase
+		Inaba Tewi
+	$<
+	$>ShortNameBase
+		てゐ
+	$<
+	$>ShortNameSubBase
+		Tewi
+	$<
+	$/二つ名
+	$>titleName
+		幸運の素兎
+	$<
+	$>SpellName
+		企符「アテンプトエスケープ」
+		「エンシェントデューパー」
+		借符「大穴牟遅様の薬」
+	$<
+$<
+$>5010
+	$>FullNameBase
+		八坂神奈子
+	$<
+	$>FullNameSubBase
+		Yasaka Kanako
+	$<
+	$>ShortNameBase
+		神奈子
+	$<
+	$>ShortNameSubBase
+		Kanako
+	$<
+	$/二つ名
+	$>titleName
+		山坂と湖の権化
+	$<
+	$>SpellName
+		神祭「エクスパンデッド・オンバシラ」
+		縁故「オオクニヌシ・コンプレックス」
+		「マウンテン・オブ・フェイス」
+	$<
+$<
+$>5011
+	$>FullNameBase
+		魂魄妖夢
+	$<
+	$>FullNameSubBase
+		Konpaku Youmu
+	$<
+	$>ShortNameBase
+		妖夢
+	$<
+	$>ShortNameSubBase
+		Youmu
+	$<
+	$/二つ名
+	$>titleName
+		半人半霊の庭師
+	$<
+	$>SpellName
+		人符「現世斬」
+		魂符「幽明の苦輪」
+		断迷剣「迷津慈航斬」
+	$<
+$<
+$>5012
+	$>FullNameBase
+		妖夢の半霊
+	$<
+	$>FullNameSubBase
+		Youmu no Hanrei
+	$<
+	$>ShortNameBase
+		半霊
+	$<
+	$>ShortNameSubBase
+		Hanrei
+	$<
+	$/二つ名
+	$>titleName
+		半人半霊の庭師
+	$<
+	$>SpellName
+		
+	$<
+$<
+$>5013
+	$>FullNameBase
+		グリモワールオブアリス
+	$<
+	$>FullNameSubBase
+		Grimoire of Alice
+	$<
+	$>ShortNameBase
+		グリモワールオブアリス
+	$<
+	$>ShortNameSubBase
+		Grimoire of Alice
+	$<
+	$/二つ名
+	$>titleName
+		幻想郷幻想日記
+	$<
+	$>SpellName
+		「童の誘いに沈む紅陽」
+		「火に入らずんば青天の霹靂」
+		「さに乱れても散らぬ紫陽花」
+		「千夜一夜に罹る翠簾」
+		「玉虫色の不思議な幻想」
+	$<
+$<

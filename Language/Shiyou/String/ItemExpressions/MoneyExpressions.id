@@ -1,0 +1,105 @@
+
+$>8000
+	$>FullNameBase
+		お金
+	$<
+	$>ShortNameBase
+		お金
+	$<
+	$>shortExplanationBase
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+	$<
+	$>longExplanationBase
+		お金（おかね）
+		#n
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+		#n
+		拾うと自動で財布に財布に入ってしまうので、
+		#n
+		持ち歩くには箱に入れる必要がある。
+	$<
+$<
+$>8001
+	$>FullNameBase
+		お金
+	$<
+	$>ShortNameBase
+		お金
+	$<
+	$>shortExplanationBase
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+	$<
+	$>longExplanationBase
+		お金（おかね）
+		#n
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+		#n
+		拾うと自動で財布に財布に入ってしまうので、
+		#n
+		持ち歩くには箱に入れる必要がある。
+	$<
+$<
+$>8002
+	$>FullNameBase
+		お金
+	$<
+	$>ShortNameBase
+		お金
+	$<
+	$>shortExplanationBase
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+	$<
+	$>longExplanationBase
+		お金（おかね）
+		#n
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+		#n
+		拾うと自動で財布に財布に入ってしまうので、
+		#n
+		持ち歩くには箱に入れる必要がある。
+	$<
+$<
+$>8003
+	$>FullNameBase
+		お金
+	$<
+	$>ShortNameBase
+		お金
+	$<
+	$>shortExplanationBase
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+	$<
+	$>longExplanationBase
+		お金（やまぶきいろのおかし）
+		#n
+		#cdNOTICE
+		拾うと財布の額が増える。
+		#n#i
+		投げつけると１銭につき１ダメージを与える。
+		#n
+		拾うと自動で財布に財布に入ってしまうので、
+		#n
+		持ち歩くには箱に入れる必要がある。
+	$<
+$<

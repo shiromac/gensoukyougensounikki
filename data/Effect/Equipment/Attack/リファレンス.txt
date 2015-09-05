@@ -1,0 +1,18 @@
+EffectEquipAttack
+
+pcCharactor型 attacker: 攻撃者
+
+数値型 fromPlaceX: 攻撃元のX位置
+数値型 fromPlaceY: 攻撃元のY位置
+
+数値型 toPlaceX: 攻撃先のX位置
+数値型 toPlaceY: 攻撃先のY位置
+
+数値型 distance: 攻撃元と攻撃先の距離
+数値型 direction: 攻撃方向（(値域:0~360)度数法で上が0、下が180、時計回り）
+
+数値型 isValidAttack : 攻撃が壁に向かっていたら０、そうでなければ１
+
+＞注意点
+攻撃エフェクトでシステムがプレイヤーを拘束する時間は16F
+isValidAttack を使って踏み込み量制御をすること
