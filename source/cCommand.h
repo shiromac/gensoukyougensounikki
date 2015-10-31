@@ -3,7 +3,8 @@
 #include "utility/SpriteText.h"
 
 #include <tstring_ph.h>
-
+#include <boost/any.hpp>
+#include <map>
 
 using namespace std;
 class cDroping;
@@ -60,3 +61,22 @@ public:
 
 };
 
+class cCommandDelegated;
+typedef int(*cCommandDelegate)(cCommandDelegated& command);
+class cCommandDelegated :
+	public cCommand
+{
+public:
+	cCommandDelegated(void){};
+	cCommandDelegated(StyleString s){caption = s;};
+public:
+	virtual ~cCommandDelegated(void){};
+
+	virtual int Action(IDirect3DDevice9 *pDev);
+
+	void setDelegate(const cCommandDelegate& delegate);
+
+	std::map<tstring, boost::any> info;
+private:
+	cCommandDelegate _delegate;
+};

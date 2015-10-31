@@ -21,3 +21,9 @@ int cCommandCancel::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
+void cCommandDelegated::setDelegate(const cCommandDelegate& delegate){
+	_delegate = delegate;
+}
+int cCommandDelegated::Action(IDirect3DDevice9 *pDev) {
+	return _delegate(*this);
+}
