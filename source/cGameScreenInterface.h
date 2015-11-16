@@ -50,12 +50,18 @@ protected:
 
 public:	
 
+	virtual int menuPosWidthByLevel();
+	virtual int menuPosHeightByLevel();
 
 	virtual int menuPosTop(int level);
 	virtual int menuPosLeft(int level);
 	virtual int menuPosRight(int level);
 	virtual int menuPosBottom(int level);
+	
+	virtual int menuPosCenterX();
+	virtual int menuPosCenterY();
 
+	virtual cRectObj menuPosParentOfControlLayer(const pcControlLayer& childControlLayer);
 
 	SpriteText text;
 
