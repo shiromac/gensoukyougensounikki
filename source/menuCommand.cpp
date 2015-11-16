@@ -1037,3 +1037,51 @@ int cCommand_menuOther_ReturnTitle::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
+//----------------------------------------------------------------------------------------------------------------
+namespace CommandContinue{
+	int CommandFunc_Continue(cCommandDelegated& command) {
+
+		//新規コントロールレイヤー
+		//sg_pDungeonSystem->
+		sg_pDungeonSystem->GameOverAndContinue();
+		sg_pDungeonSystem->メニューを閉じる();
+		return true;
+	}
+	int CommandFunc_ContinueAndSuspend(cCommandDelegated& command) {
+
+		//新規コントロールレイヤー
+		//sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
+		sg_pDungeonSystem->GameOverAndContinueAndSuspend();
+		sg_pDungeonSystem->メニューを閉じる();
+		return true;
+	}
+	int CommandFunc_Retire(cCommandDelegated& command) {
+		pcControlLayer pccl;
+		pcSelectWindow pcsw;
+
+		//新規コントロールレイヤー
+		sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
+		pccl->Init(sg_pDungeonSystem->pDevice_D3D);
+
+		pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
+
+		pcsw->commandList.push_back(pcCommand(new cCommandDelegated(g_Lang(_T("ContinueRetire+Retry")), CommandFunc_Retire_Restart)));
+		pcsw->commandList.push_back(pcCommand(new cCommandDelegated(g_Lang(_T("ContinueRetire")), CommandFunc_Retire_Retire)));
+
+		pcsw->Init(sg_pDungeonSystem->pDevice_D3D, 16, pcsw->commandList.size());
+		pcsw->setLeft(sg_pDungeonSystem->GameScreenInterface.menuPosParentOfControlLayer(pccl).Left() + sg_pDungeonSystem->GameScreenInterface.menuPosWidthByLevel());
+		pcsw->setTop(sg_pDungeonSystem->GameScreenInterface.menuPosParentOfControlLayer(pccl).Top() + sg_pDungeonSystem->GameScreenInterface.menuPosHeightByLevel());
+		return true;
+	}
+	int CommandFunc_Retire_Retire(cCommandDelegated& command) {
+		sg_pDungeonSystem->GameOver();
+		sg_pDungeonSystem->メニューを閉じる();
+		return true;
+	}
+	int CommandFunc_Retire_Restart(cCommandDelegated& command) {
+		sg_pDungeonSystem->GameOverAndRestart();
+		sg_pDungeonSystem->メニューを閉じる();
+		return true;
+	}
+
+}

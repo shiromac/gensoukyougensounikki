@@ -62,6 +62,8 @@ public:
 	
 	//ダンジョン識別
 	tstring DungeonID;
+	int saveFileNum;
+	tstring saveFileID;
 
 	int floor;
 
@@ -234,6 +236,8 @@ public:
 	//拠点での不正終了フラグ
 	int GoodEndFlagInBaseTemp;//こっちは仮フラグ
 	int DidGoodEndFlagInBase;//アプリ正常終了していたフラグ（拠点で参照
+
+	static map<tstring, int> initialLocalFlags(const tstring& dungeonID, const int num);//ダンジョン初期フラグ
 
 	//globalFlagsKeys
 	static tstring globalFlagsKey_AppreciationSupportKey(const tstring& dungeonID, int num);//識別補助

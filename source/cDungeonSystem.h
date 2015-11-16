@@ -179,8 +179,7 @@ public:
 
 protected:
 	inline int& GameOverFlag(){return pDungeonInstance_->GameOverFlag_;};
-
-
+	inline cDungeonInstance::GameEndFlag & GameRestartFlag(){return pDungeonInstance_->GameRestartFlag_;};
 	inline int& GameClearFlag(){return pDungeonInstance_->GameClearFlag_;};
 
 	//時間計測
@@ -396,9 +395,16 @@ protected:
 protected:
 	virtual void MakeResultWindow(int clear);
 public:
+
+	virtual void KnockOutHero();
 	virtual void GameOver();
+	virtual void GameOverAndContinue();
+	virtual void GameOverAndContinueAndSuspend();
+	virtual void GameOverAndRestart();
 
 	virtual int ダンジョン引き上げ要請();
+
+
 	virtual void GameEndSavetyPrepareing();
 
 	virtual void GameBaseEnd();
@@ -424,7 +430,7 @@ public:
 
 	virtual void SelectDungeon(const vector<tstring>& Dungeons);
 
-	virtual void GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName);
+	virtual void GotoDungeon(const tstring& DungeonID, const int saveFileNum, const map<tstring,int>& privateFlags, const tstring& savefileName);
 	virtual void GotoDungeon(const tstring& DungeonID);
 	
 	virtual void ContinueDungeon(pcSaveQuest continueQuest);

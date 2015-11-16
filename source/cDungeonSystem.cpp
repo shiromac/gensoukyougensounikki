@@ -32,6 +32,10 @@
 
 #include "cEventManager.h"
 
+#include "menuCommand.h"
+
+#include "caFunction.h"
+
 double gettimeofday_sec()
 {
     time_t tv;
@@ -1605,65 +1609,70 @@ void cDungeonSystem::GameOverpreprocess()
 		注意されたし!
 	*/
 
-	int i,k,size;
-	//厄システム
-	set<pcCharacter> FriendSet;
-	size = pSaveQuest->pFriend.size();
-	FriendSet.insert(pPlayerChara());
-	for(i=0;i<size;i++)
-	{
-		FriendSet.insert(pSaveQuest->pFriend[i]);
-	}
-	size = CharaList().size();
-	for(i=0;i<size;i++)
-	{
-		if(FriendSet.count(CharaList()[i])) continue;//フレンドリストにある
-		
-		for(k=0;k<CharaList()[i]->holdItem.size();k++)
-		{
-			厄システム挿入要請(pSaveQuest, CharaList()[i]->holdItem[k]);
-		}
-	}
-	vector<pcDroping> vpdrop = DropList();
-	size = vpdrop.size();
-	for(i=0;i<size;i++)
-	{
-		if(vpdrop[i]->Holder() != NULL) continue;//誰かが持ってる
-		if(vpdrop[i]->倉庫の中()) continue;
-
-		厄システム挿入要請(pSaveQuest, vpdrop[i]);
-	}
-
-
-	if(!GameClearFlag())
-	{//ゲームオーバー
-		vector<pcDroping> vdrop = pPlayerChara()->holdItem;
-		厄システム挿入要請(pSaveQuest, vdrop);
-	}
-	//もしリプレイでなかったら
-	if(!独立モード())
-	{
+	if (GameRestartFlag() == cDungeonInstance::GameOverAndRetire
+	 || GameRestartFlag() == cDungeonInstance::GameOverAndRestart) {
+		int i,k,size;
 		//厄システム
-		//pSaveData->pSaveStore()->yaku += 厄ポイント冒険評価();
-		pSaveData->pSaveStore()->yakuStore += 厄ポイント冒険評価(GameClearFlag(), 拠点フラグ(),pSaveQuest,pPlayerChara());
-		
-		pSaveData->pSaveStore()->hinaItem.insert(pSaveData->pSaveStore()->hinaItem.end(),
-			pSaveQuest->hinaPickItem.begin(),pSaveQuest->hinaPickItem.end());
-
-		pSaveQuest->hinaPickItem.clear();
-
-		if(!拠点フラグ())
+		set<pcCharacter> FriendSet;
+		size = pSaveQuest->pFriend.size();
+		FriendSet.insert(pPlayerChara());
+		for(i=0;i<size;i++)
 		{
-			//プレイヤー経験値
-			double exp = pDungeon()->culcuscore()/20 + 厄ポイント冒険評価(GameClearFlag(), 拠点フラグ(),pSaveQuest,pPlayerChara());
-			pSaveData->pSaveStore()->playerExpStore += exp * pDungeon()->playerExpPower() /2;//体験版補正
-			//ノーマルプレイ一回の大よその経験値 = 1000
+			FriendSet.insert(pSaveQuest->pFriend[i]);
 		}
-	}
+		size = CharaList().size();
+		for(i=0;i<size;i++)
+		{
+			if(FriendSet.count(CharaList()[i])) continue;//フレンドリストにある
+			
+			for(k=0;k<CharaList()[i]->holdItem.size();k++)
+			{
+				厄システム挿入要請(pSaveQuest, CharaList()[i]->holdItem[k]);
+			}
+		}
+		vector<pcDroping> vpdrop = DropList();
+		size = vpdrop.size();
+		for(i=0;i<size;i++)
+		{
+			if(vpdrop[i]->Holder() != NULL) continue;//誰かが持ってる
+			if(vpdrop[i]->倉庫の中()) continue;
 
-	GameEndSavetyPrepareing();
-	pSaveQuest->setUnEnable();
-	pSaveQuest->save();
+			厄システム挿入要請(pSaveQuest, vpdrop[i]);
+		}
+
+
+		if(!GameClearFlag())
+		{//ゲームオーバー
+			vector<pcDroping> vdrop = pPlayerChara()->holdItem;
+			厄システム挿入要請(pSaveQuest, vdrop);
+		}
+
+		//もしリプレイでなかったら
+		if(!独立モード())
+		{
+			//厄システム
+			//pSaveData->pSaveStore()->yaku += 厄ポイント冒険評価();
+			pSaveData->pSaveStore()->yakuStore += 厄ポイント冒険評価(GameClearFlag(), 拠点フラグ(),pSaveQuest,pPlayerChara());
+			
+			pSaveData->pSaveStore()->hinaItem.insert(pSaveData->pSaveStore()->hinaItem.end(),
+				pSaveQuest->hinaPickItem.begin(),pSaveQuest->hinaPickItem.end());
+
+			pSaveQuest->hinaPickItem.clear();
+
+			if(!拠点フラグ())
+			{
+				//プレイヤー経験値
+				double exp = pDungeon()->culcuscore()/20 + 厄ポイント冒険評価(GameClearFlag(), 拠点フラグ(),pSaveQuest,pPlayerChara());
+				pSaveData->pSaveStore()->playerExpStore += exp * pDungeon()->playerExpPower() /2;//体験版補正
+				//ノーマルプレイ一回の大よその経験値 = 1000
+			}
+		}
+
+		GameEndSavetyPrepareing();
+		pSaveQuest->setUnEnable();
+		pSaveQuest->save();
+
+	}
 
 }
 void cDungeonSystem::GameOverprocess()
@@ -1671,9 +1680,12 @@ void cDungeonSystem::GameOverprocess()
 	if(GameOverFlag() == 1)
 	{
 	
-		if(!pDungeon()->clearResultSkipFlag())
-		{
-			MakeResultWindow(GameClearFlag());
+		if (GameRestartFlag() == cDungeonInstance::GameOverAndRetire
+		 || GameRestartFlag() == cDungeonInstance::GameOverAndRestart) {
+			if(!pDungeon()->clearResultSkipFlag())
+			{
+				MakeResultWindow(GameClearFlag());
+			}
 		}
 		GameOverFlag() = 2;
 		AnimationManager().clear();
@@ -1694,17 +1706,45 @@ void cDungeonSystem::GameOverprocess()
 		}
 		cleanfloor();
 
-
-		pSaveData->save();//セーブ
-
-		sg_pDungeonSystem->pSaveQuest = pcSaveQuest((cSaveQuest*)NULL);
-		//g_GameEnv.m_SceneManage->SceneChange(pDevice_D3D,new csHomeFirst);
-		//sg_pDungeonSystem->GotoDungeon(_T("first_Home"));
 		sg_pDungeonSystem->メニューを閉じる();
-		sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(_T("first_Home"));
-		pPlayerChara()->HP = pPlayerChara()->MHP;
 
+		
+		if (GameRestartFlag() == cDungeonInstance::GameOverAndRetire) {
+			pSaveData->save();//セーブ
+			sg_pDungeonSystem->pSaveQuest = pcSaveQuest((cSaveQuest*)NULL);
+			//g_GameEnv.m_SceneManage->SceneChange(pDevice_D3D,new csHomeFirst);
+			//sg_pDungeonSystem->GotoDungeon(_T("first_Home"));
+			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(_T("first_Home"));
+			pPlayerChara()->HP = pPlayerChara()->MHP;
 
+		}
+		else if (GameRestartFlag() == cDungeonInstance::GameOverAndRestart){
+			pSaveData->save();//セーブ
+			//sg_pDungeonSystem->pSaveQuest = pcSaveQuest((cSaveQuest*)NULL);
+			//sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(pDungeon()->DungeonName_);
+			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(pSaveQuest->DungeonID, pSaveQuest->saveFileNum,
+				cSaveData::initialLocalFlags(pSaveQuest->DungeonID, pSaveQuest->saveFileNum),pSaveQuest->saveFileID);
+			pPlayerChara()->HP = pPlayerChara()->MHP;
+		}
+		else if (GameRestartFlag() == cDungeonInstance::Continue){
+			// nop
+			pSaveQuest->load();
+			sg_pDungeonSystem->GameEndSavetyPrepareing();
+			pSaveQuest->BadEndNum++;
+			AnimationManager().AddAnime_ContinueDungeon(pSaveQuest);
+		}
+		else if (GameRestartFlag() == cDungeonInstance::ContinueAndSuspend){
+
+			pSaveQuest->load();
+			sg_pDungeonSystem->GameEndSavetyPrepareing();
+			pSaveQuest->BadEndNum++;
+			pSaveQuest->save();
+			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(_T("first_Home"));
+			pPlayerChara()->HP = pPlayerChara()->MHP;
+		}
+		else {
+			OnAssert(_T("GameRestartFlag()"),__LINE__,FALSE,_T("予期しない値です。 illegal value"));
+		}
 		GameOverFlag() = 3;
 	}
 }
@@ -2193,7 +2233,7 @@ int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
 					360.0*rand()/RAND_MAX);
 			}
 			強制ダメージ要請(pPlayerChara(),pPlayerChara()->MHP,0,1);
-			GameOver();
+			KnockOutHero();
 		}
 	}
 
@@ -3055,15 +3095,78 @@ void cDungeonSystem::MakeResultWindow(int clear)
 	DataBase.DungeonRanking(pSaveQuest->DungeonID)->rankingIn(presult);
 }
 
-//ゲームオーバー
+//ゲームオーバー直前処理
+void KnockOutHeroFunction();
+void cDungeonSystem::KnockOutHero()
+{
+	pcAnimation pcanime = pcaFunction(new caFunction(KnockOutHeroFunction));
+	//新規コントロールレイヤー
+	sg_pDungeonSystem->AnimationManager().AddAnime_parallelCritical(pcanime);
+}
+
+void KnockOutHeroFunction()
+{
+	if (sg_pDungeonSystem->拠点フラグ()) {
+		sg_pDungeonSystem->GameOver();
+		return;
+	}
+	pcControlLayer pccl;
+	pcSelectWindow pcsw;
+
+	//新規コントロールレイヤー
+	sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
+	pccl->Init(sg_pDungeonSystem->pDevice_D3D);
+	pccl->notCancelToPop = true;
+
+	pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
+
+	pcsw->commandList.push_back(pcCommand(new cCommandDelegated(g_Lang(_T("ContinueGame")), CommandContinue::CommandFunc_Continue)));
+	pcsw->commandList.push_back(pcCommand(new cCommandDelegated(g_Lang(_T("ContinueGame+Suspend")), CommandContinue::CommandFunc_ContinueAndSuspend)));
+	pcsw->commandList.push_back(pcCommand(new cCommandDelegated(g_Lang(_T("あきらめる")), CommandContinue::CommandFunc_Retire)));
+
+	pcsw->Init(sg_pDungeonSystem->pDevice_D3D, 16, pcsw->commandList.size());
+	pcsw->CenterX = sg_pDungeonSystem->GameScreenInterface.menuPosCenterX();
+	pcsw->CenterY = sg_pDungeonSystem->GameScreenInterface.menuPosCenterY();
+}
+
+//ゲームオーバー処理
 void cDungeonSystem::GameOver()
 {
 	cannotinput() = true;
 	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::GameOverAndRetire;
 	GameClearFlag() = false;
 
 	GameOverpreprocess();
 }
+void cDungeonSystem::GameOverAndContinue()
+{
+	cannotinput() = true;
+	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::Continue;
+	GameClearFlag() = false;
+
+	GameOverpreprocess();
+}
+void cDungeonSystem::GameOverAndContinueAndSuspend()
+{
+	cannotinput() = true;
+	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::ContinueAndSuspend;
+	GameClearFlag() = false;
+
+	GameOverpreprocess();
+}
+void cDungeonSystem::GameOverAndRestart()
+{
+	cannotinput() = true;
+	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::GameOverAndRestart;
+	GameClearFlag() = false;
+
+	GameOverpreprocess();
+}
+
 void cDungeonSystem::GameEndSavetyPrepareing()
 {
 	sg_pDungeonSystem->pSaveQuest->GoodEndFlags = 1;
@@ -3073,6 +3176,7 @@ void cDungeonSystem::GameClear()
 {
 	cannotinput() = true;
 	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::GameOverAndRetire;
 	GameClearFlag() = GAMECLEAR_CLEARFLAG;
 
 	g_GameEnv.m_SoundManager.stopBGM();
@@ -3091,6 +3195,7 @@ void cDungeonSystem::GamePullout()
 {
 	cannotinput() = true;
 	GameOverFlag() = true;
+	GameRestartFlag() = cDungeonInstance::GameOverAndRetire;
 	GameClearFlag() = GAMECLEAR_PULLOUTFLAG;
 
 	GameOverpreprocess();

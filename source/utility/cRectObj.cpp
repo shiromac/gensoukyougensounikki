@@ -8,6 +8,12 @@ cRectObj::cRectObj(void)
 	Height = 0;
 }
 
+cRectObj::cRectObj(double Left, double Top, double Right, double Bottom)
+{
+	setLTRB(Left, Top, Right, Bottom);
+}
+
+
 cRectObj::~cRectObj(void)
 {
 }

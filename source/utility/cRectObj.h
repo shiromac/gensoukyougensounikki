@@ -5,6 +5,7 @@ class cRectObj
 {
 public:
 	cRectObj(void);
+	cRectObj(double Left, double Top, double Right, double Bottom);
 public:
 	virtual ~cRectObj(void);
 

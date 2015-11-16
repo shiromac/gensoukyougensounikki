@@ -946,7 +946,7 @@ void cDungeonSystem::removecharacter(pcCharacter pchara)
 
 	if(pchara == pPlayerChara())
 	{//ゲームオーバー
-		GameOver();
+		KnockOutHero();
 	}
 }
 

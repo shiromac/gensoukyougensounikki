@@ -1208,32 +1208,12 @@ public:
 		}
 		else
 		{
-			map<tstring, int> localFlags_;
-
-			//初めから
-			localFlags_[cSaveQuest::privateFlagKey_AppreciationSupportKey()] = 
-				sg_pDungeonSystem->pSaveData->globalFlags[cSaveData::globalFlagsKey_AppreciationSupportKey(dungeonID_,num_)];
-			
-			if(sg_pDungeonSystem->pSaveData->globalFlags_ClearedFlag(dungeonID_,FALSE))
-			{
-				localFlags_[cSaveQuest::privateFlagKey_StoryEventKey()] = 
-					mapUtility::getMapValue( sg_pDungeonSystem->pSaveData->globalFlags,
-											cSaveData::globalFlagsKey_StoryEventKey(dungeonID_,num_),
-											FALSE
-					);
-				}
-			else
-			{
-				//クリアしてない
-				localFlags_[cSaveQuest::privateFlagKey_StoryEventKey()] = TRUE;
-			
-			}
-				
+			map<tstring, int> localFlags_ = cSaveData::initialLocalFlags(dungeonID_,num_);
 
 			//sg_pDungeonSystem->GotoDungeon(dungeonID_,localFlags_,savefileName_);
 			sg_pDungeonSystem->AnimationManager().Anime_PlaySE(_T("step.wav"), sg_pDungeonSystem->pPlayerChara()->足元地形()->place);
 			sg_pDungeonSystem->メニューを閉じる();
-			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(dungeonID_,localFlags_,savefileName_);
+			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(dungeonID_,num_,localFlags_,savefileName_);
 		}
 		//sg_pDungeonSystem->pSaveQuest = pQuest_;
 		//g_GameEnv.m_SceneManage->SceneChange(pDev,new csDungeonFirst);
@@ -1508,6 +1488,7 @@ public:
 
 		pcSaveQuest pQuest;
 		pQuest_ = pcSaveQuest(new cSaveQuest);
+		pQuest_->saveFileNum = num;
 		questSaveFileString_ = dungeonID;
 		questSaveFileString_ += suffix;
 		pQuest_->Init(sg_pDungeonSystem->pDevice_D3D, questSaveFileString_);
@@ -2136,9 +2117,9 @@ void cDungeonSystem::GotoDungeon(const tstring& DungeonID)
 {
 	map<tstring,int> privateFlags;
 	tstring savefileName(DungeonID + _T("_temp"));
-	GotoDungeon(DungeonID,privateFlags,savefileName);
+	GotoDungeon(DungeonID,-1,privateFlags,savefileName);
 }
-void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName)
+void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const int saveFileNum, const map<tstring,int>& privateFlags, const tstring& savefileName)
 {
 	nextDungeon = DungeonID;
 
@@ -2149,6 +2130,7 @@ void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const map<tstring,int
 	pQuest->randBase = time(NULL);
 	pQuest->privateFlags = privateFlags;
 	pQuest->DungeonID = DungeonID;
+	pQuest->saveFileNum = saveFileNum;
 	if(pPlayerChara() != NULL) pQuest->pPlayer = pPlayerChara();
 	else
 	{
@@ -2311,11 +2293,11 @@ void cDungeonSystem::Dungeonprocess(const tstring& DungeonsID)
 				dungeons.push_back(_T("green_Dungeon"));
 				dungeons.push_back(_T("purple_Dungeon"));
 #ifdef _UNRELEASE
-				dungeons.push_back(_T("red_extra_Dungeon"));
-				dungeons.push_back(_T("blue_extra_Dungeon"));
-				dungeons.push_back(_T("green_extra_Dungeon"));
-				dungeons.push_back(_T("purple_extra_Dungeon"));
-				dungeons.push_back(_T("event_dream_Dungeon"));
+				//dungeons.push_back(_T("red_extra_Dungeon"));
+				//dungeons.push_back(_T("blue_extra_Dungeon"));
+				//dungeons.push_back(_T("green_extra_Dungeon"));
+				//dungeons.push_back(_T("purple_extra_Dungeon"));
+				//dungeons.push_back(_T("event_dream_Dungeon"));
 				//dungeons.push_back(_T("event_ending_Dungeon"));
 				dungeons.push_back(_T("ten_match_Dungeon"));
 #endif

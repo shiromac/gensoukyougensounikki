@@ -17,6 +17,7 @@ class caFunction :
 {
 public:
 	caFunction(void);
+	caFunction(void (*function)());
 public:
 	virtual ~caFunction(void);
 

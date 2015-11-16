@@ -224,6 +224,31 @@ int cSaveData::AddPlayerLevel(double addExp)
 	}
 	return up_level;
 }
+map<tstring, int> cSaveData::initialLocalFlags(const tstring& dungeonID, const int num)
+{
+	map<tstring, int> localFlags;
+
+	//初めから
+	localFlags[cSaveQuest::privateFlagKey_AppreciationSupportKey()] = 
+		sg_pDungeonSystem->pSaveData->globalFlags[cSaveData::globalFlagsKey_AppreciationSupportKey(dungeonID,num)];
+	
+	if(sg_pDungeonSystem->pSaveData->globalFlags_ClearedFlag(dungeonID,FALSE))
+	{
+		localFlags[cSaveQuest::privateFlagKey_StoryEventKey()] = 
+			mapUtility::getMapValue( sg_pDungeonSystem->pSaveData->globalFlags,
+									cSaveData::globalFlagsKey_StoryEventKey(dungeonID,num),
+									FALSE
+			);
+		}
+	else
+	{
+		//クリアしてない
+		localFlags[cSaveQuest::privateFlagKey_StoryEventKey()] = TRUE;
+	
+	}
+
+	return localFlags;
+}
 tstring cSaveData::globalFlagsKey_AppreciationSupportKey(const tstring& dungeonID, int num)
 {//識別補助
 	return _T("Dungeon:")+dungeonID+_T(":")+setStyle(num,_T("%d")).conclete_tstr() +_T(":")+cSaveQuest::privateFlagKey_AppreciationSupportKey();
@@ -354,6 +379,7 @@ cSaveQuest::cSaveQuest(void)
 	SumdefeatNum = 0;
 	GoodEndFlags = 1;
 	BadEndNum = 0;
+	saveFileNum = 0;
 
 	ShopFund = 0.0;
 	ShopDebt = 0.0;
@@ -389,7 +415,7 @@ void cSaveQuest::Init(IDirect3DDevice9 *pDev, tstring savefile)
 	
 	savefile_ = pcSaveClass(new cSaveClass);
 	savefile_->savename() = SAVEDATADIRCTORY + savefile + _T("_save.dat");
-
+	saveFileID = savefile;
 
 
 
@@ -402,7 +428,7 @@ int cSaveQuest::save()
 	}
 	
 	savefile_->vv_int().resize(2);
-	savefile_->vv_int()[0].resize(10);
+	savefile_->vv_int()[0].resize(11);
 	SUBSTITUTION_L2R(floor, savefile_->vv_int()[0][0]);
 	SUBSTITUTION_L2R(money, savefile_->vv_int()[0][1]);
 	SUBSTITUTION_L2R(Sumturn, savefile_->vv_int()[0][2]);
@@ -418,9 +444,13 @@ int cSaveQuest::save()
 	//追加分4
 	SUBSTITUTION_L2R(FirstConditionOfMoney, savefile_->vv_int()[0][9]);
 
+	//追加分6
+	SUBSTITUTION_L2R(saveFileNum, savefile_->vv_int()[0][10]);
+
+
 	SUBSTITUTION_L2R(FreeFlags, savefile_->vv_int()[1]);
 
-	savefile_->vv_char().resize(11);//サイズによって忘れず変更すること
+	savefile_->vv_char().resize(12);//サイズによって忘れず変更すること
 	cDataConverter::ConvertT2VecC(DungeonID,savefile_->vv_char()[0]);
 	cDataConverter::ConvertT2VecC(randBase,savefile_->vv_char()[1]);
 	ConvertT2VecC(pPlayer,savefile_->vv_char()[2]);
@@ -447,6 +477,9 @@ int cSaveQuest::save()
 	//追加分5
 	cDataConverter::ConvertMTT2VecVecC2VecC(localFlags, savefile_->vv_char()[9]);
 	cDataConverter::ConvertMTT2VecVecC2VecC(privateFlags, savefile_->vv_char()[10]);
+
+	//追加分6
+	cDataConverter::ConvertT2VecC(saveFileID, savefile_->vv_char()[10]);
 
 	return savefile_->save();
 	
@@ -477,6 +510,10 @@ int cSaveQuest::load()
 	if(savefile_->vv_int()[0].size() > 9)
 	{//追加４
 		SUBSTITUTION_R2L(FirstConditionOfMoney, savefile_->vv_int()[0][9]);
+	}
+	if(savefile_->vv_int()[0].size() > 10)
+	{//追加6
+		SUBSTITUTION_R2L(saveFileNum, savefile_->vv_int()[0][10]);
 	}
 	else
 	{
@@ -531,6 +568,10 @@ int cSaveQuest::load()
 	{//追加分5
 		cDataConverter::BackDecodeVecC2VecVecC2MTT(localFlags, savefile_->vv_char()[9]);
 		cDataConverter::BackDecodeVecC2VecVecC2MTT(privateFlags, savefile_->vv_char()[10]);
+	}
+	if(savefile_->vv_char().size() > 11)
+	{//追加分6
+		cDataConverter::BackDecodeVecC2T(saveFileID, savefile_->vv_char()[11]);
 	}
 
 	return SUCCESS;

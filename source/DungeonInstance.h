@@ -75,6 +75,15 @@ public:
 	pcDungeon pDungeon_;
 
 	int FloorLevel_;
+	
+
+	enum GameEndFlag{
+		Continue,
+		ContinueAndSuspend,
+		GameOverAndRetire,
+		GameOverAndRestart,
+	};
+	
 
 public:
 
@@ -114,6 +123,7 @@ public:
 public:
 	int GameOverFlag_;
 	int GameClearFlag_;
+	GameEndFlag GameRestartFlag_;
 	int SumTurnCount_;
 	int SumEnemyDefeatNum_;
 

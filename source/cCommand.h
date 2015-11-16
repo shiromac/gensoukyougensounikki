@@ -68,7 +68,8 @@ class cCommandDelegated :
 {
 public:
 	cCommandDelegated(void){};
-	cCommandDelegated(StyleString s){caption = s;};
+	cCommandDelegated(StyleString s):cCommand(s){};
+	cCommandDelegated(StyleString s, cCommandDelegate delegate):cCommand(s){setDelegate(delegate);};
 public:
 	virtual ~cCommandDelegated(void){};
 

@@ -39,7 +39,7 @@ int cFloor::decodeFloor(pcFloor pmodelfloor, pcScriptRLayer floordata)
 		const tstring hindostr(_T("oŒ»•p“x"));
 		decodeInt(Minappearenemy_, pmodelfloor->Minappearenemy(), floordata, enemystr, hindostr, 0);
 		decodeInt(Maxappearenemy_, pmodelfloor->Maxappearenemy(), floordata, enemystr, hindostr, 1);
-		nextappearenemy_ = random_range(Minappearenemy_,Maxappearenemy_+1);
+		nextappearenemy_ = (Minappearenemy_+Maxappearenemy_/2);
 	
 		int i;
 		const tstring firstsetnumstr(_T("‰ŠúoŒ»”"));
@@ -832,7 +832,7 @@ void cDungeon::decode(pcScriptRLayer data)
 			pmodelfloor = vpfloor_.back();
 		}
 		
-		vpfloor_.back()->floorrandomSeed = sg_pDungeonSystem->RandomInitGen().genrand_int32();
+		vpfloor_.back()->floorrandomSeed = randomgen().genrand_int32();
 	}
 
 	

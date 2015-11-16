@@ -160,3 +160,11 @@ DEF_COMMANDCLASS(_menuOther_RetireChoice_No,g_Lang(_T("‚ ‚«‚ç‚ß‚È‚¢")))
 DEF_COMMANDCLASS(_menuOther_ReturnTitle,g_Lang(_T("ƒ^ƒCƒgƒ‹‚É–ß‚é")))
 	//virtual StyleString shortExplanationText();
 };
+
+namespace CommandContinue{
+	int CommandFunc_Continue(cCommandDelegated& command);
+	int CommandFunc_ContinueAndSuspend(cCommandDelegated& command);
+	int CommandFunc_Retire(cCommandDelegated& command);
+	int CommandFunc_Retire_Retire(cCommandDelegated& command);
+	int CommandFunc_Retire_Restart(cCommandDelegated& command);
+}
