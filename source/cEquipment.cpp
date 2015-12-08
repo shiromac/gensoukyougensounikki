@@ -197,6 +197,10 @@ void cEquipment::n—û“xƒJƒEƒ“ƒg‰ÁZ(int pfc)
 		proficiency_count() += pfc;		
 	}
 }
+void cEquipment::n—û“xƒŠƒZƒbƒg()
+{
+	proficiency_count() = 0;		
+}
 double cEquipment::n—û“x¬’·”{—¦(const double selfLV, const double oppsLV)
 {
 	return max(0,min(1,(oppsLV - selfLV + 3)*4/selfLV + 1.0));
@@ -205,6 +209,11 @@ double cEquipment::n—û“x¬’·”{—¦(const double selfLV, const double oppsLV)
 int cEquipment::n—û“xÅ‘å()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("n—û“xÅ‘å"), 999);
+}
+int cEquipment::‡¬Œ¸­Ï‚İproficiency()
+{
+	double Œ¸­Š„‡ = 0.8;
+	return proficiency_count() * pow(Œ¸­Š„‡,2);
 }
 StyleString cEquipment::n—û“xƒLƒƒƒvƒVƒ‡ƒ“()
 {
@@ -1656,9 +1665,9 @@ int cEquipment::‘•”õ“ï“x()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("‘•”õ“ï“x"), 1);
 }
-double cEquipment::n—û“x’è”()
+double cEquipment::n—û“x’è”(double ‘•”õ—Í)
 {
-	return (n—û“x()*n—û“xUŒ‚–hŒä•â³—¦())/100.0;
+	return (n—û“x()/100.0)*(‘•”õ—Í*0.05 + 0.1)*n—û“xUŒ‚–hŒä•â³—¦();
 }
 double cEquipment::n—û“xUŒ‚–hŒä•â³—¦()
 {
@@ -1666,7 +1675,7 @@ double cEquipment::n—û“xUŒ‚–hŒä•â³—¦()
 }
 double cEquipment::ƒfƒtƒHƒ‹ƒgn—û“xUŒ‚–hŒä•â³—¦()
 {
-	return sg_pDungeonSystem->DataBase.DropImportData_Value((tstring)EQUIPMENT_BASICVALUESTR, (tstring)_T("ƒfƒtƒHƒ‹ƒgn—û“xUŒ‚–hŒä•â³—¦"), 3);
+	return sg_pDungeonSystem->DataBase.DropImportData_Value((tstring)EQUIPMENT_BASICVALUESTR, (tstring)_T("ƒfƒtƒHƒ‹ƒgn—û“xUŒ‚–hŒä•â³—¦"), 1.0);
 }
 bool cEquipment::‰ü‘¢‰Â”\()
 {
@@ -1727,7 +1736,7 @@ double cEquipment::•Ší—ÍÅI’l()
 {
 	double result = •Ší—ÍŠî‘b’l() + quality()*•Ší—ÍC³’ld‚İ();
 
-	result = result + n—û“x’è”();
+	result = result + n—û“x’è”(result);
 
 
 	cValiableField val;
@@ -1760,7 +1769,7 @@ double cEquipment::–h‹ï—ÍÅI’l()
 {
 	double result = –h‹ï—ÍŠî‘b’l() + quality()*–h‹ï—ÍC³’ld‚İ();
 	
-	result = result + n—û“x’è”();
+	result = result + n—û“x’è”(result);
 
 		
 	cValiableField val;

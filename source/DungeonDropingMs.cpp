@@ -253,6 +253,17 @@ int cDungeonSystem::アイテム合成(vector<pcDroping> vpdrop, int mitamaFlag, int i
 
 						flag = 1;
 					}
+					
+					{
+						pcEquipment pequip = boost::dynamic_pointer_cast<cEquipment>(vpdrop[i]);
+						pcEquipment pequip2 = boost::dynamic_pointer_cast<cEquipment>(vpdrop[k]);
+						if(pequip && pequip2)
+						{
+							pequip->熟練度カウント加算(pequip2->合成時減少済みproficiency());
+							pequip2->熟練度リセット();
+							flag = 1;
+						}
+					}
 
 					if(vpdrop[i]->残りスロット() >= vpdrop[k]->能力スロット())
 					{

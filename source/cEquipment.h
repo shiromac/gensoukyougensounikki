@@ -74,8 +74,10 @@ public:
 	virtual inline int 熟練度();//4番
 	virtual inline int 熟練度計算(int pfc);
 	virtual inline void 熟練度カウント加算(int pfc);
+	virtual inline void 熟練度リセット();
 	virtual inline double 熟練度成長倍率(const double selfLV, const double oppsLV);
 	virtual inline int 熟練度最大();
+	virtual inline int 合成時減少済みproficiency();
 	virtual StyleString 熟練度キャプション();
 public:
 	virtual inline tstring IconFileName();
@@ -219,7 +221,7 @@ public:
 	virtual int 厄ポイント値段補正値();
 	
 	//熟練度
-	virtual double 熟練度定数();
+	virtual double 熟練度定数(double 装備力);
 	virtual double 熟練度攻撃防御補正率();
 	virtual double デフォルト熟練度攻撃防御補正率();
 
