@@ -682,7 +682,8 @@ int cDungeonSystem::CalculateDamege(pcAttackinformation pattackinfo)
 		double k = pow(0.9875,df);
 
 		//ダメージ式
-		damage = (at - 0.458*df*k)*k;
+		damage = ( (at - 0.458*df*k)*k )*0.9 + at*0.1;
+
 		//damage = damage*random_range(0.9,1.1);
 		if(df > 0) pattackinfo->valiable.doubles.val(変数_防御効果ありフラグ) = 1;
 	}
