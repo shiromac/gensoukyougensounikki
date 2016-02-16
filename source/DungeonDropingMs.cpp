@@ -101,6 +101,27 @@ int cDungeonSystem::敵自然湧きID(int outputID[3], int flag)
 	return false;
 }
 
+int cDungeonSystem::敵グループ湧き(pcLandform land)
+{
+	int spownEnemyCount = 0;
+	int groupMemberNum = 3;
+	int enemyCount;
+	for(enemyCount=0; enemyCount<groupMemberNum; enemyCount++)
+	{
+		int vint[3];
+		敵自然湧きID(vint);
+		pcLandform spownLand = land;
+		if (enemyCount != 0) {
+			spownLand = FindUtility::同部屋_ランダム地形検索(land);
+		}
+		pcCharacter pcmob = キャラクター生成_自然湧き(vint[0], vint[1], CHARACTER_FORSE_ENEMY, spownLand);
+		if(pcmob) {
+			spownEnemyCount++;
+		}
+	}
+	return spownEnemyCount;
+}
+
 //初出現する時に使う。
 int cDungeonSystem::初期設置(pcCharacter go, pcLandform land, int firstsetting)
 {

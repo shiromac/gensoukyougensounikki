@@ -341,6 +341,30 @@ pcLandform FindUtility::視界外優先_各部屋等確率_ランダム地形検索_配置安全(pcLand
 	}
 }
 
+pcLandform FindUtility::同部屋_ランダム地形検索(pcLandform pland)
+{
+	vector<pcRoom> vproom;
+
+	int i;
+	int size = sg_pDungeonSystem->Map().RoomList.size();
+	for(i=0;i<size;i++)
+	{
+		vproom.push_back(sg_pDungeonSystem->Map().RoomList[i]);
+	}
+	if(pland->RoomIndex == -1)
+	{//通路
+		return pland;
+	}
+	else 
+	{//部屋
+		vector<pcLandform> LandformList;
+		int roomindex = pland->RoomIndex;
+		int landindex = vproom[roomindex]->LandformList.size()*random();
+		return vproom[roomindex]->LandformList[landindex];
+	}
+}
+
+
 vector<pcCharacter> FindUtility::フロア敵索敵_敵リスト(pcCharacter pchara, const int range)
 {
 	vector<pcCharacter> pcharalist;

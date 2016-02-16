@@ -697,15 +697,13 @@ int cDungeonSystem::InitFloor(IDirect3DDevice9 *pDev)
 	}
 
 	//敵初期設置ランダム
-	for(i=0;i<enemynum;i++)
+	for(i=0;i<enemynum;)
 	{
-		int vint[3];
-		敵自然湧きID(vint);
-
-		if(sg_pDungeonSystem->CharaList().size() < pDungeon()->pfloor(FloorLevel())->Maxenemynum())
-		{
-			pcCharacter pcmob = キャラクター生成_自然湧き(vint[0], vint[1], CHARACTER_FORSE_ENEMY, FindUtility::各部屋等確率_ランダム地形検索_配置安全());
+		int spownCount = 敵グループ湧き(FindUtility::各部屋等確率_ランダム地形検索_配置安全());
+		if (spownCount <= 0) {
+			break;
 		}
+		i += spownCount;
 	}
 
 
@@ -2122,8 +2120,6 @@ int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
 
 	if(pDungeon()->pfloor(FloorLevel())->enemyAppear())
 	{
-		int vint[3];
-		敵自然湧きID(vint);
 		if(敵の数() < pDungeon()->pfloor(FloorLevel())->Maxenemynum())
 		{
 			pcLandform pland = FindUtility::視界外優先_各部屋等確率_ランダム地形検索_配置安全(pPlayerChara()->足元地形());
@@ -2135,7 +2131,7 @@ int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
 				}
 				pland = FindUtility::視界外優先_各部屋等確率_ランダム地形検索_配置安全(pPlayerChara()->足元地形());
 			}
-			pcCharacter pcmob = キャラクター生成_自然湧き(vint[0], vint[1], CHARACTER_FORSE_ENEMY, pland);
+			敵グループ湧き(pland);
 		}
 	}
 	

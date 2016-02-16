@@ -50,6 +50,11 @@ namespace FindUtility
 	//非配置安全
 	pcLandform 視界外優先_各部屋等確率_ランダム地形検索_非配置安全(pcLandform pland);
 
+	//同部屋ランダム
+	//すべての部屋の確率が同じ（面積に比例しない）
+	//配置安全
+	pcLandform 同部屋_ランダム地形検索(pcLandform pland);
+
 
 	//視界 rangeでの敵を索敵する
 	vector<pcCharacter> フロア敵索敵_敵リスト(pcCharacter pchara, const int range);

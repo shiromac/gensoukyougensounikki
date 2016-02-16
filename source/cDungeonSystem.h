@@ -832,6 +832,8 @@ public:
 							int flag = 0);//Rarity=(0~1)0==Rare
 
 	virtual int “G©‘R—N‚«ID(int outputID[3], int flag = 0);
+	
+	virtual int “GƒOƒ‹[ƒv—N‚«(pcLandform land);
 	//-------------------------
 	//‰Šúİ’uŠÖŒW
 
