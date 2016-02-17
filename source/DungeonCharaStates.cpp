@@ -1364,8 +1364,22 @@ int cDungeonSystem::EXTcharge(pcAttackinformation pattackinfo)
 			return true;
 		}
 
+		double ext = valf.doubles.val(•Ï”_”Ä—pŽÀ”);
+		
+		if(valf.charas.dim(•Ï”_UŒ‚ŽÒ)->LV - 10 >= valf.charas.dim(•Ï”_–hŒäŽÒ)->LV){
+			ext /= 4;
+		}
+		else if(valf.charas.dim(•Ï”_UŒ‚ŽÒ)->LV - 5 >= valf.charas.dim(•Ï”_–hŒäŽÒ)->LV){
+			ext /= 2;
+		}
+
+		ext = ceil(ext);
+		if (ext < 1) {
+			ext = 1;
+		}
+
 		//Ž©•ª‚Ìê‡ƒƒbƒZ[ƒW‚ªo‚éB
-		EXTcharge(valf.charas.val(•Ï”_UŒ‚ŽÒ), valf.doubles.val(•Ï”_”Ä—pŽÀ”), (valf.charas.val(•Ï”_UŒ‚ŽÒ) == pPlayerChara()));
+		EXTcharge(valf.charas.val(•Ï”_UŒ‚ŽÒ), ext, (valf.charas.val(•Ï”_UŒ‚ŽÒ) == pPlayerChara()));
 		//EXTcharge(pattackinfo->attacker, pattackinfo->defenser->HaveEXP(), (pattackinfo->attacker == pPlayerChara()));
 		return true;
 	}
