@@ -432,6 +432,7 @@ public:
 	virtual int isSpecialAttack();
 
 	virtual double HP自然回復割合();
+	virtual double HP自然回復開始ターン();
 	virtual double HP自然回復最低保障値();
 public:
 	virtual int SetMHP();

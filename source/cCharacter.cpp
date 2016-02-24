@@ -341,6 +341,10 @@ double cCharacter::HP自然回復割合()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復割合"),0.005);
 }
+double cCharacter::HP自然回復開始ターン()
+{
+	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復開始ターン"),10);
+}
 double cCharacter::HP自然回復最低保障値()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復最低保障値"),0.5);

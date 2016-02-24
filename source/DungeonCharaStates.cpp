@@ -1600,6 +1600,7 @@ int cDungeonSystem::DamageCharacter(pcCharacter pchara, int damage, int animatio
 	if(pchara->LastSpelling) return false;//ラストスペル中
 
 	pchara->HP -= damage;
+	pchara->Condition.damagedHP();
 
 	if(pchara->HP < 0)
 	{

@@ -871,6 +871,10 @@ bool cCondition::とても強い刺激()
 	cure_back_force(異常状態_初期化無し);
 	return true;
 }
+void cCondition::damagedHP()
+{
+	空腹Chip.resetLastDamageTurnCount();
+}
 bool cCondition::眠りcConditionChip::強い刺激(double power)
 {//隣接
 	if(count(深い居眠り))
@@ -1177,11 +1181,19 @@ bool cCondition::泥酔で混乱状態である()
 //#define STOMACH_MSG_ENPTY1 3
 //#define STOMACH_MSG_ENPTY2 4
 //#define STOMACH_MSG_ENPTY3 5
+
 bool cCondition::process_stomach()
 {
 	return 空腹Chip.process();
 }
-
+int cCondition::空腹cConditionChip::init(異常状態 type, int emotion, pcCharacter pchara)
+{
+	cConditionChipVirtual::init(type,emotion,pchara);
+	HP_oddstock = 0;
+	stomach_msg_count = 0;
+	lastDamageTurnCount = pchara->HP自然回復開始ターン();
+	return true;
+};
 bool cCondition::空腹cConditionChip::process()
 {
 	//if(self() == sg_pDungeonSystem->pPlayerChara())
@@ -1288,18 +1300,30 @@ bool cCondition::空腹cConditionChip::process()
 		}
 		if(!count(空腹) && (self()->空腹ProcessFlag() & 空腹ProcessFlag_回復))
 		{
-			cValiableField valf;
-			valf.doubles.dim(変数_回復力ボーナス_倍率) = 1;
-			sg_pDungeonSystem->CutInM().CutIn(self(),自然回復量計算時_タイミング,valf);
-	
+			lastDamageTurnCount++;
+			if(lastDamageTurnCount > self()->HP自然回復開始ターン()) {
+				//ココにダメージを受けたら一定時間回復しない処理を入れる
+				cValiableField valf;
+				valf.doubles.dim(変数_回復力ボーナス_倍率) = 1;
+				sg_pDungeonSystem->CutInM().CutIn(self(),自然回復量計算時_タイミング,valf);
+		
 
-			double recover_d = max(self()->MHP*self()->HP自然回復割合()*valf.doubles.val(変数_回復力ボーナス_倍率),self()->HP自然回復最低保障値()) + HP_oddstock;//0.5を下限
-			int recover = recover_d;
-			HP_oddstock = recover_d - recover;
+				double recover_d = max(self()->MHP*self()->HP自然回復割合()*valf.doubles.val(変数_回復力ボーナス_倍率),self()->HP自然回復最低保障値()) + HP_oddstock;//0.5を下限
+				int recover = recover_d;
+				HP_oddstock = recover_d - recover;
+				sg_pDungeonSystem->回復要請(self(),recover,false);
 
-
-			sg_pDungeonSystem->回復要請(self(),recover,false);
-
+				{
+					cValiableField valf;
+					valf.doubles.dim(変数_汎用ボーナス_倍率) = 1;
+					sg_pDungeonSystem->CutInM().CutIn(self(),自然満腹度減少量計算時_タイミング,valf);
+					valf.doubles.val(変数_汎用ボーナス_倍率) = max(valf.doubles.val(変数_汎用ボーナス_倍率),0.5);//最小値
+					sg_pDungeonSystem->満腹度減少要請(self(), 0.4*valf.doubles.val(変数_汎用ボーナス_倍率), false);
+				}
+			}
+			if(lastDamageTurnCount > GAME_TURN_GAMEOVER) {
+				lastDamageTurnCount = GAME_TURN_GAMEOVER;
+			}
 		}
 		
 	//}
@@ -1328,6 +1352,11 @@ bool cCondition::空腹cConditionChip::erase_emotion()
 {
 	self()->emotion.erase(EMOTION_HUNGER);
 	return true;
+}
+
+void cCondition::空腹cConditionChip::resetLastDamageTurnCount()
+{
+	lastDamageTurnCount = 0;
 }
 
 //----------------------------------------------

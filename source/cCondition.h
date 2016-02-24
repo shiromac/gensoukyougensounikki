@@ -144,6 +144,8 @@ public:
 
 	virtual bool とても強い刺激();//直接攻撃
 
+	virtual void damagedHP();//ダメージを受けた
+
 	//---------------------------------------------
 	//Chip
 	class cConditionChipVirtual
@@ -419,6 +421,7 @@ protected:
 	private:
 		int stomach_msg_count;
 		double HP_oddstock;
+		int lastDamageTurnCount;
 	public:
 		//デフォルトコンストラクタ
 		空腹cConditionChip()//:
@@ -427,13 +430,7 @@ protected:
 			//HP_oddstock(0.0)
 		{};
 
-		virtual int init(異常状態 type, int emotion, pcCharacter pchara)
-		{
-			cConditionChipVirtual::init(type,emotion,pchara);
-			HP_oddstock = 0;
-			stomach_msg_count = 0;
-			return true;
-		};
+		virtual int init(異常状態 type, int emotion, pcCharacter pchara);
 		/*
 		空腹cConditionChip(異常状態 type, int emotion):
 			cConditionChipVirtual(type, emotion),	
@@ -453,6 +450,9 @@ protected:
 
 		//エモーションを消す関数
 		virtual bool erase_emotion();
+		
+		//最後にダメージを受けたターンフラグを初期化
+		virtual void resetLastDamageTurnCount();
 
 	} 空腹Chip;
 protected:
