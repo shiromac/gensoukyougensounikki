@@ -318,8 +318,13 @@ protected:
 	int 踏みフラグ_;
 
 public:
-	//アイテムのサイズ
+	//倉庫内でのアイテムのサイズ
 	virtual int size(){return 1;};
+	
+	//インベントリ内でのアイテムのサイズ
+	virtual int sizeInInventory(){return 1;};
+	//アイテムがいっぱいでも拾えるときtrue
+	virtual bool noVolumeInInventory(){return (sizeInInventory() == 0);};
 
 	virtual int 修正値最大値(){return 9999;};
 	virtual void 修正値丸め();

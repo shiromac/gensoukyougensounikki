@@ -962,7 +962,7 @@ int cDungeonSystem::主人公お金所持量最大()
 }
 bool cDungeonSystem::落ち物拾得可(pcDroping pdrop, pcCharacter pchara)
 {
-	return 落ち物拾得可_持ち物余白無考慮(pdrop,pchara) && pchara->持ち物余白あり();
+	return 落ち物拾得可_持ち物余白無考慮(pdrop,pchara) && pchara->持ち物余白あり(pdrop);
 }
 bool cDungeonSystem::落ち物拾得可_持ち物余白無考慮(pcDroping pdrop, pcCharacter pchara)
 {

@@ -436,6 +436,14 @@ int cCharacter::デフォルト速度攻撃()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("デフォルト速度攻撃"),デフォルト速度移動());
 }
+int cCharacter::itemVolumeInInventory()
+{
+	int count = 0, index, size = holdItem.size();
+	for(index = 0; index < size; index++) {
+		count += holdItem[index]->sizeInInventory();
+	}
+	return count;
+}
 int cCharacter::死亡ドロップアイテムID()
 {
 	return 0;
@@ -910,6 +918,11 @@ int cCharacter::Get_AI()
 bool cCharacter::死亡()
 {
 	return (HP <= 0 && !LastSpelling);
+}
+
+bool cCharacter::持ち物余白あり(pcDroping pwillPickDrop)
+{
+	return 持ち物余白あり() || pwillPickDrop->noVolumeInInventory();
 }
 
 pcDroping cCharacter::足元()

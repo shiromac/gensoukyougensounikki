@@ -781,7 +781,7 @@ int cMob_ID_8::“ÁŽêUŒ‚Œø‰Ê(cValiableField& valiable)
 				if(!vpdrop.empty())
 				{
 					pcDroping pdrop = vpdrop[vpdrop.size()*random()];
-					if(Ž‚¿•¨—]”’‚ ‚è())
+					if(Ž‚¿•¨—]”’‚ ‚è(pdrop))
 					{
 						if(sg_pDungeonSystem->“D–_—v¿(me(),pdrop))
 						{

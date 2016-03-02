@@ -332,6 +332,8 @@ public:
 
 	//持ってるアイテム
 	vector<pcDroping> holdItem;
+	//持ってるアイテム
+	virtual int itemVolumeInInventory();
 
 
 	virtual int 死亡ドロップアイテムID();
@@ -460,7 +462,9 @@ public:
 	
 
 	virtual bool 拾得可(){return true;};//余白無考慮
-	virtual bool 持ち物余白あり(){return (MaxholdNum() > holdItem.size());};
+	virtual bool 持ち物余白あり(){return (MaxholdNum() > itemVolumeInInventory());};
+	//拾おうとしているアイテムが無限に拾えた場合は余白ありと返す
+	virtual bool 持ち物余白あり(pcDroping pwillPickDrop);
 
 	virtual bool 持ち物投擲可(){return true;};
 

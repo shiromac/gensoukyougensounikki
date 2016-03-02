@@ -583,7 +583,7 @@ int 拾う(IDirect3DDevice9 *pDev)
 		g_Langメッセージ(_T("アイテム拾う失敗拾得不可メッセージ"),valiable);
 		sg_pDungeonSystem->メニューを閉じる();
 	}
-	else if(!sg_pDungeonSystem->pPlayerChara()->持ち物余白あり())
+	else if(!sg_pDungeonSystem->pPlayerChara()->持ち物余白あり(pdrop))
 	{
 		map<tstring, StyleString> valiable;
 		valiable[_T("Item")] = pdrop->FullName();
@@ -1483,7 +1483,7 @@ int 出し要請(pcDroping pdrop, pcCharacter receiver, pcDroping pbox)
 		return false;
 	}
 
-	if(receiver->持ち物余白あり())
+	if(receiver->持ち物余白あり(pdrop))
 	{
 
 		int result = 0;
