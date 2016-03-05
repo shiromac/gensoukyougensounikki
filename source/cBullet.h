@@ -63,6 +63,9 @@ public:
 		Appreciate_State();
 		Appreciate_Quality();
 	};
+	
+	//インベントリ内でのアイテムのサイズ
+	virtual int sizeInInventory(){return 0;};
 
 	virtual int 値段補正値();
 

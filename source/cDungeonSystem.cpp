@@ -2105,12 +2105,12 @@ int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
 			キャラ落下(vpchara[i],vpchara[i]->足元地形());
 		}
 
-		if(vpchara[i]->MaxholdNum() < vpchara[i]->holdItem.size())
+		if(vpchara[i]->MaxholdNum() < vpchara[i]->itemVolumeInInventory())
 		{//持ちすぎ
 			map<tstring, StyleString> valiable;
 			valiable[_T("Chara")] = vpchara[i]->ShortName();
 			g_Langメッセージ(_T("アイテム持ちすぎメッセージ"),valiable);
-			sg_pDungeonSystem->ころび要請(vpchara[i], vpchara[i]->holdItem.size() - vpchara[i]->MaxholdNum(), true);
+			sg_pDungeonSystem->ころび要請(vpchara[i], vpchara[i]->itemVolumeInInventory() - vpchara[i]->MaxholdNum(), true);
 		}
 	}
 	
