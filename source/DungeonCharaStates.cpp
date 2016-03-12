@@ -10,25 +10,34 @@
 
 int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
 {
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = true;//効果発揮フラグ
+	valf.doubles.dim(変数_汎用実数) = recovery;
+	valf.charas.dim(変数_対象者) = pchara;
+	CutInM().CutIn(pchara,回復直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール) && valf.doubles.dim(変数_汎用実数) > 0)
+	{
 
-	int beforeHP = pchara->HP,afterHP;
+		int beforeHP = pchara->HP,afterHP;
 
-	RecoverCharacter(pchara,recovery,Messageflag);
-	afterHP = pchara->HP;
+		RecoverCharacter(pchara,recovery,Messageflag);
+		afterHP = pchara->HP;
 
-	if(Messageflag && pchara == pPlayerChara())
-	{//メッセージを表示する
-		map<tstring, StyleString> valiable;
+		if(Messageflag && pchara == pPlayerChara())
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
 
-		valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
-		valiable[_T("Chara")] = pchara->ShortName();
-	
-		g_Langメッセージ(_T("HP回復メッセージ"),valiable);
+			valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("HP回復メッセージ"),valiable);
 
-		//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
+			//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
+		}
+
+		return true;
 	}
-
-	return true;
+	return false;
 }
 int cDungeonSystem::HP設定要請(pcCharacter pchara, int afterHP, int Messageflag)
 {
