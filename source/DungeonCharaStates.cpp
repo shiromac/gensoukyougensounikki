@@ -984,6 +984,56 @@ int cDungeonSystem::鳥目要請(pcCharacter pchara, int turn, int Messageflag)
 	}
 	return false;
 }
+int cDungeonSystem::健康要請(pcCharacter pchara, int turn, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
+	CutInM().CutIn(pchara,健康追加直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール))
+	{
+		pchara->Condition.健康追加(turn);
+
+		if(Messageflag)
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
+
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("健康メッセージ"),valiable);
+			
+		}
+
+		return true;
+	}
+	return false;
+}
+int cDungeonSystem::病気要請(pcCharacter pchara, int turn, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
+	CutInM().CutIn(pchara,病気追加直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール))
+	{
+		pchara->Condition.病気追加(turn);
+
+		if(Messageflag)
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
+
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("病気メッセージ"),valiable);
+			
+		}
+
+		return true;
+	}
+	return false;
+}
 int cDungeonSystem::死の誘い要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;

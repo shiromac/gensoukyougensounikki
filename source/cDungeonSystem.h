@@ -1139,6 +1139,8 @@ public:
 	virtual int •X•t‚¯—v¿(pcCharacter pchara, int turn, int Messageflag = 1);
 	virtual int –³“G—v¿(pcCharacter pchara, int turn, int Messageflag = 1);
 	virtual int ’¹–Ú—v¿(pcCharacter pchara, int turn, int Messageflag = 1);
+	virtual int Œ’N—v¿(pcCharacter pchara, int turn, int Messageflag = 1);
+	virtual int •a‹C—v¿(pcCharacter pchara, int turn, int Messageflag = 1);
 
 	//ôpŒn
 	virtual int €‚Ì—U‚¢—v¿(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag = 1);
