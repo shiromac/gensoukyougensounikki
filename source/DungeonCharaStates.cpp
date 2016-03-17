@@ -13,6 +13,7 @@ int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
 	cValiableField valf;
 	valf.doubles.dim(変数_汎用ブール) = true;//効果発揮フラグ
 	valf.doubles.dim(変数_汎用実数) = recovery;
+	valf.doubles.dim(変数_メッセージフラグ) = Messageflag;
 	valf.charas.dim(変数_対象者) = pchara;
 	CutInM().CutIn(pchara,回復直前_タイミング,valf);
 	if(valf.doubles.val(変数_汎用ブール) && valf.doubles.dim(変数_汎用実数) > 0)

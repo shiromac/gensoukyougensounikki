@@ -292,7 +292,7 @@ void cCondition::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(病気状態() && timing == 回復直前_タイミング)
 	{
-		if(self() == sg_pDungeonSystem->pPlayerChara()) {
+		if(self() == sg_pDungeonSystem->pPlayerChara() && valiable.doubles.val(螟画焚_繝｡繝�繧ｻ繝ｼ繧ｸ繝輔Λ繧ｰ)) {
 			std::map<tstring, StyleString > val;
 			g_Langメッセージ(_T("病気回復不可メッセージ"), val);
 		}
