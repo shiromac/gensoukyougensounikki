@@ -292,7 +292,7 @@ void cCondition::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(病気状態() && timing == 回復直前_タイミング)
 	{
-		if(self() == sg_pDungeonSystem->pPlayerChara() && valiable.doubles.val(螟画焚_繝｡繝�繧ｻ繝ｼ繧ｸ繝輔Λ繧ｰ)) {
+		if(self() == sg_pDungeonSystem->pPlayerChara() && valiable.doubles.val(変数_メッセージフラグ)) {
 			std::map<tstring, StyleString > val;
 			g_Langメッセージ(_T("病気回復不可メッセージ"), val);
 		}
@@ -1318,7 +1318,7 @@ bool cCondition::空腹cConditionChip::process()
 		if(!count(空腹) && (self()->空腹ProcessFlag() & 空腹ProcessFlag_回復))
 		{
 			lastDamageTurnCount++;
-			if(lastDamageTurnCount > self()->HP自然回復開始ターン()) {
+			if(lastDamageTurnCount > self()->HP自然回復開始ターン() && !count(病気)) {
 				//ココにダメージを受けたら一定時間回復しない処理を入れる
 				cValiableField valf;
 				valf.doubles.dim(変数_回復力ボーナス_倍率) = 1;
@@ -1328,8 +1328,7 @@ bool cCondition::空腹cConditionChip::process()
 				double recover_d = max(self()->MHP*self()->HP自然回復割合()*valf.doubles.val(変数_回復力ボーナス_倍率),self()->HP自然回復最低保障値()) + HP_oddstock;//0.5を下限
 				int recover = recover_d;
 				HP_oddstock = recover_d - recover;
-				sg_pDungeonSystem->回復要請(self(),recover,false);
-
+				if (sg_pDungeonSystem->回復要請(self(),recover,false)) 
 				{
 					cValiableField valf;
 					valf.doubles.dim(変数_汎用ボーナス_倍率) = 1;
@@ -3720,14 +3719,14 @@ void cCondition::病気cConditionChip::become_healthfitness(int value) {
 
 bool cCondition::病気cConditionChip::cure_back_natural(異常状態 type) {
 	if(_avoidHealVolume > 0){
-		bool become_healthfitness(_avoidHealVolume);
+		become_healthfitness(_avoidHealVolume);
 	}
 	return cConditionChipTurn::cure_back_natural(type);
 }
 
 bool cCondition::病気cConditionChip::cure_back_force(異常状態 type){
 	if(_avoidHealVolume > 0){
-		bool become_healthfitness(_avoidHealVolume);
+		become_healthfitness(_avoidHealVolume);
 	}
 	return cConditionChipTurn::cure_back_force(type);
 }

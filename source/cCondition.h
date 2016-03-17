@@ -212,13 +212,13 @@ public:
 
 
 		//異常状態が自然に直ったときの特殊処理
-		bool cure_back_natural(異常状態 type);
+		virtual bool cure_back_natural(異常状態 type);
 
 		//異常状態を無理やり治したときの特殊処理
-		bool cure_back_force(異常状態 type);
+		virtual bool cure_back_force(異常状態 type);
 
 		//異常状態になったときの特殊処理
-		bool go_bad(異常状態 type);
+		virtual bool go_bad(異常状態 type);
 	};
 	friend cConditionChipVirtual;
 
@@ -1223,6 +1223,7 @@ protected:
 		virtual bool go_bad(異常状態 type);
 
 	} 健康Chip;
+public:
 	DEF_CONDITION_PREPROCESS_turnon_追加(健康)
 	DEF_CONDITION_PREPROCESS_count_verb(健康,状態)
 
@@ -1245,6 +1246,7 @@ protected:
 		virtual bool go_bad(異常状態 type);
 
 	} 病気Chip;
+public:
 	DEF_CONDITION_PREPROCESS_turnon_追加(病気)
 	DEF_CONDITION_PREPROCESS_count_verb(病気,状態)
 };
