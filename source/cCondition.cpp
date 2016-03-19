@@ -127,8 +127,8 @@ bool cCondition::init(pcCharacter pself)
 	DEF_condition_chipvector_init(臆病,EMOTION_OKUBYOU);臆病Chip.setOverWrite(false);
 	DEF_condition_chipvector_init(鳥目,EMOTION_TORIME);鳥目Chip.setOverWrite(false);
 	DEF_condition_chipvector_init(無意識,EMOTION_PUNPUN);無意識Chip.setOverWrite(true);
-	DEF_condition_chipvector_init(健康,EMOTION_TORIME);健康Chip.setOverWrite(false);
-	DEF_condition_chipvector_init(病気,EMOTION_TORIME);病気Chip.setOverWrite(false);
+	DEF_condition_chipvector_init(健康,EMOTION_POWAPOWA);健康Chip.setOverWrite(false);
+	DEF_condition_chipvector_init(病気,EMOTION_SEKIMEN);病気Chip.setOverWrite(false);
 
 	DEF_condition_chipvector_initNULL(脱力元気,EMOTION_NULL);
 	DEF_condition_chipvector_initNULL(軟弱頑強,EMOTION_NULL);
