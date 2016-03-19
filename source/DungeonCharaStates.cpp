@@ -1183,6 +1183,8 @@ int cDungeonSystem::g‘ÌˆÙí¡—Ã—v¿(pcCharacter pchara, int Messageflag)
 	pchara->Condition.“DŒ’Ç‰Á(-1);
 	pchara->Condition.•X•t‚¯’Ç‰Á(-1);
 	pchara->Condition.’¹–Ú’Ç‰Á(-1);
+	pchara->Condition.•a‹C’Ç‰Á(-1);
+	pchara->Condition.Œ’N’Ç‰Á(-1);
 	return true;
 }
 bool cDungeonSystem::g‘ÌˆÙíó‘Ô(pcCharacter pchara)
@@ -1195,6 +1197,8 @@ bool cDungeonSystem::g‘ÌˆÙíó‘Ô(pcCharacter pchara)
 	if(pchara->Condition.“DŒó‘Ô()) return true;
 	if(pchara->Condition.•X•t‚¯ó‘Ô()) return true;
 	if(pchara->Condition.’¹–Úó‘Ô()) return true;
+	if(pchara->Condition.•a‹C’Ç‰Á()) return true;
+	if(pchara->Condition.Œ’N’Ç‰Á()) return true;
 	return false;
 }
 int cDungeonSystem::ôpˆÙí¡—Ã—v¿(pcCharacter pchara, int Messageflag)
