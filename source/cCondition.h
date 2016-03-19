@@ -1214,8 +1214,9 @@ public:
 	//---------------------------------
 	//Œ’NŠÖŒW
 	//---------------------------------
-protected:
+public:
 	const static double healthfitnessRecoverPerHP;
+protected:
 	class Œ’NcConditionChip:
 		public cConditionChipTurn
 	{
