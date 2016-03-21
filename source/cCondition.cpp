@@ -45,6 +45,7 @@
 #define SPEED_TRIPLE 2
 
 const double cCondition::healthfitnessRecoverPerHP = 0.1f;
+const double cCondition::sicknessDamegePerHP = 0.1f;
 
 cCondition::cCondition(void)
 {
@@ -1292,7 +1293,16 @@ bool cCondition::空腹cConditionChip::process()
 
 	//if(self()->Forse == CHARACTER_FORSE_FRIEND)
 	//{//友軍
-	
+		if(self()->雑魚属性() && count(病気))
+		{
+			double damege = ceil(self()->HP*sicknessDamegePerHP);
+			if(self()->HP == damege) {
+				damege = self()->HP-1;
+			}
+			if(damege > 0) {
+				sg_pDungeonSystem->強制ダメージ要請(self(), damege, false, false);
+			}
+		}
 		if((self()->空腹ProcessFlag() & 空腹ProcessFlag_空腹))
 		{
 			if(!sg_pDungeonSystem->拠点フラグ())

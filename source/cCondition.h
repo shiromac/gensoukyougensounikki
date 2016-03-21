@@ -1231,6 +1231,8 @@ public:
 	//---------------------------------
 	//病気関係
 	//---------------------------------
+public:
+	const static double sicknessDamegePerHP;
 protected:
 
 	class 病気cConditionChip:
