@@ -1300,7 +1300,7 @@ bool cCondition::空腹cConditionChip::process()
 				damege = self()->HP-1;
 			}
 			if(damege > 0) {
-				sg_pDungeonSystem->強制ダメージ要請(self(), damege, false, false);
+				sg_pDungeonSystem->強制ダメージ要請(self(), damege, false, true);
 			}
 		}
 		if((self()->空腹ProcessFlag() & 空腹ProcessFlag_空腹))
