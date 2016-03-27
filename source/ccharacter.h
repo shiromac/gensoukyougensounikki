@@ -201,6 +201,18 @@ public:
 	virtual void Draw(IDirect3DDevice9 *pDev);
 	virtual void DrawBody(IDirect3DDevice9 *pDev);
 	virtual void DrawShadow(IDirect3DDevice9 *pDev);
+
+	virtual void DrawMahoujin(IDirect3DDevice9 *pDev);
+
+	virtual void onMahoujin();
+protected:
+	
+	virtual void settingInit_mahoujin();
+	cDrawingObject mahoujin;
+	double mahoujin_count;
+	bool mahoujin_on;
+public:
+
 	virtual unsigned int ShadowColor();
 	virtual bool edgedrawswitch(){return 0;};
 

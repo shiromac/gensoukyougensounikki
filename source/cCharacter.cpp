@@ -76,6 +76,8 @@ cCharacter::cCharacter(void)
 	anime_pitching = 0;
 	anime_position.set(0,0,0,0);
 	anime_yawing = 0;
+
+	mahoujin_on = false;
 }
 
 cCharacter::~cCharacter(void)
@@ -181,6 +183,15 @@ void cCharacter::settingInit()
 		Condition.デフォルト速度設定(三倍速); break;
 	}
 
+}
+
+void cCharacter::onMahoujin()
+{
+	if(!mahoujin_on)
+	{
+		settingInit_mahoujin();
+		mahoujin_on = true;
+	}
 }
 
 void cCharacter::naturalSpawnInit()
@@ -468,7 +479,9 @@ tstring cCharacter::LVStr()
 }
 void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 {
-
+	if(mahoujin_on) {
+		DrawMahoujin(pDev);
+	}
 	
 	c4DVector chara_place = visibleplace + anime_position;
 	//影
@@ -490,6 +503,37 @@ void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 						1,1);
 	
 	DO.Draw(pDev);
+}
+
+void cCharacter::settingInit_mahoujin()
+{
+	mahoujin.setTexture(g_GameEnv.m_GlobalResourse->getTextureFromFile(
+		sg_pDungeonSystem->pDevice_D3D,_T("effect\\magiccircle.png")));
+	mahoujin.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
+	mahoujin.m_color.ARGB(128,230,80,30);
+	mahoujin_count = 0;
+	mahoujin.m_TexRange.setLTRB(0,0,
+						1,1);
+}
+
+void cCharacter::DrawMahoujin(IDirect3DDevice9 *pDev)
+{
+	c4DVector chara_place = visibleplace + anime_position;
+	mahoujin.m_color.alpha = opaque*128;
+	mahoujin_count += 0.02;
+	
+	mahoujin.Width = 128 + sin(mahoujin_count)*32;
+	mahoujin.Height = 128 + sin(mahoujin_count)*32;
+
+	mahoujin.CenterX =  
+		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
+	
+	mahoujin.CenterY =  
+		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y - mapForcus.y);
+	
+	mahoujin.ScaleY = 0.8;
+	mahoujin.Rotation = mahoujin_count*100;
+	mahoujin.Draw(pDev);
 }
 unsigned int cCharacter::ShadowColor()
 {

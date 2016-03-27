@@ -96,10 +96,6 @@ public:
 
 	virtual int spellIndex(){return spellIndex_;};
 	virtual pcBossSpell nowSpell(){return nowSpell_;};
-protected:
-	virtual void DrawShadow(IDirect3DDevice9 *pDev);
-	cDrawingObject mouhoujin;
-	double mahoujin_count;
 public:
 	//スペルデリゲート
 	virtual pcLandform AIお気に入り地形(cValiableField& valiable);
