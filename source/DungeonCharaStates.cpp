@@ -10,25 +10,35 @@
 
 int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
 {
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = true;//効果発揮フラグ
+	valf.doubles.dim(変数_汎用実数) = recovery;
+	valf.doubles.dim(変数_メッセージフラグ) = Messageflag;
+	valf.charas.dim(変数_対象者) = pchara;
+	CutInM().CutIn(pchara,回復直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール) && valf.doubles.dim(変数_汎用実数) > 0)
+	{
 
-	int beforeHP = pchara->HP,afterHP;
+		int beforeHP = pchara->HP,afterHP;
 
-	RecoverCharacter(pchara,recovery,Messageflag);
-	afterHP = pchara->HP;
+		RecoverCharacter(pchara,recovery,Messageflag);
+		afterHP = pchara->HP;
 
-	if(Messageflag && pchara == pPlayerChara())
-	{//メッセージを表示する
-		map<tstring, StyleString> valiable;
+		if(Messageflag && pchara == pPlayerChara())
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
 
-		valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
-		valiable[_T("Chara")] = pchara->ShortName();
-	
-		g_Langメッセージ(_T("HP回復メッセージ"),valiable);
+			valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("HP回復メッセージ"),valiable);
 
-		//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
+			//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
+		}
+
+		return true;
 	}
-
-	return true;
+	return false;
 }
 int cDungeonSystem::HP設定要請(pcCharacter pchara, int afterHP, int Messageflag)
 {
@@ -975,6 +985,56 @@ int cDungeonSystem::鳥目要請(pcCharacter pchara, int turn, int Messageflag)
 	}
 	return false;
 }
+int cDungeonSystem::健康要請(pcCharacter pchara, int turn, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
+	CutInM().CutIn(pchara,健康追加直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール))
+	{
+		pchara->Condition.健康追加(turn);
+
+		if(Messageflag)
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
+
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("健康メッセージ"),valiable);
+			
+		}
+
+		return true;
+	}
+	return false;
+}
+int cDungeonSystem::病気要請(pcCharacter pchara, int turn, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
+	CutInM().CutIn(pchara,病気追加直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール))
+	{
+		pchara->Condition.病気追加(turn);
+
+		if(Messageflag)
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
+
+			valiable[_T("Chara")] = pchara->ShortName();
+		
+			g_Langメッセージ(_T("病気メッセージ"),valiable);
+			
+		}
+
+		return true;
+	}
+	return false;
+}
 int cDungeonSystem::死の誘い要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -1123,6 +1183,8 @@ int cDungeonSystem::身体異常治療要請(pcCharacter pchara, int Messageflag)
 	pchara->Condition.泥酔追加(-1);
 	pchara->Condition.氷付け追加(-1);
 	pchara->Condition.鳥目追加(-1);
+	pchara->Condition.病気追加(-1);
+	pchara->Condition.健康追加(-1);
 	return true;
 }
 bool cDungeonSystem::身体異常状態(pcCharacter pchara)
@@ -1135,6 +1197,8 @@ bool cDungeonSystem::身体異常状態(pcCharacter pchara)
 	if(pchara->Condition.泥酔状態()) return true;
 	if(pchara->Condition.氷付け状態()) return true;
 	if(pchara->Condition.鳥目状態()) return true;
+	if(pchara->Condition.病気状態()) return true;
+	if(pchara->Condition.健康状態()) return true;
 	return false;
 }
 int cDungeonSystem::呪術異常治療要請(pcCharacter pchara, int Messageflag)

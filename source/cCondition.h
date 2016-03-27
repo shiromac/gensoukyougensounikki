@@ -61,6 +61,9 @@ enum 異常状態
 	鳥目,
 	無意識,
 
+	健康,
+	病気,
+
 	脱力,
 	元気,
 
@@ -209,13 +212,13 @@ public:
 
 
 		//異常状態が自然に直ったときの特殊処理
-		bool cure_back_natural(異常状態 type);
+		virtual bool cure_back_natural(異常状態 type);
 
 		//異常状態を無理やり治したときの特殊処理
-		bool cure_back_force(異常状態 type);
+		virtual bool cure_back_force(異常状態 type);
 
 		//異常状態になったときの特殊処理
-		bool go_bad(異常状態 type);
+		virtual bool go_bad(異常状態 type);
 	};
 	friend cConditionChipVirtual;
 
@@ -1208,6 +1211,47 @@ public:
 	DEF_CONDITION_PREPROCESS_turnon_追加(無意識)
 	DEF_CONDITION_PREPROCESS_count_verb(無意識,状態)
 
+	//---------------------------------
+	//健康関係
+	//---------------------------------
+public:
+	const static double healthfitnessRecoverPerHP;
+protected:
+	class 健康cConditionChip:
+		public cConditionChipTurn
+	{
+	public:
+		virtual bool go_bad(異常状態 type);
+
+	} 健康Chip;
+public:
+	DEF_CONDITION_PREPROCESS_turnon_追加(健康)
+	DEF_CONDITION_PREPROCESS_count_verb(健康,状態)
+
+	//---------------------------------
+	//病気関係
+	//---------------------------------
+public:
+	const static double sicknessDamegePerHP;
+protected:
+
+	class 病気cConditionChip:
+		public cConditionChipTurn
+	{
+		int _avoidHealVolume;
+	public:
+		int avoidHealVolume(){return _avoidHealVolume;};
+		void setAvoidHealVolume(const int& avoidHealVolume){_avoidHealVolume = avoidHealVolume;};
+
+		void become_healthfitness(int value);
+		virtual bool cure_back_natural(異常状態 type);
+		virtual bool cure_back_force(異常状態 type);
+		virtual bool go_bad(異常状態 type);
+
+	} 病気Chip;
+public:
+	DEF_CONDITION_PREPROCESS_turnon_追加(病気)
+	DEF_CONDITION_PREPROCESS_count_verb(病気,状態)
 };
 
 //#include <boost/shared_ptr.hpp>

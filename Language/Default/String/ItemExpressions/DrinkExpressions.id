@@ -1206,3 +1206,72 @@ $>5034
 		#n
 	$<
 $<
+$>5035
+	$>FullNameBase
+		リジェネ（仮
+	$<
+	$>ShortNameBase
+		リジェネ（仮
+	$<
+	$>shortExplanationBase
+		
+		#n#cdNOTICE
+		飲むと健康状態になる。
+		#n#i
+		健康状態では徐々にHPが回復する。
+		#n
+	$<
+	$>longExplanationBase
+		#n#cdNOTICE
+		飲むと健康状態になる。
+		#n#i
+		健康状態では徐々にHPが回復する。
+		#n
+	$<
+$<
+$>5036
+	$>FullNameBase
+		病気（仮
+	$<
+	$>ShortNameBase
+		病気（仮
+	$<
+	$>shortExplanationBase
+		
+		#n#cdNOTICE
+		飲むと病気状態になる。
+		#n#i
+		病気状態ではHPが回復できない。
+		#n
+	$<
+	$>longExplanationBase
+		#n#cdNOTICE
+		飲むと病気状態になる。
+		#n#i
+		病気状態ではHPが回復できない。
+		#n
+	$<
+$<
+$>5037
+	$>FullNameBase
+		一病息災の酒
+	$<
+	$>ShortNameBase
+		一病息災の酒
+	$<
+	$>shortExplanationBase
+		
+		#n#cdNOTICE
+		飲むと病気状態になるが、その後健康状態になる。
+		#n#i
+		病気状態ではHPが回復できない。健康状態では徐々にHPが回復する
+		#n
+	$<
+	$>longExplanationBase
+		#n#cdNOTICE
+		飲むと病気状態になる。その後健康状態になる。
+		#n#i
+		病気状態ではHPが回復できない。健康状態では徐々にHPが回復する
+		#n
+	$<
+$<

@@ -62,6 +62,8 @@ typedef boost::weak_ptr<DungeonStoryScript_LuaEnvironment> wpDungeonStoryScript_
 #define EMOTION_KYOURAN 26
 #define EMOTION_OKUBYOU 27
 #define EMOTION_PUNPUN 28
+#define EMOTION_SEKIMEN 29
+#define EMOTION_POWAPOWA 30
 
 #define EMOTION_SUBINFO_STEP_ATHIRD 101
 #define EMOTION_SUBINFO_STEP_AHALF 102

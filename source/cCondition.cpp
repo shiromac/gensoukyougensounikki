@@ -44,6 +44,9 @@
 #define SPEED_DOUBLE 1
 #define SPEED_TRIPLE 2
 
+const double cCondition::healthfitnessRecoverPerHP = 0.1f;
+const double cCondition::sicknessDamegePerHP = 0.1f;
+
 cCondition::cCondition(void)
 {
 	/*
@@ -125,6 +128,8 @@ bool cCondition::init(pcCharacter pself)
 	DEF_condition_chipvector_init(臆病,EMOTION_OKUBYOU);臆病Chip.setOverWrite(false);
 	DEF_condition_chipvector_init(鳥目,EMOTION_TORIME);鳥目Chip.setOverWrite(false);
 	DEF_condition_chipvector_init(無意識,EMOTION_PUNPUN);無意識Chip.setOverWrite(true);
+	DEF_condition_chipvector_init(健康,EMOTION_POWAPOWA);健康Chip.setOverWrite(false);
+	DEF_condition_chipvector_init(病気,EMOTION_SEKIMEN);病気Chip.setOverWrite(false);
 
 	DEF_condition_chipvector_initNULL(脱力元気,EMOTION_NULL);
 	DEF_condition_chipvector_initNULL(軟弱頑強,EMOTION_NULL);
@@ -286,6 +291,19 @@ void cCondition::CutIn(タイミング timing, cValiableField& valiable)
 		valiable.doubles.val(変数_防御力ボーナス_倍率) += 1.0;
 	}
 
+	if(病気状態() && timing == 回復直前_タイミング)
+	{
+		if(self() == sg_pDungeonSystem->pPlayerChara() && valiable.doubles.val(変数_メッセージフラグ)) {
+			std::map<tstring, StyleString > val;
+			g_Langメッセージ(_T("病気回復不可メッセージ"), val);
+		}
+		病気Chip.setAvoidHealVolume(病気Chip.avoidHealVolume() + valiable.doubles.val(変数_汎用実数));
+		valiable.doubles[変数_汎用ブール] = false;
+	}
+
+	if(健康状態() && timing == ターン終了_タイミング) {
+		sg_pDungeonSystem->回復要請(self(), ceil(self()->MHP*healthfitnessRecoverPerHP), false);
+	}
 }
 
 //---------------------------------
@@ -1275,7 +1293,16 @@ bool cCondition::空腹cConditionChip::process()
 
 	//if(self()->Forse == CHARACTER_FORSE_FRIEND)
 	//{//友軍
-	
+		if(self()->雑魚属性() && count(病気))
+		{
+			double damege = ceil(self()->HP*sicknessDamegePerHP);
+			if(self()->HP == damege) {
+				damege = self()->HP-1;
+			}
+			if(damege > 0) {
+				sg_pDungeonSystem->強制ダメージ要請(self(), damege, false, true);
+			}
+		}
 		if((self()->空腹ProcessFlag() & 空腹ProcessFlag_空腹))
 		{
 			if(!sg_pDungeonSystem->拠点フラグ())
@@ -1301,7 +1328,7 @@ bool cCondition::空腹cConditionChip::process()
 		if(!count(空腹) && (self()->空腹ProcessFlag() & 空腹ProcessFlag_回復))
 		{
 			lastDamageTurnCount++;
-			if(lastDamageTurnCount > self()->HP自然回復開始ターン()) {
+			if(lastDamageTurnCount > self()->HP自然回復開始ターン() && !count(病気)) {
 				//ココにダメージを受けたら一定時間回復しない処理を入れる
 				cValiableField valf;
 				valf.doubles.dim(変数_回復力ボーナス_倍率) = 1;
@@ -1311,8 +1338,7 @@ bool cCondition::空腹cConditionChip::process()
 				double recover_d = max(self()->MHP*self()->HP自然回復割合()*valf.doubles.val(変数_回復力ボーナス_倍率),self()->HP自然回復最低保障値()) + HP_oddstock;//0.5を下限
 				int recover = recover_d;
 				HP_oddstock = recover_d - recover;
-				sg_pDungeonSystem->回復要請(self(),recover,false);
-
+				if (sg_pDungeonSystem->回復要請(self(),recover,false)) 
 				{
 					cValiableField valf;
 					valf.doubles.dim(変数_汎用ボーナス_倍率) = 1;
@@ -3688,6 +3714,38 @@ bool cCondition::cConditionChipTurn::set_predict_emotion()
 	}
 	return true;
 }
+//---------------------------------------------------------
+
+bool cCondition::健康cConditionChip::go_bad(異常状態 type) {
+	self()->Condition.病気追加(-1);
+	return cConditionChipTurn::go_bad(type);
+}
+
+void cCondition::病気cConditionChip::become_healthfitness(int value) {
+	double recoverValue = ceil(self()->MHP * healthfitnessRecoverPerHP);
+	int turn = ceil(_avoidHealVolume / recoverValue);
+	self()->Condition.健康追加(turn);
+}
+
+bool cCondition::病気cConditionChip::cure_back_natural(異常状態 type) {
+	if(_avoidHealVolume > 0){
+		become_healthfitness(_avoidHealVolume);
+	}
+	return cConditionChipTurn::cure_back_natural(type);
+}
+
+bool cCondition::病気cConditionChip::cure_back_force(異常状態 type){
+	if(_avoidHealVolume > 0){
+		become_healthfitness(_avoidHealVolume);
+	}
+	return cConditionChipTurn::cure_back_force(type);
+}
+
+bool cCondition::病気cConditionChip::go_bad(異常状態 type) {
+	setAvoidHealVolume(0);
+	self()->Condition.健康追加(-1);
+	return cConditionChipTurn::go_bad(type);
+}
 
 //---------------------------------------------------------
 // cCondition::cConditionChipOnOff
@@ -3821,9 +3879,12 @@ void cCondition::InitChipstr()
 	DEF_InitChipstr_set(嫉妬);
 	DEF_InitChipstr_set(臆病);
 	DEF_InitChipstr_set(鳥目);
+	
+	DEF_InitChipstr_set(健康);
+	DEF_InitChipstr_set(病気);
 
 	DEF_InitChipstr_set(脱力);
-	DEF_InitChipstr_set(元気);
+	DEF_InitChipstr_set(病気);
 
 	DEF_InitChipstr_set(軟弱);
 	DEF_InitChipstr_set(頑強);

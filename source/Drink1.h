@@ -435,7 +435,19 @@ DEF_class_cDrink_ID(33)
 DEF_class_cDrink_ID(34)
 	virtual int 飲む_効果_通常(pcCharacter pchara);
 };
-#define DRINK_NUM 35
+//リジェネ
+DEF_class_cDrink_ID(35)
+	virtual int 飲む_効果_通常(pcCharacter pchara);
+};
+//病気
+DEF_class_cDrink_ID(36)
+	virtual int 飲む_効果_通常(pcCharacter pchara);
+};
+//一病息災
+DEF_class_cDrink_ID(37)
+	virtual int 飲む_効果_通常(pcCharacter pchara);
+};
+#define DRINK_NUM 38
 /*
 DEF_class_cDrink_ID(999)
 
