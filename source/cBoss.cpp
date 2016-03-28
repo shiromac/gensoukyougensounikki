@@ -59,7 +59,7 @@ void cBoss::settingInit()
 		
 	}
 
-	onMahoujin();
+	onMahoujin(1.0);
 }
 
 void cBoss::CutIn(タイミング timing, cValiableField& valiable)

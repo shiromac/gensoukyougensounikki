@@ -185,8 +185,9 @@ void cCharacter::settingInit()
 
 }
 
-void cCharacter::onMahoujin()
+void cCharacter::onMahoujin(double sizePower)
 {
+	mahoujin_sizePower = sizePower;
 	if(!mahoujin_on)
 	{
 		settingInit_mahoujin();
@@ -522,8 +523,8 @@ void cCharacter::DrawMahoujin(IDirect3DDevice9 *pDev)
 	mahoujin.m_color.alpha = opaque*128;
 	mahoujin_count += 0.02;
 	
-	mahoujin.Width = 128 + sin(mahoujin_count)*32;
-	mahoujin.Height = 128 + sin(mahoujin_count)*32;
+	mahoujin.Width = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
+	mahoujin.Height = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
 
 	mahoujin.CenterX =  
 		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
@@ -1223,6 +1224,9 @@ def_AttackAttriWeekStrong_routine(強軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(強軟弱弱点_下降ターン,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降ターン,0)
+def_AttackAttriWeekStrong_routine(オーバードライブHP倍率,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ攻撃倍率,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ防御倍率,0)
 
 
 bool isDuplicate(set<攻撃属性::攻撃属性>& set1, multiset<int>& set2)

@@ -204,12 +204,13 @@ public:
 
 	virtual void DrawMahoujin(IDirect3DDevice9 *pDev);
 
-	virtual void onMahoujin();
+	virtual void onMahoujin(double sizePower);
 protected:
 	
 	virtual void settingInit_mahoujin();
 	cDrawingObject mahoujin;
 	double mahoujin_count;
+	double mahoujin_sizePower;
 	bool mahoujin_on;
 public:
 
@@ -540,6 +541,9 @@ public:
 	static double 強軟弱弱点_下降ターン();
 	static double 軟弱弱点_下降強度();
 	static double 軟弱弱点_下降ターン();
+	static double オーバードライブHP倍率();
+	static double オーバードライブ攻撃倍率();
+	static double オーバードライブ防御倍率();
 
 	//----------------------------------------
 	//luaスクリプト
