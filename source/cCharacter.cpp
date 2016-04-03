@@ -78,6 +78,8 @@ cCharacter::cCharacter(void)
 	anime_yawing = 0;
 
 	mahoujin_on = false;
+
+	overdrive_on = false;
 }
 
 cCharacter::~cCharacter(void)
@@ -184,6 +186,20 @@ void cCharacter::settingInit()
 	}
 
 }
+
+void cCharacter::onOverDrive()
+{
+	if(!mahoujin_on)
+	{
+		settingInit_overdrive();
+		overdrive_on = true;
+	}
+}
+void cCharacter::settingInit_overdrive()
+{
+	//nop for overdrive
+}
+
 
 void cCharacter::onMahoujin(double sizePower)
 {
@@ -456,6 +472,10 @@ int cCharacter::itemVolumeInInventory()
 	}
 	return count;
 }
+vector<int> cCharacter::死亡ドロップアイテムIDs()
+{
+	return vector<int>();
+}
 int cCharacter::死亡ドロップアイテムID()
 {
 	return 0;
@@ -651,19 +671,23 @@ void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 
 	if(edgedrawswitch())
 	{
+		int edgeWidth = 4;
+		if(isOverDrive()) {
+			edgeWidth = 6;
+		}
 		DO.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
 		DO.m_color.inputD3Dcolor(ShadowColor());
 		DO.m_color.alpha = opaque*255;
-		DO.CenterY -= 4;
+		DO.CenterY -= edgeWidth;
 		DO.Draw(pDev);
 
-		DO.CenterY += 4;
+		DO.CenterY += edgeWidth;
 
-		DO.CenterX += 4;
+		DO.CenterX += edgeWidth;
 		DO.Draw(pDev);
-		DO.CenterX -= 8;
+		DO.CenterX -= edgeWidth*2;
 		DO.Draw(pDev);
-		DO.CenterX += 4;
+		DO.CenterX += edgeWidth;
 	}
 
 
@@ -1224,9 +1248,13 @@ def_AttackAttriWeekStrong_routine(強軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(強軟弱弱点_下降ターン,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降ターン,0)
-def_AttackAttriWeekStrong_routine(オーバードライブHP倍率,0)
-def_AttackAttriWeekStrong_routine(オーバードライブ攻撃倍率,0)
-def_AttackAttriWeekStrong_routine(オーバードライブ防御倍率,0)
+def_AttackAttriWeekStrong_routine(オーバードライブHP倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ攻撃倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ防御倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ経験値倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブドロップ数,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ混酒の箱ドロップ率％,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ固有ドロップ上昇倍率,1)
 
 
 bool isDuplicate(set<攻撃属性::攻撃属性>& set1, multiset<int>& set2)

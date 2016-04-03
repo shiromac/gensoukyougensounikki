@@ -1020,8 +1020,14 @@ public:
 public:
 	//-------------------------
 	//キャラ生成関係
-	virtual pcCharacter キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land = NULLLAND);
-	virtual pcCharacter キャラクター生成(int ID,int CLASS,int Forse,pcLandform land = NULLLAND);
+	//virtual pcCharacter キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land = NULLLAND);
+	typedef enum {
+		CreateCharacterOptionsNoOption = 0,
+		CreateCharacterOptionsOverDrived = 1 << 0,
+	} CreateCharacterOption;
+	typedef int CreateCharacterOptions;
+
+	virtual pcCharacter キャラクター生成(int ID,int CLASS,int Forse,pcLandform land = NULLLAND, const CreateCharacterOptions& options = CreateCharacterOptionsNoOption);
 
 	virtual pcCharacter 主人公交代(int ID);
 	virtual bool 主人公交代(pcCharacter pchara);

@@ -12,13 +12,14 @@
 #include "ceaiShopOwner.h"
 #include "FindUtility.h"
 
-pcCharacter cDungeonSystem::キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land)
+/*pcCharacter cDungeonSystem::キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land)
 {
 	pcCharacter pchara = DataBase.GetSampleCharacter(name);
 	if(pchara == NULLCHARA) return NULLCHARA;
 	return キャラクター生成(pchara->ID(), CLASS, Forse, land);
 }
-pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandform land)
+*/
+pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandform land, const CreateCharacterOptions& options)
 {
 
 	if(land == NULLLAND)
@@ -38,6 +39,10 @@ pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandfo
 	if(pcmob == NULLCHARA) return NULLCHARA;
 	pcmob->Forse = Forse;
 	pcmob->CLASS = CLASS;
+
+	if(options & CreateCharacterOptionsOverDrived) {
+		pcmob->onOverDrive();
+	}
 
 
 

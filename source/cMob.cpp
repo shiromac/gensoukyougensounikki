@@ -319,6 +319,11 @@ void cMob::conditionprocess()
 	}
 }
 
+void cMob::settingInit_overdrive()
+{
+	onMahoujin(0.75);
+}
+
 tstring cMob::FullNameBase()
 {
 	pcScriptRLayer psr;
@@ -364,19 +369,35 @@ double cMob::baseDefencePower()
 
 int cMob::attaP()
 {
-	return calcuratePal(DEFPAL_攻撃力, CLASS);
+	double power = 1.0;
+	if(isOverDrive()) {
+		power = オーバードライブ攻撃倍率();
+	}
+	return calcuratePal(DEFPAL_攻撃力, CLASS) * power;
 }
 int cMob::deffP()
 {
-	return calcuratePal(DEFPAL_防御力, CLASS);
+	double power = 1.0;
+	if(isOverDrive()) {
+		power = オーバードライブ防御倍率();
+	}
+	return calcuratePal(DEFPAL_防御力, CLASS) * power;
 }
 int cMob::HaveEXP()
 {
-	return calcuratePal(DEFPAL_経験値, CLASS);
+	double power = 1.0;
+	if(isOverDrive()) {
+		power = オーバードライブ経験値倍率();
+	}
+	return calcuratePal(DEFPAL_経験値, CLASS) * power;
 }
 int cMob::GetMHP()
 {
-	return calcuratePal(DEFPAL_MHP, CLASS);
+	double power = 1.0;
+	if(isOverDrive()) {
+		power = オーバードライブHP倍率();
+	}
+	return calcuratePal(DEFPAL_MHP, CLASS) * power;
 }
 int cMob::PerOfspecialAttack()
 {
@@ -543,18 +564,69 @@ void cMob::CutIn(タイミング timing, cValiableField& valiable)
 }
 bool cMob::死亡ドロップアイテムなし()
 {
-	return 0;
+	return false;
 }
-int cMob::死亡ドロップアイテムID()
+vector<int> cMob::死亡ドロップアイテムIDs(){
+	vector<int> IDs;
+
+	if(isOverDrive()) {
+		map<int,int> dropList= 死亡ドロップアイテムリスト();
+
+		cDiscreteProbability DP;
+		map<int,int>::iterator itr = dropList.begin();
+		for(;itr!=dropList.end();itr++)
+		{
+			int id = itr->first;
+			double posibility = itr->second;
+			if(id > 0) {// 0:ドロップ無し, -1:ランダムドロップを弾く
+				posibility *= オーバードライブ固有ドロップ上昇倍率();
+			}
+			DP.set(posibility,id);
+		}
+
+		int id = DP.get(random());
+		if (id != 0) {
+			IDs.push_back(id);
+		}
+
+		if(オーバードライブ混酒の箱ドロップ率％() > random()*100)
+		{
+			IDs.push_back(7024);//混酒の箱
+		}
+
+
+		int count = IDs.size(), size = オーバードライブドロップ数();
+		for(;count < size; count++)
+		{
+			IDs.push_back(-1);
+		}
+	}
+	else {
+		int ID = 死亡ドロップアイテムID();
+		if(ID != 0) {
+			IDs.push_back(ID);
+		}
+	}
+
+	return IDs;
+}
+
+map<int,int> cMob::死亡ドロップアイテムリスト()
 {
-	if(死亡ドロップアイテムなし()) return 0;
-	
 	map<int,int> output;
-	cDiscreteProbability DP;
 
 	tstring datanamestr = _T("死亡ドロップアイテムID");
 	sg_pDungeonSystem->DataBase.CharaImportData_MapIntToInt(ID(), datanamestr, output);
 
+	return output;
+}
+
+int cMob::死亡ドロップアイテムID()
+{
+	if(死亡ドロップアイテムなし()) return 0;
+	
+	map<int,int> output = 死亡ドロップアイテムリスト();
+	cDiscreteProbability DP;
 
 	map<int,int>::iterator itr = output.begin();
 	for(;itr!=output.end();itr++)
