@@ -372,6 +372,20 @@ int cCommand_menuOther_Summon_Chara::Action(IDirect3DDevice9 *pDev)
 		pccm->chara_ID = chara_ID;
 		pccm->CLASS = i;
 		pccm->Forse = CHARACTER_FORSE_ENEMY;
+		pccm->option = cDungeonSystem::CreateCharacterOptionsNoOption;
+	}
+	for(i=0;i<5;i++)
+	{
+		TCHAR t[16];
+		_stprintf(t,_T("CLASS %d "),i);
+		cCommand_menuOther_Summon_Chara_Class* pccm;
+		pcsw->commandList.push_back(pcCommand(
+			pccm = new cCommand_menuOther_Summon_Chara_Class(t + setStyle(_T("ENEMY OVERDRIVE"),0xFFFF5050))));
+		
+		pccm->chara_ID = chara_ID;
+		pccm->CLASS = i;
+		pccm->Forse = CHARACTER_FORSE_ENEMY;
+		pccm->option = cDungeonSystem::CreateCharacterOptionsOverDrived;
 	}
 	for(i=0;i<5;i++)
 	{
@@ -384,8 +398,22 @@ int cCommand_menuOther_Summon_Chara::Action(IDirect3DDevice9 *pDev)
 		pccm->chara_ID = chara_ID;
 		pccm->CLASS = i;
 		pccm->Forse = CHARACTER_FORSE_FRIEND;
+		pccm->option = cDungeonSystem::CreateCharacterOptionsNoOption;
 	}
-	pcsw->Init(pDev, 20, 5);
+	for(i=0;i<5;i++)
+	{
+		TCHAR t[16];
+		_stprintf(t,_T("CLASS %d "),i);
+		cCommand_menuOther_Summon_Chara_Class* pccm;
+		pcsw->commandList.push_back(pcCommand(
+			pccm = new cCommand_menuOther_Summon_Chara_Class(t + setStyle(_T("FRIEND OVERDRIVE"),0xFF50FF50))));
+		
+		pccm->chara_ID = chara_ID;
+		pccm->CLASS = i;
+		pccm->Forse = CHARACTER_FORSE_FRIEND;
+		pccm->option = cDungeonSystem::CreateCharacterOptionsOverDrived;
+	}
+	pcsw->Init(pDev, 20, 10);
 	pcsw->setLeft(sg_pDungeonSystem->GameScreenInterface.menuPosLeft(4));
 	pcsw->setTop(sg_pDungeonSystem->GameScreenInterface.menuPosTop(2));
 
@@ -405,7 +433,7 @@ int cCommand_menuOther_Summon_Chara_Class::Action(IDirect3DDevice9 *pDev)
 {
 	pcCharacter pchara = sg_pDungeonSystem->DataBase.GetSampleCharacter(chara_ID);
 	sg_pDungeonSystem->キャラクター生成(chara_ID,CLASS,Forse,
-		sg_pDungeonSystem->Map().Land(sg_pDungeonSystem->pPlayerChara()->placeX,sg_pDungeonSystem->pPlayerChara()->placeY));
+		sg_pDungeonSystem->Map().Land(sg_pDungeonSystem->pPlayerChara()->placeX,sg_pDungeonSystem->pPlayerChara()->placeY), option);
 	sg_pDungeonSystem->resetTurnInformation(pDev);
 	return true;
 };
