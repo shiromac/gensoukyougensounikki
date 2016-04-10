@@ -568,6 +568,7 @@ bool cMob::死亡ドロップアイテムなし()
 }
 vector<int> cMob::死亡ドロップアイテムIDs(){
 	vector<int> IDs;
+	cDropingDistribution floorDP = sg_pDungeonSystem->pFloor()->dropitemDP();
 
 	if(isOverDrive()) {
 		map<int,int> dropList= 死亡ドロップアイテムリスト();
@@ -585,13 +586,14 @@ vector<int> cMob::死亡ドロップアイテムIDs(){
 		}
 
 		int id = DP.get(random());
-		if (id != 0) {
+		if (id != 0 && floorDP.isExistDropItemID(id)) {
 			IDs.push_back(id);
 		}
 
-		if(オーバードライブ混酒の箱ドロップ率％() > random()*100)
+		const int konsyuID = 7024;
+		if(オーバードライブ混酒の箱ドロップ率％() > random()*100 && id != 0 && floorDP.isExistDropItemID(konsyuID))
 		{
-			IDs.push_back(7024);//混酒の箱
+			IDs.push_back(konsyuID);//混酒の箱
 		}
 
 
@@ -603,7 +605,7 @@ vector<int> cMob::死亡ドロップアイテムIDs(){
 	}
 	else {
 		int ID = 死亡ドロップアイテムID();
-		if(ID != 0) {
+		if(ID != 0 && floorDP.isExistDropItemID(ID)) {
 			IDs.push_back(ID);
 		}
 	}

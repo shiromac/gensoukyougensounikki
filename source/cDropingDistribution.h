@@ -77,4 +77,6 @@ public:
 		double* MoneyBag,
 		double* Other
 		) const;
+
+	bool isExistDropItemID(const int ID);
 };

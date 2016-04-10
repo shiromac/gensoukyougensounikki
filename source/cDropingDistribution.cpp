@@ -6,6 +6,16 @@
 
 #include "utility/debug.h"
 
+static const int EquipmentGroupID = 0;
+static const int BulletGroupID = 1;
+static const int SpellGroupID = 2;
+static const int FoodGroupID = 3;
+static const int DrinkGroupID = 4;
+static const int BookGroupID = 5;
+static const int BoxGroupID = 6;
+static const int MoneyBagGroupID = 7;
+static const int OtherGroupID = 8;
+
 cDropingDistribution::cDropingDistribution(void)
 {
 	setItemGroupPos(
@@ -121,15 +131,15 @@ int cDropingDistribution::changeItemGroupPos(
 
 	cDiscreteProbability::clear();
 
-	setoldGroup(Equipment,0);
-	setoldGroup(Bullet,1);
-	setoldGroup(Spell,2);
-	setoldGroup(Food,3);
-	setoldGroup(Drink,4);
-	setoldGroup(Book,5);
-	setoldGroup(Box,6);
-	setoldGroup(MoneyBag,7);
-	setoldGroup(Other,8);
+	setoldGroup(Equipment,EquipmentGroupID);
+	setoldGroup(Bullet,BulletGroupID);
+	setoldGroup(Spell,SpellGroupID);
+	setoldGroup(Food,FoodGroupID);
+	setoldGroup(Drink,DrinkGroupID);
+	setoldGroup(Book,BookGroupID);
+	setoldGroup(Box,BoxGroupID);
+	setoldGroup(MoneyBag,MoneyBagGroupID);
+	setoldGroup(Other,OtherGroupID);
 
 	_Equipment = Equipment;
 	_Bullet = Bullet;
@@ -152,6 +162,37 @@ int cDropingDistribution::get(double random_value) const
 int cDropingDistribution::clear()
 {
 	return cDiscreteProbabilityGrouped::clear();
+}
+
+bool cDropingDistribution::isExistDropItemID(const int ID)
+{
+#define def_isExistDropItemID_groupIDcheck(group) \
+	if(index == group##GroupID) {\
+		if(_##group <= 0) {\
+			continue;\
+		}\
+	}
+
+	int index, size = Group.size();
+	for(index = 0; index < size; index++) {
+		def_isExistDropItemID_groupIDcheck(Equipment)
+		else def_isExistDropItemID_groupIDcheck(Bullet)
+		else def_isExistDropItemID_groupIDcheck(Spell)
+		else def_isExistDropItemID_groupIDcheck(Food)
+		else def_isExistDropItemID_groupIDcheck(Drink)
+		else def_isExistDropItemID_groupIDcheck(Book)
+		else def_isExistDropItemID_groupIDcheck(Box)
+		else def_isExistDropItemID_groupIDcheck(MoneyBag)
+		else def_isExistDropItemID_groupIDcheck(Other)
+
+		std::map<double, int>::iterator itr = Group[index].begin();
+		for(;itr != Group[index].end(); itr++) {
+			if(itr->second == ID) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 int cDropingDistribution::set(int ID, double power)
