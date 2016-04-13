@@ -164,12 +164,16 @@ public:
 	const int Maxappearenemy(){return Maxappearenemy_;};
 	const int Minappearenemy(){return Minappearenemy_;};
 	const int Maxenemynum(){return Maxenemynum_;};
+	const double overdriveEnemyPercent(){return overdriveEnemyPercent_;};
+	const int overdriveMaxAppearEnemyNum(){return overdriveMaxAppearEnemyNum_;};
 private:
 	int appearenemycount_;
 	int nextappearenemy_;
 	int Maxappearenemy_;
 	int Minappearenemy_;
 	int Maxenemynum_;
+	double overdriveEnemyPercent_;
+	int overdriveMaxAppearEnemyNum_;
 public:
 	//“G‰Šú”z’u
 	virtual int enemyfirstsetnum(const int roomnum, const int landnum);

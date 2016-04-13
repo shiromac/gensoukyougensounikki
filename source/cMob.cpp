@@ -279,6 +279,11 @@ void cMob::naturalSpawnInit()
 	
 	cCharacter::naturalSpawnInit();
 
+	if(isOverDrive()) {
+		Condition.深い居眠り追加();
+		return;
+	}
+
 	cDiscreteProbability CD;
 	CD.set(初期配置深い居眠り確率係数(),0);
 	CD.set(初期配置浅い居眠り確率係数(),1);

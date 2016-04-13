@@ -556,6 +556,7 @@ public:
 	virtual pcCharacter システム用キャラ検索(pcCharacter pchara);
 
 	virtual int 敵の数();//敵の数
+	virtual int オーバードライブ敵の数();//敵の数
 
 
 	virtual tstring 漢数字(int digit, int flag = 0);

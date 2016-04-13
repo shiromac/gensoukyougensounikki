@@ -50,6 +50,10 @@ int cFloor::decodeFloor(pcFloor pmodelfloor, pcScriptRLayer floordata)
 
 		const tstring firstsetstr(_T("初期設置"));
 		decodeIntMatrix(charafirstsets_, pmodelfloor->charafirstsets(), floordata, enemystr, firstsetstr);
+		
+		decodeDouble(overdriveEnemyPercent_, pmodelfloor->overdriveEnemyPercent(), floordata, enemystr, tstring(_T("オーバードライブ出現率％")), 0);
+		
+		decodeInt(overdriveMaxAppearEnemyNum_, pmodelfloor->overdriveMaxAppearEnemyNum(), floordata, enemystr, tstring(_T("オーバードライブ出現敵最大数")), 0);
 	}
 	{
 		const tstring dropstr(_T("ドロップアイテム基礎"));

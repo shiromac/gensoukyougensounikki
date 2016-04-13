@@ -802,6 +802,22 @@ int cDungeonSystem::敵の数()
 	}
 	return count;
 }
+int cDungeonSystem::オーバードライブ敵の数()
+{
+	int count = 0;
+	int i,size = sg_pDungeonSystem->CharaList().size();
+	pcCharacter pchara;
+	for(i=0;i<size;i++)
+	{
+		pchara = sg_pDungeonSystem->CharaList()[i];
+		if(pchara->Forse == CHARACTER_FORSE_ENEMY && !pchara->CharaAttribute().count(キャラ属性::弾幕) && pchara->isOverDrive())
+		{
+			
+			++count;
+		}
+	}
+	return count;
+}
 
 tstring cDungeonSystem::漢数字(int digit, int flag)
 {

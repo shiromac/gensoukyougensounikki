@@ -106,7 +106,13 @@ bool cDungeonSystem::主人公交代(pcCharacter pchara)
 //居眠り付き
 pcCharacter cDungeonSystem::キャラクター生成_自然湧き(int ID,int CLASS,int Forse,pcLandform land)
 {
-	pcCharacter pchara = キャラクター生成(ID, CLASS, Forse, land);
+	CreateCharacterOptions option = CreateCharacterOptionsNoOption;
+	if( pFloor()->overdriveMaxAppearEnemyNum() > オーバードライブ敵の数()
+		&& pFloor()->overdriveEnemyPercent() > random()*100) {
+		option = CreateCharacterOptionsOverDrived;
+	}
+
+	pcCharacter pchara = キャラクター生成(ID, CLASS, Forse, land, option);
 
 	if(pchara)
 	{
