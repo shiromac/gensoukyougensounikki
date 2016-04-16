@@ -567,6 +567,16 @@ void cMob::CutIn(タイミング timing, cValiableField& valiable)
 		Condition.強い刺激(valiable.doubles[変数_汎用実数]);
 	}
 }
+
+int cMob::MaxholdNum() {
+	if(isOverDrive()) {
+		return 10;
+	}
+	else {
+		return cCharacter::MaxholdNum();
+	}
+}
+
 bool cMob::死亡ドロップアイテムなし()
 {
 	return false;
@@ -605,7 +615,9 @@ vector<int> cMob::死亡ドロップアイテムIDs(){
 		int count = IDs.size(), size = オーバードライブドロップ数();
 		for(;count < size; count++)
 		{
-			IDs.push_back(-1);
+			int outputID[3] = {0};
+			sg_pDungeonSystem->アイテム自然湧きID(outputID);
+			IDs.push_back(outputID[0]);
 		}
 	}
 	else {

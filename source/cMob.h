@@ -65,6 +65,7 @@ public:
 	virtual int LvDown();
 
 	virtual int upMHP();
+	virtual int MaxholdNum();
 
 	virtual map<int,int> 死亡ドロップアイテムリスト();
 
