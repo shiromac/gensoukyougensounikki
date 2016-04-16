@@ -1338,7 +1338,7 @@ bool cCondition::空腹cConditionChip::process()
 				double recover_d = max(self()->MHP*self()->HP自然回復割合()*valf.doubles.val(変数_回復力ボーナス_倍率),self()->HP自然回復最低保障値()) + HP_oddstock;//0.5を下限
 				int recover = recover_d;
 				HP_oddstock = recover_d - recover;
-				if (sg_pDungeonSystem->回復要請(self(),recover,false)) 
+				if (self()->MHP > self()->HP && sg_pDungeonSystem->回復要請(self(),recover,false)) 
 				{
 					cValiableField valf;
 					valf.doubles.dim(変数_汎用ボーナス_倍率) = 1;
