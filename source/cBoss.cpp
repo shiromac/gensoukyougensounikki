@@ -59,13 +59,7 @@ void cBoss::settingInit()
 		
 	}
 
-	mouhoujin.setTexture(g_GameEnv.m_GlobalResourse->getTextureFromFile(
-		sg_pDungeonSystem->pDevice_D3D,_T("effect\\magiccircle.png")));
-	mouhoujin.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
-	mouhoujin.m_color.ARGB(128,230,80,30);
-	mahoujin_count = 0;
-	mouhoujin.m_TexRange.setLTRB(0,0,
-						1,1);
+	onMahoujin(1.0);
 }
 
 void cBoss::CutIn(タイミング timing, cValiableField& valiable)
@@ -316,28 +310,6 @@ int cBoss::特殊攻撃_アニメ(cValiableField& valiable)
 	return false;
 }
 
-void cBoss::DrawShadow(IDirect3DDevice9 *pDev)
-{
-
-	c4DVector chara_place = visibleplace + anime_position;
-	mouhoujin.m_color.alpha = opaque*128;
-	mahoujin_count += 0.02;
-	
-	mouhoujin.Width = 128 + sin(mahoujin_count)*32;
-	mouhoujin.Height = 128 + sin(mahoujin_count)*32;
-
-	mouhoujin.CenterX =  
-		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
-	
-	mouhoujin.CenterY =  
-		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y - mapForcus.y);
-	
-	mouhoujin.ScaleY = 0.8;
-	mouhoujin.Rotation = mahoujin_count*100;
-	mouhoujin.Draw(pDev);
-
-	cCharacter::DrawShadow(pDev);
-}
 void cBoss::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
 	//no

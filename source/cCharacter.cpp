@@ -76,6 +76,10 @@ cCharacter::cCharacter(void)
 	anime_pitching = 0;
 	anime_position.set(0,0,0,0);
 	anime_yawing = 0;
+
+	mahoujin_on = false;
+
+	overdrive_on = false;
 }
 
 cCharacter::~cCharacter(void)
@@ -181,6 +185,30 @@ void cCharacter::settingInit()
 		Condition.デフォルト速度設定(三倍速); break;
 	}
 
+}
+
+void cCharacter::onOverDrive()
+{
+	if(!mahoujin_on)
+	{
+		settingInit_overdrive();
+		overdrive_on = true;
+	}
+}
+void cCharacter::settingInit_overdrive()
+{
+	//nop for overdrive
+}
+
+
+void cCharacter::onMahoujin(double sizePower)
+{
+	mahoujin_sizePower = sizePower;
+	if(!mahoujin_on)
+	{
+		settingInit_mahoujin();
+		mahoujin_on = true;
+	}
 }
 
 void cCharacter::naturalSpawnInit()
@@ -444,6 +472,10 @@ int cCharacter::itemVolumeInInventory()
 	}
 	return count;
 }
+vector<int> cCharacter::死亡ドロップアイテムIDs()
+{
+	return vector<int>();
+}
 int cCharacter::死亡ドロップアイテムID()
 {
 	return 0;
@@ -468,7 +500,9 @@ tstring cCharacter::LVStr()
 }
 void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 {
-
+	if(mahoujin_on) {
+		DrawMahoujin(pDev);
+	}
 	
 	c4DVector chara_place = visibleplace + anime_position;
 	//影
@@ -490,6 +524,37 @@ void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 						1,1);
 	
 	DO.Draw(pDev);
+}
+
+void cCharacter::settingInit_mahoujin()
+{
+	mahoujin.setTexture(g_GameEnv.m_GlobalResourse->getTextureFromFile(
+		sg_pDungeonSystem->pDevice_D3D,_T("effect\\magiccircle.png")));
+	mahoujin.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
+	mahoujin.m_color.ARGB(128,230,80,30);
+	mahoujin_count = 0;
+	mahoujin.m_TexRange.setLTRB(0,0,
+						1,1);
+}
+
+void cCharacter::DrawMahoujin(IDirect3DDevice9 *pDev)
+{
+	c4DVector chara_place = visibleplace + anime_position;
+	mahoujin.m_color.alpha = opaque*128;
+	mahoujin_count += 0.02;
+	
+	mahoujin.Width = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
+	mahoujin.Height = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
+
+	mahoujin.CenterX =  
+		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
+	
+	mahoujin.CenterY =  
+		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y - mapForcus.y);
+	
+	mahoujin.ScaleY = 0.8;
+	mahoujin.Rotation = mahoujin_count*100;
+	mahoujin.Draw(pDev);
 }
 unsigned int cCharacter::ShadowColor()
 {
@@ -606,19 +671,23 @@ void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 
 	if(edgedrawswitch())
 	{
+		int edgeWidth = 4;
+		if(isOverDrive()) {
+			edgeWidth = 6;
+		}
 		DO.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
 		DO.m_color.inputD3Dcolor(ShadowColor());
 		DO.m_color.alpha = opaque*255;
-		DO.CenterY -= 4;
+		DO.CenterY -= edgeWidth;
 		DO.Draw(pDev);
 
-		DO.CenterY += 4;
+		DO.CenterY += edgeWidth;
 
-		DO.CenterX += 4;
+		DO.CenterX += edgeWidth;
 		DO.Draw(pDev);
-		DO.CenterX -= 8;
+		DO.CenterX -= edgeWidth*2;
 		DO.Draw(pDev);
-		DO.CenterX += 4;
+		DO.CenterX += edgeWidth;
 	}
 
 
@@ -1179,6 +1248,13 @@ def_AttackAttriWeekStrong_routine(強軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(強軟弱弱点_下降ターン,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降ターン,0)
+def_AttackAttriWeekStrong_routine(オーバードライブHP倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ攻撃倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ防御倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブ経験値倍率,1)
+def_AttackAttriWeekStrong_routine(オーバードライブドロップ数,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ混酒の箱ドロップ率％,0)
+def_AttackAttriWeekStrong_routine(オーバードライブ固有ドロップ上昇倍率,1)
 
 
 bool isDuplicate(set<攻撃属性::攻撃属性>& set1, multiset<int>& set2)

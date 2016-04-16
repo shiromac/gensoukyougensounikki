@@ -57,6 +57,7 @@ DEF_COMMANDCLASS(_menuOther_Summon_Chara_Class,_T("クラス"))
 	int chara_ID;
 	int CLASS;
 	int Forse;
+	int option;
 };
 
 DEF_COMMANDCLASS(_menuOther_Make,_T("デバック生成"))

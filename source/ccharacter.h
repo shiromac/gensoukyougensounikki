@@ -201,6 +201,26 @@ public:
 	virtual void Draw(IDirect3DDevice9 *pDev);
 	virtual void DrawBody(IDirect3DDevice9 *pDev);
 	virtual void DrawShadow(IDirect3DDevice9 *pDev);
+
+	virtual void DrawMahoujin(IDirect3DDevice9 *pDev);
+
+	virtual void onOverDrive();
+	virtual bool isOverDrive(){return overdrive_on;};
+protected:
+	bool overdrive_on;
+	virtual void settingInit_overdrive();
+
+public:
+	virtual void onMahoujin(double sizePower);
+
+protected:
+	virtual void settingInit_mahoujin();
+	cDrawingObject mahoujin;
+	double mahoujin_count;
+	double mahoujin_sizePower;
+	bool mahoujin_on;
+public:
+
 	virtual unsigned int ShadowColor();
 	virtual bool edgedrawswitch(){return 0;};
 
@@ -337,8 +357,10 @@ public:
 	//持ってるアイテム
 	virtual int itemVolumeInInventory();
 
-
+	virtual vector<int> 死亡ドロップアイテムIDs();
+protected:
 	virtual int 死亡ドロップアイテムID();
+public:
 
 	//持てる最大数
 	virtual inline int MaxholdNum(){return 1;};
@@ -528,6 +550,13 @@ public:
 	static double 強軟弱弱点_下降ターン();
 	static double 軟弱弱点_下降強度();
 	static double 軟弱弱点_下降ターン();
+	static double オーバードライブHP倍率();
+	static double オーバードライブ攻撃倍率();
+	static double オーバードライブ防御倍率();
+	static double オーバードライブ経験値倍率();
+	static double オーバードライブドロップ数();
+	static double オーバードライブ混酒の箱ドロップ率％();
+	static double オーバードライブ固有ドロップ上昇倍率();
 
 	//----------------------------------------
 	//luaスクリプト

@@ -1786,9 +1786,11 @@ int cDungeonSystem::DieCharacter(pcCharacter pchara, int Messageflag)
 	if(pchara != pPlayerChara())
 	{
 		//死亡アイテムドロップ
-		if(pchara->holdItem.size() < pchara->MaxholdNum())
-		{
-			int id = pchara->死亡ドロップアイテムID();
+
+		vector<int> IDs = pchara->死亡ドロップアイテムIDs();
+		int index, size = IDs.size();
+		for(index = 0; index < size; index++ ) {
+			int id = IDs[index];
 			pcDroping pdrop = 落ち物生成_設置なし(id);
 			遠隔拾得要請(pchara,pdrop);
 		}
@@ -1807,9 +1809,11 @@ int cDungeonSystem::強制退場要請(pcCharacter pchara, int Messageflag, int animat
 	if(pchara != pPlayerChara())
 	{
 		//死亡アイテムドロップ
-		if(pchara->holdItem.size() < pchara->MaxholdNum())
-		{
-			int id = pchara->死亡ドロップアイテムID();
+
+		vector<int> IDs = pchara->死亡ドロップアイテムIDs();
+		int index, size = IDs.size();
+		for(index = 0; index < size; index++ ) {
+			int id = IDs[index];
 			pcDroping pdrop = 落ち物生成_設置なし(id);
 			遠隔拾得要請(pchara,pdrop);
 		}
