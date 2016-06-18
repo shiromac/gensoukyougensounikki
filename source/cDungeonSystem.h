@@ -523,6 +523,7 @@ public:
 	virtual pcLandform キャラ視点方角地形(pcCharacter pchara, int plusaspect, int distance);
 
 	virtual pcLandform 隣接地形(pcLandform outLand, int aspect, int distance);
+	virtual vector<pcLandform> 横列地形列挙(pcLandform outLand, int aspect, int width);
 
 
 	//-------------------------

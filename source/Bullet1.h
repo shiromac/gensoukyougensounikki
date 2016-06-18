@@ -203,4 +203,14 @@ DEF_class_cBullet_ID(27)
 	virtual inline int & explosion_power(){return dpack.integer[6];};//6”Ô
 	virtual StyleString QualityCaption(){return setStyle(_T(""));};
 };
-#define BULLET_NUM 28
+DEF_class_cBullet_ID(28)
+	virtual int Õ“ËŒø‰Ê(pcCharacter pchara);
+	virtual int Œø‰Ê(pcLandform pland, int aspect);
+	virtual int Œ‚‚Â_Œø‰Ê_’Êí(pcCharacter pchara);
+};
+DEF_class_cBullet_ID(29)
+	virtual int Õ“ËŒø‰Ê(pcCharacter pchara);
+	virtual int Œø‰Ê(pcLandform pland, int aspect);
+	virtual int Œ‚‚Â_Œø‰Ê_’Êí(pcCharacter pchara);
+};
+#define BULLET_NUM 30

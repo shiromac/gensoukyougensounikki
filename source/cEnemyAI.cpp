@@ -611,7 +611,7 @@ bool cEnemyAI::u_敵隣接判定()
 			pmap->isOnSight(pmap->Land(mylandcoo),pmap->Land(coo)) &&
 			u_隣接攻撃通用判定(i))
 		{//敵
-			if(pmap->Land(coo)->pOnChar && pmap->Land(coo)->pOnChar->CharaAttribute().count(キャラ属性::弾幕))
+			if(pmap->Land(coo)->pOnChar && u_目標免除(pmap->Land(coo)->pOnChar))
 			{
 				continue;
 			}
@@ -924,7 +924,7 @@ bool cEnemyAI::u_索敵()
 	{//敵キャラリスト作成
 		if(sg_pDungeonSystem->キャラクター敵対判定(me(),visCharaList[i]))
 		{
-			if(visCharaList[i]->CharaAttribute().count(キャラ属性::弾幕))
+			if(u_目標免除(visCharaList[i]))
 			{
 				continue;
 			}
@@ -948,7 +948,7 @@ bool cEnemyAI::u_敵サーチ_キャラ優先度優先(int& out_tgt_x,int& out_tgt_y)
 	{//敵キャラリスト作成
 		if(sg_pDungeonSystem->キャラクター敵対判定(me(),visCharaList[i]))
 		{
-			if(visCharaList[i]->CharaAttribute().count(キャラ属性::弾幕))
+			if(u_目標免除(visCharaList[i]))
 			{
 				continue;
 			}
@@ -998,7 +998,7 @@ bool cEnemyAI::u_敵サーチ_距離優先(int& out_tgt_x,int& out_tgt_y)
 		if(sg_pDungeonSystem->キャラクター敵対判定(me(),visCharaList[i]))
 		{
 			cCoordinate coo(visCharaList[i]->placeX - me()->placeX, visCharaList[i]->placeY - me()->placeY);
-			if(visCharaList[i]->CharaAttribute().count(キャラ属性::弾幕))
+			if(u_目標免除(visCharaList[i]))
 			{
 				continue;
 			}
@@ -1119,4 +1119,10 @@ int cEnemyAI::u_攻撃優先度_昇順(pcCharacter penemychara)
 	value -= penemychara->被攻撃優先度();
 
 	return value;
+}
+
+bool cEnemyAI::u_目標免除(pcCharacter penemychara)
+{
+	return penemychara->CharaAttribute().count(キャラ属性::弾幕)
+		&& !penemychara->Condition.みがわり状態();
 }

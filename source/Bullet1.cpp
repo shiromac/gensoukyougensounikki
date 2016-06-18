@@ -4,6 +4,7 @@
 #include "GameIdiom.h"
 #include "cDungeonSystem.h"
 #include "cAttackinformation.h"
+#include "cObjectchara.h"
 
 bool cBullet_能力仕様フラグID_exist(cValiableField& valiable, int ID)
 {
@@ -654,4 +655,146 @@ void cBullet_ID_27::CutIn(タイミング timing, cValiableField& valiable)
 			sg_pDungeonSystem->落ち物まとめ要請(newdrop,pchara);
 		}
 	}
+}
+//------------------------------------------------------------------------------
+//スケープゴート弾
+int cBullet_ID_28::衝突時効果(pcCharacter pchara)
+{
+	const int bulletnum = quantity();
+	int bullet_count = 0;
+
+	const int MaxDistance = 4;
+
+	for(int distance = 1; distance < MaxDistance ;distance++) {
+		for(int aspect = 0; aspect < 8 ;aspect++) {
+
+			int aspect_res = aspect-4 + pchara->aspect;
+
+			pcLandform pland = sg_pDungeonSystem->キャラ視点方角地形(pchara,aspect-4,distance);
+			
+			if(sg_pDungeonSystem->キャラ配置安全(pland)) {
+			
+				効果(pland, aspect_res);
+
+				bullet_count++;
+				if(bullet_count >= bulletnum) {
+					break;
+				}
+			}
+		}
+	}
+	
+	sg_pDungeonSystem->動的識別(me());
+	return true;
+}
+int cBullet_ID_28::効果(pcLandform pland, int aspect)
+{
+	pcCharacter pchara = 弾幕::弾幕召喚(
+				pland,//場所
+				威力計算(),//HP
+				CHARACTER_FORSE_FRIEND,//Forse
+				0,//speed
+				弾幕::直進,//弾幕Type
+				弾幕::ミドリ,//弾幕色
+				aspect,//aspect
+				NULLCHARA//targetenemy
+				);
+
+	if(pchara) {
+		sg_pDungeonSystem->身代わり要請(pchara, sg_pDungeonSystem->pPlayerChara(), GAME_TURN_GAMEOVER, false);
+		sg_pDungeonSystem->動的識別(me());
+	}
+	return (pchara != NULLCHARA);
+}
+int cBullet_ID_28::撃つ_効果_通常(pcCharacter pchara)
+{
+	pcLandform forwordLand = sg_pDungeonSystem->キャラ視点方角地形(pchara,0,1);
+
+	本数消費();
+	sg_pDungeonSystem->AnimationManager().
+		Anime_PlaySE(_T("shoot.wav"),現在地形()->place);
+	溜めエフェクト(pchara);
+	
+	return 効果(forwordLand, pchara->aspect);
+}
+//------------------------------------------------------------------------------
+//壁弾幕
+int cBullet_ID_29::衝突時効果(pcCharacter pchara)
+{
+	
+	投擲者_weakpointer = wpcCharacter(pchara);
+
+	const int bulletnum = quantity() * 効果量(1);
+	int bullet_count = 0;
+
+	const int MaxDistance = 4;
+
+	for(int distance = 1; distance < MaxDistance ;distance++) {
+		for(int aspect = 0; aspect < 8 ;aspect++) {
+
+			int aspect_res = aspect-4 + pchara->aspect;
+
+			pcLandform pland = sg_pDungeonSystem->キャラ視点方角地形(pchara,aspect-4,distance);
+			
+			if(sg_pDungeonSystem->キャラ配置安全(pland)) {
+			
+				pcCharacter pchara = 弾幕::弾幕召喚(
+					pland,//場所
+					威力計算(),//HP
+					CHARACTER_FORSE_FRIEND,//Forse
+					0,//speed
+					弾幕::追尾,//弾幕Type
+					弾幕::ミドリ,//弾幕色
+					random()*8,//aspect
+					NULLCHARA//targetenemy
+					);
+
+				bullet_count++;
+				if(bullet_count >= bulletnum) {
+					break;
+				}
+			}
+		}
+	}
+
+	sg_pDungeonSystem->動的識別(me());
+	return true;
+}
+int cBullet_ID_29::効果(pcLandform pland, int aspect)
+{
+	bool res = false;
+	int width = 効果量(0);
+	vector<pcLandform> land_list = sg_pDungeonSystem->横列地形列挙(pland, aspect, width);
+	int size = land_list.size();
+	for(int distance = 0; distance < size ;distance++) {
+
+		pcCharacter pchara = 弾幕::弾幕召喚(
+					land_list[distance],//場所
+					威力計算(),//HP
+					CHARACTER_FORSE_FRIEND,//Forse
+					0,//speed
+					弾幕::直進,//弾幕Type
+					弾幕::ミドリ,//弾幕色
+					aspect,//aspect
+					NULLCHARA//targetenemy
+					);
+		res |= (pchara != NULLCHARA);
+	}
+
+	if(res) {
+		sg_pDungeonSystem->動的識別(me());
+	}
+
+	return res;
+}
+int cBullet_ID_29::撃つ_効果_通常(pcCharacter pchara)
+{
+	pcLandform forwordLand = sg_pDungeonSystem->キャラ視点方角地形(pchara,0,1);
+
+	本数消費();
+	sg_pDungeonSystem->AnimationManager().
+		Anime_PlaySE(_T("shoot.wav"),現在地形()->place);
+	溜めエフェクト(pchara);
+	
+	return 効果(forwordLand, pchara->aspect);
 }

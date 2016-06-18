@@ -785,6 +785,8 @@ $>2021
 		#n#i
 		投げつけられるとうさぎ飛びをしてしまう。
 		#n
+		#n
+		オマエがタマになるんだよ！
 	$<
 $<
 $>2022
@@ -942,5 +944,66 @@ $>2027
 	$<
 	$>longExplanationBase
 		EnemyUseOnly
+	$<
+$<
+$>2028
+	$>FullNameBase
+		囮弾
+	$<
+	$>ShortNameBase
+		囮弾
+	$<
+	$>shortExplanationBase
+		囮弾。
+		#n
+		#cdNOTICE
+		打つと囮になってくれる
+		#n
+		#i
+		ゆっくりまっすぐ進んで何かにぶつかると消える。
+		#n
+	$<
+	$>longExplanationBase
+		囮弾。
+		#n
+		#cdNOTICE
+		撃つと囮になってくれる。
+		#n
+		#i
+		ゆっくりまっすぐ進んで何かにぶつかると消える。
+		#n
+		#n
+		しかし、こんなにたくさん同じ姿の人物がいるのに不審に思わないのだろうか
+	$<
+$<
+$>2029
+	$>FullNameBase
+		弾幕
+	$<
+	$>ShortNameBase
+		弾幕
+	$<
+	$>shortExplanationBase
+		弾幕。
+		#n
+		#cdNOTICE
+		撃つと目の前に弾幕を張る。
+		#n
+		#i
+		敵が目の前にいると弾幕を貼れないので注意。
+		#n
+		#n
+	$<
+	$>longExplanationBase
+		弾幕。
+		#n
+		#cdNOTICE
+		撃つと目の前に弾幕を張る。
+		#n
+		#i
+		敵が目の前にいると弾幕を貼れないので注意。
+		#n
+		#n
+		弾幕はパワーだぜ！
 	$<
 $<
