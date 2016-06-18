@@ -98,6 +98,7 @@ public:
 	virtual bool u_隣接攻撃通用判定(int aspect);
 	virtual bool u_隣接移動通用判定(int aspect);
 	virtual int u_目標点との距離(int tgt_x,int tgt_y);
+	virtual bool u_目標免除(pcCharacter penemychara);
 
 
 	virtual int u_攻撃優先度_昇順(pcCharacter penemychara);
