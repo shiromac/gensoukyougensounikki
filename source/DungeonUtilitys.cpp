@@ -389,6 +389,14 @@ pcLandform cDungeonSystem::隣接地形(pcLandform outLand, int aspect, int distance
 	return Map().Land(outLand->placeX + asp.x*distance ,outLand->placeY + asp.y*distance);
 }
 
+vector<pcLandform> cDungeonSystem::横列地形列挙(pcLandform outLand, int aspect, int width)
+{
+	vector<pcLandform> land_list;
+	for(int width_count = 0; width_count < width; width_count++) {
+		land_list.push_back(隣接地形(outLand, aspect+2, width_count - width/2));
+	}
+	return land_list;
+}
 
 bool cDungeonSystem::壁反射判定且検索(pcLandform &outLand, int &outaspect, pcLandform comeLand, int comeaspect)
 {
