@@ -672,7 +672,7 @@ bool cCondition::s“®•s”\‚Å‚ ‚é_visual()
 }
 bool cCondition::¬—ó‘Ô‚Å‚ ‚é()
 {
-	return “DŒ‚Å¬—ó‘Ô‚Å‚ ‚é() || ‚İ‚ª‚í‚èó‘Ô();
+	return “DŒ‚Å¬—ó‘Ô‚Å‚ ‚é();
 }
 bool cCondition::“§–¾ó‘Ô‚Å‚ ‚é()
 {
