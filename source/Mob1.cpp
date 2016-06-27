@@ -3466,6 +3466,9 @@ int cMob_ID_36::特殊攻撃効果(cValiableField& valiable)
 		if(pchara)
 		{
 			sg_pDungeonSystem->軟弱要請(pchara,ValiableConstant1(),ValiableConstant2());
+			if(ValiableConstant3() > 0) {
+				sg_pDungeonSystem->病気要請(pchara,ValiableConstant4());
+			}
 		}
 
 		return true;
