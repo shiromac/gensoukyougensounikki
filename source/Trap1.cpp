@@ -1192,7 +1192,7 @@ int cTrap_ID_28::効果(pcCharacter pchara)
 {
 	効果();
 
-	sg_pDungeonSystem->回復要請(pchara,pchara->MHP*効果量(0)/100.0,false);
+	sg_pDungeonSystem->健康要請(pchara,効果量(0),false);
 	sg_pDungeonSystem->身体異常治療要請(pchara);
 
 	map<tstring, StyleString> valiable;
@@ -1311,6 +1311,32 @@ int cTrap_ID_31::効果(pcCharacter pchara)
 	return true;
 }
 int cTrap_ID_31::効果(pcDroping pdrop)//pdropを破壊したかったらtrue;
+{
+	効果();
+	return false;
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//------------------------------------------------------------------------------
+//病気の罠
+//------------------------------------------------------------------------------
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+int cTrap_ID_32::効果()
+{
+	//エフェクト未実装
+	int eff = 0;
+
+	return eff;
+}
+int cTrap_ID_32::効果(pcCharacter pchara)
+{
+
+	効果();
+
+	sg_pDungeonSystem->病気要請(pchara,効果量(0),true);
+
+	return true;
+}
+int cTrap_ID_32::効果(pcDroping pdrop)//pdropを破壊したかったらtrue;
 {
 	効果();
 	return false;
