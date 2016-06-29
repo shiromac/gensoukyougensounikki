@@ -6,6 +6,7 @@
 #include "FindUtility.h"
 #include "cDungeonSystem.h"
 #include "cAttackinformation.h"
+#include "MobAbilityIdiom.h"
 
 bool cSpell_能力仕様フラグID_exist(cValiableField& valiable, int ID)
 {
@@ -709,7 +710,7 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			{
 				pcDroping pdrop = 装備者()->attackequipment;
 				if(pdrop != NULL) sg_pDungeonSystem->アイテム祝福(pdrop);
-				Breakcrashprocess(効果時腕輪ダメージ());
+				//Breakcrashprocess(効果時腕輪ダメージ());
 				sg_pDungeonSystem->動的識別(me());
 			}
 		}
@@ -719,10 +720,12 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			{
 				pcDroping pdrop = 装備者()->defenseequipment;
 				if(pdrop != NULL) sg_pDungeonSystem->アイテム祝福(pdrop);
-				Breakcrashprocess(効果時腕輪ダメージ());
+				//Breakcrashprocess(効果時腕輪ダメージ());
 				sg_pDungeonSystem->動的識別(me());
 			}
 		}
+		
+		MobAbilityIdiom::投擲物反射CutIn(装備者(), timing, valiable);
 	}
 }
 int cSpell_ID_9::効果(pcCharacter pchara)
