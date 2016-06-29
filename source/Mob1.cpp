@@ -6,6 +6,7 @@
 #include "EffectFunctions.h"
 #include "GameIdiom.h"
 #include "FindUtility.h"
+#include "MobAbilityIdiom.h"
 
 #include "ceaiNegative.h"
 #include "ceaiEscape.h"
@@ -5262,23 +5263,7 @@ int cMob_ID_67::特殊攻撃効果(cValiableField& valiable)
 }
 void cMob_ID_67::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	if(timing == 投擲攻撃接近直前_タイミング)
-	{
-		//跳ね返し
-		if(!valiable.drops.val(変数_対象落ち物)->跳ね返し無効フラグ && 
-			!valiable.drops.val(変数_対象落ち物)->投擲貫通())
-		{
-			valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
-
-			map<tstring, StyleString> val;
-			val[_T("Chara")] = FullName();
-			val[_T("Item")] = valiable.drops.val(変数_対象落ち物)->FullName();
-			g_Langメッセージ(_T("cMob_ID_67_特殊能力メッセージ"),val);
-			
-			sg_pDungeonSystem->方向転換要請(me(), valiable.doubles.val(変数_方向)+4);
-			sg_pDungeonSystem->投擲要請(me(), valiable.drops.val(変数_対象落ち物));
-		}
-	}
+	MobAbilityIdiom::投擲物反射CutIn(me(), timing, valiable);
 }
 //---------------------------------------------------------------
 //レティ
