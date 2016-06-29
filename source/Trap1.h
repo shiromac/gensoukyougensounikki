@@ -472,4 +472,15 @@ DEF_class_cTrap_ID(31)
 	virtual int Œø‰Ê(pcDroping pdrop);//pdrop‚É‰½‚©‹N‚±‚Á‚½‚çtrue;
 	virtual bool ”íE“¾‰Â(){return false;};
 };
-#define TRAP_NUM 32
+DEF_class_cTrap_ID(32)
+
+	virtual inline tstring IconFileName(){return _T("item\\ã©‚Q.png");};
+	virtual inline int IconFileIndexX(){return 3;};
+	virtual inline int IconFileIndexY(){return 3;};
+
+	virtual int Œø‰Ê();
+	virtual int Œø‰Ê(pcCharacter pchara);
+	virtual int Œø‰Ê(pcDroping pdrop);//pdrop‚É‰½‚©‹N‚±‚Á‚½‚çtrue;
+	virtual bool ”íE“¾‰Â(){return false;};
+};
+#define TRAP_NUM 33
