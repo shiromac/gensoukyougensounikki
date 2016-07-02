@@ -23,6 +23,8 @@ typedef boost::shared_ptr<cLandform> pcLandform;
 //-------------------------------------------------
 namespace MobAbilityIdiom
 {
+	typedef bool (*CutInFunction)(pcCharacter pchara, タイミング timing, cValiableField& valiable);
+
 	bool 投擲物反射CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable);
 
 
