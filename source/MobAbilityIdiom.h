@@ -26,6 +26,7 @@ namespace MobAbilityIdiom
 	bool 投擲物反射CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable);
 
 
+	bool 拾得物修正状態識別CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable);
 
 
 };

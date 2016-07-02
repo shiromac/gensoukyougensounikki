@@ -35,3 +35,17 @@ bool MobAbilityIdiom::投擲物反射CutIn(pcCharacter pchara, タイミング timing, cVa
 
 	return false;
 }
+
+bool MobAbilityIdiom::拾得物修正状態識別CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable) {
+
+	if(timing == 拾い直後_タイミング)
+	{
+		if(!valiable.drops[変数_対象落ち物]->修正値識別済み() || !valiable.drops[変数_対象落ち物]->状態値識別済み())
+		{
+			sg_pDungeonSystem->状態のみ識別( valiable.drops[変数_対象落ち物], 0);
+			sg_pDungeonSystem->修正のみ識別( valiable.drops[変数_対象落ち物], 0);
+		}
+	}
+
+	return false;
+}
