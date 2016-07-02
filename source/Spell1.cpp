@@ -52,15 +52,12 @@ void cSpell_ID_0::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 	
-	if(装備されている() && timing == 拾い直後_タイミング && !cSpell_能力仕様フラグID_exist(valiable,ID()) )
+	if(装備されている() && !cSpell_能力仕様フラグID_exist(valiable,ID()) )
 	{
-		if(!valiable.drops[変数_対象落ち物]->修正値識別済み() || !valiable.drops[変数_対象落ち物]->状態値識別済み())
+		if( MobAbilityIdiom::拾得物修正状態識別CutIn(装備者(), timing, valiable) )
 		{
 			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
-			sg_pDungeonSystem->状態のみ識別( valiable.drops[変数_対象落ち物], 0);
-			sg_pDungeonSystem->修正のみ識別( valiable.drops[変数_対象落ち物], 0);
 			sg_pDungeonSystem->動的識別(me());
-			
 			Breakcrashprocess(効果時腕輪ダメージ());
 		}
 	}
