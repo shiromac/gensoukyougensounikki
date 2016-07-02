@@ -28,7 +28,7 @@ bool MobAbilityIdiom::投擲物反射CutIn(pcCharacter pchara, タイミング timing, cVa
 			g_Langメッセージ(_T("cMob_ID_67_特殊能力メッセージ"),val);
 			
 			sg_pDungeonSystem->方向転換要請(pchara, valiable.doubles.val(変数_方向)+4);
-			sg_pDungeonSystem->投擲要請(pchara, valiable.drops.val(変数_対象落ち物));
+			sg_pDungeonSystem->投擲要請(pchara, valiable.drops.val(変数_対象落ち物), DRAWTYPE_ATTACKDRAW);
 			return true;
 		}
 	}
