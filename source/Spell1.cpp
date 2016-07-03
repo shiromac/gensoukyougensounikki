@@ -20,6 +20,26 @@ double& cSpell_能力仕様フラグID_val(cValiableField& valiable, int ID)
 {
 	return valiable.doubles.val((_T("cSpell_能力仕様フラグID_") + setStyle(ID)).c_str());
 }
+
+bool cSpell::CutInMobAbilityIdiom(MobAbilityIdiom::CutInFunction function, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility)
+{
+	if(!guardDuplicateAbility || !cSpell_能力仕様フラグID_exist(valiable,ID())) {
+		if(function(装備者(), timing, valiable)) {
+			if(guardDuplicateAbility) {
+				cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
+			}
+			if(enabledSpellDamage) {
+				Breakcrashprocess(効果時腕輪ダメージ());
+			}
+			if(enabledActiveIdentify) {
+				sg_pDungeonSystem->動的識別(me());
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //------------------------------------------------------------------------------
 //覚識「森近霖之助」

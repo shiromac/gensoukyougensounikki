@@ -1,6 +1,7 @@
 #pragma once
 #include "cItem.h"
 
+#include "MobAbilityIdiom.h"
 
 
 //--------------------------------------
@@ -279,5 +280,9 @@ public:
 
 	virtual int スペル定型エフェクト_宣言();
 	virtual int スペル定型エフェクト_装備(pcCharacter pchara);
+
+private:
+
+	bool CutInMobAbilityIdiom(MobAbilityIdiom::CutInFunction function, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility);
 };
 
