@@ -742,13 +742,10 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			}
 		}
 		
-		if(!cSpell_能力仕様フラグID_exist(valiable,ID())) {
-			if(MobAbilityIdiom::投擲物反射CutIn(装備者(), timing, valiable)) {
-				cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;	
-				Breakcrashprocess(効果時腕輪ダメージ());
-				sg_pDungeonSystem->動的識別(me());
-			}
-		}
+		CutInMobAbilityIdiom(MobAbilityIdiom::投擲物反射CutIn, 装備者(), timing, valiable,
+			true,//bool enabledSpellDamage,
+			true,//bool enabledActiveIdentify,
+			true);//bool guardDuplicateAbility)
 	}
 }
 int cSpell_ID_9::効果(pcCharacter pchara)
