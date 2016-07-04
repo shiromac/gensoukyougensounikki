@@ -21,10 +21,10 @@ double& cSpell_能力仕様フラグID_val(cValiableField& valiable, int ID)
 	return valiable.doubles.val((_T("cSpell_能力仕様フラグID_") + setStyle(ID)).c_str());
 }
 
-bool cSpell::CutInMobAbilityIdiom(MobAbilityIdiom::CutInFunction function, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility)
+bool cSpell::CutInMobAbilityIdiom(const MobAbilityIdiom::CutInFunctionObject& functor, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility)
 {
 	if(!guardDuplicateAbility || !cSpell_能力仕様フラグID_exist(valiable,ID())) {
-		if(function(装備者(), timing, valiable)) {
+		if(functor(装備者(), timing, valiable)) {
 			if(guardDuplicateAbility) {
 				cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
 			}
@@ -39,7 +39,6 @@ bool cSpell::CutInMobAbilityIdiom(MobAbilityIdiom::CutInFunction function, pcCha
 	}
 	return false;
 }
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //------------------------------------------------------------------------------
 //覚識「森近霖之助」
@@ -74,7 +73,7 @@ void cSpell_ID_0::CutIn(タイミング timing, cValiableField& valiable)
 	
 	if(装備されている() && !cSpell_能力仕様フラグID_exist(valiable,ID()) )
 	{
-		if( MobAbilityIdiom::拾得物修正状態識別CutIn(装備者(), timing, valiable) )
+		if( MobAbilityIdiom::拾得物修正状態識別CutIn()(装備者(), timing, valiable) )
 		{
 			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
 			sg_pDungeonSystem->動的識別(me());
@@ -742,7 +741,7 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			}
 		}
 		
-		CutInMobAbilityIdiom(MobAbilityIdiom::投擲物反射CutIn, 装備者(), timing, valiable,
+		CutInMobAbilityIdiom(MobAbilityIdiom::投擲物反射CutIn(), 装備者(), timing, valiable,
 			true,//bool enabledSpellDamage,
 			true,//bool enabledActiveIdentify,
 			true);//bool guardDuplicateAbility)

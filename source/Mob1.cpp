@@ -5263,7 +5263,7 @@ int cMob_ID_67::特殊攻撃効果(cValiableField& valiable)
 }
 void cMob_ID_67::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	MobAbilityIdiom::投擲物反射CutIn(me(), timing, valiable);
+	MobAbilityIdiom::投擲物反射CutIn()(me(), timing, valiable);
 }
 //---------------------------------------------------------------
 //レティ

@@ -283,6 +283,8 @@ public:
 
 protected:
 
-	bool CutInMobAbilityIdiom(MobAbilityIdiom::CutInFunction function, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility);
+
+	bool CutInMobAbilityIdiom(const MobAbilityIdiom::CutInFunctionObject& functor, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility);
+
 };
 

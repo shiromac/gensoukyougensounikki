@@ -23,12 +23,22 @@ typedef boost::shared_ptr<cLandform> pcLandform;
 //-------------------------------------------------
 namespace MobAbilityIdiom
 {
-	typedef bool (*CutInFunction)(pcCharacter pchara, タイミング timing, cValiableField& valiable);
+	class CutInFunctionObject {
+		public:
+		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const = 0;
+	};
 
-	bool 投擲物反射CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable);
+#define DEF_MobAbilityIdiom_CutInFunction_Class(name) class name : public CutInFunctionObject {\
+		public:\
+		virtual ~name(){};\
+		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const;
+// def end
+
+	DEF_MobAbilityIdiom_CutInFunction_Class(投擲物反射CutIn)};
 
 
-	bool 拾得物修正状態識別CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable);
+	DEF_MobAbilityIdiom_CutInFunction_Class(拾得物修正状態識別CutIn)};
+
 
 
 };

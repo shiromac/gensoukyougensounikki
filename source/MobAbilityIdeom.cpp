@@ -11,8 +11,7 @@
 
 using namespace MobAbilityIdiom;
 
-
-bool MobAbilityIdiom::投擲物反射CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable) {
+bool MobAbilityIdiom::投擲物反射CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
 	if(timing == 投擲攻撃接近直前_タイミング)
 	{
@@ -36,7 +35,7 @@ bool MobAbilityIdiom::投擲物反射CutIn(pcCharacter pchara, タイミング timing, cVa
 	return false;
 }
 
-bool MobAbilityIdiom::拾得物修正状態識別CutIn(pcCharacter pchara, タイミング timing, cValiableField& valiable) {
+bool MobAbilityIdiom::拾得物修正状態識別CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
 	if(timing == 拾い直後_タイミング)
 	{
