@@ -1940,14 +1940,9 @@ void cMob_ID_19::パッシブ能力(タイミング timing, cValiableField& valiable)
 			}
 			else if(ValiableConstant3())
 			{
-				valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
-			
-				map<tstring, StyleString> val;
-				val[_T("Chara")] = ShortName();
-				g_Langメッセージ(_T("cMob_ID_19_特殊能力3メッセージ"),val);
-				
-				sg_pDungeonSystem->強制ダメージ要請(me(),ValiableConstant3(),1,1);
-				sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
+				if(MobAbilityIdiom::投擲物ダメージ化CutIn(ValiableConstant3())(me(), timing, valiable)) {
+					sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
+				}
 			}
 		}
 	}

@@ -48,3 +48,48 @@ bool MobAbilityIdiom::拾得物修正状態識別CutIn::operator()(pcCharacter pchara, タ
 
 	return false;
 }
+
+bool MobAbilityIdiom::投擲物魔法ダメージ化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(投擲物ダメージ化CutIn(damegeValue)(pchara,timing,valiable) || 魔法ダメージ化CutIn(damegeValue)(pchara,timing,valiable)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool MobAbilityIdiom::魔法ダメージ化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == 魔法接近直前_タイミング)
+	{
+		valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
+	
+		map<tstring, StyleString> val;
+		val[_T("Chara")] = pchara->ShortName();
+		g_Langメッセージ(_T("cMob_ID_19_特殊能力4メッセージ"),val);
+		
+		sg_pDungeonSystem->強制ダメージ要請(pchara,damegeValue,1,1);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool MobAbilityIdiom::投擲物ダメージ化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == 投擲攻撃接近直前_タイミング)
+	{
+		valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
+	
+		map<tstring, StyleString> val;
+		val[_T("Chara")] = pchara->ShortName();
+		g_Langメッセージ(_T("cMob_ID_19_特殊能力3メッセージ"),val);
+		
+		sg_pDungeonSystem->強制ダメージ要請(pchara,damegeValue,1,1);
+
+		return true;
+	}
+
+	return false;
+}

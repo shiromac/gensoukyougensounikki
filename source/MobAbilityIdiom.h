@@ -34,11 +34,24 @@ namespace MobAbilityIdiom
 		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const;
 // def end
 
+#define DEF_MobAbilityIdiom_CutInFunction_Class_Value(name, value) class name : public CutInFunctionObject {\
+		public:\
+		virtual ~name(){};\
+		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const;\
+		private:\
+			name(){};\
+		public:\
+			name(double value_):value(value_){};\
+		double value;
+// def end
+
 	DEF_MobAbilityIdiom_CutInFunction_Class(投擲物反射CutIn)};
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(拾得物修正状態識別CutIn)};
 
 
-
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(投擲物魔法ダメージ化CutIn, damegeValue)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(魔法ダメージ化CutIn, damegeValue)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(投擲物ダメージ化CutIn, damegeValue)};
 };
