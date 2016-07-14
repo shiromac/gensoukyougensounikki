@@ -93,3 +93,20 @@ bool MobAbilityIdiom::投擲物ダメージ化CutIn::operator()(pcCharacter pchara, タイ
 
 	return false;
 }
+
+bool MobAbilityIdiom::遠距離ダメージ軽減CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == ダメージ計算防御時_タイミング)
+	{
+		pcCharacter penemy = valiable.charas[変数_攻撃者];
+		if(penemy == NULL) {
+			return false;
+		}
+		if((pchara->足元地形()->place - penemy->足元地形()->place).dif() > 1){
+			valiable.doubles[変数_耐性ボーナス_倍率％] += reduceDamegePercent;
+			return true;
+		}
+	}
+
+	return false;
+}

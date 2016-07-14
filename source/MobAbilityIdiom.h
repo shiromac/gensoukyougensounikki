@@ -54,4 +54,10 @@ namespace MobAbilityIdiom
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(投擲物魔法ダメージ化CutIn, damegeValue)};
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(魔法ダメージ化CutIn, damegeValue)};
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(投擲物ダメージ化CutIn, damegeValue)};
+
+
+	
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(遠距離ダメージ軽減CutIn, reduceDamegePercent)};
+
+
 };

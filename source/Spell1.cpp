@@ -220,11 +220,21 @@ void cSpell_ID_3::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 
-	if(装備されている() && timing == アイテム命中判定時_タイミング)
+	if(装備されている())
 	{
-		valiable.doubles[変数_回避力] += 効果量(1);
-		Breakcrashprocess(効果時腕輪ダメージ());
-		sg_pDungeonSystem->動的識別(me());
+		int damage = 装備者()->MHP/効果量(1);
+		if(damage < 1) {
+			damage = 1;
+		}
+		if(MobAbilityIdiom::投擲物魔法ダメージ化CutIn(damage)(装備者(),timing,valiable)) {
+			Breakcrashprocess(効果時腕輪ダメージ());
+			sg_pDungeonSystem->動的識別(me());
+		}
+
+		if(MobAbilityIdiom::遠距離ダメージ軽減CutIn(効果量(2))(装備者(),timing,valiable)) {
+			Breakcrashprocess(効果時腕輪ダメージ());
+			sg_pDungeonSystem->動的識別(me());
+		}
 	}
 
 }
