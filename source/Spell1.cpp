@@ -402,7 +402,13 @@ void cSpell_ID_5::CutIn(タイミング timing, cValiableField& valiable)
 		}
 
 	}
-
+	if(装備されている() && !cSpell_能力仕様フラグID_exist(valiable,ID()))
+	{
+		if(MobAbilityIdiom::呪い無効化CutIn()(装備者(), timing, valiable)) {
+			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
+			sg_pDungeonSystem->動的識別(me());
+		}
+	}
 }
 int cSpell_ID_5::効果(pcCharacter pchara)
 {

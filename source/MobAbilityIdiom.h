@@ -61,4 +61,5 @@ namespace MobAbilityIdiom
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(‰“‹——£ƒ_ƒ[ƒWŒyŒ¸CutIn, reduceDamegePercent)};
 
 
+	DEF_MobAbilityIdiom_CutInFunction_Class(ô‚¢–³Œø‰»CutIn)};
 };

@@ -126,3 +126,14 @@ bool MobAbilityIdiom::遠距離ダメージ軽減CutIn::operator()(pcCharacter pchara, タ
 
 	return false;
 }
+
+bool MobAbilityIdiom::呪い無効化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == アイテム呪い直前_タイミング)
+	{
+		valiable.doubles.val(変数_汎用ブール) = 0;
+		return true;
+	}
+
+	return false;
+}
