@@ -71,11 +71,10 @@ void cSpell_ID_0::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 	
-	if(装備されている() && !cSpell_能力仕様フラグID_exist(valiable,ID()) )
+	if(装備されている())
 	{
-		if( MobAbilityIdiom::拾得物修正状態識別CutIn()(装備者(), timing, valiable) )
+		if( MobAbilityIdiom::フロア開始時所持アイテムランダム識別CutIn(効果量(0))(装備者(), timing, valiable) )
 		{
-			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
 			sg_pDungeonSystem->動的識別(me());
 			Breakcrashprocess(効果時腕輪ダメージ());
 		}

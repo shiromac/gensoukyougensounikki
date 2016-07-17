@@ -49,6 +49,22 @@ bool MobAbilityIdiom::拾得物修正状態識別CutIn::operator()(pcCharacter pchara, タ
 	return false;
 }
 
+bool MobAbilityIdiom::フロア開始時所持アイテムランダム識別CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == フロア開始_タイミング)
+	{
+		vector<pcDroping> itemList = FindUtility::全てのアイテム一覧(pchara);
+		itemList = FindUtility::dropFiltering(itemList, FindUtility::完全に鑑定されていないアイテムか);
+		itemList = FindUtility::randomSelect(itemList, count);
+		int i, size = itemList.size();
+		for(i=0; i<size; i++) {
+			sg_pDungeonSystem->識別(itemList[i],true);
+		}
+	}
+
+	return false;
+}
+
 bool MobAbilityIdiom::投擲物魔法ダメージ化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
 	if(投擲物ダメージ化CutIn(damegeValue)(pchara,timing,valiable) || 魔法ダメージ化CutIn(damegeValue)(pchara,timing,valiable)) {

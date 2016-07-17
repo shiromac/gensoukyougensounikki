@@ -49,6 +49,7 @@ namespace MobAbilityIdiom
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(拾得物修正状態識別CutIn)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(フロア開始時所持アイテムランダム識別CutIn, count)};
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(投擲物魔法ダメージ化CutIn, damegeValue)};
