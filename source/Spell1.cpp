@@ -1036,14 +1036,14 @@ void cSpell_ID_13::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
-		/*
+		
 		if(timing == 自然満腹度減少量計算時_タイミング)
 		{
 			valiable.doubles.val(変数_汎用ボーナス_倍率) += 効果量(1)/100.0;
 			//Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
-		*/
+		
 		if(timing == ダメージ時_タイミング)
 		{
 			valiable.doubles.val(変数_ダメージ) = min(valiable.doubles.val(変数_ダメージ),装備者()->MHP/効果量(2));
