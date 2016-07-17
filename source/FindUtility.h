@@ -80,6 +80,18 @@ namespace FindUtility
 
 	vector<pcDroping> 装備品以外の表面手持ちアイテム店売り除く(pcCharacter pchara);
 
+	vector<pcDroping> 全てのアイテム一覧(pcCharacter pchara);
+	vector<pcDroping> 自身のリストと内容アイテム一覧(const vector<pcDroping>& pdrop);
+	vector<pcDroping> 内容アイテム一覧(pcDroping pdrop);
+
+	vector<pcDroping> randomSelect(const vector<pcDroping>& pdropList, const int count);
+	vector<int> randomIndex(const int size, const int count);
+
+	typedef bool (*dropFilterFunction)(const pcDroping& target);
+	vector<pcDroping> dropFiltering(const vector<pcDroping>& pdropList, dropFilterFunction filter);
+	//dropFilterFunction
+	bool 完全に鑑定されていないアイテムか(const pcDroping& target);
+
 	int キャラの方向(pcCharacter me, pcCharacter you);
 
 	int キャラ八方ズレ数(pcCharacter me, pcCharacter you);
