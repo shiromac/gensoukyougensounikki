@@ -3358,6 +3358,50 @@ void cSpell_ID_49::CutIn(タイミング timing, cValiableField& valiable)
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //------------------------------------------------------------------------------
+//シズハ
+//------------------------------------------------------------------------------
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+int cSpell_ID_50::効果(pcCharacter pchara)
+{
+	int eff = 0;
+	//eff |= ;
+
+	EffectFunctions::上吹き飛ばし風エフェクト(pchara->placeX, pchara->placeY, true);
+	eff |= sg_pDungeonSystem->吹き飛ばし要請(pchara, pchara, pchara->aspect+4, 効果量(0), 効果量(1));
+
+	if(eff)
+	{
+
+	}
+	else
+	{
+		map<tstring, StyleString> valiable;
+		g_Langメッセージ(_T("Spell効果無しメッセージ"),valiable);
+	}
+	return eff;
+}
+int cSpell_ID_50::宣言_効果_通常(pcCharacter pchara ,vector<pcDroping> &ObjectList)
+{
+	スペル定型エフェクト_宣言();
+	//SpellEffects::EffectcSpell_ID_1(pchara->placeX,pchara->placeY);
+	効果(pchara);
+	return true;//必ずtrueを返す
+}
+
+void cSpell_ID_50::CutIn(タイミング timing, cValiableField& valiable)
+{
+	cSpell::CutIn(timing,valiable);
+
+	if(装備されている())
+	{
+		if(MobAbilityIdiom::攻撃時自分ノックバックCutIn()(装備者(), timing, valiable)) {
+			Breakcrashprocess(効果時腕輪ダメージ());
+			sg_pDungeonSystem->動的識別(me());
+		}
+	}
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//------------------------------------------------------------------------------
 //ミノリコ
 //------------------------------------------------------------------------------
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
