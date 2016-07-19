@@ -5612,10 +5612,7 @@ void cMob_ID_76::パッシブ能力(タイミング timing, cValiableField& valiable)
 //オオワシ
 void cMob_ID_77::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	if(timing == 攻撃直後時_タイミング)
-	{
-		sg_pDungeonSystem->吹き飛ばし要請(me(), me(), me()->aspect+4, 1, 0);
-	}
+	MobAbilityIdiom::攻撃時自分ノックバックCutIn()(me(), timing, valiable);
 }
 
 //-----------------------------------------------------------------
