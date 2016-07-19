@@ -62,4 +62,8 @@ namespace MobAbilityIdiom
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(呪い無効化CutIn)};
+
+
+	DEF_MobAbilityIdiom_CutInFunction_Class(攻撃時自分ノックバックCutIn)};
+
 };
