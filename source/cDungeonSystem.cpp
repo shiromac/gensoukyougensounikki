@@ -1062,7 +1062,15 @@ int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
 
 
 					s_phase() = GAME_PHASE_ENEMY;
-					if(AnimationManager().WeekInvocation(pDev)) return false;//strongが起こったらtrueが返ってくる
+					if(AnimationManager().WeekInvocation(pDev))
+					{//strongが起こったらtrueが返ってくる
+						return false;
+					}
+					else
+					{
+						pPlayerChara()->visibleplace.set(pPlayerChara()->placeX,pPlayerChara()->placeY,0,0);
+						pPlayerChara()->visibleaspect = pPlayerChara()->aspect;
+					}
 				}
 			}
 			
