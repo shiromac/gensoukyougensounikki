@@ -3354,6 +3354,11 @@ void cSpell_ID_49::CutIn(タイミング timing, cValiableField& valiable)
 			//Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
+		if(MobAbilityIdiom::攻撃時眠り付与CutIn(効果量(2),効果量(3))(装備者(), timing, valiable)) {
+			Breakcrashprocess(効果時腕輪ダメージ());
+			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
+			sg_pDungeonSystem->動的識別(me());
+		}
 	}
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -45,6 +45,18 @@ namespace MobAbilityIdiom
 		double value;
 // def end
 
+#define DEF_MobAbilityIdiom_CutInFunction_Class_Value2(name, valueX, valueY) class name : public CutInFunctionObject {\
+		public:\
+		virtual ~name(){};\
+		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const;\
+		private:\
+			name(){};\
+		public:\
+			name(double valueX_, double valueY_):valueX(valueX_),valueY(valueY_){};\
+		double valueX;\
+		double valueY;
+// def end
+
 	DEF_MobAbilityIdiom_CutInFunction_Class(投擲物反射CutIn)};
 
 
@@ -65,5 +77,8 @@ namespace MobAbilityIdiom
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(攻撃時自分ノックバックCutIn)};
+	
+
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(攻撃時眠り付与CutIn, percent, turn)};
 
 };

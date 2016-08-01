@@ -142,15 +142,31 @@ bool MobAbilityIdiom::攻撃時自分ノックバックCutIn::operator()(pcCharacter pchara
 
 	if(timing == 攻撃直後時_タイミング)
 	{
-		pcCharacter penemy = valiable.charas[変数_防御者];
-		if(penemy == NULL) {
-			return false;
-		}
-		if((pchara->足元地形()->place - penemy->足元地形()->place).dif() <= 1){
+		if(valiable.doubles.exist(変数_直接攻撃フラグ))
+		{
 			sg_pDungeonSystem->吹き飛ばし要請(pchara, pchara, pchara->aspect+4, 1, 0);
 			return true;
 		}
 	}
 
+	return false;
+}
+
+bool MobAbilityIdiom::攻撃時眠り付与CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == 攻撃直後時_タイミング)
+	{
+		if(valiable.doubles.exist(変数_直接攻撃フラグ))
+		{
+			if(percent/100.0 > random())
+			{
+				if(valiable.charas.dim(変数_防御者) != NULL)
+				{
+					sg_pDungeonSystem->眠り要請(valiable.charas.dim(変数_防御者),turn);
+
+				}
+			}
+		}
+	}
 	return false;
 }
