@@ -459,15 +459,22 @@ void cSpell_ID_6::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 
-	if(装備されている() && timing == 攻撃力計算時_タイミング)
+	if(装備されている())
 	{
 		pcDroping pdrop = 装備者()->attackequipment;
 		if(pdrop == NULL) return;
 		if(pdrop->属性.count(落ち物属性::剣))
 		{
-			valiable.doubles[変数_攻撃力ボーナス_倍率] += 効果量(2)/100.0;
-			//Breakcrashprocess(効果時腕輪ダメージ());
-			sg_pDungeonSystem->動的識別(me());
+			if(MobAbilityIdiom::攻撃時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable)) {
+				sg_pDungeonSystem->動的識別(me());
+				//Breakcrashprocess(効果時腕輪ダメージ());
+			}
+		}
+		else{
+			if(MobAbilityIdiom::防御時防御力ボーナスCutIn(効果量(3), 0)(装備者(), timing, valiable)) {
+				sg_pDungeonSystem->動的識別(me());
+				//Breakcrashprocess(効果時腕輪ダメージ());
+			}
 		}
 	}
 
