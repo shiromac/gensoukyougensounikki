@@ -1161,6 +1161,10 @@ public:
 	virtual int 呪術異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 速度異常治療要請(pcCharacter pchara, int Messageflag = 1);
 
+	virtual int 悪性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+	virtual int 良性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+	virtual int 全異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+
 	virtual bool 精神異常状態(pcCharacter pchara);
 	virtual bool 身体異常状態(pcCharacter pchara);
 	virtual bool 呪術異常状態(pcCharacter pchara);
