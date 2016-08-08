@@ -1293,7 +1293,7 @@ int cDungeonSystem::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
 
 	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
 	{
-		速度異常治療要請(pchara, false);
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
 	}
 
 	return true;
@@ -1317,13 +1317,13 @@ int cDungeonSystem::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
 
 	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
 	{
-		速度異常治療要請(pchara, false);
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
 	}
 
 	return true;
 }
 
-int cDungeonSystem::全異常状態治療要請(pcCharacter pchara, int Messageflag = 1)
+int cDungeonSystem::全異常状態治療要請(pcCharacter pchara, int Messageflag)
 {
 	良性異常状態治療要請(pchara, Messageflag);
 	悪性異常状態治療要請(pchara, Messageflag);
