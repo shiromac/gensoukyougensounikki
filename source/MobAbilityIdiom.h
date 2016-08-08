@@ -74,6 +74,7 @@ namespace MobAbilityIdiom
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(呪い無効化CutIn)};
+	DEF_MobAbilityIdiom_CutInFunction_Class(悪性異常状態無効化CutIn, addPercent, addConst)};
 
 
 	DEF_MobAbilityIdiom_CutInFunction_Class(攻撃時自分ノックバックCutIn)};
@@ -81,4 +82,7 @@ namespace MobAbilityIdiom
 
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(攻撃時眠り付与CutIn, percent, turn)};
 
+	
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(攻撃時攻撃力ボーナスCutIn, addPercent, addConst)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(防御時防御力ボーナスCutIn, addPercent, addConst)};
 };
