@@ -36,6 +36,8 @@
 
 #include "caFunction.h"
 
+#include "GameIdiom.h"
+
 double gettimeofday_sec()
 {
     time_t tv;
@@ -859,9 +861,7 @@ int cDungeonSystem::cleanfloor()
 	set<pcCharacter>::iterator friendSetItr = FriendSet.begin();
 	for(; FriendSet.end()!=friendSetItr; friendSetItr++)
 	{
-		精神異常治療要請(*friendSetItr, false);
-		身体異常治療要請(*friendSetItr, false);
-		呪術異常治療要請(*friendSetItr, false);
+		GameIdiom::全異常状態治療要請(*friendSetItr, false);
 		(*friendSetItr)->emotion.clear();
 		(*friendSetItr)->visibleemotion.clear();
 	}

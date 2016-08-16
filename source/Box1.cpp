@@ -1062,9 +1062,7 @@ int cBox_ID_26::入れる_効果_通常(pcDroping pdrop)
 		if(pchara == NULL) pchara = 乗りキャラ();
 		sg_pDungeonSystem->落ち物破壊要請(pdrop);
 		capacity()--;
-		sg_pDungeonSystem->精神異常治療要請(pchara);
-		sg_pDungeonSystem->身体異常治療要請(pchara);
-		sg_pDungeonSystem->呪術異常治療要請(pchara);
+		GameIdiom::悪性異常状態治療要請(pchara);
 		sg_pDungeonSystem->AnimationManager().
 			Anime_PlaySE(_T("recover.wav"),pchara->足元地形()->place);
 

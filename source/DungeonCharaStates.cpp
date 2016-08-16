@@ -6,6 +6,7 @@
 #include "Gameobjects.h"
 #include "EffectFunctions.h"
 #include "FindUtility.h"
+#include "GameIdiom.h"
 #include <boost/pointer_cast.hpp>
 
 int cDungeonSystem::‰ñ•œ—v¿(pcCharacter pchara, int recovery, int Messageflag)
@@ -1145,6 +1146,7 @@ int cDungeonSystem::‹[‘Ô—v¿(pcCharacter pchara, int turn, int Messageflag)
 	return true;
 
 }
+/*
 int cDungeonSystem::¸_ˆÙíŽ¡—Ã—v¿(pcCharacter pchara, int Messageflag)
 {
 	if(pchara == NULL || pchara->Ž€–S()) return false;
@@ -1329,12 +1331,12 @@ int cDungeonSystem::‘SˆÙíó‘ÔŽ¡—Ã—v¿(pcCharacter pchara, int Messageflag)
 	ˆ««ˆÙíó‘ÔŽ¡—Ã—v¿(pchara, Messageflag);
 	return true;
 }
-
+*/
 int cDungeonSystem::‚â‚è‚·‚²‚µ—v¿(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->Ž€–S()) return false;
 
-	ŽôpˆÙíŽ¡—Ã—v¿(pchara);
+	GameIdiom::Žôpˆ««ˆÙíó‘ÔŽ¡—Ã—v¿(pchara);
 
 	pchara->Condition.‚â‚è‚·‚²‚µ’Ç‰Á(turn);
 

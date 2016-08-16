@@ -1156,6 +1156,7 @@ public:
 	virtual int 変身要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag = 1);
 	virtual int 擬態要請(pcCharacter pchara, int turn, int Messageflag = 1);
 
+	/*
 	virtual int 精神異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 身体異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 呪術異常治療要請(pcCharacter pchara, int Messageflag = 1);
@@ -1169,6 +1170,7 @@ public:
 	virtual bool 身体異常状態(pcCharacter pchara);
 	virtual bool 呪術異常状態(pcCharacter pchara);
 	virtual bool 速度異常状態(pcCharacter pchara);
+	*/
 
 	virtual int やりすごし要請(pcCharacter pchara, int turn, int Messageflag = 0);
 

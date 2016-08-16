@@ -127,8 +127,7 @@ void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 			{
 				if(valiable.charas[変数_防御者] == NULL) return;
 				cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-				sg_pDungeonSystem->精神異常治療要請( valiable.charas[変数_防御者]);
-				sg_pDungeonSystem->身体異常治療要請( valiable.charas[変数_防御者]);
+				GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
 			}
 		}
 	}
@@ -136,8 +135,7 @@ void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 	{
 		if(valiable.charas[変数_防御者] == NULL) return;
 		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-		sg_pDungeonSystem->精神異常治療要請( valiable.charas[変数_防御者]);
-		sg_pDungeonSystem->身体異常治療要請( valiable.charas[変数_防御者]);
+		GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
 	}
 }
 double cEquipment_ID_5::発動率()
