@@ -285,6 +285,27 @@ int GameIdiom::キャラの方を向く(pcCharacter frompchara, pcCharacter tochara)
 	return sg_pDungeonSystem->方向転換要請(frompchara,(youco-nowco).GetAspect());
 }
 
+int 速度異常治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+	int i;
+	for(i=0;i<4;i++)
+	{
+		if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+		{
+			sg_pDungeonSystem->速度減少要請(pchara,pchara->Condition.速度残りターン数());
+		}
+		if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+		{
+			sg_pDungeonSystem->速度増加要請(pchara,pchara->Condition.速度残りターン数());
+		}
+		if(pchara->Condition.速度度数() == pchara->Condition.デフォルト速度度数())
+		{
+			break;
+		}
+	}
+	return true;
+}
 
 bool GameIdiom::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
 {
@@ -316,17 +337,28 @@ bool GameIdiom::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
 	pchara->Condition.病気追加(-1);
 	//pchara->Condition.健康追加(-1);
 
-	pchara->Condition.死の誘い追加(-1,NULLCHARA);
-	pchara->Condition.みがわり追加(-1,NULLCHARA);
-	//pchara->Condition.擬態追加(-1);
+	呪術悪性異常状態治療要請(pchara, Messageflag);
 
 	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
 	{
-		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+		速度異常治療要請(pchara, false);
 	}
 
 	return true;
 }
+
+bool GameIdiom::呪術悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+
+	pchara->Condition.死の誘い追加(-1,NULLCHARA);
+	pchara->Condition.みがわり追加(-1,NULLCHARA);
+	//pchara->Condition.擬態追加(-1);
+
+	return true;
+}
+
 bool GameIdiom::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -346,7 +378,7 @@ bool GameIdiom::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
 
 	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
 	{
-		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+		速度異常治療要請(pchara, false);
 	}
 
 	return true;
@@ -388,9 +420,7 @@ bool GameIdiom::悪性異常状態である(pcCharacter pchara)
 	//if(pchara->Condition.健康状態()) {return true;}
 
 
-	if(pchara->Condition.死の誘い状態()) {return true;}
-	if(pchara->Condition.みがわり状態()) {return true;}
-	//if(pchara->Condition.擬態状態()) {return true;}
+	呪術悪性異常状態である(pchara);
 
 
 	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
@@ -400,6 +430,18 @@ bool GameIdiom::悪性異常状態である(pcCharacter pchara)
 
 	return false;
 }
+
+bool GameIdiom::呪術悪性異常状態である(pcCharacter pchara)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	if(pchara->Condition.死の誘い状態()) {return true;}
+	if(pchara->Condition.みがわり状態()) {return true;}
+	//if(pchara->Condition.擬態状態()) {return true;}
+
+	return true;
+}
+
 bool GameIdiom::良性異常状態である(pcCharacter pchara)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
