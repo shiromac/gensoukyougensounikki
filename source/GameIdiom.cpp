@@ -273,6 +273,7 @@ int GameIdiom::アイテム焼失(pcDroping pdrop)
 	return sg_pDungeonSystem->落ち物破壊要請(pdrop);
 }
 
+
 //軽いイデオム
 int GameIdiom::キャラの方を向く(pcCharacter frompchara, pcCharacter tochara)
 {
@@ -282,4 +283,195 @@ int GameIdiom::キャラの方を向く(pcCharacter frompchara, pcCharacter tochara)
 	cCoordinate youco(tochara->placeX, tochara->placeY);
 
 	return sg_pDungeonSystem->方向転換要請(frompchara,(youco-nowco).GetAspect());
+}
+
+int 速度異常治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+	int i;
+	for(i=0;i<4;i++)
+	{
+		if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+		{
+			sg_pDungeonSystem->速度減少要請(pchara,pchara->Condition.速度残りターン数());
+		}
+		if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+		{
+			sg_pDungeonSystem->速度増加要請(pchara,pchara->Condition.速度残りターン数());
+		}
+		if(pchara->Condition.速度度数() == pchara->Condition.デフォルト速度度数())
+		{
+			break;
+		}
+	}
+	return true;
+}
+
+bool GameIdiom::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	pchara->Condition.とても強い刺激();
+	pchara->Condition.バクスイ追加(-1);
+	pchara->Condition.眠り追加(-1);
+	pchara->Condition.びっくり追加(-1);
+	pchara->Condition.金縛り追加(-1);
+	pchara->Condition.封印追加(-1);
+	pchara->Condition.空振り追加(-1);
+	pchara->Condition.貧乏追加(-1);
+	pchara->Condition.臆病追加(-1);
+	//pchara->Condition.嫉妬追加(-1);
+	pchara->Condition.狂乱追加(-1);
+	pchara->Condition.無意識追加(-1);
+
+	if(pchara->Condition.力度数() < 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() < 0) {
+		pchara->Condition.軟弱初期化();
+	}
+
+	pchara->Condition.泥酔追加(-1);
+	pchara->Condition.氷付け追加(-1);
+	pchara->Condition.鳥目追加(-1);
+	pchara->Condition.病気追加(-1);
+	//pchara->Condition.健康追加(-1);
+
+	呪術悪性異常状態治療要請(pchara, Messageflag);
+
+	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+	{
+		速度異常治療要請(pchara, false);
+	}
+
+	return true;
+}
+
+bool GameIdiom::呪術悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+
+	pchara->Condition.死の誘い追加(-1,NULLCHARA);
+	pchara->Condition.みがわり追加(-1,NULLCHARA);
+	//pchara->Condition.擬態追加(-1);
+
+	return true;
+}
+
+bool GameIdiom::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	pchara->Condition.嫉妬追加(-1);
+
+	if(pchara->Condition.力度数() > 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() > 0) {
+		pchara->Condition.軟弱初期化();
+	}
+
+	pchara->Condition.健康追加(-1);
+
+	pchara->Condition.擬態追加(-1);
+
+	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+	{
+		速度異常治療要請(pchara, false);
+	}
+
+	return true;
+}
+
+bool GameIdiom::全異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	良性異常状態治療要請(pchara, Messageflag);
+	悪性異常状態治療要請(pchara, Messageflag);
+	return true;
+}
+
+bool GameIdiom::悪性異常状態である(pcCharacter pchara)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	if(pchara->Condition.眠りで行動不能である()) {return true;}
+	if(pchara->Condition.びっくりで行動不能である()) {return true;}
+	if(pchara->Condition.金縛りで行動不能である()) {return true;}
+	if(pchara->Condition.封印状態()) {return true;}
+	if(pchara->Condition.空振り状態()) {return true;}
+	if(pchara->Condition.貧乏状態()) {return true;}
+	if(pchara->Condition.臆病状態()) {return true;}
+	//if(pchara->Condition.嫉妬状態()) return true;
+	if(pchara->Condition.狂乱状態()) {return true;}
+	if(pchara->Condition.無意識状態()) {return true;}
+
+	if(pchara->Condition.力度数() < 0) {
+		return true;
+	}
+	if(pchara->Condition.守度数() < 0) {
+		return true;
+	}
+
+	if(pchara->Condition.泥酔状態()) {return true;}
+	if(pchara->Condition.氷付け状態()) {return true;}
+	if(pchara->Condition.鳥目状態()) {return true;}
+	if(pchara->Condition.病気状態()) {return true;}
+	//if(pchara->Condition.健康状態()) {return true;}
+
+
+	呪術悪性異常状態である(pchara);
+
+
+	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool GameIdiom::呪術悪性異常状態である(pcCharacter pchara)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	if(pchara->Condition.死の誘い状態()) {return true;}
+	if(pchara->Condition.みがわり状態()) {return true;}
+	//if(pchara->Condition.擬態状態()) {return true;}
+
+	return true;
+}
+
+bool GameIdiom::良性異常状態である(pcCharacter pchara)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	if(pchara->Condition.嫉妬状態()) {return true;}
+
+	if(pchara->Condition.力度数() > 0) {
+		return true;
+	}
+	if(pchara->Condition.守度数() > 0) {
+		return true;
+	}
+
+	if(pchara->Condition.健康状態()) {return true;}
+
+	if(pchara->Condition.擬態状態()) {return true;}
+
+	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool GameIdiom::異常状態である(pcCharacter pchara)
+{
+	if(悪性異常状態である(pchara)) {return true;}
+
+	if(良性異常状態である(pchara)) {return true;}
+
+	return false;
 }

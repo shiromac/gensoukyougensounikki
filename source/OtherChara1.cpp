@@ -12,6 +12,7 @@
 #include "ScriptDecodeFunction.h"
 #include "fireCommand.h"
 #include "cEquipment.h"
+#include "GameIdiom.h"
 
 #define DEF_COMMANDCLASS(name,deftext) \
 class cCommand##name## : public cCommand\
@@ -767,7 +768,7 @@ int cCommand_Uncurse::Action(IDirect3DDevice9 *pDev)
 		}
 	}
 
-	sg_pDungeonSystem->ôpˆÙí¡—Ã—v¿(pchara);
+	GameIdiom::ôpˆ««ˆÙíó‘Ô¡—Ã—v¿(pchara);
 
 	if(eff)
 	{

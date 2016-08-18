@@ -137,6 +137,44 @@ bool MobAbilityIdiom::呪い無効化CutIn::operator()(pcCharacter pchara, タイミング
 
 	return false;
 }
+bool MobAbilityIdiom::悪性異常状態無効化CutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(
+			//速度系
+			timing == 速度減少直前_タイミング
+			//精神系
+		 || timing == 眠り追加直前_タイミング
+		 || timing == バクスイ追加直前_タイミング
+		 || timing == びっくり追加直前_タイミング
+		 || timing == 金縛り追加直前_タイミング
+		 || timing == 封印追加直前_タイミング
+		 || timing == 空振り追加直前_タイミング
+		 || timing == 貧乏追加直前_タイミング
+		 || timing == 錯乱追加直前_タイミング
+		 || timing == 臆病追加直前_タイミング
+		 //|| timing == 嫉妬追加直前_タイミング
+		 || timing == 狂乱追加直前_タイミング
+		 || timing == 無意識追加直前_タイミング
+			//身体系
+		 || timing == 泥酔追加直前_タイミング
+		 || timing == 氷付け追加直前_タイミング
+		 || timing == 脱力追加直前_タイミング
+		 //|| timing == 元気追加直前_タイミング
+		 || timing == 軟弱追加直前_タイミング
+		 //|| timing == 頑強追加直前_タイミング
+		 || timing == 鳥目追加直前_タイミング
+		 //|| timing == 健康追加直前_タイミング
+		 || timing == 病気追加直前_タイミング
+			//呪術系
+	     || timing == 死の誘い追加直前_タイミング)
+
+	{
+		valiable.doubles.val(変数_汎用ブール) = 0;
+		return true;
+	}
+
+	return false;
+}
 
 bool MobAbilityIdiom::攻撃時自分ノックバックCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
@@ -167,6 +205,28 @@ bool MobAbilityIdiom::攻撃時眠り付与CutIn::operator()(pcCharacter pchara, タイミ
 				}
 			}
 		}
+	}
+	return false;
+}
+
+bool MobAbilityIdiom::攻撃時攻撃力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == 攻撃力計算時_タイミング)
+	{
+		valiable.doubles[変数_攻撃力ボーナス_倍率] += addPercent / 100.0;
+		valiable.doubles[変数_攻撃力ボーナス_定数] += addConst;
+		return true;
+	}
+	return false;
+}
+
+bool MobAbilityIdiom::防御時防御力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == 防御力計算時_タイミング)
+	{
+		valiable.doubles[変数_防御力ボーナス_倍率] += addPercent / 100.0;
+		valiable.doubles[変数_防御力ボーナス_定数] += addConst;
+		return true;
 	}
 	return false;
 }

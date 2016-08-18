@@ -593,7 +593,7 @@ int cMob_ID_6::特殊攻撃効果(cValiableField& valiable)
 
 			if((nowco - youco).dif() == 1 && me()->pAI->u_隣接攻撃通用判定((youco - nowco).GetAspect()))
 			{
-				sg_pDungeonSystem->精神異常治療要請(pchara);
+				GameIdiom::悪性異常状態治療要請(pchara);
 			}
 		}
 
@@ -3102,7 +3102,7 @@ int cMob_ID_32::特殊攻撃効果(cValiableField& valiable)
 	if(pchara != NULL && !sg_pDungeonSystem->キャラクター敵対判定(me(),pchara)
 		&& pchara->Condition.眠りで行動不能である())
 	{
-		sg_pDungeonSystem->精神異常治療要請(pchara);
+		GameIdiom::悪性異常状態治療要請(pchara);
 	
 	}
 	return false;
@@ -4358,7 +4358,7 @@ void cMob_ID_50::パッシブ能力(タイミング timing, cValiableField& valiable)
 				{
 					EffectFunctions::特殊能力発揮エフェクト(me()->placeX,me()->placeY,1.7);
 					EffectFunctions::煙エフェクト1(pchara->placeX, pchara->placeY);
-					sg_pDungeonSystem->精神異常治療要請(pchara,false);
+					GameIdiom::悪性異常状態治療要請(pchara,false);
 				}
 			}
 		}

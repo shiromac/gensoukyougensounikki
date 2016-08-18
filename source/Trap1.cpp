@@ -1193,7 +1193,7 @@ int cTrap_ID_28::効果(pcCharacter pchara)
 	効果();
 
 	sg_pDungeonSystem->健康要請(pchara,効果量(0),false);
-	sg_pDungeonSystem->身体異常治療要請(pchara);
+	GameIdiom::悪性異常状態治療要請(pchara);
 
 	map<tstring, StyleString> valiable;
 	valiable[_T("Chara")] = pchara->ShortName();

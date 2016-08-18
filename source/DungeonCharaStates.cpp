@@ -6,6 +6,7 @@
 #include "Gameobjects.h"
 #include "EffectFunctions.h"
 #include "FindUtility.h"
+#include "GameIdiom.h"
 #include <boost/pointer_cast.hpp>
 
 int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
@@ -1145,6 +1146,7 @@ int cDungeonSystem::擬態要請(pcCharacter pchara, int turn, int Messageflag)
 	return true;
 
 }
+/*
 int cDungeonSystem::精神異常治療要請(pcCharacter pchara, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -1274,8 +1276,12 @@ int cDungeonSystem::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
 	pchara->Condition.狂乱追加(-1);
 	pchara->Condition.無意識追加(-1);
 
-	pchara->Condition.脱力初期化();
-	pchara->Condition.軟弱初期化();
+	if(pchara->Condition.力度数() < 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() < 0) {
+		pchara->Condition.軟弱初期化();
+	}
 
 	pchara->Condition.泥酔追加(-1);
 	pchara->Condition.氷付け追加(-1);
@@ -1287,13 +1293,50 @@ int cDungeonSystem::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
 	pchara->Condition.みがわり追加(-1,NULLCHARA);
 	//pchara->Condition.擬態追加(-1);
 
+	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+	{
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+	}
+
 	return true;
 }
+int cDungeonSystem::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	pchara->Condition.嫉妬追加(-1);
+
+	if(pchara->Condition.力度数() > 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() > 0) {
+		pchara->Condition.軟弱初期化();
+	}
+
+	pchara->Condition.健康追加(-1);
+
+	pchara->Condition.擬態追加(-1);
+
+	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+	{
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+	}
+
+	return true;
+}
+
+int cDungeonSystem::全異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	良性異常状態治療要請(pchara, Messageflag);
+	悪性異常状態治療要請(pchara, Messageflag);
+	return true;
+}
+*/
 int cDungeonSystem::やりすごし要請(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
 
-	呪術異常治療要請(pchara);
+	GameIdiom::呪術悪性異常状態治療要請(pchara);
 
 	pchara->Condition.やりすごし追加(turn);
 

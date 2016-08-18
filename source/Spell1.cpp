@@ -428,7 +428,7 @@ int cSpell_ID_5::効果(pcCharacter pchara)
 		}
 	}
 
-	sg_pDungeonSystem->呪術異常治療要請(pchara);
+	GameIdiom::呪術悪性異常状態である(pchara);
 
 	if(eff)
 	{
@@ -887,8 +887,7 @@ int cSpell_ID_10::効果(pcCharacter pchara)
 	int eff = 0;
 
 	eff |= sg_pDungeonSystem->回復要請(pchara,pchara->MHP);
-	eff |= sg_pDungeonSystem->精神異常治療要請(pchara);
-	eff |= sg_pDungeonSystem->身体異常治療要請(pchara);
+	eff |= GameIdiom::悪性異常状態治療要請(pchara);
 
 	if(eff)
 	{
@@ -2288,7 +2287,7 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 		*/
 		if(timing == スペル装備直後_タイミング)
 		{
-			sg_pDungeonSystem->精神異常治療要請(装備者(),true);
+			GameIdiom::悪性異常状態治療要請(装備者(),true);
 		}
 		else if((
 			timing == 眠り追加直前_タイミング
@@ -2598,15 +2597,9 @@ int cSpell_ID_32::効果(pcCharacter pchara)
 
 	if(!didTryFlag)
 	{
-		if(sg_pDungeonSystem->精神異常状態(pchara)||
-			sg_pDungeonSystem->身体異常状態(pchara)||
-			sg_pDungeonSystem->呪術異常状態(pchara)||
-			sg_pDungeonSystem->速度異常状態(pchara) )
+		if(GameIdiom::悪性異常状態である(pchara))
 		{
-			eff |= sg_pDungeonSystem->精神異常治療要請(pchara);
-			eff |= sg_pDungeonSystem->身体異常治療要請(pchara);
-			eff |= sg_pDungeonSystem->呪術異常治療要請(pchara);
-			eff |= sg_pDungeonSystem->速度異常状態(pchara);
+			eff |= GameIdiom::悪性異常状態治療要請(pchara);
 			didTryFlag = true;
 		}
 
