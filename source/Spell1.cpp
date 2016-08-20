@@ -1797,12 +1797,21 @@ void cSpell_ID_22::CutIn(タイミング timing, cValiableField& valiable)
 		if(timing == 箱帯静電気直前_タイミング
 			|| timing == 本濡れ直前_タイミング
 			|| timing == 水筒冷凍直前_タイミング
-			|| timing == 食べ物劣化直前_タイミング)
+			|| timing == 食べ物劣化直前_タイミング
+			|| timing == イモライズ直前_タイミング)
 		{
 
 			valiable.doubles.val(変数_汎用ブール) = 0;
 			Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
+		}
+		if(MobAbilityIdiom::悪性異常状態無効化CutIn()(装備者(), timing, valiable))
+		{
+			Breakcrashprocess(効果時腕輪ダメージ());
+		}
+		if(timing == スペル装備直後_タイミング)
+		{
+			GameIdiom::悪性異常状態治療要請(装備者(),true);
 		}
 	}
 }
