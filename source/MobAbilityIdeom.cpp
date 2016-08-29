@@ -209,7 +209,7 @@ bool MobAbilityIdiom::攻撃時眠り付与CutIn::operator()(pcCharacter pchara, タイミ
 	return false;
 }
 
-bool MobAbilityIdiom::攻撃時攻撃力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+bool MobAbilityIdiom::常時攻撃力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
 	if(timing == 攻撃力計算時_タイミング)
 	{
@@ -220,7 +220,7 @@ bool MobAbilityIdiom::攻撃時攻撃力ボーナスCutIn::operator()(pcCharacter pchara, 
 	return false;
 }
 
-bool MobAbilityIdiom::防御時防御力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+bool MobAbilityIdiom::常時防御力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
 
 	if(timing == 防御力計算時_タイミング)
 	{

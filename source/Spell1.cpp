@@ -465,13 +465,13 @@ void cSpell_ID_6::CutIn(タイミング timing, cValiableField& valiable)
 		if(pdrop == NULL) return;
 		if(pdrop->属性.count(落ち物属性::剣))
 		{
-			if(MobAbilityIdiom::攻撃時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable)) {
+			if(MobAbilityIdiom::常時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable)) {
 				sg_pDungeonSystem->動的識別(me());
 				//Breakcrashprocess(効果時腕輪ダメージ());
 			}
 		}
 		else{
-			if(MobAbilityIdiom::防御時防御力ボーナスCutIn(効果量(3), 0)(装備者(), timing, valiable)) {
+			if(MobAbilityIdiom::常時防御力ボーナスCutIn(効果量(3), 0)(装備者(), timing, valiable)) {
 				sg_pDungeonSystem->動的識別(me());
 				//Breakcrashprocess(効果時腕輪ダメージ());
 			}

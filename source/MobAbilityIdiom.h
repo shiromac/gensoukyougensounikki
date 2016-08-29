@@ -82,7 +82,6 @@ namespace MobAbilityIdiom
 
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(攻撃時眠り付与CutIn, percent, turn)};
 
-	
-	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(攻撃時攻撃力ボーナスCutIn, addPercent, addConst)};
-	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(防御時防御力ボーナスCutIn, addPercent, addConst)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(常時攻撃力ボーナスCutIn, addPercent, addConst)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(常時防御力ボーナスCutIn, addPercent, addConst)};
 };
