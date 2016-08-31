@@ -146,6 +146,9 @@ public:
 
 	virtual double 効果時腕輪ダメージ();
 
+	virtual double 攻撃力ボーナス％();
+	virtual double 防御力ボーナス％();
+
 	virtual bool 破損する();
 	virtual bool 破損回復(int message);
 

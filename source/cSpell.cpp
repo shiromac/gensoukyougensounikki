@@ -242,6 +242,16 @@ double cSpell::効果時腕輪ダメージ()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		ID(),(tstring)_T("効果時腕輪ダメージ"),0.0);
 }
+double cSpell::攻撃力ボーナス％()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		ID(),(tstring)_T("攻撃力ボーナス％"),0.0);
+}
+double cSpell::防御力ボーナス％()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		ID(),(tstring)_T("防御力ボーナス％"),0.0);
+}
 void cSpell::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
 {
 	cDrawingObject DO;
@@ -1281,6 +1291,12 @@ void cSpell::CutIn(タイミング timing, cValiableField& valiable)
 
 			}
 		}
+	}
+
+	if(装備されている())
+	{
+		MobAbilityIdiom::常時攻撃力ボーナスCutIn(攻撃力ボーナス％(), 0)(装備者(), timing, valiable);
+		MobAbilityIdiom::常時防御力ボーナスCutIn(防御力ボーナス％(), 0)(装備者(), timing, valiable);
 	}
 
 }
