@@ -2270,19 +2270,19 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
-		/*
+		
 		if(timing == スペル装備直後_タイミング)
 		{
 			tempmem() = 装備者()->Forse;
 			if(tempmem() == CHARACTER_FORSE_FRIEND)
 			{
+				sg_pDungeonSystem->狂乱要請(装備者(),GAME_TURN_GAMEOVER,true);
 				装備者()->Forse = CHARACTER_FORSE_ENEMY;
 			}
 			else
 			{
 				装備者()->Forse = CHARACTER_FORSE_FRIEND;
 			}
-			sg_pDungeonSystem->狂乱要請(装備者(),GAME_TURN_GAMEOVER,true);
 		}
 		else if(timing == スペル装備解除直前_タイミング)
 		{
@@ -2291,9 +2291,12 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 		}
 		else if(timing == ターン終了_タイミング)
 		{
-			Breakcrashprocess(効果時腕輪ダメージ());
+			if(tempmem() == CHARACTER_FORSE_FRIEND) {
+				Breakcrashprocess(効果時腕輪ダメージ());
+			}
 		}
-		*/
+		
+			/*
 		if(timing == スペル装備直後_タイミング)
 		{
 			GameIdiom::悪性異常状態治療要請(装備者(),true);
@@ -2321,6 +2324,7 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 			}
 			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
 		}
+		*/
 	}
 }
 int cSpell_ID_28::効果(pcCharacter pchara)
@@ -2329,9 +2333,13 @@ int cSpell_ID_28::効果(pcCharacter pchara)
 	//eff |= ;
 
 	//未実装
+	vector<pcCharacter> charaList = FindUtility::部屋内と隣接敵リスト(pchara);
 
-	eff = sg_pDungeonSystem->狂乱要請(pchara,効果量(0));
-	
+	int i,size = charaList.size();
+	for(i=0;i<size;i++) {
+		eff |= sg_pDungeonSystem->速度減少要請(charaList[i],効果量(0));
+		eff |= sg_pDungeonSystem->無意識要請(charaList[i],効果量(0));
+	}
 
 	if(eff)
 	{
