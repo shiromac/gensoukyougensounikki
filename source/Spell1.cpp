@@ -7,6 +7,7 @@
 #include "cDungeonSystem.h"
 #include "cAttackinformation.h"
 #include "MobAbilityIdiom.h"
+#include "cObjectChara.h"
 
 bool cSpell_能力仕様フラグID_exist(cValiableField& valiable, int ID)
 {
@@ -2020,8 +2021,49 @@ void cSpell_ID_25::CutIn(タイミング timing, cValiableField& valiable)
 }
 int cSpell_ID_25::効果(pcCharacter pchara)
 {
-	int eff = 0;
+	int eff = 1;
 
+	EffectFunctions::ボスエフェクト集中(pchara->placeX, pchara->placeY, 0);
+	int i,k;
+	for(i=0;i<64;i++)
+	{
+		for(k=0;k<8;k++)
+		{
+			double x = pow(i/32.0 -1, 2);
+			double i_kaiten = 25;
+			double k_kaiten = 45;
+			double i_kyori = 0.25;
+			c4DVector v(i*i_kyori + x*0.1,0,0,0);
+			v.turn(k*k_kaiten+i*i_kaiten);
+			cCoordinate coo(v.x, v.y);
+			v.x += pchara->placeX + 0.5;
+			v.y += pchara->placeY + 0.5;
+			pcLandform pland = sg_pDungeonSystem->Map().Land(v.x,v.y);
+			if(sg_pDungeonSystem->キャラ配置安全(pland))
+			{
+				EffectFunctions::煙エフェクト1(pland->placeX,pland->placeY);
+
+				弾幕::弾幕Type type = 弾幕::追尾;
+				弾幕::弾幕色 color = 弾幕::マゼンタ;
+				if(k%2 == 0)
+				{
+					color = 弾幕::アオ;
+					type = 弾幕::追尾;
+				}
+				弾幕::弾幕召喚(pland,//場所
+								pchara->GetBulletAttackPower()*効果量(1),//HP
+								CHARACTER_FORSE_FRIEND,//Forse
+								0,//speed
+								type,//弾幕Type
+								color,//弾幕色
+								coo.GetAspect()-4,//aspect
+								NULLCHARA//targetenemy
+								);
+				
+			}
+		}
+	}
+	/*
 	map<tstring, StyleString> valiable;
 	valiable[_T("Chara")] = pchara->ShortName();
 	g_Langメッセージ(_T("cSpell_ID_25効果メッセージ"),valiable);
@@ -2088,7 +2130,8 @@ int cSpell_ID_25::効果(pcCharacter pchara)
 		}
 	
 		eff |= 1;
-	}
+	}*/
+
 
 	if(eff)
 	{
