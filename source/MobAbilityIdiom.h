@@ -57,6 +57,18 @@ namespace MobAbilityIdiom
 		double valueY;
 // def end
 
+#define DEF_MobAbilityIdiom_CutInFunction_Class_SetInt_Value(name, setInt, value) class name : public CutInFunctionObject {\
+		public:\
+		virtual ~name(){};\
+		virtual bool operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const;\
+		private:\
+			name(){};\
+		public:\
+		name(std::set<int> setInt_, double value_):setInt(setInt_),value(value_){};\
+		std::set<int> setInt;\
+		double value;
+// def end
+
 	DEF_MobAbilityIdiom_CutInFunction_Class(投擲物反射CutIn)};
 
 
@@ -84,4 +96,6 @@ namespace MobAbilityIdiom
 
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(常時攻撃力ボーナスCutIn, addPercent, addConst)};
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(常時防御力ボーナスCutIn, addPercent, addConst)};
+
+	DEF_MobAbilityIdiom_CutInFunction_Class_SetInt_Value(属性耐性ボーナス％, attribsute, addPercent)};
 };

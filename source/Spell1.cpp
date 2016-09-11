@@ -927,6 +927,17 @@ void cSpell_ID_11::CutIn(タイミング timing, cValiableField& valiable)
 			//Breakcrashprocess(効果時腕輪ダメージ());
 			//sg_pDungeonSystem->動的識別(me());
 		}
+
+		std::set<int> attri;
+		attri.insert((int)攻撃属性::水);
+		MobAbilityIdiom::属性耐性ボーナス％(attri,効果量(1))(装備者(), timing, valiable);
+
+		if(timing == ターン終了_タイミング)
+		{
+			if(装備者()->足元地形()->iswater()) {
+				sg_pDungeonSystem->回復要請(装備者(),装備者()->MHP*効果量(0)/100.0,false);
+			}
+		}
 		/*
 		if(timing == アイテム呪い直前_タイミング)
 		{

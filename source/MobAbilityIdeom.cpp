@@ -230,3 +230,25 @@ bool MobAbilityIdiom::常時防御力ボーナスCutIn::operator()(pcCharacter pchara, タ
 	}
 	return false;
 }
+bool MobAbilityIdiom::属性耐性ボーナス％::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == ダメージ計算防御時_タイミング)
+	{
+		bool match = false;
+		set<int>::const_iterator itr = attribsute.begin();
+		for(;itr != attribsute.end(); itr++) {
+			if(valiable.intsets.val(変数_属性).count(*itr) > 0)
+			{
+				match = true;
+				break;
+			}
+		}
+
+		if(match)
+		{
+			valiable.doubles.val(変数_耐性ボーナス_倍率％) += addPercent;
+			return true;
+		}
+	}
+	return false;
+}
