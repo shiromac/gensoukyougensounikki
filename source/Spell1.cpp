@@ -677,6 +677,8 @@ void cSpell_ID_8::CutIn(タイミング timing, cValiableField& valiable)
 			if(count) sg_pDungeonSystem->動的識別(me());
 			valiable.doubles[変数_攻撃力ボーナス_倍率] += sqrt((double)count)*効果量(1)/100.0;
 		}
+		
+		MobAbilityIdiom::常時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable);
 	}
 }
 int cSpell_ID_8::効果(pcCharacter pchara)
@@ -1929,6 +1931,8 @@ void cSpell_ID_24::CutIn(タイミング timing, cValiableField& valiable)
 			Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
+		
+		MobAbilityIdiom::常時防御力ボーナスCutIn(効果量(0), 0)(装備者(), timing, valiable);
 	}
 }
 int cSpell_ID_24::効果(pcCharacter pchara)
