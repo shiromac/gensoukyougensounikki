@@ -244,13 +244,27 @@ double cSpell::効果時腕輪ダメージ()
 }
 double cSpell::攻撃力ボーナス％()
 {
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+	double bonus = sg_pDungeonSystem->DataBase.DropImportData_Value(
 		ID(),(tstring)_T("攻撃力ボーナス％"),0.0);
+	if (state() == cDroping::STATE_GOOD) {
+		bonus *= 2;
+	}
+	else if (state() == cDroping::STATE_CURSE) {
+		bonus *= 0;
+	}
+	return bonus;
 }
 double cSpell::防御力ボーナス％()
 {
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+	double bonus = sg_pDungeonSystem->DataBase.DropImportData_Value(
 		ID(),(tstring)_T("防御力ボーナス％"),0.0);
+	if (state() == cDroping::STATE_GOOD) {
+		bonus *= 2;
+	}
+	else if (state() == cDroping::STATE_CURSE) {
+		bonus *= 0;
+	}
+	return bonus;
 }
 void cSpell::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
 {
