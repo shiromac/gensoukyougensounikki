@@ -1894,7 +1894,7 @@ int cMob_ID_19::特殊攻撃効果(cValiableField& valiable)
 
 
 			multiset<攻撃属性::攻撃属性> 属性;
-			属性.insert(攻撃属性::気);
+			//属性.insert(攻撃属性::気);
 			
 			sg_pDungeonSystem->攻撃接近(攻撃作成(
 				me(),//攻撃者
@@ -5073,10 +5073,12 @@ int cMob_ID_64::召喚(int ID, pcCharacter enemy)
 }
 void cMob_ID_64::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
+	/*
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
 		valiable.intsets.val(変数_属性).insert(攻撃属性::気);
 	}
+	*/
 }
 //---------------------------------------------------------------
 //ヒジリ

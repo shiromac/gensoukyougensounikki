@@ -666,11 +666,11 @@ void cSpell_ID_8::CutIn(タイミング timing, cValiableField& valiable)
 		if(timing == ダメージ計算攻撃時優先度低_タイミング )
 		{
 			int count = 0;
-			count += valiable.intsets[変数_属性].count(攻撃属性::爆発);
+			//count += valiable.intsets[変数_属性].count(攻撃属性::爆発);
 			count += valiable.intsets[変数_属性].count(攻撃属性::火);
 			count += valiable.intsets[変数_属性].count(攻撃属性::水);
 			count += valiable.intsets[変数_属性].count(攻撃属性::冷気);
-			count += valiable.intsets[変数_属性].count(攻撃属性::気);
+			//count += valiable.intsets[変数_属性].count(攻撃属性::気);
 			count += valiable.intsets[変数_属性].count(攻撃属性::電気);
 
 			Breakcrashprocess(効果時腕輪ダメージ());
@@ -699,11 +699,11 @@ int cSpell_ID_8::効果(pcCharacter pchara)
 
 			eff++;
 			multiset<攻撃属性::攻撃属性> temp;
-			temp.insert(攻撃属性::爆発);
+			//temp.insert(攻撃属性::爆発);
 			temp.insert(攻撃属性::火);
 			temp.insert(攻撃属性::水);
 			temp.insert(攻撃属性::冷気);
-			temp.insert(攻撃属性::気);
+			//temp.insert(攻撃属性::気);
 			temp.insert(攻撃属性::電気);
 			sg_pDungeonSystem->攻撃接近(攻撃作成(
 				pchara,//攻撃者
@@ -1594,14 +1594,10 @@ void cSpell_ID_19::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
+		MobAbilityIdiom::超遠距離耐性ボーナスCutIn(効果量(3))(装備者(), timing, valiable);
+
 		if(timing == ダメージ計算防御時_タイミング)
 		{
-			if(valiable.intsets.val(変数_属性).count(攻撃属性::気))
-			{
-				valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(3);
-				//Breakcrashprocess(効果時腕輪ダメージ());
-				sg_pDungeonSystem->動的識別(me());
-			}
 			if(valiable.intsets.val(変数_属性).count(攻撃属性::落ち物))
 			{
 				valiable.doubles.val(変数_耐性ボーナス_倍率％) -= 効果量(4);
