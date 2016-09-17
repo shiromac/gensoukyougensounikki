@@ -252,3 +252,49 @@ bool MobAbilityIdiom::‘®«‘Ï«ƒ{[ƒiƒX“::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ
 	}
 	return false;
 }
+
+const static int ’´‰“‹——£Distance = 4;
+
+bool MobAbilityIdiom::’´‰“‹——£UŒ‚—Íƒ{[ƒiƒXCutIn::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ“ƒO timing, cValiableField& valiable) const{
+
+	if(timing == ƒ_ƒ[ƒWŒvZUŒ‚_ƒ^ƒCƒ~ƒ“ƒO)
+	{
+		pcCharacter attack = valiable.charas[•Ï”_UŒ‚Ò];
+		pcCharacter defence = valiable.charas[•Ï”_–hŒäÒ];
+		if(attack != NULLCHARA && defence != NULLCHARA && FindUtility::ƒLƒƒƒ‰‚Ì‹——£(attack,defence) >= ’´‰“‹——£Distance) {
+			valiable.doubles[•Ï”_UŒ‚—Íƒ{[ƒiƒX_”{—¦] += addPercent / 100.0;
+			valiable.doubles[•Ï”_UŒ‚—Íƒ{[ƒiƒX_’è”] += addConst;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MobAbilityIdiom::’´‰“‹——£–hŒä—Íƒ{[ƒiƒXCutIn::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ“ƒO timing, cValiableField& valiable) const{
+
+	if(timing == ƒ_ƒ[ƒWŒvZ–hŒä_ƒ^ƒCƒ~ƒ“ƒO)
+	{
+		pcCharacter attack = valiable.charas[•Ï”_UŒ‚Ò];
+		pcCharacter defence = valiable.charas[•Ï”_–hŒäÒ];
+		if(attack != NULLCHARA && defence != NULLCHARA && FindUtility::ƒLƒƒƒ‰‚Ì‹——£(attack,defence) >= ’´‰“‹——£Distance) {
+			valiable.doubles[•Ï”_–hŒä—Íƒ{[ƒiƒX_”{—¦] += addPercent / 100.0;
+			valiable.doubles[•Ï”_–hŒä—Íƒ{[ƒiƒX_’è”] += addConst;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MobAbilityIdiom::’´‰“‹——£‘Ï«ƒ{[ƒiƒXCutIn::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ“ƒO timing, cValiableField& valiable) const{
+
+	if(timing == ƒ_ƒ[ƒWŒvZ–hŒä_ƒ^ƒCƒ~ƒ“ƒO)
+	{
+		pcCharacter attack = valiable.charas[•Ï”_UŒ‚Ò];
+		pcCharacter defence = valiable.charas[•Ï”_–hŒäÒ];
+		if(attack != NULLCHARA && defence != NULLCHARA && FindUtility::ƒLƒƒƒ‰‚Ì‹——£(attack,defence) >= ’´‰“‹——£Distance) {
+			valiable.doubles[•Ï”_‘Ï«ƒ{[ƒiƒX_”{—¦“] += addPercent;
+			return true;
+		}
+	}
+	return false;
+}
