@@ -1596,16 +1596,7 @@ void cSpell_ID_19::CutIn(タイミング timing, cValiableField& valiable)
 	{
 		MobAbilityIdiom::超遠距離耐性ボーナスCutIn(効果量(3))(装備者(), timing, valiable);
 
-		if(timing == ダメージ計算防御時_タイミング)
-		{
-			if(valiable.intsets.val(変数_属性).count(攻撃属性::落ち物))
-			{
-				valiable.doubles.val(変数_耐性ボーナス_倍率％) -= 効果量(4);
-				//Breakcrashprocess(効果時腕輪ダメージ());
-				sg_pDungeonSystem->動的識別(me());
-			}
-		}
-		else if(timing == 自然満腹度減少量計算時_タイミング)
+		if(timing == 自然満腹度減少量計算時_タイミング)
 		{
 			valiable.doubles.val(変数_汎用ボーナス_倍率) -= 効果量(2)/100.0;
 			//Breakcrashprocess(効果時腕輪ダメージ());
