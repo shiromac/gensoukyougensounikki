@@ -1131,32 +1131,25 @@ void cEquipment_ID_48::能力(const タイミング timing, cValiableField& valiable)
 //------------------------------------------------------------------------------
 void cEquipment_ID_49::能力(const タイミング timing, cValiableField& valiable)
 {
-	if(timing == ダメージ計算防御時_タイミング)
+	if(timing != 能力発動条件満たしている_攻撃用_タイミング && timing != 能力発動条件満たしている_防御用_タイミング)
 	{
 		if(能力発動条件満たしている_防御用())
 		{
-			if(valiable.intsets.val(変数_属性).count(攻撃属性::爆発))
-			{
-				if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
-				{//初
-					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(0);
+			if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
+			{//初
+				if(MobAbilityIdiom::定数攻撃耐性ボーナスCutIn(効果量(0))(装備者_防御用(), timing, valiable)) {
 					cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
 				}
-				else
-				{
-					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(1);
-				
-				}
-				
+			}
+			else
+			{
+				MobAbilityIdiom::定数攻撃耐性ボーナスCutIn(効果量(1))(装備者_防御用(), timing, valiable);
 			}
 		}
-	}
-	if(timing == ダメージ計算攻撃時_タイミング)
-	{
-		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+
+		if(能力発動条件満たしている_攻撃用())
 		{
-			valiable.intsets.val(変数_属性).insert(攻撃属性::爆発);
+			MobAbilityIdiom::定数攻撃攻撃力ボーナスCutIn(効果量(2),0)(装備者_攻撃用(), timing, valiable);
 		}
 	}
 }

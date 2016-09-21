@@ -298,3 +298,28 @@ bool MobAbilityIdiom::超遠距離耐性ボーナスCutIn::operator()(pcCharacter pchara, 
 	}
 	return false;
 }
+
+bool MobAbilityIdiom::定数攻撃攻撃力ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == ダメージ計算攻撃時_タイミング)
+	{
+		if(valiable.doubles.exist(変数_定数ダメージフラグ) && valiable.doubles[変数_定数ダメージフラグ]) {
+			valiable.doubles[変数_攻撃力ボーナス_倍率] += addPercent / 100.0;
+			valiable.doubles[変数_攻撃力ボーナス_定数] += addConst;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool MobAbilityIdiom::定数攻撃耐性ボーナスCutIn::operator()(pcCharacter pchara, タイミング timing, cValiableField& valiable) const{
+
+	if(timing == ダメージ計算防御時_タイミング)
+	{
+		if(valiable.doubles.exist(変数_定数ダメージフラグ) && valiable.doubles[変数_定数ダメージフラグ]) {
+			valiable.doubles[変数_耐性ボーナス_倍率％] += addPercent;
+			return true;
+		}
+	}
+	return false;
+}

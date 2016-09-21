@@ -103,4 +103,8 @@ namespace MobAbilityIdiom
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(超遠距離攻撃力ボーナスCutIn, addPercent, addConst)};
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(超遠距離防御力ボーナスCutIn, addPercent, addConst)};
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value(超遠距離耐性ボーナスCutIn, addPercent)};
+
+	//爆発属性代替
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(定数攻撃攻撃力ボーナスCutIn, addPercent, addConst)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_Value(定数攻撃耐性ボーナスCutIn, addPercent)};
 };
