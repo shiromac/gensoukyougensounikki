@@ -458,8 +458,6 @@ int cMob_ID_5::“ÁêUŒ‚Œø‰Ê(cValiableField& valiable)
 
 
 		int a;
-		multiset<UŒ‚‘®«::UŒ‚‘®«> ‘®«;
-		‘®«.insert(UŒ‚‘®«::”š”­);
 
 		map<tstring, StyleString> val;
 		val[_T("Chara")] = FullName();

@@ -1315,6 +1315,28 @@ int cTrap_ID_31::効果(pcDroping pdrop)//pdropを破壊したかったらtrue;
 	効果();
 	return false;
 }
+double cTrap_ID_31::発動率_発見済み() {
+	return 0;
+}
+
+int cTrap_ID_31::発動(pcCharacter pchara){
+	if(isDiscoveredWhen乗るBefore) {
+		map<tstring, StyleString> valiable;
+		g_Langメッセージ(_T("Trap効果無しメッセージ"),valiable);
+		return false;
+	}
+	else {
+		return cTrap::発動(pchara);
+	}
+}
+int cTrap_ID_31::発動(pcDroping pdrop) {//pdropに何か起こったらtrue;
+	if(isDiscoveredWhen乗るBefore) {
+		return false;
+	}
+	else {
+		return cTrap::発動(pdrop);
+	}
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //------------------------------------------------------------------------------
 //病気の罠

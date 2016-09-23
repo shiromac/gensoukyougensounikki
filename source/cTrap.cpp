@@ -18,6 +18,7 @@
 cTrap::cTrap(void)
 {
 	Fired = 0;
+	isDiscoveredWhen乗るBefore = true;//trueは未定義を含む
 }
 
 cTrap::~cTrap(void)
@@ -278,7 +279,7 @@ int cTrap::乗る()
 	}
 	else
 	{
-		int isdiscovered = isDiscover();
+		isDiscoveredWhen乗るBefore = isDiscover();
 
 		if(onChara == sg_pDungeonSystem->pPlayerChara())
 		{
@@ -303,7 +304,7 @@ int cTrap::乗る()
 
 		if(!sg_pDungeonSystem->キャラクター敵対判定(sg_pDungeonSystem->pPlayerChara(), onChara))
 		{
-			if(!isdiscovered && random()*100 <= 発動率()*posp)
+			if(!isDiscoveredWhen乗るBefore && random()*100 <= 発動率()*posp)
 			{
 				return 発動要請();
 			}
@@ -327,6 +328,9 @@ int cTrap::乗る()
 
 int cTrap::上に落ちる(pcDroping pdrop)//pdropを破壊したいときtrue;
 {
+	
+	isDiscoveredWhen乗るBefore = isDiscover();
+
 	sg_pDungeonSystem->アイテム強制マッピング(me());//発見
 	sg_pDungeonSystem->AnimationManager().Anime_DisplayChange(&(opaque), 1);
 
@@ -335,6 +339,9 @@ int cTrap::上に落ちる(pcDroping pdrop)//pdropを破壊したいときtrue;
 }
 int cTrap::上に落ちる(pcCharacter pchara)//charaに何か起こったらtrue;
 {
+	
+	isDiscoveredWhen乗るBefore = isDiscover();
+
 	sg_pDungeonSystem->アイテム強制マッピング(me());
 	sg_pDungeonSystem->AnimationManager().Anime_DisplayChange(&(opaque), 1);
 		
