@@ -165,26 +165,20 @@ void cEquipment_ID_8::能力(const タイミング timing, cValiableField& valiable)
 void cEquipment_ID_9::能力(const タイミング timing, cValiableField& valiable)
 {
 
-	if(timing == 被攻撃直後時_タイミング)
+	if(timing == 装備品防具力基礎値計算時_タイミング)
 	{
-		if(能力発動条件満たしている_防御用() && !cEquipment_能力仕様フラグID_exist(valiable,ID()))
-		{
-
-			if(valiable.charas[変数_防御者] == NULL) return;
-			cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-			sg_pDungeonSystem->満腹度減少要請( valiable.charas[変数_防御者] ,効果量(0)/10.0,0);
-		}
+		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+		valiable.doubles.val(変数_防具力基礎値ボーナス_定数) += 効果量(1);
 	}
-	if(timing == 攻撃直後時_タイミング)
+	if(timing == 装備品武器力基礎値計算時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用() && !cEquipment_能力仕様フラグID_exist(valiable,ID())
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
-		{
-
-			if(valiable.charas[変数_防御者] == NULL) return;
-			cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-			sg_pDungeonSystem->満腹度減少要請( valiable.charas[変数_防御者] ,効果量(1),0);
-		}
+		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+		valiable.doubles.val(変数_武器力基礎値ボーナス_定数) += 効果量(1);
+	}
+	if(timing == 自然満腹度減少量計算時_タイミング)
+	{
+		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+		valiable.doubles.val(変数_汎用ボーナス_倍率) += 効果量(0)/100.0;
 	}
 }
 //------------------------------------------------------------------------------
