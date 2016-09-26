@@ -98,6 +98,7 @@ namespace MobAbilityIdiom
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(常時防御力ボーナスCutIn, addPercent, addConst)};
 
 	DEF_MobAbilityIdiom_CutInFunction_Class_SetInt_Value(属性耐性ボーナス％, attribsute, addPercent)};
+	DEF_MobAbilityIdiom_CutInFunction_Class_SetInt_Value(属性攻撃ボーナス％, attribsute, addPercent)};
 	
 	//気属性代替
 	DEF_MobAbilityIdiom_CutInFunction_Class_Value2(超遠距離攻撃力ボーナスCutIn, addPercent, addConst)};

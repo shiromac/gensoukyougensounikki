@@ -939,10 +939,17 @@ void cEquipment_ID_39::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		if(能力発動条件満たしている_攻撃用())
 		{
-			valiable.intsets.val(変数_属性).insert(攻撃属性::火);
+			攻撃属性::攻撃属性 attackAttri = 攻撃属性::火;
+			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
+				valiable.intsets.val(変数_属性).insert(attackAttri);
+			}
+			else {
+				set<int> targetAttackAttri;
+				targetAttackAttri.insert((int)attackAttri);
+				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
+			}
 		}
 	}
 
@@ -1189,10 +1196,17 @@ void cEquipment_ID_50::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		if(能力発動条件満たしている_攻撃用())
 		{
-			valiable.intsets.val(変数_属性).insert(攻撃属性::冷気);
+			攻撃属性::攻撃属性 attackAttri = 攻撃属性::冷気;
+			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
+				valiable.intsets.val(変数_属性).insert(attackAttri);
+			}
+			else {
+				set<int> targetAttackAttri;
+				targetAttackAttri.insert((int)attackAttri);
+				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
+			}
 		}
 	}
 }
@@ -1448,10 +1462,17 @@ void cEquipment_ID_59::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		if(能力発動条件満たしている_攻撃用())
 		{
-			valiable.intsets.val(変数_属性).insert(攻撃属性::水);
+			攻撃属性::攻撃属性 attackAttri = 攻撃属性::水;
+			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
+				valiable.intsets.val(変数_属性).insert(attackAttri);
+			}
+			else {
+				set<int> targetAttackAttri;
+				targetAttackAttri.insert((int)attackAttri);
+				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
+			}
 		}
 	}
 }
@@ -1482,10 +1503,17 @@ void cEquipment_ID_60::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		if(能力発動条件満たしている_攻撃用())
 		{
-			valiable.intsets.val(変数_属性).insert(攻撃属性::雷);
+			攻撃属性::攻撃属性 attackAttri = 攻撃属性::雷;
+			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
+				valiable.intsets.val(変数_属性).insert(attackAttri);
+			}
+			else {
+				set<int> targetAttackAttri;
+				targetAttackAttri.insert((int)attackAttri);
+				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
+			}
 		}
 	}
 }

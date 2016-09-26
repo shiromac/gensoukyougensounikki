@@ -252,6 +252,28 @@ bool MobAbilityIdiom::‘®«‘Ï«ƒ{[ƒiƒX“::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ
 	}
 	return false;
 }
+bool MobAbilityIdiom::‘®«UŒ‚ƒ{[ƒiƒX“::operator()(pcCharacter pchara, ƒ^ƒCƒ~ƒ“ƒO timing, cValiableField& valiable) const{
+
+	if(timing == ƒ_ƒ[ƒWŒvZUŒ‚_ƒ^ƒCƒ~ƒ“ƒO)
+	{
+		bool match = false;
+		set<int>::const_iterator itr = attribsute.begin();
+		for(;itr != attribsute.end(); itr++) {
+			if(valiable.intsets.val(•Ï”_‘®«).count(*itr) > 0)
+			{
+				match = true;
+				break;
+			}
+		}
+
+		if(match)
+		{
+			valiable.doubles[•Ï”_UŒ‚—Íƒ{[ƒiƒX_”{—¦] += addPercent / 100.0;
+			return true;
+		}
+	}
+	return false;
+}
 
 const static int ’´‰“‹——£Distance = 4;
 
