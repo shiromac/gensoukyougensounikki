@@ -982,6 +982,21 @@ void cEquipment_ID_41::能力(const タイミング timing, cValiableField& valiable)
 			}
 		}
 	}
+	if(timing == 被攻撃直後時_タイミング)
+	{
+		if(能力発動条件満たしている_防御用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		{
+			if(効果量(0)/100.0 > random())
+			{
+				if(valiable.charas.dim(変数_防御者) != NULL)
+				{
+					sg_pDungeonSystem->頑強要請(valiable.charas.dim(変数_防御者),効果量(1),効果量(2));
+
+				}
+			}
+		}
+	}
 }
 //------------------------------------------------------------------------------
 //分厚い本
