@@ -119,7 +119,7 @@ double cEquipment_ID_4::効果ターン()
 void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 {
 
-	if(timing == 攻撃直後時_タイミング)
+	if(timing == ダメージ計算攻撃時_タイミング)
 	{
 		if(能力発動条件満たしている_攻撃用() && !cEquipment_能力仕様フラグID_exist(valiable,ID())
 			&& valiable.doubles.exist(変数_直接攻撃フラグ))
@@ -127,8 +127,11 @@ void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 			if(発動率() > random())
 			{
 				if(valiable.charas[変数_防御者] == NULL) return;
-				cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-				GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
+				if(GameIdiom::異常状態である(valiable.charas[変数_防御者])) {
+					cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+					GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
+					valiable.doubles[変数_耐性ボーナス_倍率％] -= 効果量(1);
+				}
 			}
 		}
 	}
