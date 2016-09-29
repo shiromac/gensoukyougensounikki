@@ -962,12 +962,36 @@ void cEquipment_ID_39::能力(const タイミング timing, cValiableField& valiable)
 //------------------------------------------------------------------------------
 void cEquipment_ID_40::能力(const タイミング timing, cValiableField& valiable)
 {
-	if(timing == 防御力計算時_タイミング)
+	if(timing == ダメージ計算防御時_タイミング)
 	{
-		if(能力発動条件満たしている_防御用() || 能力発動条件満たしている_攻撃用())
+		if(能力発動条件満たしている_防御用())
 		{
-			valiable.doubles.val(変数_防御力ボーナス_倍率) += 効果量(0)/1000.0;
-			valiable.doubles.val(変数_防御力ボーナス_定数) += 効果量(1);
+			if(valiable.doubles.exist(変数_方向))
+			{
+				int as = safeAspect( valiable.doubles.val(変数_方向) - 装備者_防御用()->aspect);
+				if(as < 3 || as > 5)
+				{
+					if(cEquipment_能力仕様フラグID_exist(valiable,ID()))
+					{
+						cEquipment_能力仕様フラグID_val(valiable,ID()) += 1;
+					}
+					else
+					{
+						cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+					}
+
+					if(cEquipment_能力仕様フラグID_val(valiable,ID()) <= 1)
+					{
+						valiable.doubles[変数_耐性ボーナス_倍率％] += 効果量(0);
+					}
+					else
+					{
+						double power = pow(効果量(0)/100.0 , cEquipment_能力仕様フラグID_val(valiable,ID()) - 2);
+						valiable.doubles[変数_耐性ボーナス_倍率％] += 効果量(1)*power;
+					}
+				
+				}
+			}
 		}
 	}
 
