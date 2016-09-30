@@ -495,7 +495,11 @@ DEF_class_cSpell_ID(49)
 	int 効果(pcCharacter pchara );
 	virtual void CutIn(タイミング timing, cValiableField& valiable);
 };
-DEF_class_cSpell_ID(50)};
+DEF_class_cSpell_ID(50)
+	virtual int 宣言_効果_通常(pcCharacter pchara ,vector<pcDroping> &ObjectList);
+	int 効果(pcCharacter pchara );
+	virtual void CutIn(タイミング timing, cValiableField& valiable);
+};
 DEF_class_cSpell_ID(51)
 	virtual int 宣言_効果_通常(pcCharacter pchara ,vector<pcDroping> &ObjectList);
 	int 効果(pcCharacter pchara );

@@ -549,6 +549,83 @@ vector<pcDroping> FindUtility::装備品以外の表面手持ちアイテム店売り除く(pcCharac
 	return vpdrop;
 }
 
+vector<pcDroping> FindUtility::全てのアイテム一覧(pcCharacter pchara)
+{
+	return 自身のリストと内容アイテム一覧(pchara->holdItem);
+}
+vector<pcDroping> FindUtility::自身のリストと内容アイテム一覧(const vector<pcDroping>& pdropsList)
+{
+	vector<pcDroping> vpdrop = pdropsList;
+	const vector<pcDroping>& includeList = pdropsList;
+
+	int i, size = pdropsList.size();
+		
+	for(i=0;i<size;i++)
+	{
+		vector<pcDroping> includeInclude = 内容アイテム一覧(includeList[i]);
+		std::copy(includeInclude.begin(),includeInclude.end(),std::back_inserter(vpdrop));
+	}
+
+	return vpdrop;
+}
+
+vector<pcDroping> FindUtility::内容アイテム一覧(pcDroping pdrop)
+{
+	return 自身のリストと内容アイテム一覧(pdrop->内包落ち物対象リスト());
+}
+
+vector<pcDroping> FindUtility::dropFiltering(const vector<pcDroping>& pdropList, dropFilterFunction filter) {
+	vector<pcDroping> vpdrop;
+
+	int i, size = pdropList.size();
+		
+	for(i=0;i<size;i++)
+	{
+		if(filter(pdropList[i])) {
+			vpdrop.push_back(pdropList[i]);
+		}
+	}
+
+	return vpdrop;
+}
+bool FindUtility::完全に鑑定されていないアイテムか(const pcDroping& target) {
+	return (!target->状態値識別済み() || !target->修正値識別済み() || !target->名称識別済み());
+}
+
+vector<pcDroping> FindUtility::randomSelect(const vector<pcDroping>& pdropList, const int count) {
+	vector<int> indexs = randomIndex(pdropList.size(),count);
+	vector<pcDroping> result;
+
+	int i, size = indexs.size();
+		
+	for(i=0;i<size;i++)
+	{
+		pcDroping pdrop = pdropList[indexs[i]];
+		result.push_back(pdrop);
+	}
+
+	return result;
+}
+vector<int> FindUtility::randomIndex(const int size, const int count) {
+    std::vector<int> indexs;
+    indexs.resize(size);
+    for(int i=0; i<size; ++i) {
+        indexs[i] = i;
+    }
+ 
+    for(int i=0; i<count; ++i){
+		if(i >= indexs.size()) {
+			break;
+		}
+        int j = i + random() * (size - i);
+        std::swap(indexs[i], indexs[j]);
+    }
+ 
+    indexs.resize(count);
+ 
+    return indexs;
+}
+
 int FindUtility::キャラの方向(pcCharacter me, pcCharacter you)
 {
 	if(you != NULL && me != NULL)

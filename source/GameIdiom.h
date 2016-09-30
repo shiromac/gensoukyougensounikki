@@ -39,14 +39,22 @@ namespace GameIdiom
 	int アイテム焼失(pcDroping pdrop);
 
 
+
 	//軽いイデオム
 	int キャラの方を向く(pcCharacter frompchara, pcCharacter tochara);
 	
 
+	bool 悪性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+	bool 良性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+	bool 全異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
+
+	bool 呪術悪性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
 
 
+	bool 悪性異常状態である(pcCharacter pchara);
+	bool 良性異常状態である(pcCharacter pchara);
+	bool 異常状態である(pcCharacter pchara);
 
-
-
+	bool 呪術悪性異常状態である(pcCharacter pchara);
 
 };

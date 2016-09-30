@@ -36,6 +36,8 @@
 
 #include "caFunction.h"
 
+#include "GameIdiom.h"
+
 double gettimeofday_sec()
 {
     time_t tv;
@@ -859,9 +861,7 @@ int cDungeonSystem::cleanfloor()
 	set<pcCharacter>::iterator friendSetItr = FriendSet.begin();
 	for(; FriendSet.end()!=friendSetItr; friendSetItr++)
 	{
-		精神異常治療要請(*friendSetItr, false);
-		身体異常治療要請(*friendSetItr, false);
-		呪術異常治療要請(*friendSetItr, false);
+		GameIdiom::全異常状態治療要請(*friendSetItr, false);
 		(*friendSetItr)->emotion.clear();
 		(*friendSetItr)->visibleemotion.clear();
 	}
@@ -1062,7 +1062,15 @@ int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
 
 
 					s_phase() = GAME_PHASE_ENEMY;
-					if(AnimationManager().WeekInvocation(pDev)) return false;//strongが起こったらtrueが返ってくる
+					if(AnimationManager().WeekInvocation(pDev))
+					{//strongが起こったらtrueが返ってくる
+						return false;
+					}
+					else
+					{
+						pPlayerChara()->visibleplace.set(pPlayerChara()->placeX,pPlayerChara()->placeY,0,0);
+						pPlayerChara()->visibleaspect = pPlayerChara()->aspect;
+					}
 				}
 			}
 			

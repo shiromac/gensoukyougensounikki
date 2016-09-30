@@ -471,6 +471,10 @@ DEF_class_cTrap_ID(31)
 	virtual int Œø‰Ê(pcCharacter pchara);
 	virtual int Œø‰Ê(pcDroping pdrop);//pdrop‚É‰½‚©‹N‚±‚Á‚½‚çtrue;
 	virtual bool ”íE“¾‰Â(){return false;};
+	virtual double ”­“®—¦_”­Œ©Ï‚İ();
+protected:
+	virtual int ”­“®(pcCharacter pchara);
+	virtual int ”­“®(pcDroping pdrop);//pdrop‚É‰½‚©‹N‚±‚Á‚½‚çtrue;
 };
 DEF_class_cTrap_ID(32)
 

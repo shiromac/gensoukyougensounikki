@@ -6,6 +6,7 @@
 #include "Gameobjects.h"
 #include "EffectFunctions.h"
 #include "FindUtility.h"
+#include "GameIdiom.h"
 #include <boost/pointer_cast.hpp>
 
 int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
@@ -298,26 +299,34 @@ int cDungeonSystem::速度減少要請(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
 
-	if(!(pchara->雑魚属性()))//(pchara->Forse == CHARACTER_FORSE_FRIEND)
+	cValiableField valf;
+	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
+	CutInM().CutIn(pchara,速度減少直前_タイミング,valf);
+	if(valf.doubles.val(変数_汎用ブール))
 	{
-		pchara->Condition.速度減少(turn);
-	}
-	else
-	{//味方以外
-		pchara->Condition.速度減少(GAME_TURN_GAMEOVER);//永続
-	}
 
-	if(Messageflag && pchara == pPlayerChara())
-	{//メッセージを表示する
-		map<tstring, StyleString> valiable;
+		if(!(pchara->雑魚属性()))//(pchara->Forse == CHARACTER_FORSE_FRIEND)
+		{
+			pchara->Condition.速度減少(turn);
+		}
+		else
+		{//味方以外
+			pchara->Condition.速度減少(GAME_TURN_GAMEOVER);//永続
+		}
 
-		valiable[_T("Chara")] = pchara->ShortName();
-	
-		g_Langメッセージ(_T("速度減少メッセージ"),valiable);
+		if(Messageflag && pchara == pPlayerChara())
+		{//メッセージを表示する
+			map<tstring, StyleString> valiable;
+
+			valiable[_T("Chara")] = pchara->ShortName();
 		
-		//メッセージ(pchara->ShortName() +_T(" の素早さが 下がった。\n"));
+			g_Langメッセージ(_T("速度減少メッセージ"),valiable);
+			
+			//メッセージ(pchara->ShortName() +_T(" の素早さが 下がった。\n"));
+		}
+		return true;
 	}
-	return true;
+	return false;
 }
 int cDungeonSystem::眠り要請(pcCharacter pchara, int turn, int Messageflag)
 {
@@ -1137,6 +1146,7 @@ int cDungeonSystem::擬態要請(pcCharacter pchara, int turn, int Messageflag)
 	return true;
 
 }
+/*
 int cDungeonSystem::精神異常治療要請(pcCharacter pchara, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -1249,11 +1259,84 @@ bool cDungeonSystem::速度異常状態(pcCharacter pchara)
 	if(pchara->Condition.速度度数() != pchara->Condition.デフォルト速度度数()) return true;
 	return false;
 }
+int cDungeonSystem::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	pchara->Condition.とても強い刺激();
+	pchara->Condition.バクスイ追加(-1);
+	pchara->Condition.眠り追加(-1);
+	pchara->Condition.びっくり追加(-1);
+	pchara->Condition.金縛り追加(-1);
+	pchara->Condition.封印追加(-1);
+	pchara->Condition.空振り追加(-1);
+	pchara->Condition.貧乏追加(-1);
+	pchara->Condition.臆病追加(-1);
+	//pchara->Condition.嫉妬追加(-1);
+	pchara->Condition.狂乱追加(-1);
+	pchara->Condition.無意識追加(-1);
+
+	if(pchara->Condition.力度数() < 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() < 0) {
+		pchara->Condition.軟弱初期化();
+	}
+
+	pchara->Condition.泥酔追加(-1);
+	pchara->Condition.氷付け追加(-1);
+	pchara->Condition.鳥目追加(-1);
+	pchara->Condition.病気追加(-1);
+	//pchara->Condition.健康追加(-1);
+
+	pchara->Condition.死の誘い追加(-1,NULLCHARA);
+	pchara->Condition.みがわり追加(-1,NULLCHARA);
+	//pchara->Condition.擬態追加(-1);
+
+	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
+	{
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+	}
+
+	return true;
+}
+int cDungeonSystem::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	if(pchara == NULL || pchara->死亡()) return false;
+
+	pchara->Condition.嫉妬追加(-1);
+
+	if(pchara->Condition.力度数() > 0) {
+		pchara->Condition.脱力初期化();
+	}
+	if(pchara->Condition.守度数() > 0) {
+		pchara->Condition.軟弱初期化();
+	}
+
+	pchara->Condition.健康追加(-1);
+
+	pchara->Condition.擬態追加(-1);
+
+	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
+	{
+		sg_pDungeonSystem->速度異常治療要請(pchara, false);
+	}
+
+	return true;
+}
+
+int cDungeonSystem::全異常状態治療要請(pcCharacter pchara, int Messageflag)
+{
+	良性異常状態治療要請(pchara, Messageflag);
+	悪性異常状態治療要請(pchara, Messageflag);
+	return true;
+}
+*/
 int cDungeonSystem::やりすごし要請(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
 
-	呪術異常治療要請(pchara);
+	GameIdiom::呪術悪性異常状態治療要請(pchara);
 
 	pchara->Condition.やりすごし追加(turn);
 

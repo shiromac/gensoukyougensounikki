@@ -483,6 +483,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\MobAbilityIdeom.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\source\SpellEffects.cpp"
 				>
 			</File>
@@ -2086,6 +2090,10 @@
 			</File>
 			<File
 				RelativePath=".\source\menuCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\MobAbilityIdiom.h"
 				>
 			</File>
 			<File

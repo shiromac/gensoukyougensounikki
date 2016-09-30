@@ -121,9 +121,10 @@ public://“¥‚ñ‚¾”
 	virtual int Õ“Ë(pcCharacter pchara);
 	virtual int Äİ’u();
 
-private:
+protected:
 	virtual int ”­“®(pcCharacter pchara);
 	virtual int ”­“®(pcDroping pdrop);//pdrop‚É‰½‚©‹N‚±‚Á‚½‚çtrue;
+	bool isDiscoveredWhenæ‚éBefore;
 public:
 	virtual int Œø‰Ê();
 	virtual int Œø‰Ê(pcCharacter pchara);

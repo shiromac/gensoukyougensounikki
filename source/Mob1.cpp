@@ -6,6 +6,7 @@
 #include "EffectFunctions.h"
 #include "GameIdiom.h"
 #include "FindUtility.h"
+#include "MobAbilityIdiom.h"
 
 #include "ceaiNegative.h"
 #include "ceaiEscape.h"
@@ -457,8 +458,6 @@ int cMob_ID_5::特殊攻撃効果(cValiableField& valiable)
 
 
 		int a;
-		multiset<攻撃属性::攻撃属性> 属性;
-		属性.insert(攻撃属性::爆発);
 
 		map<tstring, StyleString> val;
 		val[_T("Chara")] = FullName();
@@ -592,7 +591,7 @@ int cMob_ID_6::特殊攻撃効果(cValiableField& valiable)
 
 			if((nowco - youco).dif() == 1 && me()->pAI->u_隣接攻撃通用判定((youco - nowco).GetAspect()))
 			{
-				sg_pDungeonSystem->精神異常治療要請(pchara);
+				GameIdiom::悪性異常状態治療要請(pchara);
 			}
 		}
 
@@ -1893,7 +1892,7 @@ int cMob_ID_19::特殊攻撃効果(cValiableField& valiable)
 
 
 			multiset<攻撃属性::攻撃属性> 属性;
-			属性.insert(攻撃属性::気);
+			//属性.insert(攻撃属性::気);
 			
 			sg_pDungeonSystem->攻撃接近(攻撃作成(
 				me(),//攻撃者
@@ -1939,14 +1938,9 @@ void cMob_ID_19::パッシブ能力(タイミング timing, cValiableField& valiable)
 			}
 			else if(ValiableConstant3())
 			{
-				valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
-			
-				map<tstring, StyleString> val;
-				val[_T("Chara")] = ShortName();
-				g_Langメッセージ(_T("cMob_ID_19_特殊能力3メッセージ"),val);
-				
-				sg_pDungeonSystem->強制ダメージ要請(me(),ValiableConstant3(),1,1);
-				sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
+				if(MobAbilityIdiom::投擲物ダメージ化CutIn(ValiableConstant3())(me(), timing, valiable)) {
+					sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
+				}
 			}
 		}
 	}
@@ -3106,7 +3100,7 @@ int cMob_ID_32::特殊攻撃効果(cValiableField& valiable)
 	if(pchara != NULL && !sg_pDungeonSystem->キャラクター敵対判定(me(),pchara)
 		&& pchara->Condition.眠りで行動不能である())
 	{
-		sg_pDungeonSystem->精神異常治療要請(pchara);
+		GameIdiom::悪性異常状態治療要請(pchara);
 	
 	}
 	return false;
@@ -4362,7 +4356,7 @@ void cMob_ID_50::パッシブ能力(タイミング timing, cValiableField& valiable)
 				{
 					EffectFunctions::特殊能力発揮エフェクト(me()->placeX,me()->placeY,1.7);
 					EffectFunctions::煙エフェクト1(pchara->placeX, pchara->placeY);
-					sg_pDungeonSystem->精神異常治療要請(pchara,false);
+					GameIdiom::悪性異常状態治療要請(pchara,false);
 				}
 			}
 		}
@@ -5077,10 +5071,12 @@ int cMob_ID_64::召喚(int ID, pcCharacter enemy)
 }
 void cMob_ID_64::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
+	/*
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
 		valiable.intsets.val(変数_属性).insert(攻撃属性::気);
 	}
+	*/
 }
 //---------------------------------------------------------------
 //ヒジリ
@@ -5262,23 +5258,7 @@ int cMob_ID_67::特殊攻撃効果(cValiableField& valiable)
 }
 void cMob_ID_67::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	if(timing == 投擲攻撃接近直前_タイミング)
-	{
-		//跳ね返し
-		if(!valiable.drops.val(変数_対象落ち物)->跳ね返し無効フラグ && 
-			!valiable.drops.val(変数_対象落ち物)->投擲貫通())
-		{
-			valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
-
-			map<tstring, StyleString> val;
-			val[_T("Chara")] = FullName();
-			val[_T("Item")] = valiable.drops.val(変数_対象落ち物)->FullName();
-			g_Langメッセージ(_T("cMob_ID_67_特殊能力メッセージ"),val);
-			
-			sg_pDungeonSystem->方向転換要請(me(), valiable.doubles.val(変数_方向)+4);
-			sg_pDungeonSystem->投擲要請(me(), valiable.drops.val(変数_対象落ち物));
-		}
-	}
+	MobAbilityIdiom::投擲物反射CutIn()(me(), timing, valiable);
 }
 //---------------------------------------------------------------
 //レティ
@@ -5632,10 +5612,7 @@ void cMob_ID_76::パッシブ能力(タイミング timing, cValiableField& valiable)
 //オオワシ
 void cMob_ID_77::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	if(timing == 攻撃直後時_タイミング)
-	{
-		sg_pDungeonSystem->吹き飛ばし要請(me(), me(), me()->aspect+4, 1, 0);
-	}
+	MobAbilityIdiom::攻撃時自分ノックバックCutIn()(me(), timing, valiable);
 }
 
 //-----------------------------------------------------------------

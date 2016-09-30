@@ -3,6 +3,7 @@
 #include "EffectFunctions.h"
 #include "gameMainSystem/filemanage/cScriptRLayer.h"
 #include "Event1.h"
+#include "GameIdiom.h"
 
 #include "gameMainSystem/cEnvironment.h"
 cBoss::cBoss(void)
@@ -135,9 +136,7 @@ void cBoss::gotoNextSpell()
 	sg_pDungeonSystem->満腹度設定要請(me(), 100, false);
 	me()->MHP = baseMHP();
 	sg_pDungeonSystem->回復要請(me(), baseMHP(), false);
-	sg_pDungeonSystem->精神異常治療要請(me(), false);
-	sg_pDungeonSystem->身体異常治療要請(me(), false);
-	sg_pDungeonSystem->呪術異常治療要請(me(), false);
+	GameIdiom::全異常状態治療要請(me(),false);
 	//EffectFunctions::ボスエフェクト集中(me()->placeX, me()->placeY, 0);
 
 	loadSpell(spellIndex_);
@@ -204,10 +203,7 @@ void cBoss::endSpell(int index)
 		{
 			sg_pDungeonSystem->回復要請(sg_pDungeonSystem->pPlayerChara(),sg_pDungeonSystem->pPlayerChara()->MHP,true);
 		}
-		sg_pDungeonSystem->精神異常治療要請(sg_pDungeonSystem->pPlayerChara(),false);
-		sg_pDungeonSystem->身体異常治療要請(sg_pDungeonSystem->pPlayerChara(),false);
-		sg_pDungeonSystem->呪術異常治療要請(sg_pDungeonSystem->pPlayerChara(),false);
-		sg_pDungeonSystem->速度異常治療要請(sg_pDungeonSystem->pPlayerChara(),false);
+		GameIdiom::全異常状態治療要請(sg_pDungeonSystem->pPlayerChara(),false);
 	}
 }
 

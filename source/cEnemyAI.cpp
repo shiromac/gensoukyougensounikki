@@ -276,6 +276,10 @@ int cEnemyAI::SimpleActiveRequest(int phase)
 			{//成功
 				mode = MODE_ATTACK;
 			}
+			else if(me()->Forse == CHARACTER_FORSE_FRIEND) {
+				//主人公についていく
+				u_味方主人公サーチ(tgtLandX,tgtLandY);
+			}
 		}
 	}
 	else if(mode == MODE_ATTACK)//追尾モード
@@ -971,6 +975,46 @@ bool cEnemyAI::u_敵サーチ_キャラ優先度優先(int& out_tgt_x,int& out_tgt_y)
 	multimap<int,pcCharacter>::iterator itr = sortMap.begin();
 	if(sortMap.size())
 	{//最も近い敵をサーチする。
+		for(;itr != sortMap.end();itr++)
+		{
+			out_tgt_x = itr->second->placeX;
+			out_tgt_y = itr->second->placeY;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool cEnemyAI::u_味方主人公サーチ(int& out_tgt_x,int& out_tgt_y)
+{
+	multimap<int,pcCharacter> sortMap;
+	int i;
+	vector<pcCharacter> visCharaList;
+
+	int maxForcevalue = 0;
+	sg_pDungeonSystem->キャラクター目視可範囲キャラリスト(me(),visCharaList);
+	
+	if(visCharaList.empty()) return false;
+
+	for(i=0;i<visCharaList.size();i++)
+	{
+		if(!sg_pDungeonSystem->キャラクター敵対判定(me(),visCharaList[i]))
+		{
+			if(visCharaList[i] != sg_pDungeonSystem->pPlayerChara())
+			{
+				continue;
+			}
+			cCoordinate coo;
+			coo.x = visCharaList[i]->placeX - me()->placeX;
+			coo.y = visCharaList[i]->placeY - me()->placeY;
+			sortMap.insert(pair<int,pcCharacter>(coo.dif(),visCharaList[i]));
+		}
+	}
+
+	multimap<int,pcCharacter>::iterator itr = sortMap.begin();
+	if(sortMap.size())
+	{
 		for(;itr != sortMap.end();itr++)
 		{
 			out_tgt_x = itr->second->placeX;

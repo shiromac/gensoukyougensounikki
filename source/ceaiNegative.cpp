@@ -48,6 +48,10 @@ int ceaiNegative::Request(int phase)
 		{//成功
 			mode = MODE_ATTACK;
 		}
+		else if(me()->Forse == CHARACTER_FORSE_FRIEND) {
+			//主人公についていく
+			u_味方主人公サーチ(tgtLandX,tgtLandY);
+		}
 	}
 	else if(mode == MODE_ATTACK)//追尾モード
 	{

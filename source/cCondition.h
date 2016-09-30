@@ -1240,6 +1240,7 @@ protected:
 	{
 		int _avoidHealVolume;
 	public:
+		•a‹CcConditionChip():_avoidHealVolume(0) {};
 		int avoidHealVolume(){return _avoidHealVolume;};
 		void setAvoidHealVolume(const int& avoidHealVolume){_avoidHealVolume = avoidHealVolume;};
 

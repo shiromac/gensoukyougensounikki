@@ -85,7 +85,8 @@ StyleString cSpell::識別未識別混合道具名()
 void cSpell::AppreciationBeginOptimize(int difficulty)
 {
 	cItem::AppreciationBeginOptimize(difficulty);
-	appreciation_state() = true;//状態識別済み
+	//appreciation_state() = true;//状態識別済み
+	appreciation_quality() = true;//修正値識別済み
 }
 
 /*
@@ -240,6 +241,30 @@ double cSpell::効果時腕輪ダメージ()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		ID(),(tstring)_T("効果時腕輪ダメージ"),0.0);
+}
+double cSpell::攻撃力ボーナス％()
+{
+	double bonus = sg_pDungeonSystem->DataBase.DropImportData_Value(
+		ID(),(tstring)_T("攻撃力ボーナス％"),0.0);
+	if (state() == cDroping::STATE_GOOD) {
+		bonus *= 2;
+	}
+	else if (state() == cDroping::STATE_CURSE) {
+		bonus *= 0;
+	}
+	return bonus;
+}
+double cSpell::防御力ボーナス％()
+{
+	double bonus = sg_pDungeonSystem->DataBase.DropImportData_Value(
+		ID(),(tstring)_T("防御力ボーナス％"),0.0);
+	if (state() == cDroping::STATE_GOOD) {
+		bonus *= 2;
+	}
+	else if (state() == cDroping::STATE_CURSE) {
+		bonus *= 0;
+	}
+	return bonus;
 }
 void cSpell::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
 {
@@ -1280,6 +1305,12 @@ void cSpell::CutIn(タイミング timing, cValiableField& valiable)
 
 			}
 		}
+	}
+
+	if(装備されている())
+	{
+		MobAbilityIdiom::常時攻撃力ボーナスCutIn(攻撃力ボーナス％(), 0)(装備者(), timing, valiable);
+		MobAbilityIdiom::常時防御力ボーナスCutIn(防御力ボーナス％(), 0)(装備者(), timing, valiable);
 	}
 
 }

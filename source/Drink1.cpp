@@ -808,8 +808,7 @@ int cDrink_ID_24::飲む_効果_通常(pcCharacter pchara)
 int cDrink_ID_25::効果(pcCharacter pchara)
 {
 	//効果音未実装
-	sg_pDungeonSystem->精神異常治療要請(pchara);
-	sg_pDungeonSystem->身体異常治療要請(pchara);
+	GameIdiom::全異常状態治療要請(pchara);
 
 	map<tstring, StyleString> valiable;
 	valiable[_T("Chara")] = pchara->ShortName();
