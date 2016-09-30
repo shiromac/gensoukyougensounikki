@@ -85,7 +85,7 @@ StyleString cSpell::¯•Ê–¢¯•Ê¬‡“¹‹ï–¼()
 void cSpell::AppreciationBeginOptimize(int difficulty)
 {
 	cItem::AppreciationBeginOptimize(difficulty);
-	appreciation_state() = true;//ó‘Ô¯•ÊÏ‚İ
+	//appreciation_state() = true;//ó‘Ô¯•ÊÏ‚İ
 	appreciation_quality() = true;//C³’l¯•ÊÏ‚İ
 }
 
