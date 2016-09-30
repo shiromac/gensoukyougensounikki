@@ -964,7 +964,7 @@ void cEquipment_ID_40::能力(const タイミング timing, cValiableField& valiable)
 {
 	if(timing == ダメージ計算防御時_タイミング)
 	{
-		if(能力発動条件満たしている_防御用())
+		if(能力発動条件満たしている_防御用() || 能力発動条件満たしている_攻撃用())
 		{
 			if(valiable.doubles.exist(変数_方向))
 			{
