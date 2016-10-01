@@ -502,6 +502,7 @@ void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 {
 	if(mahoujin_on) {
 		DrawMahoujin(pDev);
+		DrawAura(pDev);
 	}
 	
 	c4DVector chara_place = visibleplace + anime_position;
@@ -556,6 +557,39 @@ void cCharacter::DrawMahoujin(IDirect3DDevice9 *pDev)
 	mahoujin.Rotation = mahoujin_count*100;
 	mahoujin.Draw(pDev);
 }
+
+void cCharacter::DrawAura(IDirect3DDevice9 *pDev)
+{
+	loadBodyTextureAndRange(aura);
+	c4DVector chara_place = visibleplace + anime_position;
+
+	aura.Width = GetTex_Size_dotX() * DEFAULTTEXPOWER/4.0;
+	aura.Height = GetTex_Size_dotY() * DEFAULTTEXPOWER/8.0;
+
+	aura.CenterX = GetDrawDifference_dotX()*MAPTEXPOWER + 
+		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
+	
+	aura.setBottom( GetDrawDifference_dotY()*MAPTEXPOWER + 
+		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y -chara_place.z*0.5 - mapForcus.y)	
+		+ MAPTEXBOXSIZE*MAPTEXPOWER/2);
+	aura.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
+	aura.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
+	aura.m_color.inputD3Dcolor(ShadowColor());
+
+
+	double period = 0.5;
+	double phase = (mahoujin_count - floor(mahoujin_count / period)*period) / (double)period;
+	double UPcenterMax = MAPTEXBOXSIZE*MAPTEXPOWER/5;
+	double UPScaleMax = 0.6;
+
+	aura.CenterY -= UPcenterMax*phase;
+	aura.ScaleX = 1+UPScaleMax*phase;
+	aura.ScaleY = 1+UPScaleMax*phase;
+	
+	aura.m_color.alpha = opaque*(255 - phase*255);
+
+	aura.Draw(pDev);
+}
 unsigned int cCharacter::ShadowColor()
 {
 	return 0xFF000000;
@@ -599,66 +633,11 @@ void cCharacter::Draw(IDirect3DDevice9 *pDev)
 }
 void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 {
-	int texaspect = 0;
-
-	int step = 0;
-
-	
-	if(anime_stopStamp)
-	{
-		if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
-		{//雛専用
-			texaspect = aspect;
-		}
-		else
-		{
-			step = 0;
-		}
-	}
-	else
-	{
-		if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
-		{//雛専用
-			int a = anime_stamp_step*8/DEFAULTSTAMPSUMSTEP + 4;
-			if(a > 8) a -= 8;//初期状態を下向き
-			texaspect = a;
-		}
-		else
-		{
-			step = anime_stamp_step*4/DEFAULTSTAMPSUMSTEP;
-		}
-	}
-
-	DO.setTexture(m_pTexture);//, GetTex_Size_dotX(), GetTex_Size_dotY());
-	//GetTex_Size_dotX_ = DO.getTexSizeX();
-	//GetTex_Size_dotY_ = DO.getTexSizeY();
-
-	if(GetTex_aspect_type() == CHARACTER_TEXASPECT_FULLASPECT)
-	{
-		texaspect = visibleaspect;
-	}
-	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_SINPLE)
-	{
-		texaspect = ASPECT_DOWN;
-	}
-	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_FOURASPECT)
-	{
-		texaspect = (visibleaspect/2)*2;
-	}
-	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
-	{//雛専用
-		step = 0;
-	}
-
-	//anime
-	texaspect += ((anime_yawing + 45/2) * 8 ) / 360 + 8;
-	texaspect = safeAspect(texaspect);
+	loadBodyTextureAndRange(DO);
 
 	c4DVector chara_place = visibleplace + anime_position;
 
 
-	DO.m_TexRange.setLTRB(step/4.0	,texaspect/8.0,
-						(step+1)/4.0	,(texaspect+1)/8.0);
 	DO.Width = GetTex_Size_dotX() * DEFAULTTEXPOWER/4.0;
 	DO.Height = GetTex_Size_dotY() * DEFAULTTEXPOWER/8.0;
 
@@ -700,6 +679,66 @@ void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 	DO.colorblendmode = cDrawableObject::COLOR_BLEND_MULTIPLE;
 	DO.m_color.ARGB(opaque*255,255,255,255);
 	DO.Draw(pDev);
+}
+
+void cCharacter::loadBodyTextureAndRange(cDrawingObject& textureObject) {
+
+	int texaspect = 0;
+
+	int step = 0;
+
+	
+	if(anime_stopStamp)
+	{
+		if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
+		{//雛専用
+			texaspect = aspect;
+		}
+		else
+		{
+			step = 0;
+		}
+	}
+	else
+	{
+		if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
+		{//雛専用
+			int a = anime_stamp_step*8/DEFAULTSTAMPSUMSTEP + 4;
+			if(a > 8) a -= 8;//初期状態を下向き
+			texaspect = a;
+		}
+		else
+		{
+			step = anime_stamp_step*4/DEFAULTSTAMPSUMSTEP;
+		}
+	}
+
+	textureObject.setTexture(m_pTexture);
+
+	if(GetTex_aspect_type() == CHARACTER_TEXASPECT_FULLASPECT)
+	{
+		texaspect = visibleaspect;
+	}
+	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_SINPLE)
+	{
+		texaspect = ASPECT_DOWN;
+	}
+	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_FOURASPECT)
+	{
+		texaspect = (visibleaspect/2)*2;
+	}
+	else if(GetTex_aspect_type() == CHARACTER_TEXASPECT_TURN)
+	{//雛専用
+		step = 0;
+	}
+
+	//anime
+	texaspect += ((anime_yawing + 45/2) * 8 ) / 360 + 8;
+	texaspect = safeAspect(texaspect);
+
+
+	textureObject.m_TexRange.setLTRB(step/4.0	,texaspect/8.0,
+						(step+1)/4.0	,(texaspect+1)/8.0);
 }
 
 void cCharacter::OptionDraw(IDirect3DDevice9 *pDev)

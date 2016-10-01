@@ -203,6 +203,7 @@ public:
 	virtual void DrawShadow(IDirect3DDevice9 *pDev);
 
 	virtual void DrawMahoujin(IDirect3DDevice9 *pDev);
+	virtual void DrawAura(IDirect3DDevice9 *pDev);
 
 	virtual void onOverDrive();
 	virtual bool isOverDrive(){return overdrive_on;};
@@ -216,6 +217,7 @@ public:
 protected:
 	virtual void settingInit_mahoujin();
 	cDrawingObject mahoujin;
+	cDrawingObject aura;
 	double mahoujin_count;
 	double mahoujin_sizePower;
 	bool mahoujin_on;
@@ -227,6 +229,7 @@ public:
 	virtual void OptionDraw(IDirect3DDevice9 *pDev);
 	IDirect3DTexture9 *p_Texoption;
 	int anime_option_step;
+	void loadBodyTextureAndRange(cDrawingObject& textureObject);
 
 
 
