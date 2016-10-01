@@ -732,11 +732,11 @@ double cBullet::能力スロット()
 	int maxslot = cItem::能力スロット();
 
 
-	return ceil( maxslot*効果量係数()*能力効果量倍率());
+	return maxslot;
 }
 double cBullet::能力効果量倍率()
 {
-	return 1/max(0.5,1+(まとめ最大数()-1)*効果量修正値倍率());
+	return 1.0;
 }
 
 
