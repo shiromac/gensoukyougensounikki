@@ -593,7 +593,12 @@ bool FindUtility::完全に鑑定されていないアイテムか(const pcDroping& target) {
 }
 
 vector<pcDroping> FindUtility::randomSelect(const vector<pcDroping>& pdropList, const int count) {
-	vector<int> indexs = randomIndex(pdropList.size(),count);
+	int drop_count = count;
+	if(pdropList.size() < drop_count) {
+		drop_count = pdropList.size();
+	}
+
+	vector<int> indexs = randomIndex(pdropList.size(),drop_count);
 	vector<pcDroping> result;
 
 	int i, size = indexs.size();
@@ -607,13 +612,18 @@ vector<pcDroping> FindUtility::randomSelect(const vector<pcDroping>& pdropList, 
 	return result;
 }
 vector<int> FindUtility::randomIndex(const int size, const int count) {
+	int index_count = count;
+	if(size < index_count) {
+		index_count = size;
+	}
+
     std::vector<int> indexs;
     indexs.resize(size);
     for(int i=0; i<size; ++i) {
         indexs[i] = i;
     }
  
-    for(int i=0; i<count; ++i){
+    for(int i=0; i<index_count; ++i){
 		if(i >= indexs.size()) {
 			break;
 		}
@@ -621,7 +631,7 @@ vector<int> FindUtility::randomIndex(const int size, const int count) {
         std::swap(indexs[i], indexs[j]);
     }
  
-    indexs.resize(count);
+    indexs.resize(index_count);
  
     return indexs;
 }
