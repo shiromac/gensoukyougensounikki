@@ -204,6 +204,23 @@ int cScriptRLayer::eraseContent(const tstring& label)
 	return false;
 }
 
+int cScriptRLayer::addDependContent(const tstring& label, pLuaScript content)
+{
+	if((dependContent_.insert(pair<tstring, pLuaScript>(label,content)).second) == false)
+	{//‚µ‚Á‚Ï‚¢
+		return false;
+	}
+	return true;
+}
+int cScriptRLayer::eraseDependContent(const tstring& label)
+{
+	if((dependContent_.erase(label)))
+	{//¬Œ÷
+		return true;
+	}
+	return false;
+}
+
 pcScriptRLayer cScriptRLayer::addMember(const tstring& label, pcScriptRLayer parent)
 {
 	pcScriptRLayer pcsr = pcScriptRLayer(new cScriptRLayer);

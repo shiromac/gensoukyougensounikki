@@ -63,6 +63,9 @@ public:
 
 	int addContent(const tstring& label, pLuaScript content);
 	int eraseContent(const tstring& label);
+	
+	int addDependContent(const tstring& label, pLuaScript content);
+	int eraseDependContent(const tstring& label);
 
 	std::map<tstring,pcScriptRLayer> & membermap(){return member_;};
 	std::vector<tstring> memberKeyList();
@@ -70,6 +73,7 @@ protected:
 	std::vector<tstring> script_;//データ
 	std::map<tstring,pcScriptRLayer> member_;//子メンバ
 	std::map<tstring,pLuaScript> content_;//特殊コンテンツ
+	std::map<tstring,pLuaScript> dependContent_;//依存特殊コンテンツ
 	wpcScriptRLayer parent_;//親メンバ
 
 	tstring name_;
