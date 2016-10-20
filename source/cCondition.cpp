@@ -1344,7 +1344,7 @@ bool cCondition::空腹cConditionChip::process()
 					valf.doubles.dim(変数_汎用ボーナス_倍率) = 1;
 					sg_pDungeonSystem->CutInM().CutIn(self(),自然満腹度減少量計算時_タイミング,valf);
 					valf.doubles.val(変数_汎用ボーナス_倍率) = max(valf.doubles.val(変数_汎用ボーナス_倍率),0.5);//最小値
-					sg_pDungeonSystem->満腹度減少要請(self(), 0.4*valf.doubles.val(変数_汎用ボーナス_倍率), false);
+					sg_pDungeonSystem->満腹度減少要請(self(), 0.15*valf.doubles.val(変数_汎用ボーナス_倍率), false);
 				}
 			}
 			if(lastDamageTurnCount > GAME_TURN_GAMEOVER) {
