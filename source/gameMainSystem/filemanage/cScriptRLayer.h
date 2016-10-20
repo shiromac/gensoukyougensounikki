@@ -51,6 +51,10 @@ public:
 	pLuaScript pcontent(const tstring& label);
 	void getLuaScriptKeys(std::vector<tstring>& keys);
 
+	//依存コンテンツ
+	pLuaScript pdependContent(const tstring& label);
+	void getDependLuaScriptKeys(std::vector<tstring>& keys);
+
 	//名前
 	virtual tstring& name(){return name_;};
 	virtual tstring nameAllPass();

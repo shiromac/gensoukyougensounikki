@@ -155,6 +155,37 @@ pLuaScript cScriptRLayer::pcontent(const tstring& label)
 
 	return (itr->second);
 }
+
+pLuaScript cScriptRLayer::pdependContent(const tstring& label)
+{
+	map<tstring,pLuaScript>::iterator itr;
+	itr = dependContent_.find(label);
+
+	if(itr == dependContent_.end())
+	{
+		//assert(!_T("cScriptRLayer::macro“à‚Å•s“KØ‚ÈŽQÆ"));
+		return NULLOFLuaScript;
+	}
+
+	return (itr->second);
+}
+
+void cScriptRLayer::getDependLuaScriptKeys(std::vector<tstring>& keys)
+{
+	map<tstring,pLuaScript>::iterator itr = dependContent_.begin();
+	for(;;)
+	{
+		if(itr == dependContent_.end())
+		{
+			return;
+		}
+
+		keys.push_back(itr->first);
+
+		itr++;
+	}
+
+}
 /*
 pLuaScript cScriptRLayer::ptopcontent()
 {
