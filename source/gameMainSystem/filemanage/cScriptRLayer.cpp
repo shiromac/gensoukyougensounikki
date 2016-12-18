@@ -450,7 +450,7 @@ void afterdecode_table(std::vector<tstring> & script,const TCHAR* delim, pcScrip
 int cScriptRLayer::savedata(std::vector<SByte>& data)
 {
 	vector<vector<SByte>> vvdata;
-	vvdata.resize(5);
+	vvdata.resize(6);
 
 	cDataConverter::ConvertVT2VecVecC2VecC(script_,vvdata[0]);
 	cDataConverter::ConvertMTT2VecVecC2VecC(member_,vvdata[1]);
@@ -459,6 +459,9 @@ int cScriptRLayer::savedata(std::vector<SByte>& data)
 
 	//’Ç‰Á
 	cDataConverter::ConvertMTT2VecVecC2VecC(content_,vvdata[4]);
+
+	//’Ç‰Á 20161218
+	cDataConverter::ConvertMTT2VecVecC2VecC(dependContent_,vvdata[5]);
 
 	cDataConverter::VecVecC2VecC(vvdata,data);
 
@@ -477,6 +480,11 @@ int cScriptRLayer::loaddata(const std::vector<SByte>& data, pcScriptRLayer me)
 	cDataConverter::BackDecodeVecC2VecVecC2MTVT(macro_,vvdata[3]);
 	//’Ç‰Á
 	cDataConverter::BackDecodeVecC2VecVecC2MTT(content_,vvdata[4]);
+	
+	if(vvdata.size() > 5) {
+		//’Ç‰Á 20161218
+		cDataConverter::BackDecodeVecC2VecVecC2MTT(dependContent_,vvdata[5]);
+	}
 
 	std::map<tstring,pcScriptRLayer>::iterator itr = member_.begin();
 	for(; itr != member_.end(); itr++)
