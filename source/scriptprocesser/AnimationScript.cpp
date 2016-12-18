@@ -388,6 +388,7 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
             .def("addNextChip", &AnimeChip_Chain::addNextChip)
             .def("setLife", &AnimeChip_Chain::setLife)
             .def("setDelay", &AnimeChip_Chain::setDelay)
+            .def("getDelay", &AnimeChip_Chain::getDelay)
 			.def("setWorldRotation", &AnimeChip_Chain::setWorldRotation)
 		//,
 	];

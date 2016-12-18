@@ -107,6 +107,7 @@ protected:
 public:
 	void setLife(const int life){life_ = life;};
 	void setDelay(const int delay){delay_ = delay;};
+	int getDelay(){return delay_;};
 	void setWorldRotation(double rotation){worldRotation_ = rotation;};
 public:
 	virtual void selfDraw(IDirect3DDevice9 *pDev) = 0;
