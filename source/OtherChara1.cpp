@@ -1247,17 +1247,6 @@ int cOtherChara_ID_2::TalkEvent()
 DEF_COMMANDCLASS(_NitoriFactory, g_Lang(_T("ニトリ製作所")))
 	//virtual StyleString shortExplanationText();
 };
-DEF_COMMANDCLASS(_NitoriFactory_reinforce, g_Lang(_T("装備品を強化する")))
-	cCommand_NitoriFactory_reinforce(int reinforce_fee, StyleString s):reinforce_fee_(reinforce_fee){caption = s;};
-	int reinforce_fee_;
-	virtual StyleString shortExplanationText(){
-		cMoney money(reinforce_fee_);
-		std::map<tstring, StyleString > val;
-		val[_T("Money")] = money.caption();
-		return g_Lang(_T("装備品を強化するshortExplanationText"),val);
-	};
-	//virtual StyleString shortExplanationText();
-};
 DEF_COMMANDCLASS(_NitoriFactory_reinforce_item, _T("装備品を強化する->装備品名"))
 	//virtual StyleString shortExplanationText();
 	cCommand_NitoriFactory_reinforce_item(pcDroping item, int reinforce_fee, StyleString s):item_(item), reinforce_fee_(reinforce_fee){caption = s;};
@@ -1270,16 +1259,6 @@ DEF_COMMANDCLASS(_NitoriFactory_reinforce_item, _T("装備品を強化する->装備品名")
 		}
 		return NULLDROP;
 	};
-};
-DEF_COMMANDCLASS(_NitoriFactory_combine, g_Lang(_T("アイテムを合成する")))
-	cCommand_NitoriFactory_combine(int combine_fee, StyleString s):combine_fee_(combine_fee){caption = s;};
-	int combine_fee_;
-	virtual StyleString shortExplanationText(){
-		cMoney money(combine_fee_);
-		std::map<tstring, StyleString > val;
-		val[_T("Money")] = money.caption();
-		return g_Lang(_T("アイテムを合成するshortExplanationText"),val);};
-	//virtual StyleString shortExplanationText();
 };
 DEF_COMMANDCLASS(_NitoriFactory_combine_item1, _T("アイテムを合成する->アイテム名１"))
 	//virtual StyleString shortExplanationText();
