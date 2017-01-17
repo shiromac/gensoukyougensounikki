@@ -4,6 +4,7 @@
 
 #include <tstring_ph.h>
 #include <boost/any.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <map>
 
 using namespace std;
@@ -11,8 +12,21 @@ class cDroping;
 #include <boost/shared_ptr.hpp>
 typedef boost::shared_ptr<cDroping> pcDroping;
 
+class cCommandDelegateObject;
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+typedef boost::shared_ptr<cCommandDelegateObject> pcCommandDelegateObject;
+typedef boost::weak_ptr<cCommandDelegateObject> wpcCommandDelegateObject;
+
+class cCommand;
+class cCommandDelegateObject {
+	public:
+	virtual ~cCommandDelegateObject(void){};
+	virtual void didEndCommand(cCommand& caller) = 0;
+};
+
 class cCommand :
-	public cControl
+	public cControl, public cCommandDelegateObject, public boost::enable_shared_from_this<cCommand>
 {
 public:
 	cCommand(void);
@@ -32,6 +46,14 @@ public:
 
 	//ì‡ïÔóéÇøï®ëŒè€ÉäÉXÉg();
 	virtual pcDroping includeObjectiveDroping(pcDroping objectpdrop){return pcDroping((cDroping*)NULL);};
+
+	wpcCommandDelegateObject delegate_;
+	int delegateID_;
+
+	// as delegate target
+	virtual void didEndCommand(cCommand& self);
+
+	virtual wpcCommandDelegateObject selfAsDelegate();
 };
 
 class cCommandNull :
