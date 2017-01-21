@@ -2,6 +2,7 @@
 #include "cTrap.h"
 #include "Mob1.h"
 #include "Event1.h"
+#include "OtherChara1.h"
 
 #include "EffectFunctions.h"
 #include "GameIdiom.h"
@@ -12,6 +13,7 @@
 #include "ceaiEscape.h"
 #include "ceaiLoot.h"
 #include "ceaiShopOwner.h"
+#include "ceaiRoomKeeper.h"
 #include "cSaveStore.h"
 inline double pow(int a,int b)
 {
@@ -5680,4 +5682,105 @@ int cMob_ID_80::セミパッシブ特殊攻撃効果(cValiableField& valiable)
 		return true;
 	}
 	return false;
+}
+//-----------------------------------------------------------------
+//ミセニトリ
+void cMob_ID_81::配置処理()
+{
+	shop_use_count_ = 0;
+}
+pcEnemyAI cMob_ID_81::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
+}
+bool cMob_ID_81::すれ違い許可(pcCharacter pchara)
+{
+	return cMob::すれ違い許可(pchara) && !((sg_pDungeonSystem->店請求金額(me()) > 0) &&
+		(足元() != NULL &&
+			(
+				足元()->属性.count(落ち物属性::階段)
+				|| 足元()->ID() == 9015
+			)
+		));
+}
+int cMob_ID_81::canTalk()
+{
+	return !(sg_pDungeonSystem->キャラクター敵対判定(me(),sg_pDungeonSystem->pPlayerChara()));
+}
+bool cMob_ID_81::isCanUseShop()
+{
+	return (ValiableConstant1() > shop_use_count_);
+}
+int cMob_ID_81::強化資金()
+{
+	return ValiableConstant2() * (shop_use_count_ + 1);
+}
+int cMob_ID_81::合成資金()
+{
+	return ValiableConstant3() * (shop_use_count_ + 1);
+}
+int cMob_ID_81::TalkEvent()
+{
+	
+	GameIdiom::キャラの方を向く(me(), sg_pDungeonSystem->pPlayerChara());
+
+	if(isCanUseShop())
+	{
+		//使用可能
+
+		pcControlLayer pccl;
+		pcSelectWindow pcsw;
+
+		sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
+
+		pccl->Init(sg_pDungeonSystem->pDevice_D3D);
+		pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
+
+		pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_reinforce(強化資金(), g_Lang(_T("装備品を強化する")) ) );
+		pcommand->delegate_ = wpcCommandDelegateObject(boost::static_pointer_cast<cCommandDelegateObject>(boost::dynamic_pointer_cast<cMob_ID_81>(me())));
+		pcommand->delegateID_ = delegateID_reinforce;
+		pcsw->commandList.push_back(pcommand);
+
+		pcommand = pcCommand(new cCommand_NitoriFactory_combine(合成資金(),g_Lang(_T("アイテムを合成する")) ) );
+		pcommand->delegate_ = wpcCommandDelegateObject(boost::static_pointer_cast<cCommandDelegateObject>(boost::dynamic_pointer_cast<cMob_ID_81>(me())));
+		pcommand->delegateID_ = delegateID_combine;
+		pcsw->commandList.push_back(pcommand);
+		
+		int strsize = 0;
+		int i;
+		for(i=0;i<pcsw->commandList.size();i++)
+		{
+			strsize = max(strsize,pcsw->commandList[i]->caption.length());
+		}
+		strsize = max(strsize,3);
+		strsize = min(strsize,20);
+
+		pcsw->Init(sg_pDungeonSystem->pDevice_D3D, strsize, pcsw->commandList.size());
+		pcsw->setLeft(sg_pDungeonSystem->GameScreenInterface.menuPosLeft(2));
+		pcsw->setTop(sg_pDungeonSystem->GameScreenInterface.menuPosTop(2));
+
+		pcsw->playsound_decide();
+		
+	}
+	else
+	{
+		g_Langメッセージ(_T("ニトリ製作所資材不足メッセージ"),std::map<tstring, StyleString >());
+		sg_pDungeonSystem->メニューを閉じる();
+	}
+	return true;
+}
+void cMob_ID_81::パッシブ能力(タイミング timing, cValiableField& valiable)
+{
+	if(timing == 被攻撃直後時_タイミング)
+	{
+		pAI->addEnemy(valiable.charas.val(変数_攻撃者));
+	}
+}
+void cMob_ID_81::didEndCommand(cCommand& caller) {
+	if (caller.delegateID_ == delegateID_reinforce) {
+		shop_use_count_++;
+	}
+	else if (caller.delegateID_ == delegateID_combine) {
+		shop_use_count_++;
+	}
 }
