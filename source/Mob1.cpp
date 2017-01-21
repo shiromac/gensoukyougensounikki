@@ -4208,6 +4208,10 @@ void cMob_ID_47::パッシブ能力(タイミング timing, cValiableField& valiable)
 		}
 	}
 }
+pcEnemyAI cMob_ID_47::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
+}
 //テイ
 int cMob_ID_48::AI特殊攻撃選択(cValiableField& valiable)
 {
@@ -4504,6 +4508,10 @@ int cMob_ID_52::特殊攻撃効果(cValiableField& valiable)
 	}
 	return false;
 }
+pcEnemyAI cMob_ID_52::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
+}
 //リリカ
 void cMob_ID_53::配置処理()
 {
@@ -4539,6 +4547,10 @@ int cMob_ID_53::特殊攻撃効果(cValiableField& valiable)
 		}
 	}
 	return false;
+}
+pcEnemyAI cMob_ID_53::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //ルナサ
 void cMob_ID_54::配置処理()
@@ -4578,6 +4590,10 @@ int cMob_ID_54::特殊攻撃効果(cValiableField& valiable)
 		}
 	}
 	return false;
+}
+pcEnemyAI cMob_ID_54::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //メディスン
 int cMob_ID_55::AI特殊攻撃選択(cValiableField& valiable)
@@ -5424,6 +5440,10 @@ int cMob_ID_70::特殊攻撃効果(cValiableField& valiable)
 
 	}
 	return false;
+}
+pcEnemyAI cMob_ID_70::Get_kindofAI()
+{
+	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //-----------------------------------------------------------------
 void cMob_ID_sangessei::setfriend(pcCharacter friendchara1, pcCharacter friendchara2, pcCharacter friendchara3)

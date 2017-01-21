@@ -519,7 +519,7 @@ DEF_class_cMob_ID(47)
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
 	virtual void パッシブ能力(タイミング timing, cValiableField& valiable);
-
+	virtual pcEnemyAI Get_kindofAI();
 };
 //テイ
 DEF_class_cMob_ID(48)
@@ -580,6 +580,7 @@ DEF_class_cMob_ID_parent(52,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
+	virtual pcEnemyAI Get_kindofAI();
 };
 //リリカ
 DEF_class_cMob_ID_parent(53,cMob_ID_prismriver)
@@ -588,6 +589,7 @@ DEF_class_cMob_ID_parent(53,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
+	virtual pcEnemyAI Get_kindofAI();
 };
 //ルナサ
 DEF_class_cMob_ID_parent(54,cMob_ID_prismriver)
@@ -596,6 +598,7 @@ DEF_class_cMob_ID_parent(54,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
+	virtual pcEnemyAI Get_kindofAI();
 };
 //メディスン
 DEF_class_cMob_ID(55)
@@ -725,6 +728,7 @@ DEF_class_cMob_ID(70)
 	virtual bool AI移動許可(cValiableField& valiable);
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
+	virtual pcEnemyAI Get_kindofAI();
 };
 //ゾンビフェアリー
 DEF_class_cMob_ID(71)
