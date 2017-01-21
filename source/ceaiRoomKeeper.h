@@ -21,3 +21,15 @@ public:
 	virtual int Request(int phase);
 
 };
+
+class ceaiRoomKeeperNoMove
+	:public ceaiRoomKeeper
+{
+public:
+	ceaiRoomKeeperNoMove(void);
+public:
+	virtual ~ceaiRoomKeeperNoMove(void);
+
+	virtual bool u_–Ú•W“_ì¬(int& out_tgt_x,int& out_tgt_y){return true;};
+
+};

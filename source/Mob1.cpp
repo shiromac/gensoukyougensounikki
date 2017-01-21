@@ -5711,7 +5711,7 @@ void cMob_ID_81::”z’uˆ—()
 }
 pcEnemyAI cMob_ID_81::Get_kindofAI()
 {
-	return pcEnemyAI(new ceaiRoomKeeper);
+	return pcEnemyAI(new ceaiRoomKeeperNoMove);
 }
 bool cMob_ID_81::‚·‚êˆá‚¢‹–‰Â(pcCharacter pchara)
 {
