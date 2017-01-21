@@ -1084,6 +1084,7 @@ void cDungeonSystem::店生成(int roomindex, int shopFlag)
 		}
 
 		pcCharacter pcmob = キャラクター生成(2020, shopLevel, CHARACTER_FORSE_OTHER, pland);
+		キャラクター生成(2081, shopLevel, CHARACTER_FORSE_OTHER, pland); //ニトリ
 
 		//アイテム初期設置ランダム
 		for(i=0;i<itemnum;i++)
