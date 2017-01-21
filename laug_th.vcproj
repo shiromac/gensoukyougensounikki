@@ -1186,6 +1186,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\source\ceaiRoomKeeper.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\source\ceaiShopOwner.cpp"
 					>
 				</File>
@@ -1790,6 +1794,10 @@
 			</File>
 			<File
 				RelativePath=".\source\ceaiNegative.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\ceaiRoomKeeper.h"
 				>
 			</File>
 			<File
