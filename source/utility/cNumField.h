@@ -33,21 +33,21 @@ public:
 	
 	virtual void GetFigure(vector<int>& figures);
 
-	int arrangeX;
-	int arrangeY;
+	bool percentSign;
+	bool plusSign;
 
 	enum PositionArrangeX
 	{
 		ARRANGEX_LEFT = -1,
 		ARRANGEX_CENTER = 0,
 		ARRANGEX_RIGHT = 1,
-	};
+	} arrangeX;
 	enum PositionArrangeY
 	{
 		ARRANGEY_TOP = -1,
 		ARRANGEY_CENTER = 0,
 		ARRANGEY_BOTTOM = 1,
-	};
+	} arrangeY;
 
 protected:
 	

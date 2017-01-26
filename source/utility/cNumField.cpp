@@ -9,7 +9,9 @@ colorBlendMode(cDrawingObject::COLOR_BLEND_MULTIPLE),
 	drawMode(cDrawingObject::DRAW_MODE_NORMAL),
 	arrangeX(ARRANGEX_RIGHT),
 	arrangeY(ARRANGEY_BOTTOM),
-	Value_(0)
+	Value_(0),
+	percentSign(false),
+	plusSign(false)
 {
 }
 
@@ -35,6 +37,10 @@ void cNumField::GetFigure(vector<int>& figures)
 {
 	figures.clear();
 
+	if(percentSign) {
+		figures.push_back(13);//%記号
+	}
+
 	int i;
 	INT64 tmp;
 	int minus = 0;
@@ -59,7 +65,10 @@ void cNumField::GetFigure(vector<int>& figures)
 	{
 		figures.push_back(10);//マイナス記号
 	}
-
+	else if(plusSign)
+	{
+		figures.push_back(11);//プラス記号
+	}
 }
 
 void cNumField::Draw(IDirect3DDevice9 *pDev)
