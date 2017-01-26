@@ -11,7 +11,8 @@ colorBlendMode(cDrawingObject::COLOR_BLEND_MULTIPLE),
 	arrangeY(ARRANGEY_BOTTOM),
 	Value_(0),
 	percentSign(false),
-	plusSign(false)
+	plusSign(false),
+	distanceQuant(true)
 {
 }
 
@@ -124,6 +125,11 @@ void cNumField::Draw(IDirect3DDevice9 *pDev)
 	DO.AddingDraw = (cDrawingObject::DrawMode)drawMode;
 	DO.colorblendmode = (cDrawingObject::ColorBlendMode)colorBlendMode;
 	
+	
+	if(distanceQuant) {
+		distance = floor(distance);
+	}
+
 	for(i=0;i<Figures.size();i++)
 	{
 		

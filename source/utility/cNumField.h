@@ -19,7 +19,9 @@ public:
 	virtual void Draw(IDirect3DDevice9 *pDev);
 	virtual void Init(IDirect3DDevice9 *pDev);
 
-	int distance;
+	double distance;
+	bool distanceQuant;
+
 	c4DVector position;
 
 	int FontHeightSize;
