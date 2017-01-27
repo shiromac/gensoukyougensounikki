@@ -8,6 +8,8 @@
 #include "cParameterGage.h"
 #include "utility\valiableField\SafePointerObject.h"
 
+class GensouGageView;
+typedef boost::shared_ptr<GensouGageView> pGensouGageView;
 
 class cGameScreenInterface :
 	public cControl
@@ -68,7 +70,7 @@ public:
 protected:
 	cParameterGage HPGage;
 	cParameterGage STGage;
-
+	pGensouGageView gensouGage;
 public:	
 	//I—¹ƒtƒ‰ƒO
 	bool End;

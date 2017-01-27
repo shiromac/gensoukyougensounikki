@@ -1,6 +1,9 @@
 
 #include "stdafx.h"
 #include "cGameScreenInterface.h"
+#include "../GensouGage.h"
+#include <boost/make_shared.hpp>
+#include "cFloor.h"
 
 
 #define INTERFACEFONTSIZE 32
@@ -62,6 +65,10 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 
 	heroCopy = pcCharacter(new cPlayerChara);
 
+	gensouGage = pGensouGageView(new GensouGageView);
+	gensouGage->init();
+	gensouGage->delegate = wpGensouGageViewDelegate(sg_pDungeonSystem->pDungeon()->gensouGage_);
+
 	Resetdisp(pDev);
 	RefreshDraw(pDev);
 
@@ -84,7 +91,9 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 
 int cGameScreenInterface::process(IDirect3DDevice9 *pDev)
 {
-
+	if(gensouGage) {
+		gensouGage->process();
+	}
 	return true;
 }
 
@@ -176,6 +185,7 @@ int cGameScreenInterface::RefreshDraw(IDirect3DDevice9 *pDev)
 	}
 	text.EndText();
 
+	gensouGage->refreshView();
 
 	return true;
 }
@@ -405,6 +415,7 @@ int cGameScreenInterface::Draw(IDirect3DDevice9 *pDev)
 	DO.Draw(pDev);
 	*/
 	
+	gensouGage->draw(pDev);
 
 	return true;
 }
