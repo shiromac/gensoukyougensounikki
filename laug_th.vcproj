@@ -1161,6 +1161,10 @@
 					RelativePath=".\source\DungeonUtilitys.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\source\GensouGage.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="AI"
@@ -2070,6 +2074,14 @@
 			</File>
 			<File
 				RelativePath=".\source\Gameobjects.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GensouGage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\GensouGage.h"
 				>
 			</File>
 			<File
