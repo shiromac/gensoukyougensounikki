@@ -1378,6 +1378,7 @@ int cDungeonSystem::process(IDirect3DDevice9 *pDev)
 
 	}
 
+	GameScreenInterface.process(pDev);
 	Map().process();
 
 
