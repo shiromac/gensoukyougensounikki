@@ -6,7 +6,7 @@
 #include "VariationNumber.h"
 #include "cDungeonSystem.h"
 
-GensouGage::GensouGage(void):short_live_power_(0), long_live_power_(0)
+GensouGage::GensouGage(void):short_live_power_(0), long_live_power_(0), short_live_power_keep_(false)
 {
 }
 
@@ -29,6 +29,9 @@ void GensouGage::add_short_live_power(double power) {
 	short_live_power_ += power;
 	short_live_power_ = formalize(short_live_power_);
 }
+void GensouGage::keep_short_live_power() {
+	short_live_power_keep_ = true;
+}
 void GensouGage::add_long_live_power(double power) {
 	long_live_power_ += power;
 	long_live_power_ = formalize(long_live_power_);
@@ -37,12 +40,16 @@ void GensouGage::add_long_live_power(double power) {
 void GensouGage::reset_power_to_zero() {
 	short_live_power_ = 0;
 	long_live_power_ = 0;
+	short_live_power_increase_ = 0;
 }
 	
 void GensouGage::refresh_short_live_power(double trans_rate)
 {
-	long_live_power_ += short_live_power_ * trans_rate;
-	short_live_power_ = 0;
+	if (!short_live_power_keep_) {
+		long_live_power_ += short_live_power_ * trans_rate;
+		short_live_power_ = 0;
+	}
+	short_live_power_keep_ = false;
 }
 void GensouGage::loss_long_live_power(double loss_rate, double min_loss)
 {

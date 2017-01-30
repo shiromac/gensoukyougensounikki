@@ -22,6 +22,7 @@ public:
 	double sum_power();
 	
 	void add_short_live_power(double power);
+	void keep_short_live_power();
 	void add_long_live_power(double power);
 
 	void reset_power_to_zero();
@@ -31,6 +32,8 @@ public:
 private:
 	double short_live_power_;
 	double long_live_power_;
+
+	bool short_live_power_keep_;
 	
 	void refresh_short_live_power(double trans_rate);
 	void loss_long_live_power(double loss_rate, double min_loss);
