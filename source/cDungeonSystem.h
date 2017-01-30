@@ -651,6 +651,9 @@ public:
 	//UŒ‚‚Ìî•ñ‚ğ“¾‚é
 	virtual int GetNormalAttackinformation(pcCharacter pchara,pcAttackinformation &pcattackinfo);
 
+	virtual void PíŒ¶‘z“x“‰ÁZ(double power);
+	virtual void uŠÔŒ¶‘z“x“‰ÁZ(double power);
+	virtual double Œ¶‘z“x“();
 protected:
 
 	//UŒ‚‚·‚é

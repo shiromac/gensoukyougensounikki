@@ -4,6 +4,8 @@
 
 #include "EffectFunctions.h"
 #include "Gameobjects.h"
+#include "../GensouGage.h"
+#include "../cFloor.h"
 
 
 
@@ -598,6 +600,18 @@ int cDungeonSystem::AttackHit(pcAttackinformation pattackinfo)
 
 	if(pattackinfo->defenser->Ž€–S())
 	{//ŒoŒ±’l
+		if(pattackinfo->attacker == sg_pDungeonSystem->pPlayerChara())
+		{
+
+			if (pattackinfo->defenser->CharaAttribute().count(ƒLƒƒƒ‰‘®«::’e–‹)) {
+				double power = 1;
+				uŠÔŒ¶‘z“x“‰ÁŽZ(power);
+			}
+			else {
+				double power = 5;
+				PíŒ¶‘z“x“‰ÁŽZ(power);
+			}
+		}
 
 		EXTcharge(pattackinfo);
 		
@@ -702,4 +716,16 @@ int cDungeonSystem::CalculateDamege(pcAttackinformation pattackinfo)
 
 
 	return damage;
+}
+void cDungeonSystem::PíŒ¶‘z“x“‰ÁŽZ(double power)
+{
+	pDungeon()->gensouGage_->add_long_live_power(power);
+}
+void cDungeonSystem::uŠÔŒ¶‘z“x“‰ÁŽZ(double power)
+{
+	pDungeon()->gensouGage_->add_short_live_power(power);
+}
+double cDungeonSystem::Œ¶‘z“x“()
+{
+	return pDungeon()->gensouGage_->sum_power();
 }
