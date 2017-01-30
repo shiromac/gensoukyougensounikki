@@ -54,10 +54,10 @@ void GensouGage::loss_long_live_power(double loss_rate, double min_loss)
 
 void GensouGage::pass_turn(bool no_refresh_short_live_power, bool no_loss_long_live_power)
 {
-	if (no_loss_long_live_power) {
+	if (!no_loss_long_live_power) {
 		loss_long_live_power(loss_rate(), 0.1);
 	}
-	if (no_refresh_short_live_power) {
+	if (!no_refresh_short_live_power) {
 		refresh_short_live_power(0.1);
 	}
 }
