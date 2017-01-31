@@ -31,7 +31,9 @@ public:
 
 	void reset_power_to_zero();
 	
+	void forse_refresh_short_live_power();
 	void pass_turn(bool no_refresh_short_live_power, bool no_loss_long_live_power);
+
 
 private:
 	double short_live_power_;
@@ -40,8 +42,10 @@ private:
 	bool short_live_power_keep_;
 	
 	void refresh_short_live_power(double trans_rate);
+	void forse_refresh_short_live_power(double trans_rate);
 	void loss_long_live_power(double loss_rate, double min_loss);
 
+	double refresh_rate();
 	double loss_rate();
 	double formalize(double value);
 };

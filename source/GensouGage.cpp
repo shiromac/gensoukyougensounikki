@@ -49,12 +49,19 @@ void GensouGage::reset_power_to_zero() {
 	long_live_power_ = 0;
 	short_live_power_keep_ = 0;
 }
-	
+void GensouGage::forse_refresh_short_live_power(){
+	return forse_refresh_short_live_power(refresh_rate());
+}
+void GensouGage::forse_refresh_short_live_power(double trans_rate)
+{
+	long_live_power_ += short_live_power_ * trans_rate;
+	short_live_power_ = 0;
+	short_live_power_keep_ = false;
+}
 void GensouGage::refresh_short_live_power(double trans_rate)
 {
 	if (!short_live_power_keep_) {
-		long_live_power_ += short_live_power_ * trans_rate;
-		short_live_power_ = 0;
+		forse_refresh_short_live_power(trans_rate);
 	}
 	short_live_power_keep_ = false;
 }
@@ -69,11 +76,16 @@ void GensouGage::loss_long_live_power(double loss_rate, double min_loss)
 void GensouGage::pass_turn(bool no_refresh_short_live_power, bool no_loss_long_live_power)
 {
 	if (!no_loss_long_live_power) {
-		loss_long_live_power(loss_rate(), 0.1);
+		double min_loss = 0.1;
+		loss_long_live_power(loss_rate(), min_loss);
 	}
 	if (!no_refresh_short_live_power) {
-		refresh_short_live_power(0.1);
+		refresh_short_live_power(refresh_rate());
 	}
+}
+
+double GensouGage::refresh_rate() {
+	return 0.1;
 }
 
 double GensouGage::loss_rate() {
