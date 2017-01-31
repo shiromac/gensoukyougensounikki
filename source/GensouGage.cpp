@@ -21,6 +21,13 @@ double GensouGage::short_live_power() {
 double GensouGage::long_live_power() {
 	return long_live_power_;
 }
+void GensouGage::set_short_live_power(double power) {
+	short_live_power_ = power;
+}
+void GensouGage::set_long_live_power(double power) {
+	long_live_power_ = power;
+}
+
 double GensouGage::sum_power() {
 	return short_live_power() + long_live_power();
 }
@@ -40,7 +47,7 @@ void GensouGage::add_long_live_power(double power) {
 void GensouGage::reset_power_to_zero() {
 	short_live_power_ = 0;
 	long_live_power_ = 0;
-	short_live_power_increase_ = 0;
+	short_live_power_keep_ = 0;
 }
 	
 void GensouGage::refresh_short_live_power(double trans_rate)

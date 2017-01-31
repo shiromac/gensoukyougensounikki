@@ -19,6 +19,10 @@ public:
 
 	virtual double short_live_power();
 	virtual double long_live_power();
+
+	void set_short_live_power(double power);
+	void set_long_live_power(double power);
+
 	double sum_power();
 	
 	void add_short_live_power(double power);
