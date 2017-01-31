@@ -82,6 +82,9 @@ public:
 	double ShopFund;
 	double ShopDebt;
 
+	//幻想システム
+	double GensouLongLivePower;
+
 	vector<int> FreeFlags;
 
 	map<tstring,int> localFlags;

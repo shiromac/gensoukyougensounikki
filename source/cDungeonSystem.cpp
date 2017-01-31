@@ -200,6 +200,7 @@ int cDungeonSystem::InitDungeon(IDirect3DDevice9 *pDev)
 	FreeFlags() = pSaveQuest->FreeFlags;
 	localFlags() = pSaveQuest->localFlags;
 	privateFlags() = pSaveQuest->privateFlags;
+	pGensouGage()->set_long_live_power(pSaveQuest->GensouLongLivePower);
 
 	//ここで拠点情報復元
 	if(拠点フラグ())
@@ -440,6 +441,8 @@ int cDungeonSystem::InitFloor(IDirect3DDevice9 *pDev)
 	pSaveQuest->DropIDtoAppreciated = DataBase.DropIDtoAppreciatedinstance();
 	pSaveQuest->DropIDtoMEMO = DataBase.DropIDtoMEMOinstance();
 	pSaveQuest->Version_ = g_VersionString();
+	pGensouGage()->forse_refresh_short_live_power();
+	pSaveQuest->GensouLongLivePower = pGensouGage()->long_live_power();
 	if(!拠点フラグ())
 	{//拠点じゃない
 		if(FloorLevel() == 1)

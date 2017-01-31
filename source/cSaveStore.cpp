@@ -384,6 +384,8 @@ cSaveQuest::cSaveQuest(void)
 	ShopFund = 0.0;
 	ShopDebt = 0.0;
 
+	GensouLongLivePower = 0.0;
+
 	FirstConditionOfMoney = 0;
 }
 
@@ -465,10 +467,12 @@ int cSaveQuest::save()
 	cDataConverter::ConvertVT2VecVecC2VecC(hinaPickItem,savefile_->vv_char()[7]);
 	
 	savefile_->vv_double().resize(1);
-	savefile_->vv_double()[0].resize(2);
+	savefile_->vv_double()[0].resize(3);
 	SUBSTITUTION_L2R(ShopFund,savefile_->vv_double()[0][0]);
 	SUBSTITUTION_L2R(ShopDebt,savefile_->vv_double()[0][1]);
 
+	//’Ç‰Á•ª7
+	SUBSTITUTION_L2R(GensouLongLivePower,savefile_->vv_double()[0][2]);
 
 	//’Ç‰Á•ª4
 	ConvertT2VecC(pFirstConditionOfPlayer,savefile_->vv_char()[8]);
@@ -523,15 +527,19 @@ int cSaveQuest::load()
 	SUBSTITUTION_R2L(FreeFlags, savefile_->vv_int()[1]);
 
 	//double
-	if(savefile_->vv_double().size() < 1 
-		|| savefile_->vv_double()[0].size() < 2 )
+	if(savefile_->vv_double().size() >= 1 ) 
 	{
-		
-	}
-	else
-	{
-		SUBSTITUTION_R2L(ShopFund,savefile_->vv_double()[0][0]);
-		SUBSTITUTION_R2L(ShopDebt,savefile_->vv_double()[0][1]);
+		if (savefile_->vv_double()[0].size() >= 2 )
+		{
+			SUBSTITUTION_R2L(ShopFund,savefile_->vv_double()[0][0]);
+			SUBSTITUTION_R2L(ShopDebt,savefile_->vv_double()[0][1]);
+		}
+
+		//’Ç‰Á•ª7
+		if (savefile_->vv_double()[0].size() >= 3 )
+		{
+			SUBSTITUTION_R2L(GensouLongLivePower,savefile_->vv_double()[0][2]);
+		}
 	}
 
 	//char
