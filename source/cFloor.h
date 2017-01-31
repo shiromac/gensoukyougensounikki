@@ -283,8 +283,6 @@ private:
 	pcScriptRLayer extraLuaScript_;
 };
 
-class GensouGage;
-typedef boost::shared_ptr<GensouGage> pGensouGage;
 
 class cDungeon
 {
@@ -312,7 +310,6 @@ public:
 	StyleString DungeonName_;
 	tstring DungeonID_;
 
-	pGensouGage gensouGage_;
 public:
 	const double& appreciationpos(){return appreciationpos_;};
 	const vector<double>& appreciationposkind(){return appreciationposkind_;};

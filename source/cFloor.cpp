@@ -11,9 +11,6 @@
 
 #include "utility/StyleString.h"
 
-#include <boost/make_shared.hpp>
-#include "../GensouGage.h"
-
 
 #define ArraySizeOf(array)     (sizeof(array) / sizeof(array[0]))
 
@@ -658,7 +655,6 @@ void cFloor::decodeParty(pcParty& tv, pcScriptRLayer floordata)
 
 cDungeon::cDungeon(void){
 	appreciationpos_ = 1;
-	gensouGage_ = boost::make_shared<GensouGage>();
 };
 void cDungeon::decode(pcScriptRLayer data)
 {

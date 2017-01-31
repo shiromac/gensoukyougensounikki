@@ -67,7 +67,7 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 
 	gensouGage = pGensouGageView(new GensouGageView);
 	gensouGage->init();
-	gensouGage->delegate = wpGensouGageViewDelegate(sg_pDungeonSystem->pDungeon()->gensouGage_);
+	gensouGage->delegate = wpGensouGageViewDelegate(sg_pDungeonSystem->pGensouGage());
 
 	Resetdisp(pDev);
 	RefreshDraw(pDev);

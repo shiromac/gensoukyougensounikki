@@ -719,13 +719,13 @@ int cDungeonSystem::CalculateDamege(pcAttackinformation pattackinfo)
 }
 void cDungeonSystem::PíŒ¶‘z“x“‰ÁŽZ(double power)
 {
-	pDungeon()->gensouGage_->add_long_live_power(power);
+	pGensouGage()->add_long_live_power(power);
 }
 void cDungeonSystem::uŠÔŒ¶‘z“x“‰ÁŽZ(double power)
 {
-	pDungeon()->gensouGage_->add_short_live_power(power);
+	pGensouGage()->add_short_live_power(power);
 }
 double cDungeonSystem::Œ¶‘z“x“()
 {
-	return pDungeon()->gensouGage_->sum_power();
+	return pGensouGage()->sum_power();
 }

@@ -52,6 +52,9 @@ typedef boost::weak_ptr<cDungeon> wpcDungeon;
 #include <d3d9.h>
 #include <d3dx9.h>
 
+class GensouGage;
+typedef boost::shared_ptr<GensouGage> pGensouGage;
+
 //ダンジョン中保存されるデータ類
 class cDungeonInstance
 {
@@ -76,6 +79,7 @@ public:
 
 	int FloorLevel_;
 	
+	pGensouGage gensouGage_;
 
 	enum GameEndFlag{
 		Continue,

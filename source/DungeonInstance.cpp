@@ -21,6 +21,9 @@
 
 #include <boost/pointer_cast.hpp>
 
+#include "GensouGage.h"
+
+
 cDungeonInstance::cDungeonInstance()
 {
 
@@ -32,6 +35,8 @@ cDungeonInstance::cDungeonInstance()
 	time_SumFrameCount_ = 0;
 	time_Sumtime_ = 0;
 	SumEnemyDefeatNum_ = 0;
+
+	gensouGage_ = pGensouGage(new GensouGage);
 }
 cDungeonInstance::~cDungeonInstance()
 {

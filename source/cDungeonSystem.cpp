@@ -1018,7 +1018,7 @@ int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
 					s_AltaInputprocess().process(false);
 					havemove = true;
 
-					pDungeon()->gensouGage_->pass_turn((pPlayerChara()->HP < pPlayerChara()->MHP*0.25), (pPlayerChara()->HP < pPlayerChara()->MHP));
+					pGensouGage()->pass_turn((pPlayerChara()->HP < pPlayerChara()->MHP*0.25), (pPlayerChara()->HP < pPlayerChara()->MHP));
 
 					CutInM().CutIn(pPlayerChara(),アクション終了_タイミング);
 					CutInM().CutIn(pPlayerChara()->足元(),アクション終了_タイミング);

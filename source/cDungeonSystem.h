@@ -36,6 +36,8 @@
 #include <set>
 #include <tstring_ph.h>
 
+class GensouGage;
+typedef boost::shared_ptr<GensouGage> pGensouGage;
 
 using namespace std;
 
@@ -145,6 +147,7 @@ public:
 	inline unsigned long& random_Seed(){return pDungeonInstance_->random_Seed_;};
 
 	inline pcDungeon& pDungeon(){return pDungeonInstance_->pDungeon_;};
+	inline pGensouGage& pGensouGage(){return pDungeonInstance_->gensouGage_;};
 
 	inline vector<int>& FreeFlags(){return pDungeonInstance_->FreeFlags_;};
 	inline map<tstring,int>& localFlags(){return pDungeonInstance_->localFlags_;};
