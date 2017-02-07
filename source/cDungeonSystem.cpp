@@ -1021,7 +1021,7 @@ int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
 					s_AltaInputprocess().process(false);
 					havemove = true;
 
-					pGensouGage()->pass_turn((pPlayerChara()->HP < pPlayerChara()->MHP*0.25), (pPlayerChara()->HP < pPlayerChara()->MHP));
+					pGensouGage()->did_player_action((pPlayerChara()->HP < pPlayerChara()->MHP*0.25), (pPlayerChara()->HP < pPlayerChara()->MHP));
 
 					CutInM().CutIn(pPlayerChara(),アクション終了_タイミング);
 					CutInM().CutIn(pPlayerChara()->足元(),アクション終了_タイミング);
@@ -1815,6 +1815,8 @@ int cDungeonSystem::Inputprocess(IDirect3DDevice9 *pDev)
 	if(!s_AltaInputprocess().on)
 	{//直前の関数返り値がfalse
 		CutInM().CutInForAllObject(インプット直前_タイミング);
+
+		pGensouGage()->will_player_action();
 
 		//自動振り向き
 		if(s_autoTurnFlag() && !キャラクター敵対判定(pPlayerChara(),キャラ前地形(pPlayerChara(),1)->pOnChar))

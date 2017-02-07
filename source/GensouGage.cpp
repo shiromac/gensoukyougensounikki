@@ -6,7 +6,12 @@
 #include "VariationNumber.h"
 #include "cDungeonSystem.h"
 
-GensouGage::GensouGage(void):short_live_power_(0), long_live_power_(0), short_live_power_keep_(false)
+GensouGage::GensouGage(void):
+short_live_power_(0),
+long_live_power_(0),
+short_live_power_keep_(false),
+short_live_power_stock_(0),
+long_live_power_stock_(0)
 {
 }
 
@@ -23,9 +28,11 @@ double GensouGage::long_live_power() {
 }
 void GensouGage::set_short_live_power(double power) {
 	short_live_power_ = power;
+	short_live_power_stock_ = 0;
 }
 void GensouGage::set_long_live_power(double power) {
 	long_live_power_ = power;
+	long_live_power_stock_ = 0;
 }
 
 double GensouGage::sum_power() {
@@ -33,21 +40,21 @@ double GensouGage::sum_power() {
 }
 	
 void GensouGage::add_short_live_power(double power) {
-	short_live_power_ += power;
-	short_live_power_ = formalize(short_live_power_);
+	short_live_power_stock_ += power;
 }
 void GensouGage::keep_short_live_power() {
 	short_live_power_keep_ = true;
 }
 void GensouGage::add_long_live_power(double power) {
-	long_live_power_ += power;
-	long_live_power_ = formalize(long_live_power_);
+	long_live_power_stock_ += power;
 }
 
 void GensouGage::reset_power_to_zero() {
 	short_live_power_ = 0;
 	long_live_power_ = 0;
 	short_live_power_keep_ = 0;
+	short_live_power_stock_ = 0;
+	long_live_power_stock_ = 0;
 }
 void GensouGage::forse_refresh_short_live_power(){
 	return forse_refresh_short_live_power(refresh_rate());
@@ -72,8 +79,16 @@ void GensouGage::loss_long_live_power(double loss_rate, double min_loss)
 	long_live_power_ -= loss;
 	long_live_power_ = formalize(long_live_power_);
 }
-
-void GensouGage::pass_turn(bool no_refresh_short_live_power, bool no_loss_long_live_power)
+void GensouGage::will_player_action()
+{
+	short_live_power_ += short_live_power_stock_;
+	long_live_power_ += long_live_power_stock_;
+	short_live_power_ = formalize(short_live_power_);
+	long_live_power_ = formalize(long_live_power_);
+	short_live_power_stock_ = 0;
+	long_live_power_stock_ = 0;
+}
+void GensouGage::did_player_action(bool no_refresh_short_live_power, bool no_loss_long_live_power)
 {
 	if (!no_loss_long_live_power) {
 		double min_loss = 0.1;

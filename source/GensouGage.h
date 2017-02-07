@@ -32,12 +32,16 @@ public:
 	void reset_power_to_zero();
 	
 	void forse_refresh_short_live_power();
-	void pass_turn(bool no_refresh_short_live_power, bool no_loss_long_live_power);
+	void will_player_action();
+	void did_player_action(bool no_refresh_short_live_power, bool no_loss_long_live_power);
 
 
 private:
 	double short_live_power_;
 	double long_live_power_;
+
+	double short_live_power_stock_;
+	double long_live_power_stock_;
 
 	bool short_live_power_keep_;
 	
