@@ -233,6 +233,8 @@ public:
 
 
 	virtual int C³’lŒÀŠE’l();
+	
+	virtual int Á”ïŒ¶‘z“x‰ÁZ—Ê();
 
 	//‰ßC³‚Ì‚Æ‚«’´‰ß•ª•Ô‚·
 	virtual int ‰ßC³‚Å‚ ‚é();

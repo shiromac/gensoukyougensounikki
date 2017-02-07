@@ -154,6 +154,8 @@ public:
 
 	virtual int C³’lÅ‘å’l(){return 4;};
 	
+	virtual int Á”ïŒ¶‘z“x‰ÁZ—Ê();
+	
 	//Œø‰Ê—Ê(ŒW”)
 	virtual double Œø‰Ê—Êó‘Ô”{—¦(){return 1.0;};
 

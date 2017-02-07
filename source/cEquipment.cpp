@@ -1133,6 +1133,9 @@ int cEquipment::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
+		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
+			幻想度加算();
+		}
 		cValiableField val;
 		val.doubles.dim(変数_汎用ブール) = 1;
 		sg_pDungeonSystem->CutInM().CutIn(me(), 装備品衝突消滅直前時_タイミング, val);
@@ -1701,6 +1704,11 @@ int cEquipment::修正値限界値()
 	int val = sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("修正値限界値"), 10);
 	val += overspec()*(val*0.5 + 1);
 	return val;
+}
+int cEquipment::消費時幻想度加算量()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		(tstring)_T("Equipment基本値"),(tstring)_T("消費時幻想度加算量"),0);
 }
 double cEquipment::初期初期残りスロット()
 {

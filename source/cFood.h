@@ -84,4 +84,5 @@ public:
 
 	virtual double ‰Î«¿•Ï‰»—¦();
 	virtual int ‰Á”MŒã•Ï‰»ID() = 0;
+	virtual int Á”ïŒ¶‘z“x‰ÁZ—Ê();
 };

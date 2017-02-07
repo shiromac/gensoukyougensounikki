@@ -29,6 +29,8 @@ public:
 	//故障率(%)
 	virtual double 故障率();
 
+	virtual int 消費時幻想度加算量();
+
 
 	//データパックを初期最適化する。アイテムを初期設置するときに一度だけ使う。
 	virtual void DataBeginOptimize(int difficulty);

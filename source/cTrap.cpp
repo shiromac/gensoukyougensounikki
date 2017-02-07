@@ -76,7 +76,11 @@ double cTrap::故障率()
 		ID(),(tstring)_T("故障率"),0);
 }
 
-
+int cTrap::消費時幻想度加算量()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		(tstring)_T("Trap基本値"),(tstring)_T("消費時幻想度加算量"),0);
+}
 
 void cTrap::DataBeginOptimize(int difficulty)
 {
@@ -455,7 +459,11 @@ int cTrap::衝突(pcCharacter pchara)
 
 
 	発動(pchara);
-	
+
+	if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
+		幻想度加算();
+	}
+
 	sg_pDungeonSystem->落ち物破壊要請(me(),1);
 
 	return true;

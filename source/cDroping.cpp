@@ -828,6 +828,18 @@ int cDroping::内包アイテム込み売却受け取り値()
 	return value;
 }
 
+void cDroping::幻想度加算()
+{
+	int power = 消費時幻想度加算量();
+	if(power > 0) {
+		sg_pDungeonSystem->瞬間幻想度％加算(power);
+	}
+}
+int cDroping::消費時幻想度加算量()
+{
+	return 0;
+}
+
 double cDroping::値段割引()
 {
 	if(shopDiscountflag() == SHOPDISCOUNTFLAG_FREE)

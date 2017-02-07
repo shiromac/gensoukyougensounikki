@@ -1532,6 +1532,12 @@ bool cSpell::破損回復(int message)
 	return true;
 }
 
+int cSpell::消費時幻想度加算量()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		(tstring)_T("Spell基本値"),(tstring)_T("消費時幻想度加算量"),0);
+}
+
 //イメージカラー
 unsigned long cSpell::imagecolar1_real()
 {

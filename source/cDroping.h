@@ -364,6 +364,9 @@ public:
 	virtual int 単体売却受け取り値();
 	virtual int 内包アイテム込み売却受け取り値();
 
+	virtual void 幻想度加算();
+	virtual int 消費時幻想度加算量();
+
 
 	virtual double 値段割引();
 	//中身の値段を別ルーチンで足す必要がある時false

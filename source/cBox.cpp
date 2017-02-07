@@ -993,7 +993,11 @@ double cBox::電気時帯静電気率()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Box基本値"),(tstring)_T("電気時帯静電気率"),0.15);
 }
-
+int cBox::消費時幻想度加算量()
+{
+	return sg_pDungeonSystem->DataBase.DropImportData_Value(
+		(tstring)_T("Box基本値"),(tstring)_T("消費時幻想度加算量"),0);
+}
 int cBox::BreakOut()
 {
 	sg_pDungeonSystem->AnimationManager().
