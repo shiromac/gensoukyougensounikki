@@ -724,6 +724,7 @@ void cDungeonSystem::恒常幻想度％加算(double power)
 void cDungeonSystem::瞬間幻想度％加算(double power)
 {
 	pGensouGage()->add_short_live_power(power);
+	pGensouGage()->keep_short_live_power();
 }
 double cDungeonSystem::幻想度％()
 {
