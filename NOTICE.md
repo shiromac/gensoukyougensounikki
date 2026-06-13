@@ -55,6 +55,8 @@ The original bundled manual and the released readme credited the following creat
 - 山可祢 様 (sound effects)
 - Music with Myuu, http://www.ne.jp/asahi/music/myuu/
 
+Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release.
+
 Large audio files are not included in this public branch. The credit is retained because the original manual listed it and older/private builds may have used those materials.
 
 ### Material sites credited by the original manual
