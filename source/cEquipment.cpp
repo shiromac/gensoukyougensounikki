@@ -1404,7 +1404,7 @@ int cEquipment::Getsmollview(pcGameWindow& smollview)
 
 #define DEF_EquipmentAttributeExpresstions(str) \
 if(‘®«.count(—‚¿•¨‘®«::str)){\
-explanations.back() += g_Lang(_T(#str)_T("Expresstions"));}
+explanations.back() += g_Lang(_T(#str) _T("Expresstions"));}
 
 
 void cEquipment::longExplanationExtraBase(std::vector<StyleString> &explanations)

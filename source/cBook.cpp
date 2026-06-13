@@ -146,7 +146,7 @@ StyleString cBook::ExtraHatString()
 
 #define DEF_BookAttributeExpresstions魔法難度(str) \
 if(魔法難度() == str){\
-explanations.back() += g_Lang(_T("魔法難度")_T(#str)_T("Expresstions"));}
+explanations.back() += g_Lang(_T("魔法難度") _T(#str) _T("Expresstions"));}
 
 
 void cBook::longExplanationExtraBase(std::vector<StyleString> &explanations)

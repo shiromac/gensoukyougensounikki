@@ -81,7 +81,7 @@ cDiscreteProbability cBullet::qualityBeginDP(int difficulty)
 
 #define DEF_BulletAttributeExpresstions(str) \
 if(AAt.count(UŒ‚‘®«::str)){\
-explanations.back() += g_Lang(_T(#str)_T("Expresstions"));}
+explanations.back() += g_Lang(_T(#str) _T("Expresstions"));}
 
 
 void cBullet::longExplanationExtraBase(std::vector<StyleString> &explanations)

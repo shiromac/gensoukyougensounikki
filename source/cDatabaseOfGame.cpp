@@ -1560,7 +1560,7 @@ int cDatabaseOfGame::DecodeCharaFileData()
 					}\
 					else\
 					{\
-						assert(!_T(#CHARAATTACKATTRISTRING)_T( "デコード内に無効な識別子を発見しました。"));\
+						assert(!_T(#CHARAATTACKATTRISTRING) _T( "デコード内に無効な識別子を発見しました。"));\
 					}\
 				}\
 			}\
@@ -1831,7 +1831,7 @@ void cDatabaseOfGame::CharaImportData_MapIntToInt(int ID, tstring& dataname, map
 #define ArraySizeOf(array)     (sizeof(array) / sizeof(array[0]))
 
 #define DEF_OF_INSERT_UNKNOWN_NAMEPOOL(classtype,classtypeBIG) \
-	pcrl = SR.data().pmember(_T("UnknownName_")_T(#classtype));\
+	pcrl = SR.data().pmember(_T("UnknownName_") _T(#classtype));\
 if(pcrl != NULL)\
 {\
 	DropUnknownNamePool.insert(pair<int, vector<tstring>>(\
@@ -1842,7 +1842,7 @@ if(DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size() < ##classtype
 	int shortsize = ##classtypeBIG##_NUM - DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size();\
 	for(i=0;i<shortsize;i++)\
 	{\
-		DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].push_back(_T("UnknownNameOf")_T(#classtype)+setStyle(i).conclete_tstr());\
+		DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].push_back(_T("UnknownNameOf") _T(#classtype)+setStyle(i).conclete_tstr());\
 	}\
 }
 /*

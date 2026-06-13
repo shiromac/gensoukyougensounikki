@@ -360,11 +360,11 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
 		,
 		luabind::def("sqrt", &sqrt_for_effect)
 		,
-		luabind::def("sin", &sin)
+		luabind::def("sin", (double(*)(double))&sin)
 		,
-		luabind::def("cos", &cos)
+		luabind::def("cos", (double(*)(double))&cos)
 		,
-		luabind::def("tan", &tan)
+		luabind::def("tan", (double(*)(double))&tan)
 		//,
 	];
 	luabind::module(luaEnvironment.luaState())

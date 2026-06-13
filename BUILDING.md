@@ -10,7 +10,7 @@ Install these on the build machine:
 - Visual Studio 2022 with **Desktop development with C++**
   - MSVC v143 x86/x64 build tools
   - Windows SDK
-- Boost headers (`BoostRoot` must contain `boost\shared_ptr.hpp`)
+- Complete Boost headers (`BoostRoot` must contain `boost\shared_ptr.hpp`, `boost\smart_ptr\shared_ptr.hpp`, and `boost\mpl\bool.hpp`). Boost 1.46.1 is known to work with the bundled luabind 0.9.1 code.
 - D3DX9 headers/libs
   - Either DirectX SDK (June 2010), or
   - NuGet package `Microsoft.DXSDK.D3DX` restored by the build script
@@ -29,17 +29,19 @@ That release used packed runtime data: `data/Packed_*.id.cdat`, `graphic/graphic
 
 ## Build
 
-From the repository root:
+From the repository root, pass a complete Boost root explicitly or set `BOOST_ROOT`:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\build-debug.ps1 -RestoreNuGetDeps
+powershell -ExecutionPolicy Bypass -File .\tools\build-debug.ps1 -BoostRoot C:\path\to\boost_1_46_1 -RestoreNuGetDeps
 ```
 
-If Boost or DirectX SDK are installed somewhere custom, pass them explicitly:
+`-RestoreNuGetDeps` can restore `Microsoft.DXSDK.D3DX` for D3DX9. If DirectX SDK is installed somewhere custom, pass it explicitly:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\build-debug.ps1 -BoostRoot C:\path\to\boost_1_xx_x -DirectXSdkDir "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)"
+powershell -ExecutionPolicy Bypass -File .\tools\build-debug.ps1 -BoostRoot C:\path\to\boost_1_46_1 -DirectXSdkDir "C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)"
 ```
+
+On the recovered archive layout used during maintenance, the script also checks `..\..\..\..\libs\boost\boost_1_46_1` relative to this repository.
 
 The expected output is:
 

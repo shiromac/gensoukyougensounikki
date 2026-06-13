@@ -634,9 +634,9 @@ void SystemMassage_Loading(LuaEnvironment& luaEnvironment)
 		,
 		luabind::def("utility_localizedMessage", &forLua::utility_localizedMessage)
 		,
-		luabind::def("localizeString", &(StyleString(*)(const tstring& ))forLua::localizeString)
+		luabind::def("localizeString", (StyleString(*)(const tstring&))&forLua::localizeString)
 		,
-		luabind::def("localizeString", &(StyleString(*)(const tstring&, std::map<tstring, StyleString > & ))forLua::localizeString)
+		luabind::def("localizeString", (StyleString(*)(const tstring&, std::map<tstring, StyleString>&))&forLua::localizeString)
 		,
 		SYSTEMMESSAGELUABINDDEF(isExistStoryMessage),
 		SYSTEMMESSAGELUABINDDEF(isExistLocalizedMessage),

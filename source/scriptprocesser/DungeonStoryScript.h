@@ -14,7 +14,6 @@ protected:
 	//std::map<tstring, pluaString> 
 public:
 	friend class std::vector<DungeonStoryScript_LuaEnvironment>;
-protected:
 	DungeonStoryScript_LuaEnvironment();
 public:
 	DungeonStoryScript_LuaEnvironment(::std::basic_string<LuaString> name);

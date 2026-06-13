@@ -598,7 +598,7 @@ int cDrink::カクテルレシピから削除()
 
 #define DEF_DrinkAttributeExpresstions(str) \
 if(属性.count(落ち物属性::str)){\
-explanations.back() += g_Lang(_T(#str)_T("Expresstions"));}
+explanations.back() += g_Lang(_T(#str) _T("Expresstions"));}
 
 
 void cDrink::longExplanationExtraBase(std::vector<StyleString> &explanations)
