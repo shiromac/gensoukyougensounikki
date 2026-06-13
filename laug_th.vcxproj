@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -20,14 +20,15 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset Condition="'$(PlatformToolset)'==''">v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset Condition="'$(PlatformToolset)'==''">v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -35,6 +36,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="BuildPaths">
+    <ThirdPartyRoot Condition="'$(ThirdPartyRoot)'==''">$(ProjectDir)..\</ThirdPartyRoot>
+    <LuaRoot Condition="'$(LuaRoot)'==''">$(ThirdPartyRoot)lua5.1\</LuaRoot>
+    <LuabindRoot Condition="'$(LuabindRoot)'==''">$(ThirdPartyRoot)luabind-0.9.1\</LuabindRoot>
+    <D3DXIncludeDir Condition="'$(D3DXIncludeDir)'=='' and '$(DXSDK_DIR)'!=''">$(DXSDK_DIR)Include\</D3DXIncludeDir>
+    <D3DXLibDir Condition="'$(D3DXLibDir)'=='' and '$(DXSDK_DIR)'!=''">$(DXSDK_DIR)Lib\x86\</D3DXLibDir>
+  </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
@@ -43,10 +51,11 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\DataHDDall\program\laug_th\source\gameMainSystem;D:\DataHDDall\program\laug_th\source\gameMainSystem\filemanage;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)source;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);$(IncludePath)</IncludePath>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ggn_d</TargetName>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\DataHDDall\program\laug_th\Debug;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\DataHDDall\program\laug_th\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(D3DXLibDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(D3DXLibDir);$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)source;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,6 +70,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <CompileAsManaged>false</CompileAsManaged>
       <ProgramDataBaseFileName>$(IntDir)vc100.pdb</ProgramDataBaseFileName>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:libcmtd.lib  %(AdditionalOptions)</AdditionalOptions>
@@ -68,25 +78,23 @@
       <OutputFile>$(OutDir)ggn_d.exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>
-      </OptimizeReferences>
+      <OptimizeReferences></OptimizeReferences>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
-      <AssemblyDebug>
-      </AssemblyDebug>
-      <MapFileName>
-      </MapFileName>
+      <AssemblyDebug></AssemblyDebug>
+      <MapFileName></MapFileName>
+      <AdditionalLibraryDirectories>$(D3DXLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader></PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(ProjectDir)source;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
@@ -97,6 +105,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(D3DXLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -120,6 +129,54 @@
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Label="ThirdPartySource">
+    <ClCompile Include="$(LuaRoot)src\lapi.c" />
+    <ClCompile Include="$(LuaRoot)src\lauxlib.c" />
+    <ClCompile Include="$(LuaRoot)src\lbaselib.c" />
+    <ClCompile Include="$(LuaRoot)src\lcode.c" />
+    <ClCompile Include="$(LuaRoot)src\ldblib.c" />
+    <ClCompile Include="$(LuaRoot)src\ldebug.c" />
+    <ClCompile Include="$(LuaRoot)src\ldo.c" />
+    <ClCompile Include="$(LuaRoot)src\ldump.c" />
+    <ClCompile Include="$(LuaRoot)src\lfunc.c" />
+    <ClCompile Include="$(LuaRoot)src\lgc.c" />
+    <ClCompile Include="$(LuaRoot)src\linit.c" />
+    <ClCompile Include="$(LuaRoot)src\liolib.c" />
+    <ClCompile Include="$(LuaRoot)src\llex.c" />
+    <ClCompile Include="$(LuaRoot)src\lmathlib.c" />
+    <ClCompile Include="$(LuaRoot)src\lmem.c" />
+    <ClCompile Include="$(LuaRoot)src\loadlib.c" />
+    <ClCompile Include="$(LuaRoot)src\lobject.c" />
+    <ClCompile Include="$(LuaRoot)src\lopcodes.c" />
+    <ClCompile Include="$(LuaRoot)src\loslib.c" />
+    <ClCompile Include="$(LuaRoot)src\lparser.c" />
+    <ClCompile Include="$(LuaRoot)src\lstate.c" />
+    <ClCompile Include="$(LuaRoot)src\lstring.c" />
+    <ClCompile Include="$(LuaRoot)src\lstrlib.c" />
+    <ClCompile Include="$(LuaRoot)src\ltable.c" />
+    <ClCompile Include="$(LuaRoot)src\ltablib.c" />
+    <ClCompile Include="$(LuaRoot)src\ltm.c" />
+    <ClCompile Include="$(LuaRoot)src\lundump.c" />
+    <ClCompile Include="$(LuaRoot)src\lvm.c" />
+    <ClCompile Include="$(LuaRoot)src\lzio.c" />
+    <ClCompile Include="$(LuabindRoot)src\class.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\class_info.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\class_registry.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\class_rep.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\create_class.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\error.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\exception_handler.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\function.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\inheritance.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\link_compatibility.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\object_rep.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\open.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\pcall.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\scope.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\stack_content_by_name.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\weak_ref.cpp" />
+    <ClCompile Include="$(LuabindRoot)src\wrapper_base.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\cDrawingObject.cpp" />
@@ -568,6 +625,5 @@
     <ResourceCompile Include="laug_th.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>

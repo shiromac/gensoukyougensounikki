@@ -1,4 +1,4 @@
-﻿# laug_th / GGN public archive
+# laug_th / GGN public archive
 
 This branch is a public archival/reference branch for the `laug_th` project.
 
@@ -12,3 +12,7 @@ Before publishing or reusing anything from this repository, read:
 - `NOTICE.md`
 
 The project also depends on external SDKs/libraries that are not vendored here, including Boost, Lua 5.1, luabind 0.9.1, zlib, DirectX/DirectSound, and Windows platform SDK headers.
+
+## Build
+
+For the maintained Debug build and smoke-test workflow, see `BUILDING.md`.

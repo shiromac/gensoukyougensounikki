@@ -52,3 +52,4 @@ dictionary_save.dat
 # Large editable design sources
 *.psd
 *.sai
+packages/
