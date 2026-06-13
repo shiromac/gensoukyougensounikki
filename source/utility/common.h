@@ -7,7 +7,7 @@
 #ifdef _DEBUG
 	#define _UNRELEASE
 #endif
-#ifdef _LUADEBUG;
+#ifdef _LUADEBUG
 	#define _UNRELEASE
 #endif
 #else

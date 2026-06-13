@@ -51,6 +51,18 @@ The expected output is:
 Debug\ggn_d.exe
 ```
 
+For a distributable executable that reads runtime assets from the executable directory, build `Release|Win32`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\build-debug.ps1 -Configuration Release -RestoreNuGetDeps
+```
+
+The expected release output is:
+
+```text
+ggn.exe
+```
+
 ## Runtime assets
 
 The public branch does not include the large released sound packs. To run the built debug executable locally, copy these files from a released runtime into this repository:
@@ -88,3 +100,13 @@ powershell -ExecutionPolicy Bypass -File .\tools\run-smoke.ps1 -ExePath C:\path\
 ```
 
 Run this against a disposable copy if you do not want the executable to update `savedata` or `log` files in that runtime folder.
+
+## Release package
+
+After a successful Release build, create a binary package by pointing the package script at a released runtime that contains the packed `data`, `graphic`, `Language`, and `sound` assets:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\package-release.ps1 -RuntimeRoot "E:\path\to\released-runtime"
+```
+
+The package is written under `Release_Archive\ggn-1.0.5.0\` and `Release_Archive\ggn-1.0.5.0.zip`. These outputs are ignored by Git.

@@ -53,6 +53,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)source;$(ProjectDir)source\utility;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);$(IncludePath)</IncludePath>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ggn_d</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ggn</TargetName>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(D3DXLibDir);$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(D3DXLibDir);$(LibraryPath)</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)source;$(ProjectDir)source\utility;$(ProjectDir)source\gameMainSystem;$(ProjectDir)source\gameMainSystem\filemanage;$(LuaRoot)include;$(LuaRoot)src;$(LuabindRoot);$(BoostRoot);$(D3DXIncludeDir);$(IncludePath)</IncludePath>
@@ -90,7 +91,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BOOST_NO_RVALUE_REFERENCES;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_ARCHIVE;BOOST_NO_RVALUE_REFERENCES;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader></PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
@@ -100,7 +101,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>dxguid.lib;d3dx9.lib;d3d9.lib;dinput8.lib;LIBCMT.lib;lang_th_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;d3dx9.lib;d3d9.lib;dinput8.lib;LIBCMT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)ggn.exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
