@@ -15,6 +15,8 @@ Before publishing or reusing anything from this repository, read:
 - `LICENSE.md`
 - `NOTICE.md`
 
+Binary release packages may be unpacked to run the game, but the packed runtime assets must not be extracted, redistributed, or reused as standalone sound, music, image, texture, script, or data materials.
+
 The project also depends on external SDKs/libraries that are not vendored here, including Boost, Lua 5.1, luabind 0.9.1, zlib, DirectX/DirectSound, and Windows platform SDK headers.
 
 ## Build

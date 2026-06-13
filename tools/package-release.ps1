@@ -100,7 +100,8 @@ $releaseText = @(
     "Packaged: $((Get-Date).ToString("yyyy-MM-dd HH:mm:ss zzz"))",
     "",
     "Run ggn.exe to start the game.",
-    "Large runtime data/audio files are packaged here for local distribution and are not committed to the public source branch."
+    "Large runtime data/audio files are packaged here for local distribution and are not committed to the public source branch.",
+    "You may unpack this ZIP to run the game. Do not extract, redistribute, or reuse packed audio, graphics, scripts, scenarios, or data files as standalone material assets."
 )
 Set-Content -LiteralPath (Join-Path $packageDir "RELEASE.txt") -Value $releaseText -Encoding UTF8
 

@@ -59,6 +59,8 @@ The original bundled manual and the released readme credited the following creat
 
 Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release.
 
+Maintainer note (`2026-06-14`): this project has a prior commercial release history, and the maintainer states that rights-problematic audio files were not used in the released project. This statement supports distributing the audio packs only as part of the playable game package; it does not grant permission to extract or reuse audio files as standalone sound materials.
+
 Large audio files are not included in this public branch. The credit is retained because the original manual listed it and older/private builds may have used those materials.
 
 ### Audio redistribution audit notes
@@ -81,7 +83,7 @@ Confirmed public-source exact matches (`2026-06-14`): 11 packed sound-effect fil
 
 The current `ザ・マッチメイカァズ2nd` material page describes the materials as usable for paid or unpaid works, with no permission-contact or copyright-display requirement, while prohibiting redistribution of the material files themselves as standalone material.
 
-Additional metadata concern: `swing1034.wav`, `swing1038.wav`, and `swing1058.wav` contain embedded metadata referencing `Crypton Future Media, Inc.`, `Sonicwire Sound Archiver`, and `http://sonicwire.com`. Do not publicly redistribute an audio-included package until the applicable Sonicwire/Crypton license or permission for these embedded sound effects has been confirmed, or these files have been removed/replaced.
+Additional metadata note: `swing1034.wav`, `swing1038.wav`, and `swing1058.wav` contain embedded metadata referencing `Crypton Future Media, Inc.`, `Sonicwire Sound Archiver`, and `http://sonicwire.com`. The maintainer recalls editing/pitch-shifting sound-effect material and states that the commercial release did not use rights-problematic audio. Keep this note for audit traceability; do not distribute extracted WAV files or treat the packed audio as a reusable material library.
 
 ### Material sites credited by the original manual
 
