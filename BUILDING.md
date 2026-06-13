@@ -49,6 +49,24 @@ The expected output is:
 Debug\ggn_d.exe
 ```
 
+## Runtime assets
+
+The public branch does not include the large released sound packs. To run the built debug executable locally, copy these files from a released runtime into this repository:
+
+```text
+sound\data1
+sound\data2
+```
+
+For the recovered maintenance machine, these were copied from:
+
+```text
+E:\2025D\games\ggn\幻想郷幻想日記\sound\data1
+E:\2025D\games\ggn\幻想郷幻想日記\sound\data2
+```
+
+Those files are ignored by Git and should not be committed. Debug startup also uses existing packed graphics/script data by default, so running the game does not rewrite `graphic\graphicpack` or generate `Packed_*.id.cdat` files unless repacking macros are enabled intentionally.
+
 ## Smoke test
 
 After building:
@@ -57,7 +75,7 @@ After building:
 powershell -ExecutionPolicy Bypass -File .\tools\run-smoke.ps1
 ```
 
-The smoke test starts an executable, waits a few seconds, and treats an immediate exit as a failure. By default it stops the process after the check. Use `-KeepRunning` to leave the game window open.
+The smoke test starts an executable, waits a few seconds, and treats an immediate exit or non-responding window as a failure. By default it stops the process after the check. Use `-KeepRunning` to leave the game window open.
 
 Debug builds run from `Debug\` and use `..\data`, `..\graphic`, `..\Language`, and `..\sound` through the existing `_EXELOCATION` setting.
 

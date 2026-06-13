@@ -57,6 +57,11 @@ int cScriptReader::load(void)
 }
 int cScriptReader::loadAndpacked(void)
 {
+#ifndef GGN_REPACK_SCRIPT_ON_START
+	int error = loadpacked();
+	if(error == SUCCESS) return SUCCESS;
+	return load();
+#else
 	int error = 0;
 	if((error = load()) != SUCCESS)
 	{//ÉçÅ[Éhé∏îs
@@ -76,6 +81,7 @@ int cScriptReader::loadAndpacked(void)
 	}
 
 	return SUCCESS;
+#endif
 }
 
 int cScriptReader::savepacked(void)

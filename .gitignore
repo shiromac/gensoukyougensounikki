@@ -35,6 +35,10 @@ savedata/
 player.dat
 config.dat
 dictionary_save.dat
+sound/data1
+sound/data2
+data/Packed_*.id.cdat
+graphic/Packed_*.id.cdat
 
 # Backups, conflict leftovers, temporary files
 *.bak
