@@ -7,7 +7,7 @@ It is intentionally conservative: items with unclear redistribution permission s
 
 - Repository/project name: `gensoukyougensounikki` / GGN public archive. Released product name: `幻想郷幻想日記`.
 - Current public distribution version: `1.0.5.0` (`2026-06-13`).
-- The original source code and build/package scripts are licensed under the MIT License. Game assets, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
+- The original source code and build/package scripts are licensed under the MIT License. Game assets, BGM/music, sound effects, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
 - This is an unofficial Touhou Project fan work. It is not official, not affiliated with Team Shanghai Alice, and not endorsed by Team Shanghai Alice or ZUN.
 - Touhou Project characters, settings, and related intellectual property belong to Team Shanghai Alice / ZUN.
 - The public branch is intended to exclude extracted official assets and private/build artifacts. If any such material is found, remove it before publishing.
@@ -58,7 +58,7 @@ The original bundled manual and the released readme credited the following creat
 - 霊屋 倭 様 (sound effects; credited by the online manual)
 - Music with Myuu, http://www.ne.jp/asahi/music/myuu/
 
-Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release.
+Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator for distribution as part of this playable game package. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release. BGM/music is not MIT-licensed and must not be extracted, redistributed, reused, or repurposed for any other project, video, stream, soundtrack, asset pack, or other purpose.
 
 Maintainer note (`2026-06-14`): this project has a prior commercial release history, and the maintainer states that rights-problematic audio files were not used in the released project. This statement supports distributing the audio packs only as part of the playable game package; it does not grant permission to extract or reuse audio files as standalone sound materials.
 

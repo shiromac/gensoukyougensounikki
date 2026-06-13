@@ -2,9 +2,9 @@
 
 The original source code and build/package scripts in this repository are licensed under the MIT License, unless a file contains a different license notice.
 
-This license does not grant rights to Touhou Project characters, settings, trademarks, third-party libraries, third-party source files with their own notices, music, sound effects, graphics, textures, scenarios, scripts, packed game data, or other non-code assets. Those remain under their own licenses, terms, and creator rights. See `NOTICE.md`.
+This license does not grant rights to Touhou Project characters, settings, trademarks, third-party libraries, third-party source files with their own notices, BGM/music, sound effects, graphics, textures, scenarios, scripts, packed game data, or other non-code assets. Those remain under their own licenses, terms, and creator rights. See `NOTICE.md`.
 
-Binary release packages may be unpacked to install and run the game. They do not grant permission to extract, republish, redistribute, or reuse packed audio, graphics, scenario, script, or data files as standalone material assets. In particular, do not unpack or convert files such as `sound/data1`, `sound/data2`, `graphic/graphicpack`, or `data/Packed_*.id.cdat` for use as a sound-effect, music, image, texture, script, or data material library.
+Binary release packages may be unpacked to install and run the game. They do not grant permission to extract, republish, redistribute, or reuse packed audio, graphics, scenario, script, or data files as standalone material assets. In particular, do not unpack or convert files such as `sound/data1`, `sound/data2`, `graphic/graphicpack`, or `data/Packed_*.id.cdat` for use as a BGM/music, sound-effect, image, texture, script, or data material library. BGM/music included in the release package may only be used as part of playing this game and must not be used for any other project, video, stream, soundtrack, asset pack, or other purpose.
 
 ## MIT License
 

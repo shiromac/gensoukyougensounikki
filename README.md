@@ -10,14 +10,14 @@ It has been prepared for publication by removing private e-mail addresses, build
 
 This repository is an unofficial Touhou Project fan work. It is not affiliated with or endorsed by Team Shanghai Alice or ZUN.
 
-The original source code and build/package scripts are licensed under the MIT License. Game assets, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
+The original source code and build/package scripts are licensed under the MIT License. Game assets, BGM/music, sound effects, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
 
 Before publishing or reusing anything from this repository, read:
 
 - `LICENSE.md`
 - `NOTICE.md`
 
-Binary release packages may be unpacked to run the game, but the packed runtime assets must not be extracted, redistributed, or reused as standalone sound, music, image, texture, script, or data materials.
+Binary release packages may be unpacked to run the game, but the packed runtime assets must not be extracted, redistributed, or reused as standalone BGM/music, sound, image, texture, script, or data materials. Included BGM/music may only be used as part of playing this game.
 
 The project also depends on external SDKs/libraries that are not vendored here, including Boost, Lua 5.1, luabind 0.9.1, zlib, DirectX/DirectSound, and Windows platform SDK headers.
 
