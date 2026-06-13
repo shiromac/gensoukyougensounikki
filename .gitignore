@@ -1,0 +1,54 @@
+# Build outputs
+Debug/
+Release/
+Release_Archive/
+luaDebug/
+luaDebug_Archive/
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.exe
+*.dll
+*.lib
+*.res
+*.manifest
+*.dep
+
+# Visual Studio and local IDE state
+*.suo
+*.ncb
+*.aps
+*.user
+*.deuser
+.vs/
+ipch/
+Thumbs.db
+
+# Logs and runtime data
+log/
+logs/
+*.log
+savedata/
+*_save.dat
+*ranking.dat
+player.dat
+config.dat
+dictionary_save.dat
+
+# Backups, conflict leftovers, temporary files
+*.bak
+*.rej
+*.mine
+*.r[0-9]*
+*.tmp
+*.lzh
+*.zip
+*.7z
+*.rar
+~$*
+.~lock*#
+
+# Large editable design sources
+*.psd
+*.sai
