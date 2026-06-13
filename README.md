@@ -1,6 +1,6 @@
-# laug_th / GGN public archive
+# gensoukyougensounikki / GGN public archive
 
-This branch is a public archival/reference branch for the `laug_th` project.
+This branch is a public archival/reference branch for `幻想郷幻想日記` (`gensoukyougensounikki`).
 
 Current public distribution version: `1.0.5.0` (`2026-06-13`).
 
