@@ -10,6 +10,8 @@ It has been prepared for publication by removing private e-mail addresses, build
 
 This repository is an unofficial Touhou Project fan work. It is not affiliated with or endorsed by Team Shanghai Alice or ZUN.
 
+The original source code and build/package scripts are licensed under the MIT License. Game assets, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
+
 Before publishing or reusing anything from this repository, read:
 
 - `LICENSE.md`

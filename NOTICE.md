@@ -7,6 +7,7 @@ It is intentionally conservative: items with unclear redistribution permission s
 
 - Repository/project name: `gensoukyougensounikki` / GGN public archive. Released product name: `幻想郷幻想日記`.
 - Current public distribution version: `1.0.5.0` (`2026-06-13`).
+- The original source code and build/package scripts are licensed under the MIT License. Game assets, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
 - This is an unofficial Touhou Project fan work. It is not official, not affiliated with Team Shanghai Alice, and not endorsed by Team Shanghai Alice or ZUN.
 - Touhou Project characters, settings, and related intellectual property belong to Team Shanghai Alice / ZUN.
 - The public branch is intended to exclude extracted official assets and private/build artifacts. If any such material is found, remove it before publishing.
