@@ -3,6 +3,8 @@
 The maintained build target for this public branch is `Debug|Win32`.
 `Release|Win32` is historical and still references release-only packaging/library assumptions that are not part of the public archive.
 
+Current public distribution version: `1.0.5.0` (`2026-06-13`).
+
 ## Prerequisites
 
 Install these on the build machine:
@@ -23,7 +25,7 @@ This local archive already has `../lua5.1` and `../luabind-0.9.1`; they are exte
 
 ## Known released runtime
 
-The released runtime checked during archive preparation identifies as `幻想郷幻想日記` / `ggn.exe` version `1.0.4.0`, with release notes dated `2014-12-21`.
+The historical released runtime checked during archive preparation identifies as `幻想郷幻想日記` / `ggn.exe` version `1.0.4.0`, with release notes dated `2014-12-21`.
 
 That release used packed runtime data: `data/Packed_*.id.cdat`, `graphic/graphicpack`, `sound/data1`, `sound/data2`, and `Language/Default`. The maintained public build target is still `Debug|Win32`, which runs from `Debug\` and reads the source tree through `..\data`, `..\graphic`, `..\Language`, and `..\sound`. Full `Release_Archive` packaging is historical and is not reconstructed by the current script.
 

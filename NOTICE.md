@@ -6,6 +6,7 @@ It is intentionally conservative: items with unclear redistribution permission s
 ## Project notice
 
 - Repository/project name: `laug_th` / GGN public archive. Released product name: `幻想郷幻想日記`.
+- Current public distribution version: `1.0.5.0` (`2026-06-13`).
 - This is an unofficial Touhou Project fan work. It is not official, not affiliated with Team Shanghai Alice, and not endorsed by Team Shanghai Alice or ZUN.
 - Touhou Project characters, settings, and related intellectual property belong to Team Shanghai Alice / ZUN.
 - The public branch is intended to exclude extracted official assets and private/build artifacts. If any such material is found, remove it before publishing.
@@ -19,6 +20,8 @@ Relevant Touhou Project references:
 ## Released package reference
 
 The released binary used as an audit reference identifies as `幻想郷幻想日記` / `ggn.exe` with FileVersion/ProductVersion `1.0.4.0`. Its release notes list `1ST 1.0.4.0` dated `2014-12-21`.
+
+The new public distribution version cut from this branch is `1.0.5.0`, dated `2026-06-13`.
 
 The released runtime used packed data and audio files such as `data/Packed_*.id.cdat`, `graphic/graphicpack`, `sound/data1`, and `sound/data2`, plus the `Language` directory. This public branch intentionally excludes generated binaries, save data, logs, and large audio packs. The released readme also states that redistributing data without permission from rights holders is prohibited.
 
