@@ -1,24 +1,39 @@
-﻿# Notice
+# Notice
 
 This file records copyright, attribution, and license notices currently known for the public branch.
 It is intentionally conservative: items with unclear redistribution permission should be removed from the public branch instead of treated as licensed.
 
 ## Project notice
 
-- Repository/project name: `laug_th` / GGN public archive.
+- Repository/project name: `laug_th` / GGN public archive. Released product name: `幻想郷幻想日記`.
 - This is an unofficial Touhou Project fan work. It is not official, not affiliated with Team Shanghai Alice, and not endorsed by Team Shanghai Alice or ZUN.
 - Touhou Project characters, settings, and related intellectual property belong to Team Shanghai Alice / ZUN.
 - The public branch is intended to exclude extracted official assets and private/build artifacts. If any such material is found, remove it before publishing.
-- Historical documents in the original project identify `@N-Factory`, `白mac`, and contributors as project creators/contributors.
+- Historical documents and the released readme identify `@N-Factory`, `白mac`, and contributors as project creators/contributors.
 
 Relevant Touhou Project references:
 
 - Official Touhou Project fan content guidelines: https://touhou-project.news/guidelines_en/
 - Team Shanghai Alice / ZUN site referenced by the original manual: http://www16.big.or.jp/~zun/
 
-## Credits recovered from the original manual
+## Released package reference
 
-The original bundled manual credited the following creators and sites. These credits are preserved here for attribution and audit purposes. They do not grant additional reuse rights.
+The released binary used as an audit reference identifies as `幻想郷幻想日記` / `ggn.exe` with FileVersion/ProductVersion `1.0.4.0`. Its release notes list `1ST 1.0.4.0` dated `2014-12-21`.
+
+The released runtime used packed data and audio files such as `data/Packed_*.id.cdat`, `graphic/graphicpack`, `sound/data1`, and `sound/data2`, plus the `Language` directory. This public branch intentionally excludes generated binaries, save data, logs, and large audio packs. The released readme also states that redistributing data without permission from rights holders is prohibited.
+
+## Credits recovered from the original manual and released readme
+
+The original bundled manual and the released readme credited the following creators and sites. These credits are preserved here for attribution and audit purposes. They do not grant additional reuse rights.
+
+### Project staff credited by the released readme
+
+- @N-Factory, http://ato-nfactory.jp/
+- Planning: 白mac
+- Programming: 白mac
+- Programming cooperation: spk, 霊屋 倭
+- Graphics: 白mac, overx
+- Balance adjustment: 霊屋 倭, まやん
 
 ### Graphics and artwork contributors
 
@@ -33,7 +48,8 @@ The original bundled manual credited the following creators and sites. These cre
 
 ### Music and sound contributors
 
-- KGM 様
+- KGM 様 (music)
+- 山可祢 様 (sound effects)
 - Music with Myuu, http://www.ne.jp/asahi/music/myuu/
 
 Large audio files are not included in this public branch. The credit is retained because the original manual listed it and older/private builds may have used those materials.
