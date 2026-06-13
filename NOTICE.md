@@ -52,12 +52,36 @@ The original bundled manual and the released readme credited the following creat
 ### Music and sound contributors
 
 - KGM 様 (music)
-- 山可祢 様 (sound effects)
+- 山可祢 様 (sound effects; credited by the released readme)
+- 白mac 様 (sound effects; credited by the online manual)
+- 霊屋 倭 様 (sound effects; credited by the online manual)
 - Music with Myuu, http://www.ne.jp/asahi/music/myuu/
 
 Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release.
 
 Large audio files are not included in this public branch. The credit is retained because the original manual listed it and older/private builds may have used those materials.
+
+### Audio redistribution audit notes
+
+The released runtime's `sound/data1` pack contains 122 sound-effect entries. Header inspection confirmed that `sound/data1` is separate from the BGM pack `sound/data2`.
+
+Confirmed public-source exact matches (`2026-06-14`): 11 packed sound-effect files are byte-identical to files from `ザ・マッチメイカァズ2nd` old sound archive `se_old_pack00.zip`.
+
+- `kaminari.wav` <- `crash17.wav`
+- `mob29.wav` <- `gun24.wav`
+- `hitlight.wav` <- `hit33.wav`
+- `swing1031.wav` <- `hit_p07.wav`
+- `trap.wav` <- `kachi17.wav`
+- `mob32.wav` <- `metal25_a.wav`
+- `powerup.wav` <- `power32.wav`
+- `mob31.wav` <- `puu05.wav`
+- `powerdown.wav` <- `puu23.wav`
+- `jump.wav` <- `pyoro35_c.wav`
+- `swing27.wav` <- `swing27.wav`
+
+The current `ザ・マッチメイカァズ2nd` material page describes the materials as usable for paid or unpaid works, with no permission-contact or copyright-display requirement, while prohibiting redistribution of the material files themselves as standalone material.
+
+Additional metadata concern: `swing1034.wav`, `swing1038.wav`, and `swing1058.wav` contain embedded metadata referencing `Crypton Future Media, Inc.`, `Sonicwire Sound Archiver`, and `http://sonicwire.com`. Do not publicly redistribute an audio-included package until the applicable Sonicwire/Crypton license or permission for these embedded sound effects has been confirmed, or these files have been removed/replaced.
 
 ### Material sites credited by the original manual
 
