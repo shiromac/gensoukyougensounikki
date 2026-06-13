@@ -55,6 +55,14 @@ After building:
 powershell -ExecutionPolicy Bypass -File .\tools\run-smoke.ps1
 ```
 
-The smoke test starts `Debug\ggn_d.exe`, waits a few seconds, and treats an immediate exit as a failure. By default it stops the process after the check. Use `-KeepRunning` to leave the game window open.
+The smoke test starts an executable, waits a few seconds, and treats an immediate exit as a failure. By default it stops the process after the check. Use `-KeepRunning` to leave the game window open.
 
 Debug builds run from `Debug\` and use `..\data`, `..\graphic`, `..\Language`, and `..\sound` through the existing `_EXELOCATION` setting.
+
+You can also smoke-test an existing copied runtime without changing this repository:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\run-smoke.ps1 -ExePath C:\path\to\ggn.exe
+```
+
+Run this against a disposable copy if you do not want the executable to update `savedata` or `log` files in that runtime folder.
