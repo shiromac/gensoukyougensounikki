@@ -4108,6 +4108,7 @@ int cMob_ID_46::特殊攻撃効果(cValiableField& valiable)
 			&& sg_pDungeonSystem->キャラクター敵対判定(me(),pchara))
 		{
 			
+			GameIdiom::キャラの方を向く(me(),pchara);
 			pcDroping newpdrop = sg_pDungeonSystem->落ち物生成_設置なし(ValiableConstant4());
 			//一本
 			newpdrop->quality() = 0;

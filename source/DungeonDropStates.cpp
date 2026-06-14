@@ -526,7 +526,7 @@ int cDungeonSystem::‹­§‘•”õ(pcDroping pdrop, int part, int massage)
 			pSpe->unequip();
 		}
 		
-		pSpe->equip(pEqu->Holder(),part);
+		pSpe->equip(pSpe->Holder(),part);
 
 	}
 	else

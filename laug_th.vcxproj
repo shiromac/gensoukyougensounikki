@@ -103,12 +103,14 @@
       <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>dxguid.lib;d3dx9.lib;d3d9.lib;dinput8.lib;LIBCMT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)ggn.exe</OutputFile>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(D3DXLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)ggn.map</MapFileName>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -90,6 +90,37 @@ $luabindRoot = Join-Path $ThirdPartyRoot "luabind-0.9.1"
 if (-not (Test-Path -LiteralPath (Join-Path $luaRoot "include\lua.h"))) { Fail "Lua 5.1 headers were not found: $luaRoot" }
 if (-not (Test-Path -LiteralPath (Join-Path $luabindRoot "luabind\luabind.hpp"))) { Fail "luabind 0.9.1 headers were not found: $luabindRoot" }
 
+function Ensure-LuabindMsvcNoexceptPatch($luabindRootPath) {
+    $header = Join-Path $luabindRootPath "luabind\detail\call_function.hpp"
+    if (-not (Test-Path -LiteralPath $header)) { Fail "luabind call_function.hpp was not found: $header" }
+
+    $text = Get-Content -LiteralPath $header -Raw
+    if ($text -match "~proxy_function_void_caller\(\)\s+noexcept\(false\)") {
+        return
+    }
+
+    $old = @"
+				~proxy_function_void_caller()
+				{
+"@
+    $new = @"
+#if defined(_MSC_VER) && _MSC_VER >= 1900
+				~proxy_function_void_caller() noexcept(false)
+#else
+				~proxy_function_void_caller()
+#endif
+				{
+"@
+    if (-not $text.Contains($old)) {
+        Fail "luabind call_function.hpp did not match the expected 0.9.1 layout. Apply the MSVC noexcept compatibility patch manually: $header"
+    }
+
+    [System.IO.File]::WriteAllText($header, $text.Replace($old, $new), [System.Text.Encoding]::ASCII)
+    Write-Host "Applied luabind 0.9.1 MSVC noexcept compatibility patch: $header"
+}
+
+Ensure-LuabindMsvcNoexceptPatch $luabindRoot
+
 if ($BoostRoot -and -not (Test-BoostRoot $BoostRoot)) {
     Fail "BoostRoot is incomplete: $BoostRoot"
 }

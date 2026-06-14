@@ -1298,7 +1298,10 @@ bool cCondition::‹ó• cConditionChip::process()
 			HP_oddstock = recover_d - recover;
 
 
-			sg_pDungeonSystem->‰ñ•œ—v¿(self(),recover,false);
+			if(self()->MHP > self()->HP)
+			{
+				sg_pDungeonSystem->‰ñ•œ—v¿(self(),recover,false);
+			}
 
 		}
 		

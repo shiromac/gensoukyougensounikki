@@ -3,6 +3,19 @@
 #include "cDrawingObject.h"
 
 
+namespace
+{
+void SetPointSampler(IDirect3DDevice9* pDev, DWORD sampler)
+{
+	pDev->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+	pDev->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+	pDev->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	pDev->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+	pDev->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+}
+}
+
+
 //-------------------------------------------------
 //cDrawableObject
 //-------------------------------------------------
@@ -58,6 +71,7 @@ int cDrawableObject::SetRenderMode(IDirect3DDevice9 *pDev)
 	pDev->SetFVF( VERTEX2D_COLORED::FVF );
 
 	pDev->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+	SetPointSampler(pDev, 0);
 
 
 
@@ -295,6 +309,7 @@ int cDrawingObject::EasyDraw(IDirect3DDevice9 *pDev)
 	pDev->SetFVF( VERTEX2D_COLORED::FVF );
 
 	pDev->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+	SetPointSampler(pDev, 0);
 
 
 	

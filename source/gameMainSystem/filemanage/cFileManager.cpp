@@ -11,6 +11,24 @@ const int CHARCODE_UNKNOWN = 0;
 const int CHARCODE_SJIS = 1;
 const int CHARCODE_UNICODE_BE = 2;
 const int CHARCODE_UNICODE_LE = 3;
+#ifdef UNICODE
+static tstring SjisToTString(const string& line)
+{
+	if(line.empty()) return tstring();
+
+	int length = ::MultiByteToWideChar(932, 0, line.c_str(), static_cast<int>(line.size()), NULL, 0);
+	if(length <= 0)
+	{
+		CStringW fallback(line.c_str());
+		return fallback.GetString();
+	}
+
+	tstring output;
+	output.resize(length);
+	::MultiByteToWideChar(932, 0, line.c_str(), static_cast<int>(line.size()), &output[0], length);
+	return output;
+}
+#endif
 
 //#include <atlstr.h>
 //using namespace ATL;
@@ -23,8 +41,40 @@ cFileManager::~cFileManager(void)
 {
 }
 
+static void EnsureParentDirectory(const tstring& filename)
+{
+	size_t pos = filename.find_last_of(_T("\\/"));
+	if(pos == tstring::npos) return;
+
+	tstring directory = filename.substr(0, pos);
+	if(directory.empty()) return;
+
+	for(size_t i = 0; i < directory.size(); i++)
+	{
+		if(directory[i] == _T('/')) directory[i] = _T('\\');
+	}
+
+	size_t start = 0;
+	while(start < directory.size())
+	{
+		size_t next = directory.find(_T('\\'), start);
+		if(next == tstring::npos) break;
+		if(next > 0)
+		{
+			tstring partial = directory.substr(0, next);
+			if(!(partial.size() == 2 && partial[1] == _T(':')))
+			{
+				::CreateDirectory(partial.c_str(), NULL);
+			}
+		}
+		start = next + 1;
+	}
+
+	::CreateDirectory(directory.c_str(), NULL);
+}
 int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<SByte>& data)
 {//ƒoƒCƒiƒŠ
+	EnsureParentDirectory(filename);
 	ofstream ofs(filename.c_str(), flag);
 	
 	if(ofs)
@@ -100,6 +150,7 @@ int cFileManager::saveEncryptFile(const tstring& filename, std::vector<SByte>& d
 		truefilename += _T(".cdat");
 	}
 
+	EnsureParentDirectory(truefilename);
 	ofstream ofs(truefilename.c_str(), flag);
 
 	SByte checksum = 0;
@@ -198,6 +249,7 @@ int cFileManager::loadEncryptFile(const tstring& filename, std::vector<SByte>& d
 
 int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<tstring>& data)
 {
+	EnsureParentDirectory(filename);
 	oftstream ofs(filename.c_str(), flag);
 	
 	if(ofs)
@@ -386,8 +438,7 @@ int cFileManager::decode_SJIS(const std::vector<SByte>& data, std::vector<tstrin
 			{
 				line.push_back('\n');
 #ifdef UNICODE
-				CStringW str(line.c_str());
-				stringdata.push_back(str.GetString());
+				stringdata.push_back(SjisToTString(line));
 #else
 				stringdata.push_back(line);
 #endif
@@ -401,8 +452,7 @@ int cFileManager::decode_SJIS(const std::vector<SByte>& data, std::vector<tstrin
 			{
 				line.push_back('\n');
 #ifdef UNICODE
-				CStringW str(line.c_str());
-				stringdata.push_back(str.GetString());
+				stringdata.push_back(SjisToTString(line));
 #else
 				stringdata.push_back(line);
 #endif

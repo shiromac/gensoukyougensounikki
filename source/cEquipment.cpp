@@ -88,7 +88,7 @@ int cEquipment::値段補正値()
 	{
 		value += includedItem[i]->値段基礎値()/2;
 	}
-	return value;
+	return max(0,value);
 }
 int cEquipment::厄ポイント値段補正値()
 {
@@ -103,7 +103,7 @@ int cEquipment::厄ポイント値段補正値()
 	{
 		value += includedItem[i]->厄ポイント値段基礎値();
 	}
-	return value;
+	return max(0,value);
 }
 
 double cEquipment::効果時神力切れ確率()

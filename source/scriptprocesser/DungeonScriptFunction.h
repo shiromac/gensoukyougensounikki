@@ -677,11 +677,11 @@ public:
 	};
 
 	//iterator
-	static LuaVector_iterator& iterator_increment(LuaVector_iterator itr)
+	static LuaVector_iterator iterator_increment(LuaVector_iterator itr)
 	{
 		return ++itr;
 	};
-	static LuaVector_iterator& iterator_decrement(LuaVector_iterator itr)
+	static LuaVector_iterator iterator_decrement(LuaVector_iterator itr)
 	{
 		return --itr;
 	};

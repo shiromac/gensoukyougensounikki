@@ -4,6 +4,18 @@
 #include "../utility/cColor.h"
 #include <d3d9.h>
 
+namespace
+{
+void SetScreenPointSampler(IDirect3DDevice9* pDevice, DWORD sampler)
+{
+	pDevice->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+	pDevice->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+	pDevice->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+	pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+}
+}
+
 cScreen::cScreen(void)
 {
 }
@@ -73,6 +85,8 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 	vp.MaxZ = 1.0f;
 	//ビューポートセット
 	pDevice->SetViewport(&vp);
+	SetScreenPointSampler(pDevice, 0);
+	SetScreenPointSampler(pDevice, 1);
 
 	/*
 	//クリア
@@ -86,7 +100,7 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 
 	cRectObj tex_map;
 
-	tex_map.setLTRB(0,0,(double)(SCREEN_X+0.5)/TEXTURESIZE,(double)(SCREEN_Y+0.5)/TEXTURESIZE);
+	tex_map.setLTRB(0.5 / TEXTURESIZE, 0.5 / TEXTURESIZE, (double)(SCREEN_X+0.5)/TEXTURESIZE, (double)(SCREEN_Y+0.5)/TEXTURESIZE);
 	float tmLeft = (float)tex_map.Left();
 	float tmTop = (float)tex_map.Top();
 	float tmRight = (float)tex_map.Right();
@@ -423,6 +437,8 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		vp.MaxZ = 1.0f;
 		//ビューポートセット
 		pDevice->SetViewport(&vp);
+		SetScreenPointSampler(pDevice, 0);
+		SetScreenPointSampler(pDevice, 1);
 
 		//アルファモード設定
 		setAlphaMode(pDevice, m_MiniMode);
@@ -513,6 +529,8 @@ void cScreen::DebugDraw(IDirect3DDevice9* pDevice)
 	vp.MaxZ = 1.0f;
 	//ビューポートセット
 	pDevice->SetViewport(&vp);
+	SetScreenPointSampler(pDevice, 0);
+	SetScreenPointSampler(pDevice, 1);
 
 	double h = Height/3;
 

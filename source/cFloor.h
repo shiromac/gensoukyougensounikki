@@ -329,7 +329,7 @@ protected:
 public:
 	const double& playerExpPower(){return playerExpPower_;};
 protected:
-	int playerExpPower_;
+	double playerExpPower_;
 
 public:
 	const int& clearResultSkipFlag(){return clearResultSkipFlag_;};

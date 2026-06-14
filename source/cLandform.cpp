@@ -447,8 +447,11 @@ void cLandform::SetDecoration(dChipTexPos pos, int decorationID, int decorationl
 }
 void cLandform::DeleteDecorationConditionID(int decorationID)
 {
-	set<int>::iterator itr = find(decorationConditionID_.begin(),decorationConditionID_.end(),decorationID);
-	decorationConditionID_.erase(itr);
+	set<int>::iterator itr = decorationConditionID_.find(decorationID);
+	if(itr != decorationConditionID_.end())
+	{
+		decorationConditionID_.erase(itr);
+	}
 	int i;
 	for(i=0;i<LANDFORM_DECO_LAYERNUM;i++)
 	{

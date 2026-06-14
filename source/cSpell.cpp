@@ -852,6 +852,8 @@ int cSpell::装備要請(pcCharacter pchara, int part)
 
 int cSpell::装備_効果_通常(pcCharacter pchara, int part)
 {
+	if(pchara == NULL || part < 0 || part >= pchara->最大装備スペル数() || part >= SPELL_EQUIP_MAXNUM) return false;
+
 	int result = 1;
 
 	if(pchara->spellequipment[part] == NULL)
@@ -958,8 +960,8 @@ int cSpell::装備メッセージ定型(pcCharacter pchara, int part)
 //強制的に装備
 int cSpell::equip(pcCharacter pchara, int part)
 {
+	if(pchara == NULL || part < 0 || part >= pchara->最大装備スペル数() || part >= SPELL_EQUIP_MAXNUM) return false;
 
-	
 	pchara->spellequipment[part] = me();
 	weak_pEquiper = wpcCharacter(pchara);
 	装備箇所 = part;

@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.0.5.1",
+    [string]$Version = "1.0.5.2",
     [string]$RuntimeRoot,
     [string]$OutputRoot
 )
@@ -67,6 +67,9 @@ Copy-RequiredFile (Join-Path $repo "README.md") (Join-Path $packageDir "README.m
 Copy-RequiredFile (Join-Path $repo "LICENSE.md") (Join-Path $packageDir "LICENSE.md")
 Copy-RequiredFile (Join-Path $repo "NOTICE.md") (Join-Path $packageDir "NOTICE.md")
 
+New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "log") | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "savedata") | Out-Null
+
 New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "data") | Out-Null
 foreach ($name in @(
     "Packed_Chara.id.cdat",
@@ -82,6 +85,10 @@ foreach ($name in @(
 New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "graphic") | Out-Null
 Copy-RequiredFile (Join-Path (Join-Path $runtimeRootPath "graphic") "graphicpack") (Join-Path (Join-Path $packageDir "graphic") "graphicpack")
 Copy-RequiredFile (Join-Path (Join-Path $runtimeRootPath "graphic") "Packed_graphicpass.id.cdat") (Join-Path (Join-Path $packageDir "graphic") "Packed_graphicpass.id.cdat")
+Copy-RequiredDir (Join-Path (Join-Path $runtimeRootPath "graphic") "skin") (Join-Path (Join-Path $packageDir "graphic") "skin")
+Copy-RequiredFile (Join-Path $runtimeRootPath "graphic\skinについて.txt") (Join-Path $packageDir "graphic\skinについて.txt")
+# Keep loose effect textures as a fallback for lazily loaded packed textures.
+Copy-RequiredDir (Join-Path $repo "graphic\effect") (Join-Path $packageDir "graphic\effect")
 
 Copy-RequiredDir (Join-Path $runtimeRootPath "Language") (Join-Path $packageDir "Language")
 

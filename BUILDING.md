@@ -3,7 +3,7 @@
 The maintained build target for this public branch is `Debug|Win32`.
 `Release|Win32` is historical and still references release-only packaging/library assumptions that are not part of the public archive.
 
-Current public distribution version: `1.0.5.1` (`2026-06-14`).
+Current public distribution version: `1.0.5.2` (`2026-06-14`).
 
 ## Prerequisites
 
@@ -109,4 +109,4 @@ After a successful Release build, create a binary package by pointing the packag
 powershell -ExecutionPolicy Bypass -File .\tools\package-release.ps1 -RuntimeRoot "E:\path\to\released-runtime"
 ```
 
-The package is written under `Release_Archive\ggn-1.0.5.1\` and `Release_Archive\ggn-1.0.5.1.zip`. These outputs are ignored by Git.
+The package is written under `Release_Archive\ggn-1.0.5.2\` and `Release_Archive\ggn-1.0.5.2.zip`. These outputs are ignored by Git.

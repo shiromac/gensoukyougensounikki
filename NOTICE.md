@@ -6,7 +6,7 @@ It is intentionally conservative: items with unclear redistribution permission s
 ## Project notice
 
 - Repository/project name: `gensoukyougensounikki` / GGN public archive. Released product name: `幻想郷幻想日記`.
-- Current public distribution version: `1.0.5.1` (`2026-06-14`).
+- Current public distribution version: `1.0.5.2` (`2026-06-14`).
 - The original source code and build/package scripts are licensed under the MIT License. Game assets, BGM/music, sound effects, Touhou Project content, third-party materials, external libraries, and packed runtime data are not covered by that MIT grant.
 - This is an unofficial Touhou Project fan work. It is not official, not affiliated with Team Shanghai Alice, and not endorsed by Team Shanghai Alice or ZUN.
 - Touhou Project characters, settings, and related intellectual property belong to Team Shanghai Alice / ZUN.
@@ -22,7 +22,7 @@ Relevant Touhou Project references:
 
 The released binary used as an audit reference identifies as `幻想郷幻想日記` / `ggn.exe` with FileVersion/ProductVersion `1.0.4.0`. Its release notes list `1ST 1.0.4.0` dated `2014-12-21`.
 
-The current public distribution version cut from this branch is `1.0.5.1`, dated `2026-06-14`. It is rebuilt from the `1.0.4.0` release baseline, with public-source licensing/build/package fixes applied and later in-development gameplay/data changes excluded.
+The current public distribution version cut from this branch is `1.0.5.2`, dated `2026-06-14`. It is rebuilt from the `1.0.4.0` release baseline, with public-source licensing/build/package fixes applied and later in-development gameplay/data changes excluded.
 
 The released runtime used packed data and audio files such as `data/Packed_*.id.cdat`, `graphic/graphicpack`, `sound/data1`, and `sound/data2`, plus the `Language` directory. This public branch intentionally excludes generated binaries, save data, logs, and large audio packs. The released readme also states that redistributing data without permission from rights holders is prohibited.
 

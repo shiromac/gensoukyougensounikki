@@ -2,11 +2,11 @@
 
 This branch is a public archival/reference branch for `幻想郷幻想日記` (`gensoukyougensounikki`).
 
-Current public distribution version: `1.0.5.1` (`2026-06-14`).
+Current public distribution version: `1.0.5.2` (`2026-06-14`).
 
 Known historical released executable used as the recovery reference: `幻想郷幻想日記` / `ggn.exe` version `1.0.4.0` (`2014-12-21`).
 
-Version `1.0.5.1` is rebuilt from the `1.0.4.0` release baseline, with public-source licensing/build/package fixes applied and later in-development gameplay/data changes excluded.
+Version `1.0.5.2` is rebuilt from the `1.0.4.0` release baseline, with public-source licensing/build/package fixes applied and later in-development gameplay/data changes excluded.
 
 It has been prepared for publication by removing private e-mail addresses, build outputs, save data, large archives, and known unclear-license artifacts. The `temp` branch is a local backup of the original working tree and should not be pushed publicly.
 
