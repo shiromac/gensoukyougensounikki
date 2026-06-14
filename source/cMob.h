@@ -25,7 +25,7 @@ public:
 	virtual void naturalSpawnInit();
 
 	virtual void 配置処理();
-	virtual bool 雑魚属性(){return !isOverDrive();};
+	virtual bool 雑魚属性(){return true;};
 
 	virtual void CutIn(タイミング timing, cValiableField& valiable);
 	virtual unsigned int ShadowColor();
@@ -36,10 +36,6 @@ public:
 	//virtual tstring ShortNameSubBase();
 	//コンディション特殊能力
 	virtual void conditionprocess();
-
-protected:
-	virtual void settingInit_overdrive();
-
 protected:
 	virtual double baseAttackPower();
 	virtual double baseDefencePower();
@@ -65,12 +61,8 @@ public:
 	virtual int LvDown();
 
 	virtual int upMHP();
-	virtual int MaxholdNum();
-
-	virtual map<int,int> 死亡ドロップアイテムリスト();
 
 	virtual bool 死亡ドロップアイテムなし();
-	virtual vector<int> 死亡ドロップアイテムIDs();
 	virtual int 死亡ドロップアイテムID();
 	virtual bool 水上歩行();
 

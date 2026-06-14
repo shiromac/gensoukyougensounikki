@@ -24,15 +24,12 @@ public:
 public:
 	virtual ~caDamage(void);
 
-	virtual int preprocess(IDirect3DDevice9 *pDev);
 
 	virtual int process(IDirect3DDevice9 *pDev);
 	virtual int Init(pcAnimation me);
 
 	virtual bool isOnScreen();
 	int vi;
-
-	bool preprocessed;
 
 	pcCharacter pDamager;
 	int Damage;

@@ -176,7 +176,7 @@ int caFadeGotoDungeon::process(IDirect3DDevice9 *pDev)
 	}
 	else
 	{
-		sg_pDungeonSystem->GotoDungeon(DungeonID, savefileNum, privateFlags, savefileName);
+		sg_pDungeonSystem->GotoDungeon(DungeonID, privateFlags, savefileName);
 		mode_ = 1;
 	}
 

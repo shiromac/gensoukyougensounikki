@@ -277,7 +277,6 @@ public:
 
 	virtual void Init(pcDMMap selfpointer);
 	virtual void Reset();
-	virtual void ResetSub_Lands();
 
 	//**********************************************************
 	//‘æˆê‰ß’ö

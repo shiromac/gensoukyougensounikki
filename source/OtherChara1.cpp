@@ -12,7 +12,6 @@
 #include "ScriptDecodeFunction.h"
 #include "fireCommand.h"
 #include "cEquipment.h"
-#include "GameIdiom.h"
 
 #define DEF_COMMANDCLASS(name,deftext) \
 class cCommand##name## : public cCommand\
@@ -768,7 +767,7 @@ int cCommand_Uncurse::Action(IDirect3DDevice9 *pDev)
 		}
 	}
 
-	GameIdiom::呪術悪性異常状態治療要請(pchara);
+	sg_pDungeonSystem->呪術異常治療要請(pchara);
 
 	if(eff)
 	{
@@ -1246,49 +1245,58 @@ int cOtherChara_ID_2::TalkEvent()
 //--------------------------------------------------------------------
 DEF_COMMANDCLASS(_NitoriFactory, g_Lang(_T("ニトリ製作所")))
 	//virtual StyleString shortExplanationText();
-	virtual void didEndCommand(cCommand& caller);
-	enum {
-		delegateID_reinforce = 0,
-		delegateID_combine = 1,
+};
+DEF_COMMANDCLASS(_NitoriFactory_reinforce, g_Lang(_T("装備品を強化する")))
+	virtual StyleString shortExplanationText(){
+		cMoney money(cOtherChara_ID_5::強化資金());
+		std::map<tstring, StyleString > val;
+		val[_T("Money")] = money.caption();
+		return g_Lang(_T("装備品を強化するshortExplanationText"),val);
 	};
+	//virtual StyleString shortExplanationText();
 };
 DEF_COMMANDCLASS(_NitoriFactory_reinforce_item, _T("装備品を強化する->装備品名"))
 	//virtual StyleString shortExplanationText();
-	cCommand_NitoriFactory_reinforce_item(pcDroping item, int reinforce_fee, StyleString s):item_(item), reinforce_fee_(reinforce_fee){caption = s;};
+	cCommand_NitoriFactory_reinforce_item(pcDroping item, StyleString s):item_(item){caption = s;};
 	pcDroping item_;
-	int reinforce_fee_;
 	virtual pcDroping includeObjectiveDroping(pcDroping objectpdrop) {
 		if(objectpdrop->属性.count(落ち物属性::装備品)) {
 			return pcObjectiveDroping(new cObjectiveDroping( objectpdrop,
-					pcCommand(new cCommand_NitoriFactory_reinforce_item(objectpdrop, reinforce_fee_, objectpdrop->FullName()))));
+					pcCommand(new cCommand_NitoriFactory_reinforce_item(objectpdrop, objectpdrop->FullName()))));
 		}
 		return NULLDROP;
 	};
 };
+DEF_COMMANDCLASS(_NitoriFactory_combine, g_Lang(_T("アイテムを合成する")))
+	virtual StyleString shortExplanationText(){
+		cMoney money(cOtherChara_ID_5::合成資金());
+		std::map<tstring, StyleString > val;
+		val[_T("Money")] = money.caption();
+		return g_Lang(_T("アイテムを合成するshortExplanationText"),val);};
+	//virtual StyleString shortExplanationText();
+};
 DEF_COMMANDCLASS(_NitoriFactory_combine_item1, _T("アイテムを合成する->アイテム名１"))
 	//virtual StyleString shortExplanationText();
-	cCommand_NitoriFactory_combine_item1(int combine_fee, pcDroping item1, StyleString s):combine_fee_(combine_fee), item1_(item1){caption = s;};
+	cCommand_NitoriFactory_combine_item1(pcDroping item1, StyleString s):item1_(item1){caption = s;};
 	virtual pcDroping includeObjectiveDroping(pcDroping objectpdrop) {
 		return pcObjectiveDroping(new cObjectiveDroping( objectpdrop,
-			pcCommand(new cCommand_NitoriFactory_combine_item1(combine_fee_, objectpdrop, objectpdrop->FullName()))));
+			pcCommand(new cCommand_NitoriFactory_combine_item1(objectpdrop, objectpdrop->FullName()))));
 	};
 	pcDroping item1_;
-	int combine_fee_;
 };
 DEF_COMMANDCLASS(_NitoriFactory_combine_item1_item2, _T("アイテムを合成する->アイテム名１->アイテム名２"))
 	//virtual StyleString shortExplanationText();
-	cCommand_NitoriFactory_combine_item1_item2(int combine_fee, pcDroping item1, pcDroping item2, StyleString s):combine_fee_(combine_fee), item1_(item1),item2_(item2){caption = s;};
+	cCommand_NitoriFactory_combine_item1_item2(pcDroping item1, pcDroping item2, StyleString s):item1_(item1),item2_(item2){caption = s;};
 	virtual pcDroping includeObjectiveDroping(pcDroping objectpdrop) {
 		if(objectpdrop == item1_)
 		{
 			return NULLDROP;
 		}
 		return pcObjectiveDroping(new cObjectiveDroping( objectpdrop,
-			pcCommand(new cCommand_NitoriFactory_combine_item1_item2(combine_fee_, item1_, objectpdrop, objectpdrop->FullName()))));
+			pcCommand(new cCommand_NitoriFactory_combine_item1_item2(item1_, objectpdrop, objectpdrop->FullName()))));
 	};
 	pcDroping item1_;
 	pcDroping item2_;
-	int combine_fee_;
 };
 DEF_COMMANDCLASS(_NitoriFactory_remodeling, g_Lang(_T("装備品を改造する")))
 	virtual StyleString shortExplanationText(){return g_Lang(_T("装備品を改造するshortExplanationText"));};
@@ -1327,16 +1335,8 @@ int cCommand_NitoriFactory::Action(IDirect3DDevice9 *pDev)
 		pccl->Init(sg_pDungeonSystem->pDevice_D3D);
 		pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
 
-		pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_reinforce(cOtherChara_ID_5::強化資金(), g_Lang(_T("装備品を強化する")) ) );
-		pcommand->delegate_ = selfAsDelegate();
-		pcommand->delegateID_ = delegateID_reinforce;
-		pcsw->commandList.push_back(pcommand);
-
-		pcommand = pcCommand(new cCommand_NitoriFactory_combine(cOtherChara_ID_5::合成資金(),g_Lang(_T("アイテムを合成する")) ) );
-		pcommand->delegate_ = selfAsDelegate();
-		pcommand->delegateID_ = delegateID_combine;
-		pcsw->commandList.push_back(pcommand);
-		
+		pcsw->commandList.push_back(pcCommand(new cCommand_NitoriFactory_reinforce(g_Lang(_T("装備品を強化する")) ) ));
+		pcsw->commandList.push_back(pcCommand(new cCommand_NitoriFactory_combine(g_Lang(_T("アイテムを合成する")) ) ));
 		pcsw->commandList.push_back(pcCommand(new cCommand_NitoriFactory_remodeling(g_Lang(_T("装備品を改造する")) ) ));
 
 		int strsize = 0;
@@ -1362,20 +1362,12 @@ int cCommand_NitoriFactory::Action(IDirect3DDevice9 *pDev)
 	}
 	return true;
 }
-void cCommand_NitoriFactory::didEndCommand(cCommand& caller) {
-	if (caller.delegateID_ == delegateID_reinforce) {
-		cOtherChara_ID_5::ShopUsedSave();
-	}
-	else if (caller.delegateID_ == delegateID_combine) {
-		cOtherChara_ID_5::ShopUsedSave();
-	}
-}
 int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
 {
 	//----------------------------------
 	//強化
 	//----------------------------------
-	if(sg_pDungeonSystem->主人公お金所持量() < reinforce_fee_)
+	if(sg_pDungeonSystem->主人公お金所持量() < cOtherChara_ID_5::強化資金())
 	{
 		//資金不足
 		g_Langメッセージ(_T("ニトリ製作所資金不足メッセージ"),std::map<tstring, StyleString >());
@@ -1405,10 +1397,8 @@ int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
 		{
 			if(Objects[i]->属性.count(落ち物属性::装備品))
 			{
-				pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_reinforce_item(Objects[i], reinforce_fee_, Objects[i]->FullName()));
-				pcommand->delegate_ = selfAsDelegate();
 				pcladw->vpDroplist.back().push_back( pcObjectiveDroping(new cObjectiveDroping( Objects[i],
-					pcommand)));
+					pcCommand(new cCommand_NitoriFactory_reinforce_item(Objects[i], Objects[i]->FullName())))));
 			}
 
 			if(Objects[i]->内包落ち物対象可())
@@ -1420,10 +1410,8 @@ int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
 					pcDroping pdrop_include = Objects[i]->includedItem[k];
 					if(pdrop_include->属性.count(落ち物属性::装備品))
 					{
-						pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_reinforce_item(pdrop_include, reinforce_fee_, pdrop_include->FullName()));
-						pcommand->delegate_ = selfAsDelegate();
 						pcladw->vpDroplist.back().push_back( pcObjectiveDroping(new cObjectiveDroping( pdrop_include,
-							pcommand)));
+							pcCommand(new cCommand_NitoriFactory_reinforce_item(pdrop_include, pdrop_include->FullName())))));
 					}
 				}
 			}
@@ -1449,18 +1437,13 @@ int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
 }
 int cCommand_NitoriFactory_reinforce_item::Action(IDirect3DDevice9 *pDev)
 {
-	sg_pDungeonSystem->主人公お金増減( - reinforce_fee_);
+	sg_pDungeonSystem->主人公お金増減( - cOtherChara_ID_5::強化資金());
+	sg_pDungeonSystem->メニューを閉じる();
 	sg_pDungeonSystem->アイテム強化(item_,false);
 	std::map<tstring, StyleString > val;
 	val[_T("Item")] = item_->FullName();
 	g_Langメッセージ(_T("ニトリ強化完了メッセージ"),val);
-
-	pcCommandDelegateObject shared_delegate = delegate_.lock();
-	if(shared_delegate) {
-		shared_delegate->didEndCommand(*this);
-	}
-
-	sg_pDungeonSystem->メニューを閉じる();
+	cOtherChara_ID_5::ShopUsedSave();
 	return true;
 }
 int cCommand_NitoriFactory_combine::Action(IDirect3DDevice9 *pDev)
@@ -1468,7 +1451,7 @@ int cCommand_NitoriFactory_combine::Action(IDirect3DDevice9 *pDev)
 	//----------------------------------
 	//合成
 	//----------------------------------
-	if(sg_pDungeonSystem->主人公お金所持量() < combine_fee_)
+	if(sg_pDungeonSystem->主人公お金所持量() < cOtherChara_ID_5::合成資金())
 	{
 		//資金不足
 		g_Langメッセージ(_T("ニトリ製作所資金不足メッセージ"),std::map<tstring, StyleString >());
@@ -1496,10 +1479,8 @@ int cCommand_NitoriFactory_combine::Action(IDirect3DDevice9 *pDev)
 		int i,size = Objects.size();
 		for(i=0;i<size;i++)
 		{
-			pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_combine_item1(combine_fee_, Objects[i], Objects[i]->FullName()));
-			pcommand->delegate_ = selfAsDelegate();
 			pcladw->vpDroplist.back().push_back( pcObjectiveDroping(new cObjectiveDroping( Objects[i],
-				pcommand)));
+				pcCommand(new cCommand_NitoriFactory_combine_item1(Objects[i], Objects[i]->FullName())))));
 		}
 	}
 	if(pcladw->vpDroplist.empty())
@@ -1546,10 +1527,8 @@ int cCommand_NitoriFactory_combine_item1::Action(IDirect3DDevice9 *pDev)
 		for(i=0;i<size;i++)
 		{
 			if(item1_ != Objects[i]) {
-				pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_combine_item1_item2(combine_fee_, item1_, Objects[i], Objects[i]->FullName()));
-				pcommand->delegate_ = selfAsDelegate();
 				pcladw->vpDroplist.back().push_back( pcObjectiveDroping(new cObjectiveDroping( Objects[i],
-					pcommand)));
+					pcCommand(new cCommand_NitoriFactory_combine_item1_item2(item1_, Objects[i], Objects[i]->FullName())))));
 			}
 		}
 	}
@@ -1573,6 +1552,7 @@ int cCommand_NitoriFactory_combine_item1::Action(IDirect3DDevice9 *pDev)
 int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
 {
 
+	sg_pDungeonSystem->メニューを閉じる();
 	vector<pcDroping> vpdrop;
 	vpdrop.push_back(item1_);
 	vpdrop.push_back(item2_);
@@ -1580,7 +1560,7 @@ int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
 
 	if(vpdrop.size() >= 2 && vpdrop[1] && vpdrop[1]->broken)
 	{
-		sg_pDungeonSystem->主人公お金増減( - combine_fee_ );
+		sg_pDungeonSystem->主人公お金増減( - cOtherChara_ID_5::合成資金());
 		std::map<tstring, StyleString > val;
 		if(!vpdrop.empty() && vpdrop[0]) {
 			val[_T("Item")] = vpdrop[0]->FullName();
@@ -1589,11 +1569,7 @@ int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
 			val[_T("Item")] = _T("？");
 		}
 		g_Langメッセージ(_T("ニトリ合成完了メッセージ"),val);
-
-		pcCommandDelegateObject shared_delegate = delegate_.lock();
-		if(shared_delegate) {
-			shared_delegate->didEndCommand(*this);
-		}
+		cOtherChara_ID_5::ShopUsedSave();
 	}
 	else
 	{
@@ -1601,7 +1577,6 @@ int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
 		g_Langメッセージ(_T("ニトリ合成失敗メッセージ"),val);
 	}
 
-	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
 int cCommand_NitoriFactory_remodeling::Action(IDirect3DDevice9 *pDev)

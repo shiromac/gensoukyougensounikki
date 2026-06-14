@@ -731,7 +731,7 @@ $>9028
 		青竹踏み（あおたけふみ）
 		#n
 		#cdNOTICE
-		踏むと健康になる。
+		踏むとHPが回復する。
 		#n#i
 		#n
 		罠というより健康器具。
@@ -805,28 +805,5 @@ $>9031
 		#n#i
 		#n
 		のまのまイェイ！
-	$<
-$<
-$>9032
-	$>FullNameBase
-		瘴気の罠
-	$<
-	$>ShortNameBase
-		$?FullNameBase
-	$<
-	$>shortExplanationBase
-		#cdNOTICE
-		踏むと病気になる。
-		#n#i
-		#n
-	$<
-	$>longExplanationBase
-		瘴気の罠（しょうきのわな）
-		#n
-		#cdNOTICE
-		踏むと病気になる。
-		#n#i
-		#n
-		仮病をするときに便利
 	$<
 $<

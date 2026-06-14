@@ -29,8 +29,6 @@ public:
 	//故障率(%)
 	virtual double 故障率();
 
-	virtual int 消費時幻想度加算量();
-
 
 	//データパックを初期最適化する。アイテムを初期設置するときに一度だけ使う。
 	virtual void DataBeginOptimize(int difficulty);
@@ -123,10 +121,9 @@ public://踏んだ数
 	virtual int 衝突(pcCharacter pchara);
 	virtual int 再設置();
 
-protected:
+private:
 	virtual int 発動(pcCharacter pchara);
 	virtual int 発動(pcDroping pdrop);//pdropに何か起こったらtrue;
-	bool isDiscoveredWhen乗るBefore;
 public:
 	virtual int 効果();
 	virtual int 効果(pcCharacter pchara);

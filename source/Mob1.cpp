@@ -2,18 +2,15 @@
 #include "cTrap.h"
 #include "Mob1.h"
 #include "Event1.h"
-#include "OtherChara1.h"
 
 #include "EffectFunctions.h"
 #include "GameIdiom.h"
 #include "FindUtility.h"
-#include "MobAbilityIdiom.h"
 
 #include "ceaiNegative.h"
 #include "ceaiEscape.h"
 #include "ceaiLoot.h"
 #include "ceaiShopOwner.h"
-#include "ceaiRoomKeeper.h"
 #include "cSaveStore.h"
 inline double pow(int a,int b)
 {
@@ -460,6 +457,8 @@ int cMob_ID_5::特殊攻撃効果(cValiableField& valiable)
 
 
 		int a;
+		multiset<攻撃属性::攻撃属性> 属性;
+		属性.insert(攻撃属性::爆発);
 
 		map<tstring, StyleString> val;
 		val[_T("Chara")] = FullName();
@@ -593,7 +592,7 @@ int cMob_ID_6::特殊攻撃効果(cValiableField& valiable)
 
 			if((nowco - youco).dif() == 1 && me()->pAI->u_隣接攻撃通用判定((youco - nowco).GetAspect()))
 			{
-				GameIdiom::悪性異常状態治療要請(pchara);
+				sg_pDungeonSystem->精神異常治療要請(pchara);
 			}
 		}
 
@@ -782,7 +781,7 @@ int cMob_ID_8::特殊攻撃効果(cValiableField& valiable)
 				if(!vpdrop.empty())
 				{
 					pcDroping pdrop = vpdrop[vpdrop.size()*random()];
-					if(持ち物余白あり(pdrop))
+					if(持ち物余白あり())
 					{
 						if(sg_pDungeonSystem->泥棒要請(me(),pdrop))
 						{
@@ -1894,7 +1893,7 @@ int cMob_ID_19::特殊攻撃効果(cValiableField& valiable)
 
 
 			multiset<攻撃属性::攻撃属性> 属性;
-			//属性.insert(攻撃属性::気);
+			属性.insert(攻撃属性::気);
 			
 			sg_pDungeonSystem->攻撃接近(攻撃作成(
 				me(),//攻撃者
@@ -1940,9 +1939,14 @@ void cMob_ID_19::パッシブ能力(タイミング timing, cValiableField& valiable)
 			}
 			else if(ValiableConstant3())
 			{
-				if(MobAbilityIdiom::投擲物ダメージ化CutIn(ValiableConstant3())(me(), timing, valiable)) {
-					sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
-				}
+				valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
+			
+				map<tstring, StyleString> val;
+				val[_T("Chara")] = ShortName();
+				g_Langメッセージ(_T("cMob_ID_19_特殊能力3メッセージ"),val);
+				
+				sg_pDungeonSystem->強制ダメージ要請(me(),ValiableConstant3(),1,1);
+				sg_pDungeonSystem->満腹度減少要請(me(),UseSPOfspecialAttack());
 			}
 		}
 	}
@@ -3102,7 +3106,7 @@ int cMob_ID_32::特殊攻撃効果(cValiableField& valiable)
 	if(pchara != NULL && !sg_pDungeonSystem->キャラクター敵対判定(me(),pchara)
 		&& pchara->Condition.眠りで行動不能である())
 	{
-		GameIdiom::悪性異常状態治療要請(pchara);
+		sg_pDungeonSystem->精神異常治療要請(pchara);
 	
 	}
 	return false;
@@ -3462,9 +3466,6 @@ int cMob_ID_36::特殊攻撃効果(cValiableField& valiable)
 		if(pchara)
 		{
 			sg_pDungeonSystem->軟弱要請(pchara,ValiableConstant1(),ValiableConstant2());
-			if(ValiableConstant3() > 0) {
-				sg_pDungeonSystem->病気要請(pchara,ValiableConstant4());
-			}
 		}
 
 		return true;
@@ -4106,7 +4107,7 @@ int cMob_ID_46::特殊攻撃効果(cValiableField& valiable)
 		if(FindUtility::キャラの距離(me(),pchara) == 2
 			&& sg_pDungeonSystem->キャラクター敵対判定(me(),pchara))
 		{
-			GameIdiom::キャラの方を向く(me(),pchara);
+			
 			pcDroping newpdrop = sg_pDungeonSystem->落ち物生成_設置なし(ValiableConstant4());
 			//一本
 			newpdrop->quality() = 0;
@@ -4207,10 +4208,6 @@ void cMob_ID_47::パッシブ能力(タイミング timing, cValiableField& valiable)
 			sg_pDungeonSystem->魔法発射要請(me(), valiable.drops.val(変数_対象落ち物));
 		}
 	}
-}
-pcEnemyAI cMob_ID_47::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //テイ
 int cMob_ID_48::AI特殊攻撃選択(cValiableField& valiable)
@@ -4362,7 +4359,7 @@ void cMob_ID_50::パッシブ能力(タイミング timing, cValiableField& valiable)
 				{
 					EffectFunctions::特殊能力発揮エフェクト(me()->placeX,me()->placeY,1.7);
 					EffectFunctions::煙エフェクト1(pchara->placeX, pchara->placeY);
-					GameIdiom::悪性異常状態治療要請(pchara,false);
+					sg_pDungeonSystem->精神異常治療要請(pchara,false);
 				}
 			}
 		}
@@ -4508,10 +4505,6 @@ int cMob_ID_52::特殊攻撃効果(cValiableField& valiable)
 	}
 	return false;
 }
-pcEnemyAI cMob_ID_52::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeper);
-}
 //リリカ
 void cMob_ID_53::配置処理()
 {
@@ -4547,10 +4540,6 @@ int cMob_ID_53::特殊攻撃効果(cValiableField& valiable)
 		}
 	}
 	return false;
-}
-pcEnemyAI cMob_ID_53::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //ルナサ
 void cMob_ID_54::配置処理()
@@ -4590,10 +4579,6 @@ int cMob_ID_54::特殊攻撃効果(cValiableField& valiable)
 		}
 	}
 	return false;
-}
-pcEnemyAI cMob_ID_54::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //メディスン
 int cMob_ID_55::AI特殊攻撃選択(cValiableField& valiable)
@@ -5089,12 +5074,10 @@ int cMob_ID_64::召喚(int ID, pcCharacter enemy)
 }
 void cMob_ID_64::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	/*
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
 		valiable.intsets.val(変数_属性).insert(攻撃属性::気);
 	}
-	*/
 }
 //---------------------------------------------------------------
 //ヒジリ
@@ -5276,7 +5259,23 @@ int cMob_ID_67::特殊攻撃効果(cValiableField& valiable)
 }
 void cMob_ID_67::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	MobAbilityIdiom::投擲物反射CutIn()(me(), timing, valiable);
+	if(timing == 投擲攻撃接近直前_タイミング)
+	{
+		//跳ね返し
+		if(!valiable.drops.val(変数_対象落ち物)->跳ね返し無効フラグ && 
+			!valiable.drops.val(変数_対象落ち物)->投擲貫通())
+		{
+			valiable.doubles.val(変数_汎用ブール) = 0;//効果発揮フラグ
+
+			map<tstring, StyleString> val;
+			val[_T("Chara")] = FullName();
+			val[_T("Item")] = valiable.drops.val(変数_対象落ち物)->FullName();
+			g_Langメッセージ(_T("cMob_ID_67_特殊能力メッセージ"),val);
+			
+			sg_pDungeonSystem->方向転換要請(me(), valiable.doubles.val(変数_方向)+4);
+			sg_pDungeonSystem->投擲要請(me(), valiable.drops.val(変数_対象落ち物));
+		}
+	}
 }
 //---------------------------------------------------------------
 //レティ
@@ -5440,10 +5439,6 @@ int cMob_ID_70::特殊攻撃効果(cValiableField& valiable)
 
 	}
 	return false;
-}
-pcEnemyAI cMob_ID_70::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeper);
 }
 //-----------------------------------------------------------------
 void cMob_ID_sangessei::setfriend(pcCharacter friendchara1, pcCharacter friendchara2, pcCharacter friendchara3)
@@ -5634,7 +5629,10 @@ void cMob_ID_76::パッシブ能力(タイミング timing, cValiableField& valiable)
 //オオワシ
 void cMob_ID_77::パッシブ能力(タイミング timing, cValiableField& valiable)
 {
-	MobAbilityIdiom::攻撃時自分ノックバックCutIn()(me(), timing, valiable);
+	if(timing == 攻撃直後時_タイミング)
+	{
+		sg_pDungeonSystem->吹き飛ばし要請(me(), me(), me()->aspect+4, 1, 0);
+	}
 }
 
 //-----------------------------------------------------------------
@@ -5702,105 +5700,4 @@ int cMob_ID_80::セミパッシブ特殊攻撃効果(cValiableField& valiable)
 		return true;
 	}
 	return false;
-}
-//-----------------------------------------------------------------
-//ミセニトリ
-void cMob_ID_81::配置処理()
-{
-	shop_use_count_ = 0;
-}
-pcEnemyAI cMob_ID_81::Get_kindofAI()
-{
-	return pcEnemyAI(new ceaiRoomKeeperNoMove);
-}
-bool cMob_ID_81::すれ違い許可(pcCharacter pchara)
-{
-	return cMob::すれ違い許可(pchara) && !((sg_pDungeonSystem->店請求金額(me()) > 0) &&
-		(足元() != NULL &&
-			(
-				足元()->属性.count(落ち物属性::階段)
-				|| 足元()->ID() == 9015
-			)
-		));
-}
-int cMob_ID_81::canTalk()
-{
-	return !(sg_pDungeonSystem->キャラクター敵対判定(me(),sg_pDungeonSystem->pPlayerChara()));
-}
-bool cMob_ID_81::isCanUseShop()
-{
-	return (ValiableConstant1() > shop_use_count_);
-}
-int cMob_ID_81::強化資金()
-{
-	return ValiableConstant2() * (shop_use_count_ + 1);
-}
-int cMob_ID_81::合成資金()
-{
-	return ValiableConstant3() * (shop_use_count_ + 1);
-}
-int cMob_ID_81::TalkEvent()
-{
-	
-	GameIdiom::キャラの方を向く(me(), sg_pDungeonSystem->pPlayerChara());
-
-	if(isCanUseShop())
-	{
-		//使用可能
-
-		pcControlLayer pccl;
-		pcSelectWindow pcsw;
-
-		sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
-
-		pccl->Init(sg_pDungeonSystem->pDevice_D3D);
-		pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
-
-		pcCommand pcommand = pcCommand(new cCommand_NitoriFactory_reinforce(強化資金(), g_Lang(_T("装備品を強化する")) ) );
-		pcommand->delegate_ = wpcCommandDelegateObject(boost::static_pointer_cast<cCommandDelegateObject>(boost::dynamic_pointer_cast<cMob_ID_81>(me())));
-		pcommand->delegateID_ = delegateID_reinforce;
-		pcsw->commandList.push_back(pcommand);
-
-		pcommand = pcCommand(new cCommand_NitoriFactory_combine(合成資金(),g_Lang(_T("アイテムを合成する")) ) );
-		pcommand->delegate_ = wpcCommandDelegateObject(boost::static_pointer_cast<cCommandDelegateObject>(boost::dynamic_pointer_cast<cMob_ID_81>(me())));
-		pcommand->delegateID_ = delegateID_combine;
-		pcsw->commandList.push_back(pcommand);
-		
-		int strsize = 0;
-		int i;
-		for(i=0;i<pcsw->commandList.size();i++)
-		{
-			strsize = max(strsize,pcsw->commandList[i]->caption.length());
-		}
-		strsize = max(strsize,3);
-		strsize = min(strsize,20);
-
-		pcsw->Init(sg_pDungeonSystem->pDevice_D3D, strsize, pcsw->commandList.size());
-		pcsw->setLeft(sg_pDungeonSystem->GameScreenInterface.menuPosLeft(2));
-		pcsw->setTop(sg_pDungeonSystem->GameScreenInterface.menuPosTop(2));
-
-		pcsw->playsound_decide();
-		
-	}
-	else
-	{
-		g_Langメッセージ(_T("ニトリ製作所資材不足メッセージ"),std::map<tstring, StyleString >());
-		sg_pDungeonSystem->メニューを閉じる();
-	}
-	return true;
-}
-void cMob_ID_81::パッシブ能力(タイミング timing, cValiableField& valiable)
-{
-	if(timing == 被攻撃直後時_タイミング)
-	{
-		pAI->addEnemy(valiable.charas.val(変数_攻撃者));
-	}
-}
-void cMob_ID_81::didEndCommand(cCommand& caller) {
-	if (caller.delegateID_ == delegateID_reinforce) {
-		shop_use_count_++;
-	}
-	else if (caller.delegateID_ == delegateID_combine) {
-		shop_use_count_++;
-	}
 }

@@ -206,9 +206,6 @@ int cFood::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
-		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-			幻想度加算();
-		}
 		sg_pDungeonSystem->落ち物破壊要請(me());
 	}
 	
@@ -253,11 +250,6 @@ double cFood::火時性質変化率()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Food基本値"),(tstring)_T("火時性質変化率"),0.15);
-}
-int cFood::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Food基本値"),(tstring)_T("消費時幻想度加算量"),0);
 }
 
 void cFood::CutIn(タイミング timing, cValiableField& valiable)

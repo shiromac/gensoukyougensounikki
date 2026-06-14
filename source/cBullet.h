@@ -63,9 +63,6 @@ public:
 		Appreciate_State();
 		Appreciate_Quality();
 	};
-	
-	//インベントリ内でのアイテムのサイズ
-	virtual int sizeInInventory(){return 0;};
 
 	virtual int 値段補正値();
 
@@ -91,9 +88,6 @@ public:
 	virtual double 架空攻撃力_ダメージキャップ();
 
 	virtual double デフォルト効果量状態倍率_祝福();
-	
-	virtual int 消費時幻想度加算量();
-
 	//-----------------------------------
 	//データパック_ここから
 	//-----------------------------------

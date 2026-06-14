@@ -76,10 +76,6 @@ cCharacter::cCharacter(void)
 	anime_pitching = 0;
 	anime_position.set(0,0,0,0);
 	anime_yawing = 0;
-
-	mahoujin_on = false;
-
-	overdrive_on = false;
 }
 
 cCharacter::~cCharacter(void)
@@ -185,30 +181,6 @@ void cCharacter::settingInit()
 		Condition.デフォルト速度設定(三倍速); break;
 	}
 
-}
-
-void cCharacter::onOverDrive()
-{
-	if(!mahoujin_on)
-	{
-		settingInit_overdrive();
-		overdrive_on = true;
-	}
-}
-void cCharacter::settingInit_overdrive()
-{
-	//nop for overdrive
-}
-
-
-void cCharacter::onMahoujin(double sizePower)
-{
-	mahoujin_sizePower = sizePower;
-	if(!mahoujin_on)
-	{
-		settingInit_mahoujin();
-		mahoujin_on = true;
-	}
 }
 
 void cCharacter::naturalSpawnInit()
@@ -369,10 +341,6 @@ double cCharacter::HP自然回復割合()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復割合"),0.005);
 }
-double cCharacter::HP自然回復開始ターン()
-{
-	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復開始ターン"),5);
-}
 double cCharacter::HP自然回復最低保障値()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("HP自然回復最低保障値"),0.5);
@@ -464,18 +432,6 @@ int cCharacter::デフォルト速度攻撃()
 {
 	return sg_pDungeonSystem->DataBase.CharaImportData_Value(ID(),(tstring)_T("デフォルト速度攻撃"),デフォルト速度移動());
 }
-int cCharacter::itemVolumeInInventory()
-{
-	int count = 0, index, size = holdItem.size();
-	for(index = 0; index < size; index++) {
-		count += holdItem[index]->sizeInInventory();
-	}
-	return count;
-}
-vector<int> cCharacter::死亡ドロップアイテムIDs()
-{
-	return vector<int>();
-}
 int cCharacter::死亡ドロップアイテムID()
 {
 	return 0;
@@ -500,10 +456,7 @@ tstring cCharacter::LVStr()
 }
 void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 {
-	if(mahoujin_on) {
-		DrawMahoujin(pDev);
-		DrawAura(pDev);
-	}
+
 	
 	c4DVector chara_place = visibleplace + anime_position;
 	//影
@@ -525,70 +478,6 @@ void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
 						1,1);
 	
 	DO.Draw(pDev);
-}
-
-void cCharacter::settingInit_mahoujin()
-{
-	mahoujin.setTexture(g_GameEnv.m_GlobalResourse->getTextureFromFile(
-		sg_pDungeonSystem->pDevice_D3D,_T("effect\\magiccircle.png")));
-	mahoujin.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
-	mahoujin.m_color.ARGB(128,230,80,30);
-	mahoujin_count = 0;
-	mahoujin.m_TexRange.setLTRB(0,0,
-						1,1);
-}
-
-void cCharacter::DrawMahoujin(IDirect3DDevice9 *pDev)
-{
-	c4DVector chara_place = visibleplace + anime_position;
-	mahoujin.m_color.alpha = opaque*128;
-	mahoujin_count += 0.02;
-	
-	mahoujin.Width = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
-	mahoujin.Height = (128 + sin(mahoujin_count)*32)*mahoujin_sizePower;
-
-	mahoujin.CenterX =  
-		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
-	
-	mahoujin.CenterY =  
-		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y - mapForcus.y);
-	
-	mahoujin.ScaleY = 0.8;
-	mahoujin.Rotation = mahoujin_count*100;
-	mahoujin.Draw(pDev);
-}
-
-void cCharacter::DrawAura(IDirect3DDevice9 *pDev)
-{
-	loadBodyTextureAndRange(aura);
-	c4DVector chara_place = visibleplace + anime_position;
-
-	aura.Width = GetTex_Size_dotX() * DEFAULTTEXPOWER/4.0;
-	aura.Height = GetTex_Size_dotY() * DEFAULTTEXPOWER/8.0;
-
-	aura.CenterX = GetDrawDifference_dotX()*MAPTEXPOWER + 
-		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
-	
-	aura.setBottom( GetDrawDifference_dotY()*MAPTEXPOWER + 
-		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y -chara_place.z*0.5 - mapForcus.y)	
-		+ MAPTEXBOXSIZE*MAPTEXPOWER/2);
-	aura.AddingDraw = cDrawableObject::DRAW_MODE_ADDITION;
-	aura.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
-	aura.m_color.inputD3Dcolor(ShadowColor());
-
-
-	double period = 0.5;
-	double phase = (mahoujin_count - floor(mahoujin_count / period)*period) / (double)period;
-	double UPcenterMax = MAPTEXBOXSIZE*MAPTEXPOWER/5;
-	double UPScaleMax = 0.6;
-
-	aura.CenterY -= UPcenterMax*phase;
-	aura.ScaleX = 1+UPScaleMax*phase;
-	aura.ScaleY = 1+UPScaleMax*phase;
-	
-	aura.m_color.alpha = opaque*(255 - phase*255);
-
-	aura.Draw(pDev);
 }
 unsigned int cCharacter::ShadowColor()
 {
@@ -633,56 +522,6 @@ void cCharacter::Draw(IDirect3DDevice9 *pDev)
 }
 void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 {
-	loadBodyTextureAndRange(DO);
-
-	c4DVector chara_place = visibleplace + anime_position;
-
-
-	DO.Width = GetTex_Size_dotX() * DEFAULTTEXPOWER/4.0;
-	DO.Height = GetTex_Size_dotY() * DEFAULTTEXPOWER/8.0;
-
-	DO.CenterX = GetDrawDifference_dotX()*MAPTEXPOWER + 
-		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
-	
-	DO.setBottom( GetDrawDifference_dotY()*MAPTEXPOWER + 
-		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y -chara_place.z*0.5 - mapForcus.y)	
-		+ MAPTEXBOXSIZE*MAPTEXPOWER/2);
-
-	if(edgedrawswitch())
-	{
-		int edgeWidth = 4;
-		if(isOverDrive()) {
-			edgeWidth = 6;
-		}
-		DO.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
-		DO.m_color.inputD3Dcolor(ShadowColor());
-		DO.m_color.alpha = opaque*255;
-		DO.CenterY -= edgeWidth;
-		DO.Draw(pDev);
-
-		DO.CenterY += edgeWidth;
-
-		DO.CenterX += edgeWidth;
-		DO.Draw(pDev);
-		DO.CenterX -= edgeWidth*2;
-		DO.Draw(pDev);
-		DO.CenterX += edgeWidth;
-	}
-
-
-	//anime
-	DO.Rotation = anime_pitching;
-	DO.ScaleX = anime_scaleX;
-	DO.ScaleY = anime_scaleY;
-
-
-	DO.colorblendmode = cDrawableObject::COLOR_BLEND_MULTIPLE;
-	DO.m_color.ARGB(opaque*255,255,255,255);
-	DO.Draw(pDev);
-}
-
-void cCharacter::loadBodyTextureAndRange(cDrawingObject& textureObject) {
-
 	int texaspect = 0;
 
 	int step = 0;
@@ -713,7 +552,9 @@ void cCharacter::loadBodyTextureAndRange(cDrawingObject& textureObject) {
 		}
 	}
 
-	textureObject.setTexture(m_pTexture);
+	DO.setTexture(m_pTexture);//, GetTex_Size_dotX(), GetTex_Size_dotY());
+	//GetTex_Size_dotX_ = DO.getTexSizeX();
+	//GetTex_Size_dotY_ = DO.getTexSizeY();
 
 	if(GetTex_aspect_type() == CHARACTER_TEXASPECT_FULLASPECT)
 	{
@@ -736,9 +577,48 @@ void cCharacter::loadBodyTextureAndRange(cDrawingObject& textureObject) {
 	texaspect += ((anime_yawing + 45/2) * 8 ) / 360 + 8;
 	texaspect = safeAspect(texaspect);
 
+	c4DVector chara_place = visibleplace + anime_position;
 
-	textureObject.m_TexRange.setLTRB(step/4.0	,texaspect/8.0,
+
+	DO.m_TexRange.setLTRB(step/4.0	,texaspect/8.0,
 						(step+1)/4.0	,(texaspect+1)/8.0);
+	DO.Width = GetTex_Size_dotX() * DEFAULTTEXPOWER/4.0;
+	DO.Height = GetTex_Size_dotY() * DEFAULTTEXPOWER/8.0;
+
+	DO.CenterX = GetDrawDifference_dotX()*MAPTEXPOWER + 
+		MAPDRAWCENTERX + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.x - mapForcus.x);
+	
+	DO.setBottom( GetDrawDifference_dotY()*MAPTEXPOWER + 
+		MAPDRAWCENTERY + MAPTEXBOXSIZE*MAPTEXPOWER*(chara_place.y -chara_place.z*0.5 - mapForcus.y)	
+		+ MAPTEXBOXSIZE*MAPTEXPOWER/2);
+
+	if(edgedrawswitch())
+	{
+		DO.colorblendmode = cDrawableObject::COLOR_BLEND_FILL;
+		DO.m_color.inputD3Dcolor(ShadowColor());
+		DO.m_color.alpha = opaque*255;
+		DO.CenterY -= 4;
+		DO.Draw(pDev);
+
+		DO.CenterY += 4;
+
+		DO.CenterX += 4;
+		DO.Draw(pDev);
+		DO.CenterX -= 8;
+		DO.Draw(pDev);
+		DO.CenterX += 4;
+	}
+
+
+	//anime
+	DO.Rotation = anime_pitching;
+	DO.ScaleX = anime_scaleX;
+	DO.ScaleY = anime_scaleY;
+
+
+	DO.colorblendmode = cDrawableObject::COLOR_BLEND_MULTIPLE;
+	DO.m_color.ARGB(opaque*255,255,255,255);
+	DO.Draw(pDev);
 }
 
 void cCharacter::OptionDraw(IDirect3DDevice9 *pDev)
@@ -1028,11 +908,6 @@ bool cCharacter::死亡()
 	return (HP <= 0 && !LastSpelling);
 }
 
-bool cCharacter::持ち物余白あり(pcDroping pwillPickDrop)
-{
-	return 持ち物余白あり() || pwillPickDrop->noVolumeInInventory();
-}
-
 pcDroping cCharacter::足元()
 {
 	return sg_pDungeonSystem->キャラ足元地形(me())->pOnDrop;
@@ -1287,13 +1162,6 @@ def_AttackAttriWeekStrong_routine(強軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(強軟弱弱点_下降ターン,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降強度,0)
 def_AttackAttriWeekStrong_routine(軟弱弱点_下降ターン,0)
-def_AttackAttriWeekStrong_routine(オーバードライブHP倍率,1)
-def_AttackAttriWeekStrong_routine(オーバードライブ攻撃倍率,1)
-def_AttackAttriWeekStrong_routine(オーバードライブ防御倍率,1)
-def_AttackAttriWeekStrong_routine(オーバードライブ経験値倍率,1)
-def_AttackAttriWeekStrong_routine(オーバードライブドロップ数,0)
-def_AttackAttriWeekStrong_routine(オーバードライブ混酒の箱ドロップ率％,0)
-def_AttackAttriWeekStrong_routine(オーバードライブ固有ドロップ上昇倍率,1)
 
 
 bool isDuplicate(set<攻撃属性::攻撃属性>& set1, multiset<int>& set2)

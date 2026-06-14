@@ -12,14 +12,13 @@
 #include "ceaiShopOwner.h"
 #include "FindUtility.h"
 
-/*pcCharacter cDungeonSystem::キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land)
+pcCharacter cDungeonSystem::キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land)
 {
 	pcCharacter pchara = DataBase.GetSampleCharacter(name);
 	if(pchara == NULLCHARA) return NULLCHARA;
 	return キャラクター生成(pchara->ID(), CLASS, Forse, land);
 }
-*/
-pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandform land, const CreateCharacterOptions& options)
+pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandform land)
 {
 
 	if(land == NULLLAND)
@@ -39,10 +38,6 @@ pcCharacter cDungeonSystem::キャラクター生成(int ID,int CLASS,int Forse,pcLandfo
 	if(pcmob == NULLCHARA) return NULLCHARA;
 	pcmob->Forse = Forse;
 	pcmob->CLASS = CLASS;
-
-	if(options & CreateCharacterOptionsOverDrived) {
-		pcmob->onOverDrive();
-	}
 
 
 
@@ -106,13 +101,7 @@ bool cDungeonSystem::主人公交代(pcCharacter pchara)
 //居眠り付き
 pcCharacter cDungeonSystem::キャラクター生成_自然湧き(int ID,int CLASS,int Forse,pcLandform land)
 {
-	CreateCharacterOptions option = CreateCharacterOptionsNoOption;
-	if( pFloor()->overdriveMaxAppearEnemyNum() > オーバードライブ敵の数()
-		&& pFloor()->overdriveEnemyPercent() > random()*100) {
-		option = CreateCharacterOptionsOverDrived;
-	}
-
-	pcCharacter pchara = キャラクター生成(ID, CLASS, Forse, land, option);
+	pcCharacter pchara = キャラクター生成(ID, CLASS, Forse, land);
 
 	if(pchara)
 	{
@@ -1084,7 +1073,6 @@ void cDungeonSystem::店生成(int roomindex, int shopFlag)
 		}
 
 		pcCharacter pcmob = キャラクター生成(2020, shopLevel, CHARACTER_FORSE_OTHER, pland);
-		キャラクター生成(2081, shopLevel, CHARACTER_FORSE_OTHER, pland); //ニトリ
 
 		//アイテム初期設置ランダム
 		for(i=0;i<itemnum;i++)
@@ -1220,12 +1208,32 @@ public:
 		}
 		else
 		{
-			map<tstring, int> localFlags_ = cSaveData::initialLocalFlags(dungeonID_,num_);
+			map<tstring, int> localFlags_;
+
+			//初めから
+			localFlags_[cSaveQuest::privateFlagKey_AppreciationSupportKey()] = 
+				sg_pDungeonSystem->pSaveData->globalFlags[cSaveData::globalFlagsKey_AppreciationSupportKey(dungeonID_,num_)];
+			
+			if(sg_pDungeonSystem->pSaveData->globalFlags_ClearedFlag(dungeonID_,FALSE))
+			{
+				localFlags_[cSaveQuest::privateFlagKey_StoryEventKey()] = 
+					mapUtility::getMapValue( sg_pDungeonSystem->pSaveData->globalFlags,
+											cSaveData::globalFlagsKey_StoryEventKey(dungeonID_,num_),
+											FALSE
+					);
+				}
+			else
+			{
+				//クリアしてない
+				localFlags_[cSaveQuest::privateFlagKey_StoryEventKey()] = TRUE;
+			
+			}
+				
 
 			//sg_pDungeonSystem->GotoDungeon(dungeonID_,localFlags_,savefileName_);
 			sg_pDungeonSystem->AnimationManager().Anime_PlaySE(_T("step.wav"), sg_pDungeonSystem->pPlayerChara()->足元地形()->place);
 			sg_pDungeonSystem->メニューを閉じる();
-			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(dungeonID_,num_,localFlags_,savefileName_);
+			sg_pDungeonSystem->AnimationManager().AddAnime_GotoDungeon(dungeonID_,localFlags_,savefileName_);
 		}
 		//sg_pDungeonSystem->pSaveQuest = pQuest_;
 		//g_GameEnv.m_SceneManage->SceneChange(pDev,new csDungeonFirst);
@@ -1500,7 +1508,6 @@ public:
 
 		pcSaveQuest pQuest;
 		pQuest_ = pcSaveQuest(new cSaveQuest);
-		pQuest_->saveFileNum = num;
 		questSaveFileString_ = dungeonID;
 		questSaveFileString_ += suffix;
 		pQuest_->Init(sg_pDungeonSystem->pDevice_D3D, questSaveFileString_);
@@ -2129,9 +2136,9 @@ void cDungeonSystem::GotoDungeon(const tstring& DungeonID)
 {
 	map<tstring,int> privateFlags;
 	tstring savefileName(DungeonID + _T("_temp"));
-	GotoDungeon(DungeonID,-1,privateFlags,savefileName);
+	GotoDungeon(DungeonID,privateFlags,savefileName);
 }
-void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const int saveFileNum, const map<tstring,int>& privateFlags, const tstring& savefileName)
+void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName)
 {
 	nextDungeon = DungeonID;
 
@@ -2142,7 +2149,6 @@ void cDungeonSystem::GotoDungeon(const tstring& DungeonID, const int saveFileNum
 	pQuest->randBase = time(NULL);
 	pQuest->privateFlags = privateFlags;
 	pQuest->DungeonID = DungeonID;
-	pQuest->saveFileNum = saveFileNum;
 	if(pPlayerChara() != NULL) pQuest->pPlayer = pPlayerChara();
 	else
 	{
@@ -2305,11 +2311,11 @@ void cDungeonSystem::Dungeonprocess(const tstring& DungeonsID)
 				dungeons.push_back(_T("green_Dungeon"));
 				dungeons.push_back(_T("purple_Dungeon"));
 #ifdef _UNRELEASE
-				//dungeons.push_back(_T("red_extra_Dungeon"));
-				//dungeons.push_back(_T("blue_extra_Dungeon"));
-				//dungeons.push_back(_T("green_extra_Dungeon"));
-				//dungeons.push_back(_T("purple_extra_Dungeon"));
-				//dungeons.push_back(_T("event_dream_Dungeon"));
+				dungeons.push_back(_T("red_extra_Dungeon"));
+				dungeons.push_back(_T("blue_extra_Dungeon"));
+				dungeons.push_back(_T("green_extra_Dungeon"));
+				dungeons.push_back(_T("purple_extra_Dungeon"));
+				dungeons.push_back(_T("event_dream_Dungeon"));
 				//dungeons.push_back(_T("event_ending_Dungeon"));
 				dungeons.push_back(_T("ten_match_Dungeon"));
 #endif

@@ -27,18 +27,6 @@ public:\
 	virtual ~cMob_ID_##identify##(void){};\
 	virtual inline int ID(){return CCHARACTER_cMob_BASE_ID_NUM + identify;};
 
-//
-#define DEF_class_cMob_ID_parent2(identify,parent1,parent2) \
-class cMob_ID_##identify## :\
-	public parent1, public parent2\
-{\
-public:\
-	cMob_ID_##identify##(void){};\
-public:\
-	virtual ~cMob_ID_##identify##(void){};\
-	virtual inline int ID(){return CCHARACTER_cMob_BASE_ID_NUM + identify;};
-
-//
 #define DEF_class_cMob_ID(identify) DEF_class_cMob_ID_parent(identify,cMob)
 /*
 #define DEF_class_cMob_ID(identify) \
@@ -519,7 +507,7 @@ DEF_class_cMob_ID(47)
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
 	virtual void パッシブ能力(タイミング timing, cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
+
 };
 //テイ
 DEF_class_cMob_ID(48)
@@ -580,7 +568,6 @@ DEF_class_cMob_ID_parent(52,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
 };
 //リリカ
 DEF_class_cMob_ID_parent(53,cMob_ID_prismriver)
@@ -589,7 +576,6 @@ DEF_class_cMob_ID_parent(53,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
 };
 //ルナサ
 DEF_class_cMob_ID_parent(54,cMob_ID_prismriver)
@@ -598,7 +584,6 @@ DEF_class_cMob_ID_parent(54,cMob_ID_prismriver)
 	virtual void 配置処理();
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
 };
 //メディスン
 DEF_class_cMob_ID(55)
@@ -728,7 +713,6 @@ DEF_class_cMob_ID(70)
 	virtual bool AI移動許可(cValiableField& valiable);
 	virtual int AI特殊攻撃選択(cValiableField& valiable);
 	virtual int 特殊攻撃効果(cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
 };
 //ゾンビフェアリー
 DEF_class_cMob_ID(71)
@@ -820,27 +804,5 @@ DEF_class_cMob_ID(80)
 	virtual int セミパッシブ特殊攻撃効果(cValiableField& valiable);//SP消費なし優先度高
 
 };
-//ミセニトリ
-DEF_class_cMob_ID_parent2(81,cMob,cCommandDelegateObject)
-	virtual inline int GetTex_aspect_type(){return CHARACTER_TEXASPECT_FULLASPECT;};
-	virtual inline int GetDrawHeadtall_dotY(){return 24;};
-	virtual void パッシブ能力(タイミング timing, cValiableField& valiable);
-	virtual pcEnemyAI Get_kindofAI();
-	virtual bool すれ違い許可(pcCharacter pchara);
-	virtual bool isCanUseShop();
-	virtual int canTalk();
-	virtual int TalkEvent();
-	virtual inline int MaxholdNum(){return 100;};
-	virtual void 配置処理();
-	virtual int 強化資金();
-	virtual int 合成資金();
-	int shop_use_count_;
 
-	enum {
-		delegateID_reinforce = 0,
-		delegateID_combine = 1,
-	};
-	void didEndCommand(cCommand& caller);
-};
-
-#define MOB_NUM 82
+#define MOB_NUM 81

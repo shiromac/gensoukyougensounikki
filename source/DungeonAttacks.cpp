@@ -4,8 +4,6 @@
 
 #include "EffectFunctions.h"
 #include "Gameobjects.h"
-#include "../GensouGage.h"
-#include "../cFloor.h"
 
 
 
@@ -600,18 +598,6 @@ int cDungeonSystem::AttackHit(pcAttackinformation pattackinfo)
 
 	if(pattackinfo->defenser->Ž€–S())
 	{//ŒoŒ±’l
-		if(pattackinfo->attacker == sg_pDungeonSystem->pPlayerChara())
-		{
-
-			if (pattackinfo->defenser->CharaAttribute().count(ƒLƒƒƒ‰‘®«::’e–‹)) {
-				double power = 1;
-				uŠÔŒ¶‘z“x“‰ÁŽZ(power);
-			}
-			else {
-				double power = 5;
-				PíŒ¶‘z“x“‰ÁŽZ(power);
-			}
-		}
 
 		EXTcharge(pattackinfo);
 		
@@ -696,8 +682,7 @@ int cDungeonSystem::CalculateDamege(pcAttackinformation pattackinfo)
 		double k = pow(0.9875,df);
 
 		//ƒ_ƒ[ƒWŽ®
-		damage = ( (at - 0.458*df*k)*k )*0.9 + at*0.1;
-
+		damage = (at - 0.458*df*k)*k;
 		//damage = damage*random_range(0.9,1.1);
 		if(df > 0) pattackinfo->valiable.doubles.val(•Ï”_–hŒäŒø‰Ê‚ ‚èƒtƒ‰ƒO) = 1;
 	}
@@ -716,17 +701,4 @@ int cDungeonSystem::CalculateDamege(pcAttackinformation pattackinfo)
 
 
 	return damage;
-}
-void cDungeonSystem::PíŒ¶‘z“x“‰ÁŽZ(double power)
-{
-	pGensouGage()->add_long_live_power(power);
-}
-void cDungeonSystem::uŠÔŒ¶‘z“x“‰ÁŽZ(double power)
-{
-	pGensouGage()->add_short_live_power(power);
-	pGensouGage()->keep_short_live_power();
-}
-double cDungeonSystem::Œ¶‘z“x“()
-{
-	return pGensouGage()->sum_power();
 }

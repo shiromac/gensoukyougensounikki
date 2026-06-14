@@ -50,11 +50,6 @@ namespace FindUtility
 	//非配置安全
 	pcLandform 視界外優先_各部屋等確率_ランダム地形検索_非配置安全(pcLandform pland);
 
-	//同部屋ランダム
-	//すべての部屋の確率が同じ（面積に比例しない）
-	//配置安全
-	pcLandform 同部屋_ランダム地形検索(pcLandform pland);
-
 
 	//視界 rangeでの敵を索敵する
 	vector<pcCharacter> フロア敵索敵_敵リスト(pcCharacter pchara, const int range);
@@ -79,18 +74,6 @@ namespace FindUtility
 	int キャラの距離(pcCharacter me, pcCharacter you);
 
 	vector<pcDroping> 装備品以外の表面手持ちアイテム店売り除く(pcCharacter pchara);
-
-	vector<pcDroping> 全てのアイテム一覧(pcCharacter pchara);
-	vector<pcDroping> 自身のリストと内容アイテム一覧(const vector<pcDroping>& pdrop);
-	vector<pcDroping> 内容アイテム一覧(pcDroping pdrop);
-
-	vector<pcDroping> randomSelect(const vector<pcDroping>& pdropList, const int count);
-	vector<int> randomIndex(const int size, const int count);
-
-	typedef bool (*dropFilterFunction)(const pcDroping& target);
-	vector<pcDroping> dropFiltering(const vector<pcDroping>& pdropList, dropFilterFunction filter);
-	//dropFilterFunction
-	bool 完全に鑑定されていないアイテムか(const pcDroping& target);
 
 	int キャラの方向(pcCharacter me, pcCharacter you);
 

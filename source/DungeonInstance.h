@@ -52,9 +52,6 @@ typedef boost::weak_ptr<cDungeon> wpcDungeon;
 #include <d3d9.h>
 #include <d3dx9.h>
 
-class GensouGage;
-typedef boost::shared_ptr<GensouGage> pGensouGage;
-
 //ダンジョン中保存されるデータ類
 class cDungeonInstance
 {
@@ -78,16 +75,6 @@ public:
 	pcDungeon pDungeon_;
 
 	int FloorLevel_;
-	
-	pGensouGage gensouGage_;
-
-	enum GameEndFlag{
-		Continue,
-		ContinueAndSuspend,
-		GameOverAndRetire,
-		GameOverAndRestart,
-	};
-	
 
 public:
 
@@ -127,7 +114,6 @@ public:
 public:
 	int GameOverFlag_;
 	int GameClearFlag_;
-	GameEndFlag GameRestartFlag_;
 	int SumTurnCount_;
 	int SumEnemyDefeatNum_;
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "cItem.h"
 
-#include "MobAbilityIdiom.h"
 
 
 //--------------------------------------
@@ -146,15 +145,10 @@ public:
 
 	virtual double 効果時腕輪ダメージ();
 
-	virtual double 攻撃力ボーナス％();
-	virtual double 防御力ボーナス％();
-
 	virtual bool 破損する();
 	virtual bool 破損回復(int message);
 
 	virtual int 修正値最大値(){return 4;};
-	
-	virtual int 消費時幻想度加算量();
 	
 	//効果量(係数)
 	virtual double 効果量状態倍率(){return 1.0;};
@@ -285,11 +279,5 @@ public:
 
 	virtual int スペル定型エフェクト_宣言();
 	virtual int スペル定型エフェクト_装備(pcCharacter pchara);
-
-protected:
-
-
-	bool CutInMobAbilityIdiom(const MobAbilityIdiom::CutInFunctionObject& functor, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility);
-
 };
 

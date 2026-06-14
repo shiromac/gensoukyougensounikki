@@ -91,8 +91,6 @@ public:
 
 	virtual int 修正値最大値(){return 10;};
 
-	virtual int 消費時幻想度加算量();
-
 public:
 	//被箱入れ不可
 	virtual bool 被箱入れ可(){return false;};

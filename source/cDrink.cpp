@@ -389,11 +389,6 @@ double cDrink::冷気時冷凍確率()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Drink基本値"),(tstring)_T("冷気時冷凍確率"),0.05);
 }
-int cDrink::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Drink基本値"),(tstring)_T("消費時幻想度加算量"),0);
-}
 void cDrink::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cItem::CutIn(timing,valiable);
@@ -448,9 +443,6 @@ int cDrink::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
-		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-			幻想度加算();
-		}
 		sg_pDungeonSystem->落ち物破壊要請(me());
 	}
 	

@@ -19,7 +19,6 @@
 #include "../AnimeFunctions.h"
 #include "../cEventBackground.h"
 #include "../csTitle.h"
-#include "../GameIdiom.h"
 namespace forLua{
 
 
@@ -93,19 +92,9 @@ int FunctionNamePrefix(pcCharacter pchara) {\
 	return sg_pDungeonSystem->SystemFunctionName(pchara);\
 }
 
-#define CHARACTERFUNCTION0_other_ForLua(FunctionNamePrefix,SystemFunctionName) \
-int FunctionNamePrefix(pcCharacter pchara) {\
-	return SystemFunctionName(pchara);\
-}
-
 #define CHARACTERFUNCTION1_ForLua(FunctionNamePrefix,SystemFunctionName) \
 int FunctionNamePrefix(pcCharacter pchara) {\
 	return sg_pDungeonSystem->SystemFunctionName(pchara, false);\
-}
-
-#define CHARACTERFUNCTION1_other_ForLua(FunctionNamePrefix,SystemFunctionName) \
-int FunctionNamePrefix(pcCharacter pchara) {\
-	return SystemFunctionName(pchara, false);\
 }
 
 #define CHARACTERFUNCTION2_ForLua(FunctionNamePrefix,SystemFunctionName,valiableType) \
@@ -159,7 +148,6 @@ CHARACTERFUNCTION3_ForLua(CharacterDeathTouch, 死の誘い要請, pcCharacter, int)
 CHARACTERFUNCTION3_ForLua(CharacterSubstitution, 身代わり要請, pcCharacter, int)
 CHARACTERFUNCTION2_ForLua(CharacterMimicry, 擬態要請, int)
 
-/* 廃止
 CHARACTERFUNCTION1_ForLua(CharacterCureMental, 精神異常治療要請)
 CHARACTERFUNCTION1_ForLua(CharacterCurePhysical, 身体異常治療要請)
 CHARACTERFUNCTION1_ForLua(CharacterCureMagic, 呪術異常治療要請)
@@ -169,17 +157,6 @@ CHARACTERFUNCTION0_ForLua(CharacterIsMentalAberration, 精神異常状態)
 CHARACTERFUNCTION0_ForLua(CharacterIsPhysicalAberration, 身体異常状態)
 CHARACTERFUNCTION0_ForLua(CharacterIsMagicAberration, 呪術異常状態)
 CHARACTERFUNCTION0_ForLua(CharacterIsSpeedAberration, 速度異常状態)
-*/
-
-CHARACTERFUNCTION1_other_ForLua(CharacterCureMental, GameIdiom::悪性異常状態治療要請)
-CHARACTERFUNCTION1_other_ForLua(CharacterCurePhysical, GameIdiom::呪術悪性異常状態治療要請)
-CHARACTERFUNCTION1_other_ForLua(CharacterCureMagic, GameIdiom::悪性異常状態治療要請)
-CHARACTERFUNCTION1_other_ForLua(CharacterCureSpeed, GameIdiom::悪性異常状態治療要請)
-
-CHARACTERFUNCTION0_other_ForLua(CharacterIsMentalAberration, GameIdiom::悪性異常状態である)
-CHARACTERFUNCTION0_other_ForLua(CharacterIsPhysicalAberration, GameIdiom::悪性異常状態である)
-CHARACTERFUNCTION0_other_ForLua(CharacterIsMagicAberration, GameIdiom::呪術悪性異常状態である)
-CHARACTERFUNCTION0_other_ForLua(CharacterIsSpeedAberration, GameIdiom::悪性異常状態である)
 
 CHARACTERFUNCTION2_ForLua(CharacterGoPast, やりすごし要請, int)
 

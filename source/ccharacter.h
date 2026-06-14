@@ -62,8 +62,6 @@ typedef boost::weak_ptr<DungeonStoryScript_LuaEnvironment> wpDungeonStoryScript_
 #define EMOTION_KYOURAN 26
 #define EMOTION_OKUBYOU 27
 #define EMOTION_PUNPUN 28
-#define EMOTION_SEKIMEN 29
-#define EMOTION_POWAPOWA 30
 
 #define EMOTION_SUBINFO_STEP_ATHIRD 101
 #define EMOTION_SUBINFO_STEP_AHALF 102
@@ -201,35 +199,12 @@ public:
 	virtual void Draw(IDirect3DDevice9 *pDev);
 	virtual void DrawBody(IDirect3DDevice9 *pDev);
 	virtual void DrawShadow(IDirect3DDevice9 *pDev);
-
-	virtual void DrawMahoujin(IDirect3DDevice9 *pDev);
-	virtual void DrawAura(IDirect3DDevice9 *pDev);
-
-	virtual void onOverDrive();
-	virtual bool isOverDrive(){return overdrive_on;};
-protected:
-	bool overdrive_on;
-	virtual void settingInit_overdrive();
-
-public:
-	virtual void onMahoujin(double sizePower);
-
-protected:
-	virtual void settingInit_mahoujin();
-	cDrawingObject mahoujin;
-	cDrawingObject aura;
-	double mahoujin_count;
-	double mahoujin_sizePower;
-	bool mahoujin_on;
-public:
-
 	virtual unsigned int ShadowColor();
 	virtual bool edgedrawswitch(){return 0;};
 
 	virtual void OptionDraw(IDirect3DDevice9 *pDev);
 	IDirect3DTexture9 *p_Texoption;
 	int anime_option_step;
-	void loadBodyTextureAndRange(cDrawingObject& textureObject);
 
 
 
@@ -357,13 +332,9 @@ public:
 
 	//持ってるアイテム
 	vector<pcDroping> holdItem;
-	//持ってるアイテム
-	virtual int itemVolumeInInventory();
 
-	virtual vector<int> 死亡ドロップアイテムIDs();
-protected:
+
 	virtual int 死亡ドロップアイテムID();
-public:
 
 	//持てる最大数
 	virtual inline int MaxholdNum(){return 1;};
@@ -461,7 +432,6 @@ public:
 	virtual int isSpecialAttack();
 
 	virtual double HP自然回復割合();
-	virtual double HP自然回復開始ターン();
 	virtual double HP自然回復最低保障値();
 public:
 	virtual int SetMHP();
@@ -489,9 +459,7 @@ public:
 	
 
 	virtual bool 拾得可(){return true;};//余白無考慮
-	virtual bool 持ち物余白あり(){return (MaxholdNum() > itemVolumeInInventory());};
-	//拾おうとしているアイテムが無限に拾えた場合は余白ありと返す
-	virtual bool 持ち物余白あり(pcDroping pwillPickDrop);
+	virtual bool 持ち物余白あり(){return (MaxholdNum() > holdItem.size());};
 
 	virtual bool 持ち物投擲可(){return true;};
 
@@ -553,13 +521,6 @@ public:
 	static double 強軟弱弱点_下降ターン();
 	static double 軟弱弱点_下降強度();
 	static double 軟弱弱点_下降ターン();
-	static double オーバードライブHP倍率();
-	static double オーバードライブ攻撃倍率();
-	static double オーバードライブ防御倍率();
-	static double オーバードライブ経験値倍率();
-	static double オーバードライブドロップ数();
-	static double オーバードライブ混酒の箱ドロップ率％();
-	static double オーバードライブ固有ドロップ上昇倍率();
 
 	//----------------------------------------
 	//luaスクリプト

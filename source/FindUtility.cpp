@@ -341,30 +341,6 @@ pcLandform FindUtility::視界外優先_各部屋等確率_ランダム地形検索_配置安全(pcLand
 	}
 }
 
-pcLandform FindUtility::同部屋_ランダム地形検索(pcLandform pland)
-{
-	vector<pcRoom> vproom;
-
-	int i;
-	int size = sg_pDungeonSystem->Map().RoomList.size();
-	for(i=0;i<size;i++)
-	{
-		vproom.push_back(sg_pDungeonSystem->Map().RoomList[i]);
-	}
-	if(pland->RoomIndex == -1)
-	{//通路
-		return pland;
-	}
-	else 
-	{//部屋
-		vector<pcLandform> LandformList;
-		int roomindex = pland->RoomIndex;
-		int landindex = vproom[roomindex]->LandformList.size()*random();
-		return vproom[roomindex]->LandformList[landindex];
-	}
-}
-
-
 vector<pcCharacter> FindUtility::フロア敵索敵_敵リスト(pcCharacter pchara, const int range)
 {
 	vector<pcCharacter> pcharalist;
@@ -547,93 +523,6 @@ vector<pcDroping> FindUtility::装備品以外の表面手持ちアイテム店売り除く(pcCharac
 		vpdrop.push_back(pchara->holdItem[i]);
 	}
 	return vpdrop;
-}
-
-vector<pcDroping> FindUtility::全てのアイテム一覧(pcCharacter pchara)
-{
-	return 自身のリストと内容アイテム一覧(pchara->holdItem);
-}
-vector<pcDroping> FindUtility::自身のリストと内容アイテム一覧(const vector<pcDroping>& pdropsList)
-{
-	vector<pcDroping> vpdrop = pdropsList;
-	const vector<pcDroping>& includeList = pdropsList;
-
-	int i, size = pdropsList.size();
-		
-	for(i=0;i<size;i++)
-	{
-		vector<pcDroping> includeInclude = 内容アイテム一覧(includeList[i]);
-		std::copy(includeInclude.begin(),includeInclude.end(),std::back_inserter(vpdrop));
-	}
-
-	return vpdrop;
-}
-
-vector<pcDroping> FindUtility::内容アイテム一覧(pcDroping pdrop)
-{
-	return 自身のリストと内容アイテム一覧(pdrop->内包落ち物対象リスト());
-}
-
-vector<pcDroping> FindUtility::dropFiltering(const vector<pcDroping>& pdropList, dropFilterFunction filter) {
-	vector<pcDroping> vpdrop;
-
-	int i, size = pdropList.size();
-		
-	for(i=0;i<size;i++)
-	{
-		if(filter(pdropList[i])) {
-			vpdrop.push_back(pdropList[i]);
-		}
-	}
-
-	return vpdrop;
-}
-bool FindUtility::完全に鑑定されていないアイテムか(const pcDroping& target) {
-	return (!target->状態値識別済み() || !target->修正値識別済み() || !target->名称識別済み());
-}
-
-vector<pcDroping> FindUtility::randomSelect(const vector<pcDroping>& pdropList, const int count) {
-	int drop_count = count;
-	if(pdropList.size() < drop_count) {
-		drop_count = pdropList.size();
-	}
-
-	vector<int> indexs = randomIndex(pdropList.size(),drop_count);
-	vector<pcDroping> result;
-
-	int i, size = indexs.size();
-		
-	for(i=0;i<size;i++)
-	{
-		pcDroping pdrop = pdropList[indexs[i]];
-		result.push_back(pdrop);
-	}
-
-	return result;
-}
-vector<int> FindUtility::randomIndex(const int size, const int count) {
-	int index_count = count;
-	if(size < index_count) {
-		index_count = size;
-	}
-
-    std::vector<int> indexs;
-    indexs.resize(size);
-    for(int i=0; i<size; ++i) {
-        indexs[i] = i;
-    }
- 
-    for(int i=0; i<index_count; ++i){
-		if(i >= indexs.size()) {
-			break;
-		}
-        int j = i + random() * (size - i);
-        std::swap(indexs[i], indexs[j]);
-    }
- 
-    indexs.resize(index_count);
- 
-    return indexs;
 }
 
 int FindUtility::キャラの方向(pcCharacter me, pcCharacter you)

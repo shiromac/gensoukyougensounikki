@@ -87,7 +87,6 @@ public:
 	virtual bool u_敵直接攻撃(pcCharacter penemychara);
 	virtual bool u_索敵();
 	virtual bool u_敵サーチ_キャラ優先度優先(int& out_tgt_x,int& out_tgt_y);
-	virtual bool u_味方主人公サーチ(int& out_tgt_x,int& out_tgt_y);
 	virtual bool u_敵サーチ_距離優先(int& out_tgt_x,int& out_tgt_y);
 	virtual bool u_目標点作成(int& out_tgt_x,int& out_tgt_y);
 	virtual bool u_目標点作成_最近接出口(int& out_tgt_x,int& out_tgt_y);
@@ -99,7 +98,6 @@ public:
 	virtual bool u_隣接攻撃通用判定(int aspect);
 	virtual bool u_隣接移動通用判定(int aspect);
 	virtual int u_目標点との距離(int tgt_x,int tgt_y);
-	virtual bool u_目標免除(pcCharacter penemychara);
 
 
 	virtual int u_攻撃優先度_昇順(pcCharacter penemychara);

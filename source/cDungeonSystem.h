@@ -36,8 +36,6 @@
 #include <set>
 #include <tstring_ph.h>
 
-class GensouGage;
-typedef boost::shared_ptr<GensouGage> pGensouGage;
 
 using namespace std;
 
@@ -147,7 +145,6 @@ public:
 	inline unsigned long& random_Seed(){return pDungeonInstance_->random_Seed_;};
 
 	inline pcDungeon& pDungeon(){return pDungeonInstance_->pDungeon_;};
-	inline pGensouGage& pGensouGage(){return pDungeonInstance_->gensouGage_;};
 
 	inline vector<int>& FreeFlags(){return pDungeonInstance_->FreeFlags_;};
 	inline map<tstring,int>& localFlags(){return pDungeonInstance_->localFlags_;};
@@ -182,7 +179,8 @@ public:
 
 protected:
 	inline int& GameOverFlag(){return pDungeonInstance_->GameOverFlag_;};
-	inline cDungeonInstance::GameEndFlag & GameRestartFlag(){return pDungeonInstance_->GameRestartFlag_;};
+
+
 	inline int& GameClearFlag(){return pDungeonInstance_->GameClearFlag_;};
 
 	//時間計測
@@ -398,16 +396,9 @@ protected:
 protected:
 	virtual void MakeResultWindow(int clear);
 public:
-
-	virtual void KnockOutHero();
 	virtual void GameOver();
-	virtual void GameOverAndContinue();
-	virtual void GameOverAndContinueAndSuspend();
-	virtual void GameOverAndRestart();
 
 	virtual int ダンジョン引き上げ要請();
-
-
 	virtual void GameEndSavetyPrepareing();
 
 	virtual void GameBaseEnd();
@@ -433,7 +424,7 @@ public:
 
 	virtual void SelectDungeon(const vector<tstring>& Dungeons);
 
-	virtual void GotoDungeon(const tstring& DungeonID, const int saveFileNum, const map<tstring,int>& privateFlags, const tstring& savefileName);
+	virtual void GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName);
 	virtual void GotoDungeon(const tstring& DungeonID);
 	
 	virtual void ContinueDungeon(pcSaveQuest continueQuest);
@@ -526,7 +517,6 @@ public:
 	virtual pcLandform キャラ視点方角地形(pcCharacter pchara, int plusaspect, int distance);
 
 	virtual pcLandform 隣接地形(pcLandform outLand, int aspect, int distance);
-	virtual vector<pcLandform> 横列地形列挙(pcLandform outLand, int aspect, int width);
 
 
 	//-------------------------
@@ -560,7 +550,6 @@ public:
 	virtual pcCharacter システム用キャラ検索(pcCharacter pchara);
 
 	virtual int 敵の数();//敵の数
-	virtual int オーバードライブ敵の数();//敵の数
 
 
 	virtual tstring 漢数字(int digit, int flag = 0);
@@ -654,9 +643,6 @@ public:
 	//攻撃の情報を得る
 	virtual int GetNormalAttackinformation(pcCharacter pchara,pcAttackinformation &pcattackinfo);
 
-	virtual void 恒常幻想度％加算(double power);
-	virtual void 瞬間幻想度％加算(double power);
-	virtual double 幻想度％();
 protected:
 
 	//攻撃する
@@ -840,8 +826,6 @@ public:
 							int flag = 0);//Rarity=(0~1)0==Rare
 
 	virtual int 敵自然湧きID(int outputID[3], int flag = 0);
-	
-	virtual int 敵グループ湧き(pcLandform land);
 	//-------------------------
 	//初期設置関係
 
@@ -1028,14 +1012,8 @@ public:
 public:
 	//-------------------------
 	//キャラ生成関係
-	//virtual pcCharacter キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land = NULLLAND);
-	typedef enum {
-		CreateCharacterOptionsNoOption = 0,
-		CreateCharacterOptionsOverDrived = 1 << 0,
-	} CreateCharacterOption;
-	typedef int CreateCharacterOptions;
-
-	virtual pcCharacter キャラクター生成(int ID,int CLASS,int Forse,pcLandform land = NULLLAND, const CreateCharacterOptions& options = CreateCharacterOptionsNoOption);
+	virtual pcCharacter キャラクター生成(tstring name,int CLASS,int Forse,pcLandform land = NULLLAND);
+	virtual pcCharacter キャラクター生成(int ID,int CLASS,int Forse,pcLandform land = NULLLAND);
 
 	virtual pcCharacter 主人公交代(int ID);
 	virtual bool 主人公交代(pcCharacter pchara);
@@ -1153,8 +1131,6 @@ public:
 	virtual int 氷付け要請(pcCharacter pchara, int turn, int Messageflag = 1);
 	virtual int 無敵要請(pcCharacter pchara, int turn, int Messageflag = 1);
 	virtual int 鳥目要請(pcCharacter pchara, int turn, int Messageflag = 1);
-	virtual int 健康要請(pcCharacter pchara, int turn, int Messageflag = 1);
-	virtual int 病気要請(pcCharacter pchara, int turn, int Messageflag = 1);
 
 	//呪術系
 	virtual int 死の誘い要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag = 1);
@@ -1162,21 +1138,15 @@ public:
 	virtual int 変身要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag = 1);
 	virtual int 擬態要請(pcCharacter pchara, int turn, int Messageflag = 1);
 
-	/*
 	virtual int 精神異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 身体異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 呪術異常治療要請(pcCharacter pchara, int Messageflag = 1);
 	virtual int 速度異常治療要請(pcCharacter pchara, int Messageflag = 1);
 
-	virtual int 悪性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
-	virtual int 良性異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
-	virtual int 全異常状態治療要請(pcCharacter pchara, int Messageflag = 1);
-
 	virtual bool 精神異常状態(pcCharacter pchara);
 	virtual bool 身体異常状態(pcCharacter pchara);
 	virtual bool 呪術異常状態(pcCharacter pchara);
 	virtual bool 速度異常状態(pcCharacter pchara);
-	*/
 
 	virtual int やりすごし要請(pcCharacter pchara, int turn, int Messageflag = 0);
 

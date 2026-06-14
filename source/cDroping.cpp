@@ -474,6 +474,127 @@ int cDroping::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
+
+/*
+//コマンドを解決する;
+int cDroping::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+{
+
+	if(verb == _T("説明")) 説明(pDev);
+	if(verb == _T("拾う")) 拾う(pDev);
+	if(verb == _T("置く")) 置く(pDev);
+	if(verb == _T("投げる")) 投げる(pDev);
+	if(verb == _T("交換")) 交換(pDev);
+
+
+	return true;
+}
+*/
+
+/*
+int cDroping::説明(IDirect3DDevice9 *pDev)
+{
+	pcControlLayer pccl;
+	pcGameWindow pcgw;
+
+	//新規コントロールレイヤー
+	sg_pDungeonSystem->menuControlLayerV().push_back(pccl = pcControlLayer(new cControlLayer));
+	pccl->Init(pDev);
+
+	//新規ゲームウィンドウ
+	pccl->WindowList.push_back(pcgw = pcGameWindow(new cGameWindow));
+	pcgw->Init(pDev, 21, 10);
+
+
+	pcgw->Text() = longExplanation();
+
+	pcgw->CenterX = SCREEN_X/2;
+	pcgw->setTop(80);
+	
+	return true;
+}
+*/
+
+/*
+int cDroping::置く(IDirect3DDevice9 *pDev)
+{
+
+	if(sg_pDungeonSystem->足元設置要請(sg_pDungeonSystem->pPlayerChara(), me()))
+	{
+
+		sg_pDungeonSystem->メッセージ(_T("足元に")+me()->FullName()+_T("を置いた。\n"));
+		sg_pDungeonSystem->メニューを閉じる();
+		sg_pDungeonSystem->ターンエンド();
+		return true;
+	}
+
+	return false;
+	
+}
+*/
+
+/*
+int cDroping::拾う(IDirect3DDevice9 *pDev)
+{
+
+	pcDroping pdrop = sg_pDungeonSystem->pPlayerChara()->足元();
+	if(sg_pDungeonSystem->足元拾得要請(sg_pDungeonSystem->pPlayerChara()))
+	{
+		
+		sg_pDungeonSystem->AnimationManager().Anime_PlaySE(_T("pickup.wav"),pdrop->現在地形()->place);
+		if(!me()->broken)
+		{//まとめられて無い
+			sg_pDungeonSystem->メッセージ(pdrop->FullName() + _T("を拾った。\n"));
+		}
+		sg_pDungeonSystem->メニューリフレッシュ();
+		return true;
+	}
+	
+	if(!sg_pDungeonSystem->pPlayerChara()->持ち物余白あり())
+	{
+		sg_pDungeonSystem->メッセージ(_T("持ち物がいっぱいで ") + pdrop->FullName() + _T("は拾えなかった。\n"));
+	}
+	else
+	{
+		sg_pDungeonSystem->メッセージ(pdrop->FullName() + _T("は拾えなかった。\n"));
+	}
+	return false;
+	
+}
+*/
+
+/*
+int cDroping::投げる(IDirect3DDevice9 *pDev)
+{
+
+	if(sg_pDungeonSystem->投擲要請(sg_pDungeonSystem->pPlayerChara(), me()))
+	{
+		sg_pDungeonSystem->メニューを閉じる();
+		sg_pDungeonSystem->ターンエンド();
+		return true;
+	}
+	return false;
+	
+}
+*/
+/*
+int cDroping::交換(IDirect3DDevice9 *pDev)
+{
+	
+	pcDroping pdrop = sg_pDungeonSystem->pPlayerChara()->足元();
+	if(sg_pDungeonSystem->足元交換要請(sg_pDungeonSystem->pPlayerChara(), me()))
+	{
+		sg_pDungeonSystem->メッセージ(_T("足元に")+me()->FullName()+_T("を置いて、")
+			+pdrop->FullName() + _T("と交換した。\n"));
+		sg_pDungeonSystem->メニューを閉じる();
+		sg_pDungeonSystem->ターンエンド();
+		return true;
+	}
+	return false;
+	
+}
+*/
+
 int cDroping::乗る_記録()
 {
 	return 踏みフラグ_ = 1;
@@ -505,6 +626,26 @@ int cDroping::乗る()
 					valiable[_T("Item")] = FullName();
 					g_Langメッセージ(_T("アイテム乗るメッセージ"),valiable);
 				}
+
+
+				/*
+				if(sg_pDungeonSystem->足元拾得要請(pchara))
+				{
+					sg_pDungeonSystem->AnimationManager().Anime_PlaySE(_T("pickup.wav"),pchara->足元地形()->place);
+					if(!me()->broken)
+					{//まとめられて無い
+						sg_pDungeonSystem->メッセージ(FullName() + _T("を拾った。\n"));
+					}
+				}
+				else
+				{
+					if(!pchara->持ち物余白あり())
+					{
+						sg_pDungeonSystem->メッセージ(_T("持ち物がいっぱいで 拾えない。\n"));
+					}
+					sg_pDungeonSystem->メッセージ(FullName() + _T("の上に乗った。\n"));
+				}
+				*/
 				
 			}
 				
@@ -826,18 +967,6 @@ int cDroping::内包アイテム込み売却受け取り値()
 		}
 	}
 	return value;
-}
-
-void cDroping::幻想度加算()
-{
-	int power = 消費時幻想度加算量();
-	if(power > 0) {
-		sg_pDungeonSystem->瞬間幻想度％加算(power);
-	}
-}
-int cDroping::消費時幻想度加算量()
-{
-	return 0;
 }
 
 double cDroping::値段割引()

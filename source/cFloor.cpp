@@ -12,6 +12,7 @@
 #include "utility/StyleString.h"
 
 
+
 #define ArraySizeOf(array)     (sizeof(array) / sizeof(array[0]))
 
 
@@ -38,7 +39,7 @@ int cFloor::decodeFloor(pcFloor pmodelfloor, pcScriptRLayer floordata)
 		const tstring hindostr(_T("出現頻度"));
 		decodeInt(Minappearenemy_, pmodelfloor->Minappearenemy(), floordata, enemystr, hindostr, 0);
 		decodeInt(Maxappearenemy_, pmodelfloor->Maxappearenemy(), floordata, enemystr, hindostr, 1);
-		nextappearenemy_ = (Minappearenemy_+Maxappearenemy_/2);
+		nextappearenemy_ = random_range(Minappearenemy_,Maxappearenemy_+1);
 	
 		int i;
 		const tstring firstsetnumstr(_T("初期出現数"));
@@ -49,10 +50,6 @@ int cFloor::decodeFloor(pcFloor pmodelfloor, pcScriptRLayer floordata)
 
 		const tstring firstsetstr(_T("初期設置"));
 		decodeIntMatrix(charafirstsets_, pmodelfloor->charafirstsets(), floordata, enemystr, firstsetstr);
-		
-		decodeDouble(overdriveEnemyPercent_, pmodelfloor->overdriveEnemyPercent(), floordata, enemystr, tstring(_T("オーバードライブ出現率％")), 0);
-		
-		decodeInt(overdriveMaxAppearEnemyNum_, pmodelfloor->overdriveMaxAppearEnemyNum(), floordata, enemystr, tstring(_T("オーバードライブ出現敵最大数")), 0);
 	}
 	{
 		const tstring dropstr(_T("ドロップアイテム基礎"));
@@ -652,10 +649,6 @@ void cFloor::decodeParty(pcParty& tv, pcScriptRLayer floordata)
 //----------------------------------------------------------------
 //cDungeon
 //----------------------------------------------------------------
-
-cDungeon::cDungeon(void){
-	appreciationpos_ = 1;
-};
 void cDungeon::decode(pcScriptRLayer data)
 {
 	if(data == NULL) return;
@@ -839,7 +832,7 @@ void cDungeon::decode(pcScriptRLayer data)
 			pmodelfloor = vpfloor_.back();
 		}
 		
-		vpfloor_.back()->floorrandomSeed = randomgen().genrand_int32();
+		vpfloor_.back()->floorrandomSeed = sg_pDungeonSystem->RandomInitGen().genrand_int32();
 	}
 
 	

@@ -8,16 +8,7 @@ caFunction::caFunction()
 	End = false;
 	count = 0;
 	wait = 0;
-	pFunc = NULL;
 }
-caFunction::caFunction(void (*function)())
-{
-	End = false;
-	count = 0;
-	wait = 0;
-	pFunc = function;
-}
-
 caFunction::~caFunction()
 {
 }

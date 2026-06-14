@@ -333,11 +333,10 @@ int cAnimationManager::Anime_Function(void (*pFunc)(), int wait)
 	AddAnime(boost::static_pointer_cast<cAnimation>(cafu));
 	return true;
 }
-int cAnimationManager::AddAnime_GotoDungeon(const tstring& DungeonID, const int savefileNum, const map<tstring,int>& privateFlags, const tstring& savefileName)
+int cAnimationManager::AddAnime_GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName)
 {
 	pcaFadeGotoDungeon fadeGotoDungeon = pcaFadeGotoDungeon(new caFadeGotoDungeon);
 	fadeGotoDungeon->DungeonID = DungeonID;
-	fadeGotoDungeon->savefileNum = savefileNum;
 	fadeGotoDungeon->privateFlags = privateFlags;
 	fadeGotoDungeon->savefileName = savefileName;
 
@@ -347,7 +346,7 @@ int cAnimationManager::AddAnime_GotoDungeon(const tstring& DungeonID, const int 
 int cAnimationManager::AddAnime_GotoDungeon(const tstring& DungeonID) {
 	map<tstring,int> privateFlags;
 	tstring savefileName(DungeonID + _T("_temp"));
-	return AddAnime_GotoDungeon(DungeonID,-1,privateFlags,savefileName);
+	return AddAnime_GotoDungeon(DungeonID,privateFlags,savefileName);
 }
 int cAnimationManager::AddAnime_ContinueDungeon(pcSaveQuest continueQuest) {
 	pcaFadeContinueDungeon fadeContinueDungeon = pcaFadeContinueDungeon(new caFadeContinueDungeon);

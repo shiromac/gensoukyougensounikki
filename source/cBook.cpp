@@ -199,11 +199,6 @@ double cBook::水時濡れ確率()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Book基本値"),(tstring)_T("水時濡れ確率"),0.1);
 }
-int cBook::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Book基本値"),(tstring)_T("消費時幻想度加算量"),0);
-}
 StyleString cBook::OptionCaption()
 {
 	if(!修正値識別済み() && usecountminus())
@@ -493,9 +488,6 @@ int cBook::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
-		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-			幻想度加算();
-		}
 		sg_pDungeonSystem->落ち物破壊要請(me());
 	}
 	

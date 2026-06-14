@@ -58,7 +58,6 @@ public:
 	double speed;
 
 	tstring DungeonID;
-	int savefileNum;
 	map<tstring,int> privateFlags;
 	tstring savefileName;
 

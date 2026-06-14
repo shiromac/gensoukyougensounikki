@@ -66,8 +66,6 @@ public:
 	virtual double 水時濡れ確率();
 
 	virtual int 修正値最大値(){return 99;};
-	
-	virtual int 消費時幻想度加算量();
 
 	virtual bool stategoodRunoutprocess();
 	//-----------------------------------

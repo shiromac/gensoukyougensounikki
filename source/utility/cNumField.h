@@ -19,9 +19,7 @@ public:
 	virtual void Draw(IDirect3DDevice9 *pDev);
 	virtual void Init(IDirect3DDevice9 *pDev);
 
-	double distance;
-	bool distanceQuant;
-
+	int distance;
 	c4DVector position;
 
 	int FontHeightSize;
@@ -35,21 +33,21 @@ public:
 	
 	virtual void GetFigure(vector<int>& figures);
 
-	bool percentSign;
-	bool plusSign;
+	int arrangeX;
+	int arrangeY;
 
 	enum PositionArrangeX
 	{
 		ARRANGEX_LEFT = -1,
 		ARRANGEX_CENTER = 0,
 		ARRANGEX_RIGHT = 1,
-	} arrangeX;
+	};
 	enum PositionArrangeY
 	{
 		ARRANGEY_TOP = -1,
 		ARRANGEY_CENTER = 0,
 		ARRANGEY_BOTTOM = 1,
-	} arrangeY;
+	};
 
 protected:
 	

@@ -483,10 +483,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\MobAbilityIdeom.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\source\SpellEffects.cpp"
 				>
 			</File>
@@ -1161,10 +1157,6 @@
 					RelativePath=".\source\DungeonUtilitys.cpp"
 					>
 				</File>
-				<File
-					RelativePath=".\source\GensouGage.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="AI"
@@ -1187,10 +1179,6 @@
 				</File>
 				<File
 					RelativePath=".\source\ceaiNegative.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\source\ceaiRoomKeeper.cpp"
 					>
 				</File>
 				<File
@@ -1801,10 +1789,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\ceaiRoomKeeper.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\ceaiShopOwner.h"
 				>
 			</File>
@@ -2077,14 +2061,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GensouGage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\GensouGage.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\Language.h"
 				>
 			</File>
@@ -2110,10 +2086,6 @@
 			</File>
 			<File
 				RelativePath=".\source\menuCommand.h"
-				>
-			</File>
-			<File
-				RelativePath=".\source\MobAbilityIdiom.h"
 				>
 			</File>
 			<File

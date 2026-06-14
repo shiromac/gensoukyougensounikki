@@ -808,7 +808,8 @@ int cDrink_ID_24::飲む_効果_通常(pcCharacter pchara)
 int cDrink_ID_25::効果(pcCharacter pchara)
 {
 	//効果音未実装
-	GameIdiom::全異常状態治療要請(pchara);
+	sg_pDungeonSystem->精神異常治療要請(pchara);
+	sg_pDungeonSystem->身体異常治療要請(pchara);
 
 	map<tstring, StyleString> valiable;
 	valiable[_T("Chara")] = pchara->ShortName();
@@ -962,49 +963,6 @@ int cDrink_ID_34::飲む_効果_通常(pcCharacter pchara)
 		Anime_PlaySE(_T("eat.wav"),pchara->足元地形()->place);
 
 	sg_pDungeonSystem->満腹度回復要請(pchara,効果量(0));
-
-	return true;
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//------------------------------------------------------------------------------
-//リジェネ
-//------------------------------------------------------------------------------
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int cDrink_ID_35::飲む_効果_通常(pcCharacter pchara)
-{
-	sg_pDungeonSystem->AnimationManager().
-		Anime_PlaySE(_T("recover.wav"),pchara->足元地形()->place);
-
-	sg_pDungeonSystem->健康要請(pchara,効果量(0));
-
-	return true;
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//------------------------------------------------------------------------------
-//病気
-//------------------------------------------------------------------------------
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int cDrink_ID_36::飲む_効果_通常(pcCharacter pchara)
-{
-	sg_pDungeonSystem->AnimationManager().
-		Anime_PlaySE(_T("trap9010.wav"),pchara->足元地形()->place);
-
-	sg_pDungeonSystem->病気要請(pchara,効果量(0));
-
-	return true;
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//------------------------------------------------------------------------------
-//一病息災
-//------------------------------------------------------------------------------
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int cDrink_ID_37::飲む_効果_通常(pcCharacter pchara)
-{
-	sg_pDungeonSystem->AnimationManager().
-		Anime_PlaySE(_T("trap9010.wav"),pchara->足元地形()->place);
-
-	sg_pDungeonSystem->病気要請(pchara,効果量(0));
-	sg_pDungeonSystem->回復要請(pchara,効果量(1)*pchara->MHP*cCondition::healthfitnessRecoverPerHP,false);
 
 	return true;
 }

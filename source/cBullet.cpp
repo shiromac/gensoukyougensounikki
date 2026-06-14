@@ -274,11 +274,7 @@ double cBullet::デフォルト撃ち時神力切れ確率()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Bullet基本値"),(tstring)_T("デフォルト撃ち時神力切れ確率"),RUNOUTGOOD_POSSIBILITY);
 }
-int cBullet::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Bullet基本値"),(tstring)_T("消費時幻想度加算量"),0);
-}
+
 int cBullet::GetmenuCaption(vector<tstring> &CaptionList)
 {
 	if(倉庫の中())
@@ -599,9 +595,6 @@ int cBullet::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
-		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-			幻想度加算();
-		}
 		sg_pDungeonSystem->落ち物破壊要請(me());
 	}
 	
@@ -739,11 +732,11 @@ double cBullet::能力スロット()
 	int maxslot = cItem::能力スロット();
 
 
-	return maxslot;
+	return ceil( maxslot*効果量係数()*能力効果量倍率());
 }
 double cBullet::能力効果量倍率()
 {
-	return 1.0;
+	return 1/max(0.5,1+(まとめ最大数()-1)*効果量修正値倍率());
 }
 
 

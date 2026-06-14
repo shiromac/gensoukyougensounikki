@@ -6,8 +6,6 @@
 #include "FindUtility.h"
 #include "cDungeonSystem.h"
 #include "cAttackinformation.h"
-#include "MobAbilityIdiom.h"
-#include "cObjectChara.h"
 
 bool cSpell_能力仕様フラグID_exist(cValiableField& valiable, int ID)
 {
@@ -20,25 +18,6 @@ double& cSpell_能力仕様フラグID_dim(cValiableField& valiable, int ID)
 double& cSpell_能力仕様フラグID_val(cValiableField& valiable, int ID)
 {
 	return valiable.doubles.val((_T("cSpell_能力仕様フラグID_") + setStyle(ID)).c_str());
-}
-
-bool cSpell::CutInMobAbilityIdiom(const MobAbilityIdiom::CutInFunctionObject& functor, pcCharacter pchara, タイミング timing, cValiableField& valiable, bool enabledSpellDamage, bool enabledActiveIdentify, bool guardDuplicateAbility)
-{
-	if(!guardDuplicateAbility || !cSpell_能力仕様フラグID_exist(valiable,ID())) {
-		if(functor(装備者(), timing, valiable)) {
-			if(guardDuplicateAbility) {
-				cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
-			}
-			if(enabledSpellDamage) {
-				Breakcrashprocess(効果時腕輪ダメージ());
-			}
-			if(enabledActiveIdentify) {
-				sg_pDungeonSystem->動的識別(me());
-			}
-			return true;
-		}
-	}
-	return false;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //------------------------------------------------------------------------------
@@ -72,11 +51,15 @@ void cSpell_ID_0::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 	
-	if(装備されている())
+	if(装備されている() && timing == 拾い直後_タイミング && !cSpell_能力仕様フラグID_exist(valiable,ID()) )
 	{
-		if( MobAbilityIdiom::フロア開始時所持アイテムランダム識別CutIn(効果量(0))(装備者(), timing, valiable) )
+		if(!valiable.drops[変数_対象落ち物]->修正値識別済み() || !valiable.drops[変数_対象落ち物]->状態値識別済み())
 		{
+			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
+			sg_pDungeonSystem->状態のみ識別( valiable.drops[変数_対象落ち物], 0);
+			sg_pDungeonSystem->修正のみ識別( valiable.drops[変数_対象落ち物], 0);
 			sg_pDungeonSystem->動的識別(me());
+			
 			Breakcrashprocess(効果時腕輪ダメージ());
 		}
 	}
@@ -220,21 +203,11 @@ void cSpell_ID_3::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 
-	if(装備されている())
+	if(装備されている() && timing == アイテム命中判定時_タイミング)
 	{
-		int damage = 装備者()->MHP/効果量(1);
-		if(damage < 1) {
-			damage = 1;
-		}
-		if(MobAbilityIdiom::投擲物魔法ダメージ化CutIn(damage)(装備者(),timing,valiable)) {
-			Breakcrashprocess(効果時腕輪ダメージ());
-			sg_pDungeonSystem->動的識別(me());
-		}
-
-		if(MobAbilityIdiom::遠距離ダメージ軽減CutIn(効果量(2))(装備者(),timing,valiable)) {
-			Breakcrashprocess(効果時腕輪ダメージ());
-			sg_pDungeonSystem->動的識別(me());
-		}
+		valiable.doubles[変数_回避力] += 効果量(1);
+		Breakcrashprocess(効果時腕輪ダメージ());
+		sg_pDungeonSystem->動的識別(me());
 	}
 
 }
@@ -403,13 +376,7 @@ void cSpell_ID_5::CutIn(タイミング timing, cValiableField& valiable)
 		}
 
 	}
-	if(装備されている() && !cSpell_能力仕様フラグID_exist(valiable,ID()))
-	{
-		if(MobAbilityIdiom::呪い無効化CutIn()(装備者(), timing, valiable)) {
-			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
-			sg_pDungeonSystem->動的識別(me());
-		}
-	}
+
 }
 int cSpell_ID_5::効果(pcCharacter pchara)
 {
@@ -429,7 +396,7 @@ int cSpell_ID_5::効果(pcCharacter pchara)
 		}
 	}
 
-	GameIdiom::呪術悪性異常状態である(pchara);
+	sg_pDungeonSystem->呪術異常治療要請(pchara);
 
 	if(eff)
 	{
@@ -460,22 +427,15 @@ void cSpell_ID_6::CutIn(タイミング timing, cValiableField& valiable)
 {
 	cSpell::CutIn(timing,valiable);
 
-	if(装備されている())
+	if(装備されている() && timing == 攻撃力計算時_タイミング)
 	{
 		pcDroping pdrop = 装備者()->attackequipment;
 		if(pdrop == NULL) return;
 		if(pdrop->属性.count(落ち物属性::剣))
 		{
-			if(MobAbilityIdiom::常時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable)) {
-				sg_pDungeonSystem->動的識別(me());
-				//Breakcrashprocess(効果時腕輪ダメージ());
-			}
-		}
-		else{
-			if(MobAbilityIdiom::常時防御力ボーナスCutIn(効果量(3), 0)(装備者(), timing, valiable)) {
-				sg_pDungeonSystem->動的識別(me());
-				//Breakcrashprocess(効果時腕輪ダメージ());
-			}
+			valiable.doubles[変数_攻撃力ボーナス_倍率] += 効果量(2)/100.0;
+			//Breakcrashprocess(効果時腕輪ダメージ());
+			sg_pDungeonSystem->動的識別(me());
 		}
 	}
 
@@ -666,19 +626,17 @@ void cSpell_ID_8::CutIn(タイミング timing, cValiableField& valiable)
 		if(timing == ダメージ計算攻撃時優先度低_タイミング )
 		{
 			int count = 0;
-			//count += valiable.intsets[変数_属性].count(攻撃属性::爆発);
+			count += valiable.intsets[変数_属性].count(攻撃属性::爆発);
 			count += valiable.intsets[変数_属性].count(攻撃属性::火);
 			count += valiable.intsets[変数_属性].count(攻撃属性::水);
 			count += valiable.intsets[変数_属性].count(攻撃属性::冷気);
-			//count += valiable.intsets[変数_属性].count(攻撃属性::気);
+			count += valiable.intsets[変数_属性].count(攻撃属性::気);
 			count += valiable.intsets[変数_属性].count(攻撃属性::電気);
 
 			Breakcrashprocess(効果時腕輪ダメージ());
 			if(count) sg_pDungeonSystem->動的識別(me());
 			valiable.doubles[変数_攻撃力ボーナス_倍率] += sqrt((double)count)*効果量(1)/100.0;
 		}
-		
-		MobAbilityIdiom::常時攻撃力ボーナスCutIn(効果量(2), 0)(装備者(), timing, valiable);
 	}
 }
 int cSpell_ID_8::効果(pcCharacter pchara)
@@ -699,11 +657,11 @@ int cSpell_ID_8::効果(pcCharacter pchara)
 
 			eff++;
 			multiset<攻撃属性::攻撃属性> temp;
-			//temp.insert(攻撃属性::爆発);
+			temp.insert(攻撃属性::爆発);
 			temp.insert(攻撃属性::火);
 			temp.insert(攻撃属性::水);
 			temp.insert(攻撃属性::冷気);
-			//temp.insert(攻撃属性::気);
+			temp.insert(攻撃属性::気);
 			temp.insert(攻撃属性::電気);
 			sg_pDungeonSystem->攻撃接近(攻撃作成(
 				pchara,//攻撃者
@@ -751,7 +709,7 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			{
 				pcDroping pdrop = 装備者()->attackequipment;
 				if(pdrop != NULL) sg_pDungeonSystem->アイテム祝福(pdrop);
-				//Breakcrashprocess(効果時腕輪ダメージ());
+				Breakcrashprocess(効果時腕輪ダメージ());
 				sg_pDungeonSystem->動的識別(me());
 			}
 		}
@@ -761,15 +719,10 @@ void cSpell_ID_9::CutIn(タイミング timing, cValiableField& valiable)
 			{
 				pcDroping pdrop = 装備者()->defenseequipment;
 				if(pdrop != NULL) sg_pDungeonSystem->アイテム祝福(pdrop);
-				//Breakcrashprocess(効果時腕輪ダメージ());
+				Breakcrashprocess(効果時腕輪ダメージ());
 				sg_pDungeonSystem->動的識別(me());
 			}
 		}
-		
-		CutInMobAbilityIdiom(MobAbilityIdiom::投擲物反射CutIn(), 装備者(), timing, valiable,
-			true,//bool enabledSpellDamage,
-			true,//bool enabledActiveIdentify,
-			true);//bool guardDuplicateAbility)
 	}
 }
 int cSpell_ID_9::効果(pcCharacter pchara)
@@ -890,7 +843,8 @@ int cSpell_ID_10::効果(pcCharacter pchara)
 	int eff = 0;
 
 	eff |= sg_pDungeonSystem->回復要請(pchara,pchara->MHP);
-	eff |= GameIdiom::悪性異常状態治療要請(pchara);
+	eff |= sg_pDungeonSystem->精神異常治療要請(pchara);
+	eff |= sg_pDungeonSystem->身体異常治療要請(pchara);
 
 	if(eff)
 	{
@@ -928,17 +882,6 @@ void cSpell_ID_11::CutIn(タイミング timing, cValiableField& valiable)
 			valiable.doubles.val(変数_汎用ブール) = 1;
 			//Breakcrashprocess(効果時腕輪ダメージ());
 			//sg_pDungeonSystem->動的識別(me());
-		}
-
-		std::set<int> attri;
-		attri.insert((int)攻撃属性::水);
-		MobAbilityIdiom::属性耐性ボーナス％(attri,効果量(1))(装備者(), timing, valiable);
-
-		if(timing == ターン終了_タイミング)
-		{
-			if(装備者()->足元地形()->iswater()) {
-				sg_pDungeonSystem->回復要請(装備者(),装備者()->MHP*効果量(0)/100.0,false);
-			}
 		}
 		/*
 		if(timing == アイテム呪い直前_タイミング)
@@ -1056,14 +999,14 @@ void cSpell_ID_13::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
-		
+		/*
 		if(timing == 自然満腹度減少量計算時_タイミング)
 		{
 			valiable.doubles.val(変数_汎用ボーナス_倍率) += 効果量(1)/100.0;
 			//Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
-		
+		*/
 		if(timing == ダメージ時_タイミング)
 		{
 			valiable.doubles.val(変数_ダメージ) = min(valiable.doubles.val(変数_ダメージ),装備者()->MHP/効果量(2));
@@ -1594,9 +1537,22 @@ void cSpell_ID_19::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
-		MobAbilityIdiom::超遠距離耐性ボーナスCutIn(効果量(3))(装備者(), timing, valiable);
-
-		if(timing == 自然満腹度減少量計算時_タイミング)
+		if(timing == ダメージ計算防御時_タイミング)
+		{
+			if(valiable.intsets.val(変数_属性).count(攻撃属性::気))
+			{
+				valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(3);
+				//Breakcrashprocess(効果時腕輪ダメージ());
+				sg_pDungeonSystem->動的識別(me());
+			}
+			if(valiable.intsets.val(変数_属性).count(攻撃属性::落ち物))
+			{
+				valiable.doubles.val(変数_耐性ボーナス_倍率％) -= 効果量(4);
+				//Breakcrashprocess(効果時腕輪ダメージ());
+				sg_pDungeonSystem->動的識別(me());
+			}
+		}
+		else if(timing == 自然満腹度減少量計算時_タイミング)
 		{
 			valiable.doubles.val(変数_汎用ボーナス_倍率) -= 効果量(2)/100.0;
 			//Breakcrashprocess(効果時腕輪ダメージ());
@@ -1798,21 +1754,12 @@ void cSpell_ID_22::CutIn(タイミング timing, cValiableField& valiable)
 		if(timing == 箱帯静電気直前_タイミング
 			|| timing == 本濡れ直前_タイミング
 			|| timing == 水筒冷凍直前_タイミング
-			|| timing == 食べ物劣化直前_タイミング
-			|| timing == イモライズ直前_タイミング)
+			|| timing == 食べ物劣化直前_タイミング)
 		{
 
 			valiable.doubles.val(変数_汎用ブール) = 0;
 			Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
-		}
-		if(MobAbilityIdiom::悪性異常状態無効化CutIn()(装備者(), timing, valiable))
-		{
-			Breakcrashprocess(効果時腕輪ダメージ());
-		}
-		if(timing == スペル装備直後_タイミング)
-		{
-			GameIdiom::悪性異常状態治療要請(装備者(),true);
 		}
 	}
 }
@@ -1918,8 +1865,6 @@ void cSpell_ID_24::CutIn(タイミング timing, cValiableField& valiable)
 			Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
-		
-		MobAbilityIdiom::常時防御力ボーナスCutIn(効果量(0), 0)(装備者(), timing, valiable);
 	}
 }
 int cSpell_ID_24::効果(pcCharacter pchara)
@@ -2023,49 +1968,8 @@ void cSpell_ID_25::CutIn(タイミング timing, cValiableField& valiable)
 }
 int cSpell_ID_25::効果(pcCharacter pchara)
 {
-	int eff = 1;
+	int eff = 0;
 
-	EffectFunctions::ボスエフェクト集中(pchara->placeX, pchara->placeY, 0);
-	int i,k;
-	for(i=0;i<64;i++)
-	{
-		for(k=0;k<8;k++)
-		{
-			double x = pow(i/32.0 -1, 2);
-			double i_kaiten = 25;
-			double k_kaiten = 45;
-			double i_kyori = 0.25;
-			c4DVector v(i*i_kyori + x*0.1,0,0,0);
-			v.turn(k*k_kaiten+i*i_kaiten);
-			cCoordinate coo(v.x, v.y);
-			v.x += pchara->placeX + 0.5;
-			v.y += pchara->placeY + 0.5;
-			pcLandform pland = sg_pDungeonSystem->Map().Land(v.x,v.y);
-			if(sg_pDungeonSystem->キャラ配置安全(pland))
-			{
-				EffectFunctions::煙エフェクト1(pland->placeX,pland->placeY);
-
-				弾幕::弾幕Type type = 弾幕::追尾;
-				弾幕::弾幕色 color = 弾幕::マゼンタ;
-				if(k%2 == 0)
-				{
-					color = 弾幕::アオ;
-					type = 弾幕::追尾;
-				}
-				弾幕::弾幕召喚(pland,//場所
-								pchara->GetBulletAttackPower()*効果量(1),//HP
-								CHARACTER_FORSE_FRIEND,//Forse
-								0,//speed
-								type,//弾幕Type
-								color,//弾幕色
-								coo.GetAspect()-4,//aspect
-								NULLCHARA//targetenemy
-								);
-				
-			}
-		}
-	}
-	/*
 	map<tstring, StyleString> valiable;
 	valiable[_T("Chara")] = pchara->ShortName();
 	g_Langメッセージ(_T("cSpell_ID_25効果メッセージ"),valiable);
@@ -2132,8 +2036,7 @@ int cSpell_ID_25::効果(pcCharacter pchara)
 		}
 	
 		eff |= 1;
-	}*/
-
+	}
 
 	if(eff)
 	{
@@ -2315,19 +2218,19 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 
 	if(装備されている())
 	{
-		
+		/*
 		if(timing == スペル装備直後_タイミング)
 		{
 			tempmem() = 装備者()->Forse;
 			if(tempmem() == CHARACTER_FORSE_FRIEND)
 			{
-				sg_pDungeonSystem->狂乱要請(装備者(),GAME_TURN_GAMEOVER,true);
 				装備者()->Forse = CHARACTER_FORSE_ENEMY;
 			}
 			else
 			{
 				装備者()->Forse = CHARACTER_FORSE_FRIEND;
 			}
+			sg_pDungeonSystem->狂乱要請(装備者(),GAME_TURN_GAMEOVER,true);
 		}
 		else if(timing == スペル装備解除直前_タイミング)
 		{
@@ -2336,15 +2239,12 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 		}
 		else if(timing == ターン終了_タイミング)
 		{
-			if(tempmem() == CHARACTER_FORSE_FRIEND) {
-				Breakcrashprocess(効果時腕輪ダメージ());
-			}
+			Breakcrashprocess(効果時腕輪ダメージ());
 		}
-		
-			/*
+		*/
 		if(timing == スペル装備直後_タイミング)
 		{
-			GameIdiom::悪性異常状態治療要請(装備者(),true);
+			sg_pDungeonSystem->精神異常治療要請(装備者(),true);
 		}
 		else if((
 			timing == 眠り追加直前_タイミング
@@ -2369,7 +2269,6 @@ void cSpell_ID_28::CutIn(タイミング timing, cValiableField& valiable)
 			}
 			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
 		}
-		*/
 	}
 }
 int cSpell_ID_28::効果(pcCharacter pchara)
@@ -2378,13 +2277,9 @@ int cSpell_ID_28::効果(pcCharacter pchara)
 	//eff |= ;
 
 	//未実装
-	vector<pcCharacter> charaList = FindUtility::部屋内と隣接敵リスト(pchara);
 
-	int i,size = charaList.size();
-	for(i=0;i<size;i++) {
-		eff |= sg_pDungeonSystem->速度減少要請(charaList[i],効果量(0));
-		eff |= sg_pDungeonSystem->無意識要請(charaList[i],効果量(0));
-	}
+	eff = sg_pDungeonSystem->狂乱要請(pchara,効果量(0));
+	
 
 	if(eff)
 	{
@@ -2659,9 +2554,15 @@ int cSpell_ID_32::効果(pcCharacter pchara)
 
 	if(!didTryFlag)
 	{
-		if(GameIdiom::悪性異常状態である(pchara))
+		if(sg_pDungeonSystem->精神異常状態(pchara)||
+			sg_pDungeonSystem->身体異常状態(pchara)||
+			sg_pDungeonSystem->呪術異常状態(pchara)||
+			sg_pDungeonSystem->速度異常状態(pchara) )
 		{
-			eff |= GameIdiom::悪性異常状態治療要請(pchara);
+			eff |= sg_pDungeonSystem->精神異常治療要請(pchara);
+			eff |= sg_pDungeonSystem->身体異常治療要請(pchara);
+			eff |= sg_pDungeonSystem->呪術異常治療要請(pchara);
+			eff |= sg_pDungeonSystem->速度異常状態(pchara);
 			didTryFlag = true;
 		}
 
@@ -3414,55 +3315,6 @@ void cSpell_ID_49::CutIn(タイミング timing, cValiableField& valiable)
 				valiable.doubles.val(変数_耐性ボーナス_倍率％) -= 効果量(1);
 			}
 			//Breakcrashprocess(効果時腕輪ダメージ());
-			sg_pDungeonSystem->動的識別(me());
-		}
-		if(MobAbilityIdiom::攻撃時眠り付与CutIn(効果量(2),効果量(3))(装備者(), timing, valiable)) {
-			Breakcrashprocess(効果時腕輪ダメージ());
-			cSpell_能力仕様フラグID_dim(valiable,ID()) = 1;
-			sg_pDungeonSystem->動的識別(me());
-		}
-	}
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//------------------------------------------------------------------------------
-//シズハ
-//------------------------------------------------------------------------------
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-int cSpell_ID_50::効果(pcCharacter pchara)
-{
-	int eff = 0;
-	//eff |= ;
-
-	EffectFunctions::上吹き飛ばし風エフェクト(pchara->placeX, pchara->placeY, true);
-	eff |= sg_pDungeonSystem->吹き飛ばし要請(pchara, pchara, pchara->aspect+4, 効果量(0), 効果量(1));
-
-	if(eff)
-	{
-
-	}
-	else
-	{
-		map<tstring, StyleString> valiable;
-		g_Langメッセージ(_T("Spell効果無しメッセージ"),valiable);
-	}
-	return eff;
-}
-int cSpell_ID_50::宣言_効果_通常(pcCharacter pchara ,vector<pcDroping> &ObjectList)
-{
-	スペル定型エフェクト_宣言();
-	//SpellEffects::EffectcSpell_ID_1(pchara->placeX,pchara->placeY);
-	効果(pchara);
-	return true;//必ずtrueを返す
-}
-
-void cSpell_ID_50::CutIn(タイミング timing, cValiableField& valiable)
-{
-	cSpell::CutIn(timing,valiable);
-
-	if(装備されている())
-	{
-		if(MobAbilityIdiom::攻撃時自分ノックバックCutIn()(装備者(), timing, valiable)) {
-			Breakcrashprocess(効果時腕輪ダメージ());
 			sg_pDungeonSystem->動的識別(me());
 		}
 	}

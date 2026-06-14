@@ -18,7 +18,6 @@
 cTrap::cTrap(void)
 {
 	Fired = 0;
-	isDiscoveredWhen乗るBefore = true;//trueは未定義を含む
 }
 
 cTrap::~cTrap(void)
@@ -76,11 +75,7 @@ double cTrap::故障率()
 		ID(),(tstring)_T("故障率"),0);
 }
 
-int cTrap::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Trap基本値"),(tstring)_T("消費時幻想度加算量"),0);
-}
+
 
 void cTrap::DataBeginOptimize(int difficulty)
 {
@@ -283,7 +278,7 @@ int cTrap::乗る()
 	}
 	else
 	{
-		isDiscoveredWhen乗るBefore = isDiscover();
+		int isdiscovered = isDiscover();
 
 		if(onChara == sg_pDungeonSystem->pPlayerChara())
 		{
@@ -308,7 +303,7 @@ int cTrap::乗る()
 
 		if(!sg_pDungeonSystem->キャラクター敵対判定(sg_pDungeonSystem->pPlayerChara(), onChara))
 		{
-			if(!isDiscoveredWhen乗るBefore && random()*100 <= 発動率()*posp)
+			if(!isdiscovered && random()*100 <= 発動率()*posp)
 			{
 				return 発動要請();
 			}
@@ -332,9 +327,6 @@ int cTrap::乗る()
 
 int cTrap::上に落ちる(pcDroping pdrop)//pdropを破壊したいときtrue;
 {
-	
-	isDiscoveredWhen乗るBefore = isDiscover();
-
 	sg_pDungeonSystem->アイテム強制マッピング(me());//発見
 	sg_pDungeonSystem->AnimationManager().Anime_DisplayChange(&(opaque), 1);
 
@@ -343,9 +335,6 @@ int cTrap::上に落ちる(pcDroping pdrop)//pdropを破壊したいときtrue;
 }
 int cTrap::上に落ちる(pcCharacter pchara)//charaに何か起こったらtrue;
 {
-	
-	isDiscoveredWhen乗るBefore = isDiscover();
-
 	sg_pDungeonSystem->アイテム強制マッピング(me());
 	sg_pDungeonSystem->AnimationManager().Anime_DisplayChange(&(opaque), 1);
 		
@@ -459,11 +448,7 @@ int cTrap::衝突(pcCharacter pchara)
 
 
 	発動(pchara);
-
-	if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-		幻想度加算();
-	}
-
+	
 	sg_pDungeonSystem->落ち物破壊要請(me(),1);
 
 	return true;

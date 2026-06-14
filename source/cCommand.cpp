@@ -14,20 +14,6 @@ cCommand::~cCommand(void)
 {
 }
 
-void cCommand::didEndCommand(cCommand& self)
-{
-	pcCommandDelegateObject delegate = delegate_.lock();
-	if (delegate) {
-		delegate->didEndCommand(*this);
-	}
-}
-
-wpcCommandDelegateObject cCommand::selfAsDelegate()
-{
-	return wpcCommandDelegateObject(boost::static_pointer_cast<cCommandDelegateObject>(shared_from_this()));
-}
-
-
 int cCommandCancel::Action(IDirect3DDevice9 *pDev)
 {
 	sg_pDungeonSystem->ƒƒjƒ…[‚ğˆê–‡•Â‚¶‚é();
@@ -35,9 +21,3 @@ int cCommandCancel::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-void cCommandDelegated::setDelegate(const cCommandDelegate& delegate){
-	_delegate = delegate;
-}
-int cCommandDelegated::Action(IDirect3DDevice9 *pDev) {
-	return _delegate(*this);
-}

@@ -4,7 +4,6 @@
 #include "EffectFunctions.h"
 #include "cDungeonSystem.h"
 #include "cAttackinformation.h"
-#include "MobAbilityIdiom.h"
 
 
 bool cEquipment_能力仕様フラグID_exist(cValiableField& valiable, int ID)
@@ -119,7 +118,7 @@ double cEquipment_ID_4::効果ターン()
 void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 {
 
-	if(timing == ダメージ計算攻撃時_タイミング)
+	if(timing == 攻撃直後時_タイミング)
 	{
 		if(能力発動条件満たしている_攻撃用() && !cEquipment_能力仕様フラグID_exist(valiable,ID())
 			&& valiable.doubles.exist(変数_直接攻撃フラグ))
@@ -127,11 +126,9 @@ void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 			if(発動率() > random())
 			{
 				if(valiable.charas[変数_防御者] == NULL) return;
-				if(GameIdiom::異常状態である(valiable.charas[変数_防御者])) {
-					cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-					GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
-					valiable.doubles[変数_耐性ボーナス_倍率％] -= 効果量(1);
-				}
+				cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+				sg_pDungeonSystem->精神異常治療要請( valiable.charas[変数_防御者]);
+				sg_pDungeonSystem->身体異常治療要請( valiable.charas[変数_防御者]);
 			}
 		}
 	}
@@ -139,7 +136,8 @@ void cEquipment_ID_5::能力(const タイミング timing, cValiableField& valiable)
 	{
 		if(valiable.charas[変数_防御者] == NULL) return;
 		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-		GameIdiom::全異常状態治療要請( valiable.charas[変数_防御者]);
+		sg_pDungeonSystem->精神異常治療要請( valiable.charas[変数_防御者]);
+		sg_pDungeonSystem->身体異常治療要請( valiable.charas[変数_防御者]);
 	}
 }
 double cEquipment_ID_5::発動率()
@@ -168,20 +166,26 @@ void cEquipment_ID_8::能力(const タイミング timing, cValiableField& valiable)
 void cEquipment_ID_9::能力(const タイミング timing, cValiableField& valiable)
 {
 
-	if(timing == 装備品防具力基礎値計算時_タイミング)
+	if(timing == 被攻撃直後時_タイミング)
 	{
-		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-		valiable.doubles.val(変数_防具力基礎値ボーナス_定数) += 効果量(1);
+		if(能力発動条件満たしている_防御用() && !cEquipment_能力仕様フラグID_exist(valiable,ID()))
+		{
+
+			if(valiable.charas[変数_防御者] == NULL) return;
+			cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+			sg_pDungeonSystem->満腹度減少要請( valiable.charas[変数_防御者] ,効果量(0)/10.0,0);
+		}
 	}
-	if(timing == 装備品武器力基礎値計算時_タイミング)
+	if(timing == 攻撃直後時_タイミング)
 	{
-		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-		valiable.doubles.val(変数_武器力基礎値ボーナス_定数) += 効果量(1);
-	}
-	if(timing == 自然満腹度減少量計算時_タイミング)
-	{
-		cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-		valiable.doubles.val(変数_汎用ボーナス_倍率) += 効果量(0)/100.0;
+		if(能力発動条件満たしている_攻撃用() && !cEquipment_能力仕様フラグID_exist(valiable,ID())
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		{
+
+			if(valiable.charas[変数_防御者] == NULL) return;
+			cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
+			sg_pDungeonSystem->満腹度減少要請( valiable.charas[変数_防御者] ,効果量(1),0);
+		}
 	}
 }
 //------------------------------------------------------------------------------
@@ -942,17 +946,10 @@ void cEquipment_ID_39::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用())
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
-			攻撃属性::攻撃属性 attackAttri = 攻撃属性::火;
-			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
-				valiable.intsets.val(変数_属性).insert(attackAttri);
-			}
-			else {
-				set<int> targetAttackAttri;
-				targetAttackAttri.insert((int)attackAttri);
-				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
-			}
+			valiable.intsets.val(変数_属性).insert(攻撃属性::火);
 		}
 	}
 
@@ -962,36 +959,12 @@ void cEquipment_ID_39::能力(const タイミング timing, cValiableField& valiable)
 //------------------------------------------------------------------------------
 void cEquipment_ID_40::能力(const タイミング timing, cValiableField& valiable)
 {
-	if(timing == ダメージ計算防御時_タイミング)
+	if(timing == 防御力計算時_タイミング)
 	{
 		if(能力発動条件満たしている_防御用() || 能力発動条件満たしている_攻撃用())
 		{
-			if(valiable.doubles.exist(変数_方向))
-			{
-				int as = safeAspect( valiable.doubles.val(変数_方向) - 装備者_防御用()->aspect);
-				if(as < 3 || as > 5)
-				{
-					if(cEquipment_能力仕様フラグID_exist(valiable,ID()))
-					{
-						cEquipment_能力仕様フラグID_val(valiable,ID()) += 1;
-					}
-					else
-					{
-						cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
-					}
-
-					if(cEquipment_能力仕様フラグID_val(valiable,ID()) <= 1)
-					{
-						valiable.doubles[変数_耐性ボーナス_倍率％] += 効果量(0);
-					}
-					else
-					{
-						double power = pow(効果量(0)/100.0 , cEquipment_能力仕様フラグID_val(valiable,ID()) - 2);
-						valiable.doubles[変数_耐性ボーナス_倍率％] += 効果量(1)*power;
-					}
-				
-				}
-			}
+			valiable.doubles.val(変数_防御力ボーナス_倍率) += 効果量(0)/1000.0;
+			valiable.doubles.val(変数_防御力ボーナス_定数) += 効果量(1);
 		}
 	}
 
@@ -1004,21 +977,6 @@ void cEquipment_ID_41::能力(const タイミング timing, cValiableField& valiable)
 	if(timing == 攻撃直後時_タイミング)
 	{
 		if(能力発動条件満たしている_攻撃用()
-			&& valiable.doubles.exist(変数_直接攻撃フラグ))
-		{
-			if(効果量(0)/100.0 > random())
-			{
-				if(valiable.charas.dim(変数_防御者) != NULL)
-				{
-					sg_pDungeonSystem->頑強要請(valiable.charas.dim(変数_防御者),効果量(1),効果量(2));
-
-				}
-			}
-		}
-	}
-	if(timing == 被攻撃直後時_タイミング)
-	{
-		if(能力発動条件満たしている_防御用()
 			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
 			if(効果量(0)/100.0 > random())
@@ -1079,27 +1037,35 @@ void cEquipment_ID_44::能力(const タイミング timing, cValiableField& valiable)
 //------------------------------------------------------------------------------
 void cEquipment_ID_45::能力(const タイミング timing, cValiableField& valiable)
 {
-	if(timing != 能力発動条件満たしている_攻撃用_タイミング && timing != 能力発動条件満たしている_防御用_タイミング)
+if(timing == ダメージ計算防御時_タイミング)
 	{
 		if(能力発動条件満たしている_防御用())
 		{
-			if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
-			{//初
-				if(MobAbilityIdiom::超遠距離耐性ボーナスCutIn(効果量(0))(装備者(), timing, valiable))
-				{
+			if(valiable.intsets.val(変数_属性).count(攻撃属性::気))
+			{
+				if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
+				{//初
+					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(0);
 					cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
 				}
+				else
+				{
+					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(1);
+				
+				}
+				
 			}
-			else
-			{
-				MobAbilityIdiom::超遠距離耐性ボーナスCutIn(効果量(1))(装備者(), timing, valiable);
-			}
-		}
-
-		if(能力発動条件満たしている_攻撃用()) {
-			MobAbilityIdiom::超遠距離攻撃力ボーナスCutIn(効果量(2),0)(装備者(), timing, valiable);
 		}
 	}
+	if(timing == ダメージ計算攻撃時_タイミング)
+	{
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
+		{
+			valiable.intsets.val(変数_属性).insert(攻撃属性::気);
+		}
+	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -1174,25 +1140,32 @@ void cEquipment_ID_48::能力(const タイミング timing, cValiableField& valiable)
 //------------------------------------------------------------------------------
 void cEquipment_ID_49::能力(const タイミング timing, cValiableField& valiable)
 {
-	if(timing != 能力発動条件満たしている_攻撃用_タイミング && timing != 能力発動条件満たしている_防御用_タイミング)
+	if(timing == ダメージ計算防御時_タイミング)
 	{
 		if(能力発動条件満たしている_防御用())
 		{
-			if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
-			{//初
-				if(MobAbilityIdiom::定数攻撃耐性ボーナスCutIn(効果量(0))(装備者_防御用(), timing, valiable)) {
+			if(valiable.intsets.val(変数_属性).count(攻撃属性::爆発))
+			{
+				if(!cEquipment_能力仕様フラグID_exist(valiable,ID()))
+				{//初
+					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(0);
 					cEquipment_能力仕様フラグID_dim(valiable,ID()) = 1;
 				}
-			}
-			else
-			{
-				MobAbilityIdiom::定数攻撃耐性ボーナスCutIn(効果量(1))(装備者_防御用(), timing, valiable);
+				else
+				{
+					valiable.doubles.val(変数_耐性ボーナス_倍率％) += 効果量(1);
+				
+				}
+				
 			}
 		}
-
-		if(能力発動条件満たしている_攻撃用())
+	}
+	if(timing == ダメージ計算攻撃時_タイミング)
+	{
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
-			MobAbilityIdiom::定数攻撃攻撃力ボーナスCutIn(効果量(2),0)(装備者_攻撃用(), timing, valiable);
+			valiable.intsets.val(変数_属性).insert(攻撃属性::爆発);
 		}
 	}
 }
@@ -1223,17 +1196,10 @@ void cEquipment_ID_50::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用())
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
-			攻撃属性::攻撃属性 attackAttri = 攻撃属性::冷気;
-			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
-				valiable.intsets.val(変数_属性).insert(attackAttri);
-			}
-			else {
-				set<int> targetAttackAttri;
-				targetAttackAttri.insert((int)attackAttri);
-				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
-			}
+			valiable.intsets.val(変数_属性).insert(攻撃属性::冷気);
 		}
 	}
 }
@@ -1489,17 +1455,10 @@ void cEquipment_ID_59::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用())
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
-			攻撃属性::攻撃属性 attackAttri = 攻撃属性::水;
-			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
-				valiable.intsets.val(変数_属性).insert(attackAttri);
-			}
-			else {
-				set<int> targetAttackAttri;
-				targetAttackAttri.insert((int)attackAttri);
-				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
-			}
+			valiable.intsets.val(変数_属性).insert(攻撃属性::水);
 		}
 	}
 }
@@ -1530,17 +1489,10 @@ void cEquipment_ID_60::能力(const タイミング timing, cValiableField& valiable)
 	}
 	if(timing == ダメージ計算攻撃時_タイミング)
 	{
-		if(能力発動条件満たしている_攻撃用())
+		if(能力発動条件満たしている_攻撃用()
+			&& valiable.doubles.exist(変数_直接攻撃フラグ))
 		{
-			攻撃属性::攻撃属性 attackAttri = 攻撃属性::雷;
-			if(valiable.doubles.exist(変数_直接攻撃フラグ)) {
-				valiable.intsets.val(変数_属性).insert(attackAttri);
-			}
-			else {
-				set<int> targetAttackAttri;
-				targetAttackAttri.insert((int)attackAttri);
-				MobAbilityIdiom::属性攻撃ボーナス％(targetAttackAttri,効果量(2))(装備者_攻撃用(), timing, valiable);
-			}
+			valiable.intsets.val(変数_属性).insert(攻撃属性::雷);
 		}
 	}
 }

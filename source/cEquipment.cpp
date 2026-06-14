@@ -197,10 +197,6 @@ void cEquipment::熟練度カウント加算(int pfc)
 		proficiency_count() += pfc;		
 	}
 }
-void cEquipment::熟練度リセット()
-{
-	proficiency_count() = 0;		
-}
 double cEquipment::熟練度成長倍率(const double selfLV, const double oppsLV)
 {
 	return max(0,min(1,(oppsLV - selfLV + 3)*4/selfLV + 1.0));
@@ -209,11 +205,6 @@ double cEquipment::熟練度成長倍率(const double selfLV, const double oppsLV)
 int cEquipment::熟練度最大()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("熟練度最大"), 999);
-}
-int cEquipment::合成時減少済みproficiency()
-{
-	double 減少割合 = 0.8;
-	return proficiency_count() * pow(減少割合,2);
 }
 StyleString cEquipment::熟練度キャプション()
 {
@@ -1133,9 +1124,6 @@ int cEquipment::衝突(pcCharacter pchara)
 
 	if(result)
 	{//使用に成功した
-		if(me()->投擲者() == sg_pDungeonSystem->pPlayerChara()) {
-			幻想度加算();
-		}
 		cValiableField val;
 		val.doubles.dim(変数_汎用ブール) = 1;
 		sg_pDungeonSystem->CutInM().CutIn(me(), 装備品衝突消滅直前時_タイミング, val);
@@ -1668,9 +1656,9 @@ int cEquipment::装備難度()
 {
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("装備難度"), 1);
 }
-double cEquipment::熟練度定数(double 装備力)
+double cEquipment::熟練度定数()
 {
-	return (熟練度()/100.0)*(装備力*0.05 + 0.1)*熟練度攻撃防御補正率();
+	return (熟練度()*熟練度攻撃防御補正率())/100.0;
 }
 double cEquipment::熟練度攻撃防御補正率()
 {
@@ -1678,7 +1666,7 @@ double cEquipment::熟練度攻撃防御補正率()
 }
 double cEquipment::デフォルト熟練度攻撃防御補正率()
 {
-	return sg_pDungeonSystem->DataBase.DropImportData_Value((tstring)EQUIPMENT_BASICVALUESTR, (tstring)_T("デフォルト熟練度攻撃防御補正率"), 1.0);
+	return sg_pDungeonSystem->DataBase.DropImportData_Value((tstring)EQUIPMENT_BASICVALUESTR, (tstring)_T("デフォルト熟練度攻撃防御補正率"), 3);
 }
 bool cEquipment::改造可能()
 {
@@ -1704,11 +1692,6 @@ int cEquipment::修正値限界値()
 	int val = sg_pDungeonSystem->DataBase.DropImportData_Value(ID(), (tstring)_T("修正値限界値"), 10);
 	val += overspec()*(val*0.5 + 1);
 	return val;
-}
-int cEquipment::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Equipment基本値"),(tstring)_T("消費時幻想度加算量"),0);
 }
 double cEquipment::初期初期残りスロット()
 {
@@ -1744,7 +1727,7 @@ double cEquipment::武器力最終値()
 {
 	double result = 武器力基礎値() + quality()*武器力修正値重み();
 
-	result = result + 熟練度定数(result);
+	result = result + 熟練度定数();
 
 
 	cValiableField val;
@@ -1777,7 +1760,7 @@ double cEquipment::防具力最終値()
 {
 	double result = 防具力基礎値() + quality()*防具力修正値重み();
 	
-	result = result + 熟練度定数(result);
+	result = result + 熟練度定数();
 
 		
 	cValiableField val;

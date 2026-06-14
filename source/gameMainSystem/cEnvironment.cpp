@@ -43,7 +43,7 @@ bool cEnvironment::ResetDevice(LPDIRECT3DDEVICE9 pDev)//デバイスのリセット
 void cEnvironment::init(LPDIRECT3DDEVICE9 pDev)
 {
 	
-#if defined(_UNRELEASE) && defined(GGN_REPACK_GRAPHICS_ON_START)
+#ifdef _UNRELEASE
 	CFilePack graphicpack;
 	cScriptReader SR(GRAPHICFOLDER _T("graphicpass.id"));
 	SR.load();

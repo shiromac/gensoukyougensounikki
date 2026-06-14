@@ -388,7 +388,6 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
             .def("addNextChip", &AnimeChip_Chain::addNextChip)
             .def("setLife", &AnimeChip_Chain::setLife)
             .def("setDelay", &AnimeChip_Chain::setDelay)
-            .def("getDelay", &AnimeChip_Chain::getDelay)
 			.def("setWorldRotation", &AnimeChip_Chain::setWorldRotation)
 		//,
 	];
@@ -542,59 +541,31 @@ void AnimationScript_LuaEnvironment::setValiable(cValiableField& valiable)
 	}
 }
 
-int AnimationScript_AddAnimation_ToLuaEnv(AnimationScript_LuaEnvironment& luaEnv, const pLuaScript& pluascript, const tstring& contentName)
+int AnimationScript_AddAnimation(const pcScriptRLayer player, const tstring& contentName, cValiableField& valiable)
 {
+	pLuaScript psrc = player->pcontent(contentName);
+	pLuaScript pluascript = boost::dynamic_pointer_cast<LuaScript>(psrc);
+	
 	if(pluascript == NULL)
 	{
 		return false;
 	}
 
-	LuaStringTransformer luastr_contentName(contentName);
-
-	return luaEnv.runLuaScriptWithBuffer(pluascript->buffer(), pluascript->buffersize(), luastr_contentName.lua_str());
-}
-
-void AnimationScript_AddAnimation_OutputError(AnimationScript_LuaEnvironment& luaEnv, const tstring& contentName)
-{
-	tstring filename = _T("Error_LuaScript_AnimationScript_");
-	filename += contentName;
-	filename += _T(".txt");
-
-	luaEnv.outputErrorFile(filename);
-}
-
-int AnimationScript_AddAnimation(const pcScriptRLayer player, const tstring& contentName, cValiableField& valiable)
-{
-	
 	tstring name(_T("AnimationScript_"));
 	name += contentName;
 	static AnimationScript_LuaEnvironment luaEnv(tString2luastring(name));
 	luaEnv.init();
 	luaEnv.setValiable(valiable);
 
-	{
-		std::vector<tstring> dependLuakeys;
-		player->getDependLuaScriptKeys(dependLuakeys);
-		int keyIndex,size = dependLuakeys.size();
-		for(keyIndex = 0; keyIndex < size; keyIndex++) {
-			pLuaScript pluascript = player->pdependContent(dependLuakeys[keyIndex]);
-			if(AnimationScript_AddAnimation_ToLuaEnv(luaEnv, pluascript, contentName))
-			{
-				AnimationScript_AddAnimation_OutputError(luaEnv, contentName);
-			}
-		}
-	}
+	LuaStringTransformer luastr_contentName(contentName);
 
-	pLuaScript pluascript = player->pcontent(contentName);
-	
-	if(pluascript == NULL)
+	if(luaEnv.runLuaScriptWithBuffer(pluascript->buffer(), pluascript->buffersize(), luastr_contentName.lua_str()))
 	{
-		return false;
-	}
+		tstring filename = _T("Error_LuaScript_AnimationScript_");
+		filename += contentName;
+		filename += _T(".txt");
 
-	if(AnimationScript_AddAnimation_ToLuaEnv(luaEnv, pluascript, contentName))
-	{
-		AnimationScript_AddAnimation_OutputError(luaEnv, contentName);
+		luaEnv.outputErrorFile(filename);
 	}
 
 	return true;

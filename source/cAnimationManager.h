@@ -146,7 +146,7 @@ public:
 	int AddAnime_parallel(pcAnimation pcanime, int wait = 0);
 	int AddAnime_parallelCritical(pcAnimation pcanime, int wait = 0);
 
-	int AddAnime_GotoDungeon(const tstring& DungeonID, const int savefileNum, const map<tstring,int>& privateFlags, const tstring& savefileName);
+	int AddAnime_GotoDungeon(const tstring& DungeonID, const map<tstring,int>& privateFlags, const tstring& savefileName);
 	int AddAnime_GotoDungeon(const tstring& DungeonID);
 	int AddAnime_ContinueDungeon(pcSaveQuest continueQuest);
 

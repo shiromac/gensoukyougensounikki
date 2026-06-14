@@ -155,37 +155,6 @@ pLuaScript cScriptRLayer::pcontent(const tstring& label)
 
 	return (itr->second);
 }
-
-pLuaScript cScriptRLayer::pdependContent(const tstring& label)
-{
-	map<tstring,pLuaScript>::iterator itr;
-	itr = dependContent_.find(label);
-
-	if(itr == dependContent_.end())
-	{
-		//assert(!_T("cScriptRLayer::macroì‡Ç≈ïsìKêÿÇ»éQè∆"));
-		return NULLOFLuaScript;
-	}
-
-	return (itr->second);
-}
-
-void cScriptRLayer::getDependLuaScriptKeys(std::vector<tstring>& keys)
-{
-	map<tstring,pLuaScript>::iterator itr = dependContent_.begin();
-	for(;;)
-	{
-		if(itr == dependContent_.end())
-		{
-			return;
-		}
-
-		keys.push_back(itr->first);
-
-		itr++;
-	}
-
-}
 /*
 pLuaScript cScriptRLayer::ptopcontent()
 {
@@ -229,23 +198,6 @@ int cScriptRLayer::addContent(const tstring& label, pLuaScript content)
 int cScriptRLayer::eraseContent(const tstring& label)
 {
 	if((content_.erase(label)))
-	{//ê¨å˜
-		return true;
-	}
-	return false;
-}
-
-int cScriptRLayer::addDependContent(const tstring& label, pLuaScript content)
-{
-	if((dependContent_.insert(pair<tstring, pLuaScript>(label,content)).second) == false)
-	{//ÇµÇ¡ÇœÇ¢
-		return false;
-	}
-	return true;
-}
-int cScriptRLayer::eraseDependContent(const tstring& label)
-{
-	if((dependContent_.erase(label)))
 	{//ê¨å˜
 		return true;
 	}
@@ -450,7 +402,7 @@ void afterdecode_table(std::vector<tstring> & script,const TCHAR* delim, pcScrip
 int cScriptRLayer::savedata(std::vector<SByte>& data)
 {
 	vector<vector<SByte>> vvdata;
-	vvdata.resize(6);
+	vvdata.resize(5);
 
 	cDataConverter::ConvertVT2VecVecC2VecC(script_,vvdata[0]);
 	cDataConverter::ConvertMTT2VecVecC2VecC(member_,vvdata[1]);
@@ -459,9 +411,6 @@ int cScriptRLayer::savedata(std::vector<SByte>& data)
 
 	//í«â¡
 	cDataConverter::ConvertMTT2VecVecC2VecC(content_,vvdata[4]);
-
-	//í«â¡ 20161218
-	cDataConverter::ConvertMTT2VecVecC2VecC(dependContent_,vvdata[5]);
 
 	cDataConverter::VecVecC2VecC(vvdata,data);
 
@@ -480,11 +429,6 @@ int cScriptRLayer::loaddata(const std::vector<SByte>& data, pcScriptRLayer me)
 	cDataConverter::BackDecodeVecC2VecVecC2MTVT(macro_,vvdata[3]);
 	//í«â¡
 	cDataConverter::BackDecodeVecC2VecVecC2MTT(content_,vvdata[4]);
-	
-	if(vvdata.size() > 5) {
-		//í«â¡ 20161218
-		cDataConverter::BackDecodeVecC2VecVecC2MTT(dependContent_,vvdata[5]);
-	}
 
 	std::map<tstring,pcScriptRLayer>::iterator itr = member_.begin();
 	for(; itr != member_.end(); itr++)

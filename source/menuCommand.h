@@ -57,7 +57,6 @@ DEF_COMMANDCLASS(_menuOther_Summon_Chara_Class,_T("クラス"))
 	int chara_ID;
 	int CLASS;
 	int Forse;
-	int option;
 };
 
 DEF_COMMANDCLASS(_menuOther_Make,_T("デバック生成"))
@@ -161,11 +160,3 @@ DEF_COMMANDCLASS(_menuOther_RetireChoice_No,g_Lang(_T("あきらめない")))
 DEF_COMMANDCLASS(_menuOther_ReturnTitle,g_Lang(_T("タイトルに戻る")))
 	//virtual StyleString shortExplanationText();
 };
-
-namespace CommandContinue{
-	int CommandFunc_Continue(cCommandDelegated& command);
-	int CommandFunc_ContinueAndSuspend(cCommandDelegated& command);
-	int CommandFunc_Retire(cCommandDelegated& command);
-	int CommandFunc_Retire_Retire(cCommandDelegated& command);
-	int CommandFunc_Retire_Restart(cCommandDelegated& command);
-}

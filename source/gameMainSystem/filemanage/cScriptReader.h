@@ -70,8 +70,6 @@ protected:
 
 	virtual int decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename);
 
-	virtual int decode_LuaDependScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename);
-
 protected:
 	//Šî–{ƒƒ“ƒo
 

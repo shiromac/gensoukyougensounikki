@@ -101,27 +101,6 @@ int cDungeonSystem::敵自然湧きID(int outputID[3], int flag)
 	return false;
 }
 
-int cDungeonSystem::敵グループ湧き(pcLandform land)
-{
-	int spownEnemyCount = 0;
-	int groupMemberNum = 3;
-	int enemyCount;
-	for(enemyCount=0; enemyCount<groupMemberNum; enemyCount++)
-	{
-		int vint[3];
-		敵自然湧きID(vint);
-		pcLandform spownLand = land;
-		if (enemyCount != 0) {
-			spownLand = FindUtility::同部屋_ランダム地形検索(land);
-		}
-		pcCharacter pcmob = キャラクター生成_自然湧き(vint[0], vint[1], CHARACTER_FORSE_ENEMY, spownLand);
-		if(pcmob) {
-			spownEnemyCount++;
-		}
-	}
-	return spownEnemyCount;
-}
-
 //初出現する時に使う。
 int cDungeonSystem::初期設置(pcCharacter go, pcLandform land, int firstsetting)
 {
@@ -273,17 +252,6 @@ int cDungeonSystem::アイテム合成(vector<pcDroping> vpdrop, int mitamaFlag, int i
 						else vpdrop[i]->state() = cDroping::STATE_NORMAL;
 
 						flag = 1;
-					}
-					
-					{
-						pcEquipment pequip = boost::dynamic_pointer_cast<cEquipment>(vpdrop[i]);
-						pcEquipment pequip2 = boost::dynamic_pointer_cast<cEquipment>(vpdrop[k]);
-						if(pequip && pequip2)
-						{
-							pequip->熟練度カウント加算(pequip2->合成時減少済みproficiency());
-							pequip2->熟練度リセット();
-							flag = 1;
-						}
 					}
 
 					if(vpdrop[i]->残りスロット() >= vpdrop[k]->能力スロット())
@@ -962,7 +930,7 @@ int cDungeonSystem::主人公お金所持量最大()
 }
 bool cDungeonSystem::落ち物拾得可(pcDroping pdrop, pcCharacter pchara)
 {
-	return 落ち物拾得可_持ち物余白無考慮(pdrop,pchara) && pchara->持ち物余白あり(pdrop);
+	return 落ち物拾得可_持ち物余白無考慮(pdrop,pchara) && pchara->持ち物余白あり();
 }
 bool cDungeonSystem::落ち物拾得可_持ち物余白無考慮(pcDroping pdrop, pcCharacter pchara)
 {

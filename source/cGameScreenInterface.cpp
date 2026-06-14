@@ -1,9 +1,6 @@
 
 #include "stdafx.h"
 #include "cGameScreenInterface.h"
-#include "../GensouGage.h"
-#include <boost/make_shared.hpp>
-#include "cFloor.h"
 
 
 #define INTERFACEFONTSIZE 32
@@ -65,10 +62,6 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 
 	heroCopy = pcCharacter(new cPlayerChara);
 
-	gensouGage = pGensouGageView(new GensouGageView);
-	gensouGage->init();
-	gensouGage->delegate = wpGensouGageViewDelegate(sg_pDungeonSystem->pGensouGage());
-
 	Resetdisp(pDev);
 	RefreshDraw(pDev);
 
@@ -91,9 +84,7 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 
 int cGameScreenInterface::process(IDirect3DDevice9 *pDev)
 {
-	if(gensouGage) {
-		gensouGage->process();
-	}
+
 	return true;
 }
 
@@ -185,7 +176,6 @@ int cGameScreenInterface::RefreshDraw(IDirect3DDevice9 *pDev)
 	}
 	text.EndText();
 
-	gensouGage->refreshView();
 
 	return true;
 }
@@ -231,24 +221,16 @@ int cGameScreenInterface::isHeroPchange(IDirect3DDevice9 *pDev)
 
 	return flag;
 }
-int cGameScreenInterface::menuPosWidthByLevel()
-{
-	return 32;
-}
-int cGameScreenInterface::menuPosHeightByLevel()
-{
-	return 32;
-}
 int cGameScreenInterface::menuPosTop(int level)
 {
 
 	switch(level)
 	{
-		case 1: return menuPosHeightByLevel()*2;
-		case 2: return menuPosHeightByLevel()*3;
-		case 3: return menuPosHeightByLevel()*4;
-		case 4: return menuPosHeightByLevel()*5;
-		case 5: return menuPosHeightByLevel()*6;
+		case 1: return 32*2;
+		case 2: return 32*3;
+		case 3: return 32*4;
+		case 4: return 32*5;
+		case 5: return 32*6;
 	}
 	return 0;
 }
@@ -256,11 +238,11 @@ int cGameScreenInterface::menuPosLeft(int level)
 {
 	switch(level)
 	{
-		case 1: return menuPosWidthByLevel()*0 + 56;
-		case 2: return menuPosWidthByLevel()*1 + 56;
-		case 3: return menuPosWidthByLevel()*2 + 56;
-		case 4: return menuPosWidthByLevel()*3 + 56;
-		case 5: return menuPosWidthByLevel()*4 + 56;
+		case 1: return 32*0 + 56;
+		case 2: return 32*1 + 56;
+		case 3: return 32*2 + 56;
+		case 4: return 32*3 + 56;
+		case 5: return 32*4 + 56;
 	}
 	return 0;
 }
@@ -268,11 +250,11 @@ int cGameScreenInterface::menuPosRight(int level)
 {
 	switch(level)
 	{
-		case 1: return -menuPosWidthByLevel()*1 + SCREEN_X;
-		case 2: return -menuPosWidthByLevel()*2 + SCREEN_X;
-		case 3: return -menuPosWidthByLevel()*3 + SCREEN_X;
-		case 4: return -menuPosWidthByLevel()*4 + SCREEN_X;
-		case 5: return -menuPosWidthByLevel()*5 + SCREEN_X;
+		case 1: return -32*1 + SCREEN_X;
+		case 2: return -32*2 + SCREEN_X;
+		case 3: return -32*3 + SCREEN_X;
+		case 4: return -32*4 + SCREEN_X;
+		case 5: return -32*5 + SCREEN_X;
 	}
 	return SCREEN_X;
 }
@@ -281,39 +263,12 @@ int cGameScreenInterface::menuPosBottom(int level)
 	switch(level)
 	{
 		case 1: return SCREEN_Y;
-		case 2: return -menuPosHeightByLevel()*1 + SCREEN_Y;
-		case 3: return -menuPosHeightByLevel()*2 + SCREEN_Y;
-		case 4: return -menuPosHeightByLevel()*3 + SCREEN_Y;
-		case 5: return -menuPosHeightByLevel()*4 + SCREEN_Y;
+		case 2: return -32*1 + SCREEN_Y;
+		case 3: return -32*2 + SCREEN_Y;
+		case 4: return -32*3 + SCREEN_Y;
+		case 5: return -32*4 + SCREEN_Y;
 	}
 	return SCREEN_Y;
-}
-int cGameScreenInterface::menuPosCenterX()
-{
-	return SCREEN_X /2 ;
-}
-int cGameScreenInterface::menuPosCenterY()
-{
-	return SCREEN_Y /2 ;
-}
-cRectObj cGameScreenInterface::menuPosParentOfControlLayer(const pcControlLayer& childControlLayer)
-{
-	pcControlLayer pparentControlLayer = pcControlLayer((cControlLayer*)NULL);
-	vector<pcControlLayer>::reverse_iterator ritr = sg_pDungeonSystem->menuControlLayerV().rbegin();
-	for(; sg_pDungeonSystem->menuControlLayerV().rend() != ritr; ritr++) {
-		if (*ritr == childControlLayer) {
-			ritr++;
-			if(sg_pDungeonSystem->menuControlLayerV().rend() != ritr) {
-				pparentControlLayer = *ritr;
-			}
-		}
-	}
-	if(pparentControlLayer) {
-		if(!pparentControlLayer->WindowList.empty()) {
-			return *(pparentControlLayer->WindowList[0]);
-		}
-	}
-	return cRectObj(menuPosLeft(0), menuPosTop(0), menuPosRight(0), menuPosBottom(0));
 }
 
 int cGameScreenInterface::Draw(IDirect3DDevice9 *pDev)
@@ -415,7 +370,6 @@ int cGameScreenInterface::Draw(IDirect3DDevice9 *pDev)
 	DO.Draw(pDev);
 	*/
 	
-	gensouGage->draw(pDev);
 
 	return true;
 }

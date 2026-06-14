@@ -57,11 +57,6 @@ int cScriptReader::load(void)
 }
 int cScriptReader::loadAndpacked(void)
 {
-#ifndef GGN_REPACK_SCRIPT_ON_START
-	int error = loadpacked();
-	if(error == SUCCESS) return SUCCESS;
-	return load();
-#else
 	int error = 0;
 	if((error = load()) != SUCCESS)
 	{//ロード失敗
@@ -81,7 +76,6 @@ int cScriptReader::loadAndpacked(void)
 	}
 
 	return SUCCESS;
-#endif
 }
 
 int cScriptReader::savepacked(void)
@@ -350,32 +344,19 @@ int cScriptReader::decode_roop(vector<tstring>& codes, vector<pcScriptRLayer>& v
 				}
 				else if(*itrchar == _T('!'))
 				{//スクリプト読み込み
-					tstring::iterator secondOperator = itrchar;
-					secondOperator++;
-					if(secondOperator != itrstr->end() && *secondOperator == _T(':'))
-					{
-						tstring::iterator endOfLineitr = itrstr->end();
-						tstring name(++secondOperator, --endOfLineitr);
-						if(decode_LuaDependScript(vlayer, scriptdir() + name, name))
-						{//エラー
-							addError(vlayer.back(), codename, line, *itrstr, tstring(_T("error cScriptReader::decode_LuaDependScript ファイルが見つからないか、ファイルが壊れています。<error> File Not Found. or Broken File")));
-						}
-					}
-					else {
 
-						tstring::iterator itr = itrstr->end();
-						tstring name(++itrchar, --itr);
-						vlayer.back()->script().push_back(_T("#!"));
-						/*vlayer.back()->script().back().insert(vlayer.back()->script().back().end(),
-																scriptdir().begin(),
-																scriptdir().end());*///実際のロケーション
-						vlayer.back()->script().back().insert(vlayer.back()->script().back().end(),
-																name.begin(),
-																name.end());
-						if(decode_LuaScript(vlayer, scriptdir() + name, name))
-						{//エラー
-							addError(vlayer.back(), codename, line, *itrstr, tstring(_T("error cScriptReader::decode_LuaScript ファイルが見つからないか、ファイルが壊れています。<error> File Not Found. or Broken File")));
-						}
+					tstring::iterator itr = itrstr->end();
+					tstring name(++itrchar, --itr);
+					vlayer.back()->script().push_back(_T("#!"));
+					/*vlayer.back()->script().back().insert(vlayer.back()->script().back().end(),
+															scriptdir().begin(),
+															scriptdir().end());*///実際のロケーション
+					vlayer.back()->script().back().insert(vlayer.back()->script().back().end(),
+															name.begin(),
+															name.end());
+					if(decode_LuaScript(vlayer, scriptdir() + name, name))
+					{//エラー
+						addError(vlayer.back(), codename, line, *itrstr, tstring(_T("error cScriptReader::decode_LuaScript ファイルが見つからないか、ファイルが壊れています。<error> File Not Found. or Broken File")));
 					}
 					break;
 				}
@@ -749,7 +730,7 @@ int cScriptReader::decode_Matrix(std::vector<pcScriptRLayer>& vlayer, tstring& s
 	return SUCCESS;//コメントアウト終了コードが見つからない
 }
 
-pLuaScript cScriptReader_decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename)
+int cScriptReader::decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename)
 {
 	pLuaScript pluas = pLuaScript(new LuaScript);
 #ifdef _UNRELEASE
@@ -757,34 +738,18 @@ pLuaScript cScriptReader_decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, t
 #endif
 	if(!pluas->loadFile(filepass))
 	{//失敗
-		return NULLOFLuaScript;
+		return VERROR;
 	}
 	
-	return boost::static_pointer_cast<LuaScript>(pluas);
-}
-
-int cScriptReader::decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename)
-{
-	pLuaScript pluas_casted = cScriptReader_decode_LuaScript(vlayer, filepass, filename);
-	if(pluas_casted && !vlayer.back()->addContent(filename, pluas_casted))
+	pLuaScript pluas_casted = boost::static_pointer_cast<LuaScript>(pluas);
+	if(!vlayer.back()->addContent(filename, pluas_casted))
 	{
 		return VERROR;
 	}
 
-	return SUCCESS;//コメントアウト終了コードが見つからない
-}
-
-int cScriptReader::decode_LuaDependScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename)
-{
-	pLuaScript pluas_casted = cScriptReader_decode_LuaScript(vlayer, filepass, filename);
-	if(pluas_casted && !vlayer.back()->addDependContent(filename, pluas_casted))
-	{
-		return VERROR;
-	}
 
 	return SUCCESS;//コメントアウト終了コードが見つからない
 }
-
 
 
 int cScriptReader::decode_newDefineMacro(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, tstring& name, int &line)

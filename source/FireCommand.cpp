@@ -583,7 +583,7 @@ int 拾う(IDirect3DDevice9 *pDev)
 		g_Langメッセージ(_T("アイテム拾う失敗拾得不可メッセージ"),valiable);
 		sg_pDungeonSystem->メニューを閉じる();
 	}
-	else if(!sg_pDungeonSystem->pPlayerChara()->持ち物余白あり(pdrop))
+	else if(!sg_pDungeonSystem->pPlayerChara()->持ち物余白あり())
 	{
 		map<tstring, StyleString> valiable;
 		valiable[_T("Item")] = pdrop->FullName();
@@ -1358,7 +1358,6 @@ int 開け要請(pcDroping pbox)
 
 	if(result)
 	{//使用に成功した
-		pbox->幻想度加算();
 		//sg_pDungeonSystem->落ち物破壊要請(pbox);
 	}
 
@@ -1484,7 +1483,7 @@ int 出し要請(pcDroping pdrop, pcCharacter receiver, pcDroping pbox)
 		return false;
 	}
 
-	if(receiver->持ち物余白あり(pdrop))
+	if(receiver->持ち物余白あり())
 	{
 
 		int result = 0;
@@ -1917,7 +1916,6 @@ int 飲む(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	{//使用に成功した
 		pcDroping emptypdrop = sg_pDungeonSystem->落ち物生成_設置なし(5008);
 		//sg_pDungeonSystem->落ち物変化(pdrop,emptypdrop);
-		pdrop->幻想度加算();
 		sg_pDungeonSystem->落ち物破壊要請(pdrop);
 		emptypdrop->discover();
 
@@ -2480,9 +2478,6 @@ int 食べ要請(pcCharacter pchara, pcDroping pdrop)
 
 	if(result)
 	{//使用に成功した
-		if(pchara == sg_pDungeonSystem->pPlayerChara()) {
-			pdrop->幻想度加算();
-		}
 		sg_pDungeonSystem->落ち物破壊要請(pdrop);
 	}
 
@@ -2832,10 +2827,6 @@ int 宣言要請(pcCharacter pchara ,vector<pcDroping> &ObjectList, pcDroping pdrop)
 
 	if(result)
 	{//使用に成功した
-
-		if(pchara == sg_pDungeonSystem->pPlayerChara()) {
-			pdrop->幻想度加算();
-		}
 
 		if(pdrop->state() == cDroping::STATE_GOOD)
 		{

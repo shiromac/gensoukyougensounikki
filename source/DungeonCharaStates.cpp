@@ -6,40 +6,29 @@
 #include "Gameobjects.h"
 #include "EffectFunctions.h"
 #include "FindUtility.h"
-#include "GameIdiom.h"
 #include <boost/pointer_cast.hpp>
 
 int cDungeonSystem::回復要請(pcCharacter pchara, int recovery, int Messageflag)
 {
-	cValiableField valf;
-	valf.doubles.dim(変数_汎用ブール) = true;//効果発揮フラグ
-	valf.doubles.dim(変数_汎用実数) = recovery;
-	valf.doubles.dim(変数_メッセージフラグ) = Messageflag;
-	valf.charas.dim(変数_対象者) = pchara;
-	CutInM().CutIn(pchara,回復直前_タイミング,valf);
-	if(valf.doubles.val(変数_汎用ブール) && valf.doubles.dim(変数_汎用実数) > 0)
-	{
 
-		int beforeHP = pchara->HP,afterHP;
+	int beforeHP = pchara->HP,afterHP;
 
-		RecoverCharacter(pchara,recovery,Messageflag);
-		afterHP = pchara->HP;
+	RecoverCharacter(pchara,recovery,Messageflag);
+	afterHP = pchara->HP;
 
-		if(Messageflag && pchara == pPlayerChara())
-		{//メッセージを表示する
-			map<tstring, StyleString> valiable;
+	if(Messageflag && pchara == pPlayerChara())
+	{//メッセージを表示する
+		map<tstring, StyleString> valiable;
 
-			valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
-			valiable[_T("Chara")] = pchara->ShortName();
-		
-			g_Langメッセージ(_T("HP回復メッセージ"),valiable);
+		valiable[_T("Value")] = setStyle(afterHP-beforeHP,RECOVER_COLOR);
+		valiable[_T("Chara")] = pchara->ShortName();
+	
+		g_Langメッセージ(_T("HP回復メッセージ"),valiable);
 
-			//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
-		}
-
-		return true;
+		//メッセージ(pchara->ShortName() +_T(" のHPが ")+setStyle(afterHP-beforeHP,RECOVER_COLOR)+_T(" 回復した。\n"));
 	}
-	return false;
+
+	return true;
 }
 int cDungeonSystem::HP設定要請(pcCharacter pchara, int afterHP, int Messageflag)
 {
@@ -299,34 +288,26 @@ int cDungeonSystem::速度減少要請(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
 
-	cValiableField valf;
-	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
-	CutInM().CutIn(pchara,速度減少直前_タイミング,valf);
-	if(valf.doubles.val(変数_汎用ブール))
+	if(!(pchara->雑魚属性()))//(pchara->Forse == CHARACTER_FORSE_FRIEND)
 	{
-
-		if(!(pchara->雑魚属性()))//(pchara->Forse == CHARACTER_FORSE_FRIEND)
-		{
-			pchara->Condition.速度減少(turn);
-		}
-		else
-		{//味方以外
-			pchara->Condition.速度減少(GAME_TURN_GAMEOVER);//永続
-		}
-
-		if(Messageflag && pchara == pPlayerChara())
-		{//メッセージを表示する
-			map<tstring, StyleString> valiable;
-
-			valiable[_T("Chara")] = pchara->ShortName();
-		
-			g_Langメッセージ(_T("速度減少メッセージ"),valiable);
-			
-			//メッセージ(pchara->ShortName() +_T(" の素早さが 下がった。\n"));
-		}
-		return true;
+		pchara->Condition.速度減少(turn);
 	}
-	return false;
+	else
+	{//味方以外
+		pchara->Condition.速度減少(GAME_TURN_GAMEOVER);//永続
+	}
+
+	if(Messageflag && pchara == pPlayerChara())
+	{//メッセージを表示する
+		map<tstring, StyleString> valiable;
+
+		valiable[_T("Chara")] = pchara->ShortName();
+	
+		g_Langメッセージ(_T("速度減少メッセージ"),valiable);
+		
+		//メッセージ(pchara->ShortName() +_T(" の素早さが 下がった。\n"));
+	}
+	return true;
 }
 int cDungeonSystem::眠り要請(pcCharacter pchara, int turn, int Messageflag)
 {
@@ -994,56 +975,6 @@ int cDungeonSystem::鳥目要請(pcCharacter pchara, int turn, int Messageflag)
 	}
 	return false;
 }
-int cDungeonSystem::健康要請(pcCharacter pchara, int turn, int Messageflag)
-{
-	if(pchara == NULL || pchara->死亡()) return false;
-
-	cValiableField valf;
-	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
-	CutInM().CutIn(pchara,健康追加直前_タイミング,valf);
-	if(valf.doubles.val(変数_汎用ブール))
-	{
-		pchara->Condition.健康追加(turn);
-
-		if(Messageflag)
-		{//メッセージを表示する
-			map<tstring, StyleString> valiable;
-
-			valiable[_T("Chara")] = pchara->ShortName();
-		
-			g_Langメッセージ(_T("健康メッセージ"),valiable);
-			
-		}
-
-		return true;
-	}
-	return false;
-}
-int cDungeonSystem::病気要請(pcCharacter pchara, int turn, int Messageflag)
-{
-	if(pchara == NULL || pchara->死亡()) return false;
-
-	cValiableField valf;
-	valf.doubles.dim(変数_汎用ブール) = 1;//効果発揮フラグ
-	CutInM().CutIn(pchara,病気追加直前_タイミング,valf);
-	if(valf.doubles.val(変数_汎用ブール))
-	{
-		pchara->Condition.病気追加(turn);
-
-		if(Messageflag)
-		{//メッセージを表示する
-			map<tstring, StyleString> valiable;
-
-			valiable[_T("Chara")] = pchara->ShortName();
-		
-			g_Langメッセージ(_T("病気メッセージ"),valiable);
-			
-		}
-
-		return true;
-	}
-	return false;
-}
 int cDungeonSystem::死の誘い要請(pcCharacter pchara, pcCharacter subject, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -1146,7 +1077,6 @@ int cDungeonSystem::擬態要請(pcCharacter pchara, int turn, int Messageflag)
 	return true;
 
 }
-/*
 int cDungeonSystem::精神異常治療要請(pcCharacter pchara, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
@@ -1193,8 +1123,6 @@ int cDungeonSystem::身体異常治療要請(pcCharacter pchara, int Messageflag)
 	pchara->Condition.泥酔追加(-1);
 	pchara->Condition.氷付け追加(-1);
 	pchara->Condition.鳥目追加(-1);
-	pchara->Condition.病気追加(-1);
-	pchara->Condition.健康追加(-1);
 	return true;
 }
 bool cDungeonSystem::身体異常状態(pcCharacter pchara)
@@ -1207,8 +1135,6 @@ bool cDungeonSystem::身体異常状態(pcCharacter pchara)
 	if(pchara->Condition.泥酔状態()) return true;
 	if(pchara->Condition.氷付け状態()) return true;
 	if(pchara->Condition.鳥目状態()) return true;
-	if(pchara->Condition.病気状態()) return true;
-	if(pchara->Condition.健康状態()) return true;
 	return false;
 }
 int cDungeonSystem::呪術異常治療要請(pcCharacter pchara, int Messageflag)
@@ -1259,84 +1185,11 @@ bool cDungeonSystem::速度異常状態(pcCharacter pchara)
 	if(pchara->Condition.速度度数() != pchara->Condition.デフォルト速度度数()) return true;
 	return false;
 }
-int cDungeonSystem::悪性異常状態治療要請(pcCharacter pchara, int Messageflag)
-{
-	if(pchara == NULL || pchara->死亡()) return false;
-
-	pchara->Condition.とても強い刺激();
-	pchara->Condition.バクスイ追加(-1);
-	pchara->Condition.眠り追加(-1);
-	pchara->Condition.びっくり追加(-1);
-	pchara->Condition.金縛り追加(-1);
-	pchara->Condition.封印追加(-1);
-	pchara->Condition.空振り追加(-1);
-	pchara->Condition.貧乏追加(-1);
-	pchara->Condition.臆病追加(-1);
-	//pchara->Condition.嫉妬追加(-1);
-	pchara->Condition.狂乱追加(-1);
-	pchara->Condition.無意識追加(-1);
-
-	if(pchara->Condition.力度数() < 0) {
-		pchara->Condition.脱力初期化();
-	}
-	if(pchara->Condition.守度数() < 0) {
-		pchara->Condition.軟弱初期化();
-	}
-
-	pchara->Condition.泥酔追加(-1);
-	pchara->Condition.氷付け追加(-1);
-	pchara->Condition.鳥目追加(-1);
-	pchara->Condition.病気追加(-1);
-	//pchara->Condition.健康追加(-1);
-
-	pchara->Condition.死の誘い追加(-1,NULLCHARA);
-	pchara->Condition.みがわり追加(-1,NULLCHARA);
-	//pchara->Condition.擬態追加(-1);
-
-	if(pchara->Condition.速度度数() < pchara->Condition.デフォルト速度度数())
-	{
-		sg_pDungeonSystem->速度異常治療要請(pchara, false);
-	}
-
-	return true;
-}
-int cDungeonSystem::良性異常状態治療要請(pcCharacter pchara, int Messageflag)
-{
-	if(pchara == NULL || pchara->死亡()) return false;
-
-	pchara->Condition.嫉妬追加(-1);
-
-	if(pchara->Condition.力度数() > 0) {
-		pchara->Condition.脱力初期化();
-	}
-	if(pchara->Condition.守度数() > 0) {
-		pchara->Condition.軟弱初期化();
-	}
-
-	pchara->Condition.健康追加(-1);
-
-	pchara->Condition.擬態追加(-1);
-
-	if(pchara->Condition.速度度数() > pchara->Condition.デフォルト速度度数())
-	{
-		sg_pDungeonSystem->速度異常治療要請(pchara, false);
-	}
-
-	return true;
-}
-
-int cDungeonSystem::全異常状態治療要請(pcCharacter pchara, int Messageflag)
-{
-	良性異常状態治療要請(pchara, Messageflag);
-	悪性異常状態治療要請(pchara, Messageflag);
-	return true;
-}
-*/
 int cDungeonSystem::やりすごし要請(pcCharacter pchara, int turn, int Messageflag)
 {
 	if(pchara == NULL || pchara->死亡()) return false;
 
-	GameIdiom::呪術悪性異常状態治療要請(pchara);
+	呪術異常治療要請(pchara);
 
 	pchara->Condition.やりすごし追加(turn);
 
@@ -1511,22 +1364,8 @@ int cDungeonSystem::EXTcharge(pcAttackinformation pattackinfo)
 			return true;
 		}
 
-		double ext = valf.doubles.val(変数_汎用実数);
-		
-		if(valf.charas.dim(変数_攻撃者)->LV - 10 >= valf.charas.dim(変数_防御者)->LV){
-			ext /= 4;
-		}
-		else if(valf.charas.dim(変数_攻撃者)->LV - 5 >= valf.charas.dim(変数_防御者)->LV){
-			ext /= 2;
-		}
-
-		ext = ceil(ext);
-		if (ext < 1) {
-			ext = 1;
-		}
-
 		//自分の場合メッセージが出る。
-		EXTcharge(valf.charas.val(変数_攻撃者), ext, (valf.charas.val(変数_攻撃者) == pPlayerChara()));
+		EXTcharge(valf.charas.val(変数_攻撃者), valf.doubles.val(変数_汎用実数), (valf.charas.val(変数_攻撃者) == pPlayerChara()));
 		//EXTcharge(pattackinfo->attacker, pattackinfo->defenser->HaveEXP(), (pattackinfo->attacker == pPlayerChara()));
 		return true;
 	}
@@ -1747,7 +1586,6 @@ int cDungeonSystem::DamageCharacter(pcCharacter pchara, int damage, int animatio
 	if(pchara->LastSpelling) return false;//ラストスペル中
 
 	pchara->HP -= damage;
-	pchara->Condition.damagedHP();
 
 	if(pchara->HP < 0)
 	{
@@ -1869,11 +1707,9 @@ int cDungeonSystem::DieCharacter(pcCharacter pchara, int Messageflag)
 	if(pchara != pPlayerChara())
 	{
 		//死亡アイテムドロップ
-
-		vector<int> IDs = pchara->死亡ドロップアイテムIDs();
-		int index, size = IDs.size();
-		for(index = 0; index < size; index++ ) {
-			int id = IDs[index];
+		if(pchara->holdItem.size() < pchara->MaxholdNum())
+		{
+			int id = pchara->死亡ドロップアイテムID();
 			pcDroping pdrop = 落ち物生成_設置なし(id);
 			遠隔拾得要請(pchara,pdrop);
 		}
@@ -1892,11 +1728,9 @@ int cDungeonSystem::強制退場要請(pcCharacter pchara, int Messageflag, int animat
 	if(pchara != pPlayerChara())
 	{
 		//死亡アイテムドロップ
-
-		vector<int> IDs = pchara->死亡ドロップアイテムIDs();
-		int index, size = IDs.size();
-		for(index = 0; index < size; index++ ) {
-			int id = IDs[index];
+		if(pchara->holdItem.size() < pchara->MaxholdNum())
+		{
+			int id = pchara->死亡ドロップアイテムID();
 			pcDroping pdrop = 落ち物生成_設置なし(id);
 			遠隔拾得要請(pchara,pdrop);
 		}

@@ -273,15 +273,12 @@
     <ClCompile Include="source\cDrama.cpp" />
     <ClCompile Include="source\cDramaManager.cpp" />
     <ClCompile Include="source\cDrawingObject_Rod.cpp" />
-    <ClCompile Include="source\ceaiRoomKeeper.cpp" />
     <ClCompile Include="source\cEvent.cpp" />
     <ClCompile Include="source\cEventBackground.cpp" />
     <ClCompile Include="source\cEventFadeInOut.cpp" />
     <ClCompile Include="source\cEventManager.cpp" />
     <ClCompile Include="source\ConfigCommands.cpp" />
     <ClCompile Include="source\Event1.cpp" />
-    <ClCompile Include="source\GensouGage.cpp" />
-    <ClCompile Include="source\MobAbilityIdeom.cpp" />
     <ClCompile Include="source\AnimationS.cpp">
       <ProgramDataBaseFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)vc100.pdb</ProgramDataBaseFileName>
     </ClCompile>

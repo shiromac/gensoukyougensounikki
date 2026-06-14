@@ -318,13 +318,8 @@ protected:
 	int 踏みフラグ_;
 
 public:
-	//倉庫内でのアイテムのサイズ
+	//アイテムのサイズ
 	virtual int size(){return 1;};
-	
-	//インベントリ内でのアイテムのサイズ
-	virtual int sizeInInventory(){return 1;};
-	//アイテムがいっぱいでも拾えるときtrue
-	virtual bool noVolumeInInventory(){return (sizeInInventory() == 0);};
 
 	virtual int 修正値最大値(){return 9999;};
 	virtual void 修正値丸め();
@@ -363,9 +358,6 @@ public:
 	virtual int 内包アイテム込み購入支払い値();//コレが内包込みの買い物した時の値段
 	virtual int 単体売却受け取り値();
 	virtual int 内包アイテム込み売却受け取り値();
-
-	virtual void 幻想度加算();
-	virtual int 消費時幻想度加算量();
 
 
 	virtual double 値段割引();

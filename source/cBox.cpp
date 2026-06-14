@@ -678,6 +678,101 @@ int cBox::開けるメッセージ定型()
 	return true;
 }
 
+
+
+
+
+
+
+
+
+/*
+//----------------------------------------------------------
+//出す
+//----------------------------------------------------------
+int cBox::出す(IDirect3DDevice9 *pDev, pcDroping pdrop)
+{
+	int result = true;
+
+	pcCharacter receiver = sg_pDungeonSystem->pPlayerChara();
+	
+
+
+	if(result)
+	{
+		result = 出し要請(pdrop,receiver);
+	}
+
+	if(result)
+	{//使用に成功した
+		sg_pDungeonSystem->メニューを閉じる();
+		sg_pDungeonSystem->ターンエンド();
+	}
+
+	
+
+	return true;
+}
+
+
+
+int cBox::出し要請(pcDroping pdrop, pcCharacter receiver)
+{
+	if(receiver->持ち物余白あり())
+	{
+
+		int result = 0;
+			
+		if(state() == cDroping::STATE_NORMAL)
+		{
+			result = 出す_メッセージ_通常(pdrop,receiver);
+		}
+		else if(state() == cDroping::STATE_CURSE)
+		{
+			result = 出す_メッセージ_呪い(pdrop,receiver);
+		}
+		else if(state() == cDroping::STATE_GOOD)
+		{
+			result = 出す_メッセージ_祝福(pdrop,receiver);
+		}
+
+
+		if(result)
+		{
+			sg_pDungeonSystem->落ち物出し要請(me(),pdrop,receiver);
+		}
+
+
+
+
+		if(state() == cDroping::STATE_NORMAL)
+		{
+			result = 出す_効果_通常(pdrop,receiver);
+		}
+		else if(state() == cDroping::STATE_CURSE)
+		{
+			result = 出す_効果_呪い(pdrop,receiver);
+		}
+		else if(state() == cDroping::STATE_GOOD)
+		{
+			result = 出す_効果_祝福(pdrop,receiver);
+		}
+
+		if(result)
+		{//使用に成功した
+			//sg_pDungeonSystem->落ち物破壊要請(me());
+		}
+
+		return result;
+	}
+	else
+	{
+		sg_pDungeonSystem->メッセージ(_T("これ以上は持ち物がいっぱいで出せない。\n"));
+	}
+	return false;
+}
+*/
+
 int cBox::出す_効果_通常(pcDroping pdrop, pcCharacter receiver)
 {
 	//sg_pDungeonSystem->メッセージ(_T("cBox 出す_効果_通常() 効果が設定されていません。\n"));
@@ -993,11 +1088,7 @@ double cBox::電気時帯静電気率()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		(tstring)_T("Box基本値"),(tstring)_T("電気時帯静電気率"),0.15);
 }
-int cBox::消費時幻想度加算量()
-{
-	return sg_pDungeonSystem->DataBase.DropImportData_Value(
-		(tstring)_T("Box基本値"),(tstring)_T("消費時幻想度加算量"),0);
-}
+
 int cBox::BreakOut()
 {
 	sg_pDungeonSystem->AnimationManager().

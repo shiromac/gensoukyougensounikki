@@ -74,7 +74,7 @@ CAPTION "バージョン情報"
 FONT 9, "MS UI Gothic"
 BEGIN
     ICON            IDI_LAUG_TH,IDC_MYICON,14,9,16,16
-    LTEXT           "laug_th Version 1.0.5",IDC_STATIC,49,10,119,8,SS_NOPREFIX
+    LTEXT           "laug_th Version 1.0.5.1",IDC_STATIC,49,10,119,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2007",IDC_STATIC,49,20,119,8
     DEFPUSHBUTTON   "OK",IDOK,195,6,30,11,WS_GROUP
 END
@@ -114,8 +114,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,5,0
- PRODUCTVERSION 1,0,5,0
+ FILEVERSION 1,0,5,1
+ PRODUCTVERSION 1,0,5,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -131,12 +131,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "FileDescription", "GGN アプリケーション"
-            VALUE "FileVersion", "1, 0, 5, 0"
+            VALUE "FileVersion", "1, 0, 5, 1"
             VALUE "InternalName", "GGN"
             VALUE "LegalCopyright", "Copyright (C) 2010"
             VALUE "OriginalFilename", "ggn.exe"
             VALUE "ProductName", "幻想郷幻想日記"
-            VALUE "ProductVersion", "1, 0, 5, 0"
+            VALUE "ProductVersion", "1, 0, 5, 1"
         END
     END
     BLOCK "VarFileInfo"

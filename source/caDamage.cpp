@@ -10,7 +10,6 @@ caDamage::caDamage()
 	End = false;
 	count = 0;
 	speed = 1;
-	preprocessed = false;
 }
 
 caDamage::~caDamage()
@@ -23,12 +22,6 @@ int caDamage::Init(pcAnimation me)
 
 
 	Baseopaque = pDamager->opaque;
-
-	return true;
-}
-
-int caDamage::preprocess(IDirect3DDevice9 *pDev)
-{
 
 	pcaECustom caec = pcaECustom(new caECustom);
 	caec->Init(caec);
@@ -110,9 +103,6 @@ int caDamage::process(IDirect3DDevice9 *pDev)
 	count += speed;
 	
 
-	if(!preprocessed) {
-		preprocess(pDev);
-	}
 
 
 	if( !End &&  count < ANIME_DAMAGE_STEP)

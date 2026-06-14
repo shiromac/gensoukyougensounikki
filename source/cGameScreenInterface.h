@@ -8,8 +8,6 @@
 #include "cParameterGage.h"
 #include "utility\valiableField\SafePointerObject.h"
 
-class GensouGageView;
-typedef boost::shared_ptr<GensouGageView> pGensouGageView;
 
 class cGameScreenInterface :
 	public cControl
@@ -52,25 +50,19 @@ protected:
 
 public:	
 
-	virtual int menuPosWidthByLevel();
-	virtual int menuPosHeightByLevel();
 
 	virtual int menuPosTop(int level);
 	virtual int menuPosLeft(int level);
 	virtual int menuPosRight(int level);
 	virtual int menuPosBottom(int level);
-	
-	virtual int menuPosCenterX();
-	virtual int menuPosCenterY();
 
-	virtual cRectObj menuPosParentOfControlLayer(const pcControlLayer& childControlLayer);
 
 	SpriteText text;
 
 protected:
 	cParameterGage HPGage;
 	cParameterGage STGage;
-	pGensouGageView gensouGage;
+
 public:	
 	//èIóπÉtÉâÉO
 	bool End;

@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.0.5.0",
+    [string]$Version = "1.0.5.1",
     [string]$RuntimeRoot,
     [string]$OutputRoot
 )

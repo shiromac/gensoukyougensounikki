@@ -18,7 +18,6 @@
 #define DM_INDEX_UNDEFINE (-2)
 #define DM_INDEX_WAY (-1)
 
-#define MAPMAKINGEDGELANDWIDTH (EDGELANDWIDTH+5)
 
 #define MINIMUM_ROOM_SIZE 3
 #define MINIMUM_ROOM_SIZE 3
@@ -676,7 +675,6 @@ void cDMMap::Init(pcDMMap selfpointer)
 {
 	selfwp_ = wpcDMMap(selfpointer);
 	
-	landmap_edge = pcDMLand(new cDMLand);
 
 	int size = MAPWIDTH*MAPHEIGHT;
 	int i,x,y;
@@ -684,11 +682,27 @@ void cDMMap::Init(pcDMMap selfpointer)
 	{
 		landmap_.push_back(pcDMLand(new cDMLand));
 	}
+	for(x = 0 ; x < MAPWIDTH; x++)
+	{
+		for(y = 0 ; y < MAPHEIGHT; y++)
+		{
+			landmap(x,y)->Init();
+			landmap(x,y)->pos.set(x,y,0,0);
+			landmap(x,y)->rectFrag = MAPKIND_WALL;
+			if(x < EDGELANDWIDTH || x >= MAPWIDTH - EDGELANDWIDTH
+				|| y < EDGELANDWIDTH || y >= MAPHEIGHT - EDGELANDWIDTH)
+			{//エッジ
+				landmap(x,y)->rectFrag = MAPKIND_WALLEGDE;
+			}
+		}
+	}
 
-	ResetSub_Lands();
+	landmap_edge = pcDMLand(new cDMLand);
+	landmap_edge->Init();
+	landmap_edge->pos.set(-1,-1,0,0);
+	landmap_edge->rectFrag = MAPKIND_WALLEGDE;
 }
-
-void cDMMap::ResetSub_Lands()
+void cDMMap::Reset()
 {
 	int i,x,y;
 
@@ -710,11 +724,6 @@ void cDMMap::ResetSub_Lands()
 	landmap_edge->Init();
 	landmap_edge->pos.set(-1,-1,0,0);
 	landmap_edge->rectFrag = MAPKIND_WALLEGDE;
-}
-
-void cDMMap::Reset()
-{
-	ResetSub_Lands();
 
 	Rects_.clear();
 	Room_.clear();
@@ -2297,15 +2306,15 @@ void cDMMap::makeWater_Opt_way(int percent)
 	int x,y,i;
 
 
-	for(x = MAPMAKINGEDGELANDWIDTH ; x < MAPWIDTH - MAPMAKINGEDGELANDWIDTH; x++)
+	for(x = EDGELANDWIDTH ; x < MAPWIDTH - EDGELANDWIDTH; x++)
 	{
-		landlistA.push_back(landmap(x,MAPMAKINGEDGELANDWIDTH));
-		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - MAPMAKINGEDGELANDWIDTH - 1));
+		landlistA.push_back(landmap(x,EDGELANDWIDTH));
+		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - EDGELANDWIDTH - 1));
 	}
-	for(y = MAPMAKINGEDGELANDWIDTH ; y < MAPHEIGHT - MAPMAKINGEDGELANDWIDTH; y++)
+	for(y = EDGELANDWIDTH ; y < MAPHEIGHT - EDGELANDWIDTH; y++)
 	{
-		landlistA.push_back(landmap(MAPMAKINGEDGELANDWIDTH,y));
-		landlistB.push_back(landmap(MAPWIDTH - MAPMAKINGEDGELANDWIDTH - 1, MAPHEIGHT - y));
+		landlistA.push_back(landmap(EDGELANDWIDTH,y));
+		landlistB.push_back(landmap(MAPWIDTH - EDGELANDWIDTH - 1, MAPHEIGHT - y));
 	}
 
 	pcDMLand landA,landB;
@@ -2346,15 +2355,15 @@ void cDMMap::makeWater_Opt_mach(int percent)
 		makeWater_sub_pound(landmap(x,y),percent*(1+random())*MAPWIDTH*2.5/200);
 	}
 
-	for(x = MAPMAKINGEDGELANDWIDTH ; x < MAPWIDTH - MAPMAKINGEDGELANDWIDTH; x++)
+	for(x = EDGELANDWIDTH ; x < MAPWIDTH - EDGELANDWIDTH; x++)
 	{
-		landlistA.push_back(landmap(x,MAPMAKINGEDGELANDWIDTH));
-		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - MAPMAKINGEDGELANDWIDTH - 1));
+		landlistA.push_back(landmap(x,EDGELANDWIDTH));
+		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - EDGELANDWIDTH - 1));
 	}
-	for(y = MAPMAKINGEDGELANDWIDTH ; y < MAPHEIGHT - MAPMAKINGEDGELANDWIDTH; y++)
+	for(y = EDGELANDWIDTH ; y < MAPHEIGHT - EDGELANDWIDTH; y++)
 	{
-		landlistA.push_back(landmap(MAPMAKINGEDGELANDWIDTH,y));
-		landlistB.push_back(landmap(MAPWIDTH - MAPMAKINGEDGELANDWIDTH - 1, MAPHEIGHT - y));
+		landlistA.push_back(landmap(EDGELANDWIDTH,y));
+		landlistB.push_back(landmap(MAPWIDTH - EDGELANDWIDTH - 1, MAPHEIGHT - y));
 	}
 
 	pcDMLand landA,landB;
@@ -2372,9 +2381,9 @@ void cDMMap::makeWater_Opt_mach(int percent)
 void cDMMap::makeWater_Opt_max()
 {
 	int x,y,i;
-	for(x = MAPMAKINGEDGELANDWIDTH ; x < MAPWIDTH-MAPMAKINGEDGELANDWIDTH; x++)
+	for(x = EDGELANDWIDTH ; x < MAPWIDTH-EDGELANDWIDTH; x++)
 	{
-		for(y = MAPMAKINGEDGELANDWIDTH ; y < MAPHEIGHT-MAPMAKINGEDGELANDWIDTH; y++)
+		for(y = EDGELANDWIDTH ; y < MAPHEIGHT-EDGELANDWIDTH; y++)
 		{
 
 			if(landmap(x,y)->Landflag != MAPKIND_FLOOR
@@ -2392,15 +2401,15 @@ void cDMMap::makeAbyss_Opt_way(int num)
 	int x,y,i;
 
 
-	for(x = MAPMAKINGEDGELANDWIDTH ; x < MAPWIDTH - MAPMAKINGEDGELANDWIDTH; x++)
+	for(x = EDGELANDWIDTH ; x < MAPWIDTH - EDGELANDWIDTH; x++)
 	{
-		landlistA.push_back(landmap(x,MAPMAKINGEDGELANDWIDTH));
-		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - MAPMAKINGEDGELANDWIDTH - 1));
+		landlistA.push_back(landmap(x,EDGELANDWIDTH));
+		landlistB.push_back(landmap(MAPWIDTH - x, MAPHEIGHT - EDGELANDWIDTH - 1));
 	}
-	for(y = MAPMAKINGEDGELANDWIDTH ; y < MAPHEIGHT - MAPMAKINGEDGELANDWIDTH; y++)
+	for(y = EDGELANDWIDTH ; y < MAPHEIGHT - EDGELANDWIDTH; y++)
 	{
-		landlistA.push_back(landmap(MAPMAKINGEDGELANDWIDTH,y));
-		landlistB.push_back(landmap(MAPWIDTH - MAPMAKINGEDGELANDWIDTH - 1, MAPHEIGHT - y));
+		landlistA.push_back(landmap(EDGELANDWIDTH,y));
+		landlistB.push_back(landmap(MAPWIDTH - EDGELANDWIDTH - 1, MAPHEIGHT - y));
 	}
 
 	pcDMLand landA,landB;
@@ -2490,8 +2499,8 @@ void cDMMap::makeWater_sub_least(pcDMLand landA, pcDMLand landB)
 			c4DVector newstate;
 			newstate.set( state.x + coo.x, state.y + coo.y ,0,0);
 			
-			if(newstate.x < MAPMAKINGEDGELANDWIDTH || newstate.x >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-				|| newstate.y < MAPMAKINGEDGELANDWIDTH || newstate.y >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+			if(newstate.x < EDGELANDWIDTH || newstate.x >= MAPWIDTH-EDGELANDWIDTH
+				|| newstate.y < EDGELANDWIDTH || newstate.y >= MAPHEIGHT-EDGELANDWIDTH)
 			{//端っこ
 				continue;
 			}
@@ -2634,10 +2643,10 @@ void cDMMap::makeWater_sub_least(pcDMLand landA, pcDMLand landB)
 
 void cDMMap::makeWater_sub_pound(pcDMLand land, int size)
 {
-	int left = max(land->pos.x-size,MAPMAKINGEDGELANDWIDTH);
-	int right = min(land->pos.x+size,MAPWIDTH-MAPMAKINGEDGELANDWIDTH);
-	int top = max(land->pos.y-size,MAPMAKINGEDGELANDWIDTH);
-	int bottom = min(land->pos.y+size,MAPHEIGHT-MAPMAKINGEDGELANDWIDTH);
+	int left = max(land->pos.x-size,EDGELANDWIDTH);
+	int right = min(land->pos.x+size,MAPWIDTH-EDGELANDWIDTH);
+	int top = max(land->pos.y-size,EDGELANDWIDTH);
+	int bottom = min(land->pos.y+size,MAPHEIGHT-EDGELANDWIDTH);
 
 	int x,y;
 	vector<int> v_int(MAPHEIGHT,1000000000);//十分大きな値が初期値
@@ -2787,8 +2796,8 @@ void cDMMap::makeAbyss_sub_least(pcDMLand landA, pcDMLand landB)
 			c4DVector newstate;
 			newstate.set( state.x + coo.x, state.y + coo.y ,0,0);
 			
-			if(newstate.x < MAPMAKINGEDGELANDWIDTH || newstate.x >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-				|| newstate.y < MAPMAKINGEDGELANDWIDTH || newstate.y >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+			if(newstate.x < EDGELANDWIDTH || newstate.x >= MAPWIDTH-EDGELANDWIDTH
+				|| newstate.y < EDGELANDWIDTH || newstate.y >= MAPHEIGHT-EDGELANDWIDTH)
 			{//端っこ
 				continue;
 			}
@@ -2931,10 +2940,10 @@ void cDMMap::makeAbyss_sub_least(pcDMLand landA, pcDMLand landB)
 
 void cDMMap::makeAbyss_sub_pound(int percent)
 {
-	int left = MAPMAKINGEDGELANDWIDTH;
-	int right = MAPWIDTH-MAPMAKINGEDGELANDWIDTH;
-	int top = MAPMAKINGEDGELANDWIDTH;
-	int bottom = MAPHEIGHT-MAPMAKINGEDGELANDWIDTH;
+	int left = EDGELANDWIDTH;
+	int right = MAPWIDTH-EDGELANDWIDTH;
+	int top = EDGELANDWIDTH;
+	int bottom = MAPHEIGHT-EDGELANDWIDTH;
 
 	int x,y;
 	vector<int> v_int(MAPHEIGHT,1000000000);//十分大きな値が初期値
@@ -3356,10 +3365,10 @@ int cDMMap::makeWay_sub_nikaku(pcDMLand landA, pcDMLand landB, int aspect, int m
 	apos.Set(landA->pos.x, landA->pos.y);
 	bpos.Set(landB->pos.x, landB->pos.y);
 
-	if(landA->pos.x < MAPMAKINGEDGELANDWIDTH || landA->pos.y < MAPMAKINGEDGELANDWIDTH
-		|| landA->pos.x >= MAPWIDTH - MAPMAKINGEDGELANDWIDTH || landA->pos.y >= MAPHEIGHT - MAPMAKINGEDGELANDWIDTH
-	||landB->pos.x < MAPMAKINGEDGELANDWIDTH || landB->pos.y < MAPMAKINGEDGELANDWIDTH
-		|| landB->pos.x >= MAPWIDTH - MAPMAKINGEDGELANDWIDTH || landB->pos.y >= MAPHEIGHT - MAPMAKINGEDGELANDWIDTH)
+	if(landA->pos.x < EDGELANDWIDTH || landA->pos.y < EDGELANDWIDTH
+		|| landA->pos.x >= MAPWIDTH - EDGELANDWIDTH || landA->pos.y >= MAPHEIGHT - EDGELANDWIDTH
+	||landB->pos.x < EDGELANDWIDTH || landB->pos.y < EDGELANDWIDTH
+		|| landB->pos.x >= MAPWIDTH - EDGELANDWIDTH || landB->pos.y >= MAPHEIGHT - EDGELANDWIDTH)
 	{
 		return false;
 	}
@@ -3373,7 +3382,7 @@ int cDMMap::makeWay_sub_nikaku(pcDMLand landA, pcDMLand landB, int aspect, int m
 		vector<int> axis;
 
 		int i;
-		for(i=MAPMAKINGEDGELANDWIDTH;i<MAPWIDTH-MAPMAKINGEDGELANDWIDTH;i++)
+		for(i=EDGELANDWIDTH;i<MAPWIDTH-EDGELANDWIDTH;i++)
 		{
 			axis.push_back(i);
 		}
@@ -3469,7 +3478,7 @@ int cDMMap::makeWay_sub_nikaku(pcDMLand landA, pcDMLand landB, int aspect, int m
 		vector<int> axis;
 
 		int i;
-		for(i=MAPMAKINGEDGELANDWIDTH;i<MAPHEIGHT-MAPMAKINGEDGELANDWIDTH;i++)
+		for(i=EDGELANDWIDTH;i<MAPHEIGHT-EDGELANDWIDTH;i++)
 		{
 			axis.push_back(i);
 		}
@@ -3616,8 +3625,8 @@ void cDMMap::makeWay_sub_least(pcDMWallround roundA, pcDMWallround roundB, int M
 			c4DVector newstate;
 			newstate.set( state.x + coo.x, state.y + coo.y ,0,0);
 			
-			if(newstate.x < MAPMAKINGEDGELANDWIDTH || newstate.x >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-				|| newstate.y < MAPMAKINGEDGELANDWIDTH || newstate.y >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+			if(newstate.x < EDGELANDWIDTH || newstate.x >= MAPWIDTH-EDGELANDWIDTH
+				|| newstate.y < EDGELANDWIDTH || newstate.y >= MAPHEIGHT-EDGELANDWIDTH)
 			{//端っこ
 				continue;
 			}
@@ -4046,8 +4055,8 @@ pcDMLand cDMWallround::introExit(cCoordinate center)
 				break;
 			}
 			
-			if(land->pos.x < MAPMAKINGEDGELANDWIDTH || land->pos.y < MAPMAKINGEDGELANDWIDTH
-				|| land->pos.x >= MAPWIDTH - MAPMAKINGEDGELANDWIDTH || land->pos.y >= MAPHEIGHT - MAPMAKINGEDGELANDWIDTH)
+			if(land->pos.x < EDGELANDWIDTH || land->pos.y < EDGELANDWIDTH
+				|| land->pos.x >= MAPWIDTH - EDGELANDWIDTH || land->pos.y >= MAPHEIGHT - EDGELANDWIDTH)
 			{//はしっこすぎ
 				check = true;
 				break;
@@ -4377,8 +4386,8 @@ void cDMMap::Output()
 	{
 		for(y=0;y<MAPHEIGHT;y++)
 		{
-			if(x < MAPMAKINGEDGELANDWIDTH || x >= MAPWIDTH - MAPMAKINGEDGELANDWIDTH
-				|| y < MAPMAKINGEDGELANDWIDTH || y >= MAPHEIGHT - MAPMAKINGEDGELANDWIDTH)
+			if(x < EDGELANDWIDTH || x >= MAPWIDTH - EDGELANDWIDTH
+				|| y < EDGELANDWIDTH || y >= MAPHEIGHT - EDGELANDWIDTH)
 			{
 				landmap(x,y)->ConcreteLand()->setAttribute(MAPKIND_WALLEGDE);
 				landmap(x,y)->ConcreteLand()->RoomIndex = -1;
@@ -4595,10 +4604,10 @@ void cDMMap::MakeRect_RandomDivideRoop(vector<double>& divideVal)
 		divideVal.resize(2,5);
 	}
 	pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
-	newprect->Width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	newprect->Height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
-	newprect->setLeft(MAPMAKINGEDGELANDWIDTH);
-	newprect->setTop(MAPMAKINGEDGELANDWIDTH);
+	newprect->Width = MAPWIDTH - EDGELANDWIDTH*2;
+	newprect->Height = MAPHEIGHT - EDGELANDWIDTH*2;
+	newprect->setLeft(EDGELANDWIDTH);
+	newprect->setTop(EDGELANDWIDTH);
 	Rects_.push_back(newprect);
 
 	MakeRect_RandomDivideRoop_rectcount = 1;
@@ -4679,8 +4688,8 @@ void cDMMap::MakeRect_RandomDivideRoop_split(pcDMRect prect, vector<double>& div
 
 void cDMMap::MakeRect_BigringAndgrid(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 	if(divideVal.size() < 1) divideVal.resize(1,6);
 	//分割数X軸最小
@@ -4743,10 +4752,10 @@ void cDMMap::MakeRect_BigringAndgrid(vector<double>& divideVal)
 			int top = 1+ height * (k)/divideY;
 			int bottom = 1+ height * (k+1)/divideY;
 			*/
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
@@ -4788,8 +4797,8 @@ void cDMMap::MakeRect_BigringAndgrid(vector<double>& divideVal)
 
 void cDMMap::MakeRect_NetAndAnchor(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 	if(divideVal.size() < 1) divideVal.resize(1,6);
 	//分割数X軸最小
@@ -4851,10 +4860,10 @@ void cDMMap::MakeRect_NetAndAnchor(vector<double>& divideVal)
 			int top = 1+ height * (k)/divideY;
 			int bottom = 1+ height * (k+1)/divideY;
 			*/
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
@@ -4900,8 +4909,8 @@ void cDMMap::MakeRect_NetAndAnchor(vector<double>& divideVal)
 //ハブと衛星
 void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 	int i,k;
 
 
@@ -4951,10 +4960,10 @@ void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 		pcDMRect mainprect;
 		i=1;
 		{//メイン中間層
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH ;
-			int bottom = MAPMAKINGEDGELANDWIDTH + height;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH ;
+			int bottom = EDGELANDWIDTH + height;
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 			newprect->Width = right-left;
@@ -4982,10 +4991,10 @@ void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 					int top = 1+ height * (k)/divideY;
 					int bottom = 1+ height * (k+1)/divideY;
 					*/
-					int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-					int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-					int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-					int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+					int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+					int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+					int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+					int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 					pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 					newprect->Width = right-left;
@@ -5074,10 +5083,10 @@ void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 		pcDMRect mainprect;
 		k=1;
 		{//メイン中間層
-			int left = MAPMAKINGEDGELANDWIDTH ;
-			int right = MAPMAKINGEDGELANDWIDTH + width;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH ;
+			int right = EDGELANDWIDTH + width;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 			newprect->Width = right-left;
@@ -5106,10 +5115,10 @@ void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 					int top = 1+ height * (k)/divideY;
 					int bottom = 1+ height * (k+1)/divideY;
 					*/
-					int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-					int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-					int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-					int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+					int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+					int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+					int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+					int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 					pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 					newprect->Width = right-left;
@@ -5174,8 +5183,8 @@ void cDMMap::MakeRect_HabAndSatellite(vector<double>& divideVal)
 
 void cDMMap::MakeRect_SimpleGrid(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 	if(divideVal.size() < 1) divideVal.resize(1,6);
 	//分割数X軸最小
@@ -5237,10 +5246,10 @@ void cDMMap::MakeRect_SimpleGrid(vector<double>& divideVal)
 			int top = 1+ height * (k)/divideY;
 			int bottom = 1+ height * (k+1)/divideY;
 			*/
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 			newprect->Width = right-left;
@@ -5266,12 +5275,12 @@ void cDMMap::MakeRect_BigOneRoom(vector<double>& divideVal)
 	divideVal[0] = max(0,divideVal[0]);//最小
 	divideVal[0] = min(1,divideVal[0]);//最大
 
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
-	int left = MAPMAKINGEDGELANDWIDTH;
+	int left = EDGELANDWIDTH;
 	int right = left + width;
-	int top = MAPMAKINGEDGELANDWIDTH;
+	int top = EDGELANDWIDTH;
 	int bottom = top + height;
 
 	pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
@@ -5293,13 +5302,13 @@ void cDMMap::MakeRect_TwoRoom(vector<double>& divideVal)
 	divideVal[0] = max(0,divideVal[0]);//最小
 	divideVal[0] = min(1,divideVal[0]);//最大
 
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 
-	int left = MAPMAKINGEDGELANDWIDTH;
+	int left = EDGELANDWIDTH;
 	int right = left + width;
-	int top = MAPMAKINGEDGELANDWIDTH;
+	int top = EDGELANDWIDTH;
 	int bottom = top + height;
 
 	pcDMRect prect = pcDMRect(new cDMRect(selfwp_));
@@ -5353,8 +5362,8 @@ void cDMMap::MakeRect_TwoRoom(vector<double>& divideVal)
 
 void cDMMap::MakeRect_FourRoom(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 	int i,k;
 	int divideX = 2, divideY = 2;
@@ -5397,10 +5406,10 @@ void cDMMap::MakeRect_FourRoom(vector<double>& divideVal)
 			int top = 1+ height * (k)/divideY;
 			int bottom = 1+ height * (k+1)/divideY;
 			*/
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 			newprect->Width = right-left;
@@ -5439,9 +5448,9 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 	vector<pair<int,int>> randomcoordinate;
 	//種を撒く
 	int x,y;
-	for(x=MAPMAKINGEDGELANDWIDTH;x<MAPWIDTH-MAPMAKINGEDGELANDWIDTH-MINRECTSIZE+1;x++)
+	for(x=EDGELANDWIDTH;x<MAPWIDTH-EDGELANDWIDTH-MINRECTSIZE+1;x++)
 	{
-		for(y=MAPMAKINGEDGELANDWIDTH;y<MAPHEIGHT-MAPMAKINGEDGELANDWIDTH-MINRECTSIZE+1;y++)
+		for(y=EDGELANDWIDTH;y<MAPHEIGHT-EDGELANDWIDTH-MINRECTSIZE+1;y++)
 		{
 			randomcoordinate.push_back(pair<int,int>(x,y));
 		}
@@ -5459,13 +5468,13 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 			//種巻き
 			for(x=ix-MINRECTSIZE+1;x<ix+MINRECTSIZE;x++)
 			{
-				if(x < MAPMAKINGEDGELANDWIDTH || x >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH-MINRECTSIZE+1)
+				if(x < EDGELANDWIDTH || x >= MAPWIDTH-EDGELANDWIDTH-MINRECTSIZE+1)
 				{
 					continue;
 				}
 				for(y=iy-MINRECTSIZE+1;y<iy+MINRECTSIZE;y++)
 				{
-					if(y < MAPMAKINGEDGELANDWIDTH || y >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH-MINRECTSIZE+1)
+					if(y < EDGELANDWIDTH || y >= MAPHEIGHT-EDGELANDWIDTH-MINRECTSIZE+1)
 					{
 						continue;
 					}
@@ -5474,13 +5483,13 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 			}
 			for(x=ix;x<ix+MINRECTSIZE;x++)
 			{
-				if(x < MAPMAKINGEDGELANDWIDTH || x >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH+1)
+				if(x < EDGELANDWIDTH || x >= MAPWIDTH-EDGELANDWIDTH+1)
 				{
 					continue;
 				}
 				for(y=iy;y<iy+MINRECTSIZE;y++)
 				{
-					if(y < MAPMAKINGEDGELANDWIDTH || y >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH+1)
+					if(y < EDGELANDWIDTH || y >= MAPHEIGHT-EDGELANDWIDTH+1)
 					{
 						continue;
 					}
@@ -5547,8 +5556,8 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 				{//上
 					ix = growrects[i]->Left();
 					iy = growrects[i]->Top()-1;
-					if(ix < MAPMAKINGEDGELANDWIDTH || ix >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-						|| iy < MAPMAKINGEDGELANDWIDTH || iy >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+					if(ix < EDGELANDWIDTH || ix >= MAPWIDTH-EDGELANDWIDTH
+						|| iy < EDGELANDWIDTH || iy >= MAPHEIGHT-EDGELANDWIDTH)
 					{
 						continue;
 					}
@@ -5580,8 +5589,8 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 				{//下
 					ix = growrects[i]->Left();
 					iy = growrects[i]->Bottom();
-					if(ix < MAPMAKINGEDGELANDWIDTH || ix >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-						|| iy < MAPMAKINGEDGELANDWIDTH || iy >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+					if(ix < EDGELANDWIDTH || ix >= MAPWIDTH-EDGELANDWIDTH
+						|| iy < EDGELANDWIDTH || iy >= MAPHEIGHT-EDGELANDWIDTH)
 					{
 						continue;
 					}
@@ -5613,8 +5622,8 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 				{//左
 					ix = growrects[i]->Left()-1;
 					iy = growrects[i]->Top();
-					if(ix < MAPMAKINGEDGELANDWIDTH || ix >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-						|| iy < MAPMAKINGEDGELANDWIDTH || iy >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+					if(ix < EDGELANDWIDTH || ix >= MAPWIDTH-EDGELANDWIDTH
+						|| iy < EDGELANDWIDTH || iy >= MAPHEIGHT-EDGELANDWIDTH)
 					{
 						continue;
 					}
@@ -5646,8 +5655,8 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 				{//右
 					ix = growrects[i]->Right();
 					iy = growrects[i]->Top();
-					if(ix < MAPMAKINGEDGELANDWIDTH || ix >= MAPWIDTH-MAPMAKINGEDGELANDWIDTH
-						|| iy < MAPMAKINGEDGELANDWIDTH || iy >= MAPHEIGHT-MAPMAKINGEDGELANDWIDTH)
+					if(ix < EDGELANDWIDTH || ix >= MAPWIDTH-EDGELANDWIDTH
+						|| iy < EDGELANDWIDTH || iy >= MAPHEIGHT-EDGELANDWIDTH)
 					{
 						continue;
 					}
@@ -5694,8 +5703,8 @@ void cDMMap::MakeRect_RandomGrow(vector<double>& divideVal)
 
 void cDMMap::MakeRect_RandomGridUnion(vector<double>& divideVal)
 {
-	int width = MAPWIDTH - MAPMAKINGEDGELANDWIDTH*2;
-	int height = MAPHEIGHT - MAPMAKINGEDGELANDWIDTH*2;
+	int width = MAPWIDTH - EDGELANDWIDTH*2;
+	int height = MAPHEIGHT - EDGELANDWIDTH*2;
 
 	//分割数X軸最小
 	DIVIDEVALDEF(0,5,1,width/MINRECTSIZE);
@@ -5762,10 +5771,10 @@ void cDMMap::MakeRect_RandomGridUnion(vector<double>& divideVal)
 			int top = 1+ height * (k)/divideY;
 			int bottom = 1+ height * (k+1)/divideY;
 			*/
-			int left = MAPMAKINGEDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
-			int right = MAPMAKINGEDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
-			int top = MAPMAKINGEDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
-			int bottom = MAPMAKINGEDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
+			int left = EDGELANDWIDTH + randX[i] + (i)*MINRECTSIZE;
+			int right = EDGELANDWIDTH + randX[i+1] + (i+1)*MINRECTSIZE;
+			int top = EDGELANDWIDTH + randY[k] + (k)*MINRECTSIZE;
+			int bottom = EDGELANDWIDTH + randY[k+1] + (k+1)*MINRECTSIZE;
 
 			pcDMRect newprect = pcDMRect(new cDMRect(selfwp_));
 			newprect->Width = right-left;

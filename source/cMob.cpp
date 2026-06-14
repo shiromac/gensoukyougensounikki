@@ -279,11 +279,6 @@ void cMob::naturalSpawnInit()
 	
 	cCharacter::naturalSpawnInit();
 
-	if(isOverDrive()) {
-		Condition.深い居眠り追加();
-		return;
-	}
-
 	cDiscreteProbability CD;
 	CD.set(初期配置深い居眠り確率係数(),0);
 	CD.set(初期配置浅い居眠り確率係数(),1);
@@ -322,11 +317,6 @@ void cMob::conditionprocess()
 	{
 		emotion.erase(EMOTION_ITEM);
 	}
-}
-
-void cMob::settingInit_overdrive()
-{
-	onMahoujin(0.75);
 }
 
 tstring cMob::FullNameBase()
@@ -374,35 +364,19 @@ double cMob::baseDefencePower()
 
 int cMob::attaP()
 {
-	double power = 1.0;
-	if(isOverDrive()) {
-		power = オーバードライブ攻撃倍率();
-	}
-	return calcuratePal(DEFPAL_攻撃力, CLASS) * power;
+	return calcuratePal(DEFPAL_攻撃力, CLASS);
 }
 int cMob::deffP()
 {
-	double power = 1.0;
-	if(isOverDrive()) {
-		power = オーバードライブ防御倍率();
-	}
-	return calcuratePal(DEFPAL_防御力, CLASS) * power;
+	return calcuratePal(DEFPAL_防御力, CLASS);
 }
 int cMob::HaveEXP()
 {
-	double power = 1.0;
-	if(isOverDrive()) {
-		power = オーバードライブ経験値倍率();
-	}
-	return calcuratePal(DEFPAL_経験値, CLASS) * power;
+	return calcuratePal(DEFPAL_経験値, CLASS);
 }
 int cMob::GetMHP()
 {
-	double power = 1.0;
-	if(isOverDrive()) {
-		power = オーバードライブHP倍率();
-	}
-	return calcuratePal(DEFPAL_MHP, CLASS) * power;
+	return calcuratePal(DEFPAL_MHP, CLASS);
 }
 int cMob::PerOfspecialAttack()
 {
@@ -567,85 +541,20 @@ void cMob::CutIn(タイミング timing, cValiableField& valiable)
 		Condition.強い刺激(valiable.doubles[変数_汎用実数]);
 	}
 }
-
-int cMob::MaxholdNum() {
-	if(isOverDrive()) {
-		return 10;
-	}
-	else {
-		return cCharacter::MaxholdNum();
-	}
-}
-
 bool cMob::死亡ドロップアイテムなし()
 {
-	return false;
+	return 0;
 }
-vector<int> cMob::死亡ドロップアイテムIDs(){
-	vector<int> IDs;
-	cDropingDistribution floorDP = sg_pDungeonSystem->pFloor()->dropitemDP();
-
-	if(isOverDrive()) {
-		map<int,int> dropList= 死亡ドロップアイテムリスト();
-
-		cDiscreteProbability DP;
-		map<int,int>::iterator itr = dropList.begin();
-		for(;itr!=dropList.end();itr++)
-		{
-			int id = itr->first;
-			double posibility = itr->second;
-			if(id > 0) {// 0:ドロップ無し, -1:ランダムドロップを弾く
-				posibility *= オーバードライブ固有ドロップ上昇倍率();
-			}
-			DP.set(posibility,id);
-		}
-
-		int id = DP.get(random());
-		if (id != 0 && floorDP.isExistDropItemID(id)) {
-			IDs.push_back(id);
-		}
-
-		const int konsyuID = 7024;
-		if(オーバードライブ混酒の箱ドロップ率％() > random()*100 && id != 0 && floorDP.isExistDropItemID(konsyuID))
-		{
-			IDs.push_back(konsyuID);//混酒の箱
-		}
-
-
-		int count = IDs.size(), size = オーバードライブドロップ数();
-		for(;count < size; count++)
-		{
-			int outputID[3] = {0};
-			sg_pDungeonSystem->アイテム自然湧きID(outputID);
-			IDs.push_back(outputID[0]);
-		}
-	}
-	else {
-		int ID = 死亡ドロップアイテムID();
-		if(ID != 0 && floorDP.isExistDropItemID(ID)) {
-			IDs.push_back(ID);
-		}
-	}
-
-	return IDs;
-}
-
-map<int,int> cMob::死亡ドロップアイテムリスト()
-{
-	map<int,int> output;
-
-	tstring datanamestr = _T("死亡ドロップアイテムID");
-	sg_pDungeonSystem->DataBase.CharaImportData_MapIntToInt(ID(), datanamestr, output);
-
-	return output;
-}
-
 int cMob::死亡ドロップアイテムID()
 {
 	if(死亡ドロップアイテムなし()) return 0;
 	
-	map<int,int> output = 死亡ドロップアイテムリスト();
+	map<int,int> output;
 	cDiscreteProbability DP;
+
+	tstring datanamestr = _T("死亡ドロップアイテムID");
+	sg_pDungeonSystem->DataBase.CharaImportData_MapIntToInt(ID(), datanamestr, output);
+
 
 	map<int,int>::iterator itr = output.begin();
 	for(;itr!=output.end();itr++)
