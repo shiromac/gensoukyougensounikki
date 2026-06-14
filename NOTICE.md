@@ -26,6 +26,8 @@ The current public distribution version cut from this branch is `1.0.5.2`, dated
 
 The released runtime used packed data and audio files such as `data/Packed_*.id.cdat`, `graphic/graphicpack`, `sound/data1`, and `sound/data2`, plus the `Language` directory. This public branch intentionally excludes generated binaries, save data, logs, and large audio packs. The released readme also states that redistributing data without permission from rights holders is prohibited.
 
+The original online manual is archived in `docs/manual/` from `http://atn-factory.jp/ggn/manual/`. It is included as project documentation. Its screenshots, images, HTML, and related files are not standalone reusable material assets and are not covered by the MIT license grant for source code.
+
 ## Credits recovered from the original manual and released readme
 
 The original bundled manual and the released readme credited the following creators and sites. These credits are preserved here for attribution and audit purposes. They do not grant additional reuse rights.

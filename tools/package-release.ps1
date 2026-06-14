@@ -66,6 +66,7 @@ Copy-RequiredFile $exe (Join-Path $packageDir "ggn.exe")
 Copy-RequiredFile (Join-Path $repo "README.md") (Join-Path $packageDir "README.md")
 Copy-RequiredFile (Join-Path $repo "LICENSE.md") (Join-Path $packageDir "LICENSE.md")
 Copy-RequiredFile (Join-Path $repo "NOTICE.md") (Join-Path $packageDir "NOTICE.md")
+Copy-RequiredDir (Join-Path $repo "docs\manual") (Join-Path $packageDir "docs\manual")
 
 New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "log") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $packageDir "savedata") | Out-Null
@@ -107,6 +108,7 @@ $releaseText = @(
     "Packaged: $((Get-Date).ToString("yyyy-MM-dd HH:mm:ss zzz"))",
     "",
     "Run ggn.exe to start the game.",
+    "Open docs/manual/index.html to read the original manual locally.",
     "Large runtime data/audio files are packaged here for local distribution and are not committed to the public source branch.",
     "You may unpack this ZIP to run the game. Do not extract, redistribute, or reuse packed audio, graphics, scripts, scenarios, or data files as standalone material assets.",
     "Included BGM/music is not MIT-licensed and may only be used as part of playing this game."

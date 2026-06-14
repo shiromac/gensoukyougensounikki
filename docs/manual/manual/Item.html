@@ -1,0 +1,458 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta http-equiv="Content-Style-Type" content="text/css">
+	    <link rel="stylesheet" href="./Item_files/style.css" type="text/css">
+	</head>
+	
+	<body>
+
+	<a name="Food"><h1><img class="ItemIcon" src="./Item_files/Item_Food.png">食べ物</h1></a>
+		満腹度を回復してくれるアイテムです。
+		<ul>
+			<li>ほとんどは食べると元気が出てきて、<b>元気状態・頑強状態になります</b>。</li>
+			<li>くさった食べ物は食べない方がいいかも…</li>
+			<li>満腹の状態で食べると、胃袋が大きくなり<b>最大満腹度が上がります</b>。</li>
+			<li>敵に投げると食べさせることができます。</li>
+		</ul>
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">修正値</td>
+					<td>回復量が上下する。マイナスになるとくさる。</td>
+				</tr>
+				<tr>
+					<td class="category">呪い</td>
+					<td>食べられなくなる。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>回復量が上がる。</td>
+				</tr>
+  				<tr>
+					<td class="category">焼ける</td>
+					<td>火属性攻撃を受けると、焼けることがある。焼けすぎると、消し炭になってしまう。</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+
+	<a name="Drink"><h1><img class="ItemIcon" src="./Item_files/Item_Drink.png">飲み物</h1></a>
+		飲むといろいろな効果を発揮します。<br>
+		薬からお酒までいろいろあります。<br>
+		お酒は20歳になってから。
+		<ul>
+			<li>飲むことによって得られる効果は、必ずしもいいものとは限りません。</li>
+			<li>
+				敵に投げると、<b>敵が中身をかぶります</b>。<br>
+				服用したわけではない以上、<b>飲んだ時の効果と違う効果が出る</b>ものもあります。<br>
+				また、中身がまわりに飛び散ることもあります。
+			</li>
+			<li>
+				どんな飲み物でも、飲むと<b>空の水筒</b>というアイテムが足元に落ちます。<br>
+				空の水筒は、<b>混酒の箱で作ったカクテル</b>の入れ物にできます。
+			</li>
+		</ul>
+		
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">修正値</td>
+					<td>効果が増減する(一部例外あり)。</td>
+				</tr>
+				<tr>
+					<td class="category">呪い</td>
+					<td>飲めなくなる。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>飲んだ時・投げたときの効果が大きくアップする。</td>
+				</tr>
+				<tr>
+					<td class="category">凍結</td>
+					<td>飲めなくなる。投げつけて使うことはできる。フロア進行で自然解除。</td>
+				</tr>
+			</tbody></table>
+			
+			<h2>固有パラメータ</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">カクテル材料</td>
+					<td>混酒の箱に入れた際に変換されるマテリアル量。</td>
+				</tr>
+			</tbody></table>
+
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">迷酒神殺し</td>
+					<td>
+						鬼でさえ飲まないと言う酒。<br>
+						飲むと火を吹いて目の前の敵を攻撃する。<br>
+						投げて当てると敵にダメージ。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">毒水</td>
+					<td>
+						正体はただの炭酸水。<br>
+						プラシーボ効果で欝になる。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+		
+	<a name="Weapon"><h1><img class="ItemIcon" src="./Item_files/Item_Weapon.png">装備品</h1></a>
+		攻撃に使用したり、身を守るのに使う道具です。
+		<ul>
+			<li><b>装備品は「武器」か「防具」どちらとしても装備できます。</b><br>
+				武器として装備すると攻撃力が、防具として装備すると防御力がそれぞれ上昇します。
+			</li>
+			<li>
+				まれに「両手持ち」の装備品があります。<br>
+				武器と防具の両方の装備箇所を消費して、攻撃力と防御力の双方を上昇させます。
+			</li>
+			
+  			
+			<li>投げると、パラメータに比例したダメージを与えます。</li>
+		</ul>
+		
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">修正値</td>
+					<td>攻撃力・防御力が増減。</td>
+				</tr>
+				<tr>
+					<td class="category">呪い</td>
+					<td>装備してしまうと外せなくなる。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>攻撃力・防御力が大きくアップする。</td>
+				</tr>
+			</tbody></table>
+
+			<h2>固有パラメータ</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">武器力・防具力</td>
+					<td>
+						武器(防具)として装備した際に、攻撃力(防御力)に加算される値。<br>
+						熟練度・修正値・御霊などの補正後の値が表示される。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">武器力(防御力)基礎値</td>
+					<td>武器力(防御力)の、熟練度・修正値・御霊などの補正がかかる前の値。</td>
+				</tr>
+				<tr>
+					<td class="category">武器力(防御力)成長度</td>
+					<td>
+						武器力(防御力)の、熟練度に対する値の伸びやすさを表す。<br>
+						○より◎の方が伸びやすく、○・◎の数が多いほど伸びやすい。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">スロット</td>
+					<td>御霊合成で宿らせることのできる御霊の最大スロット数。「改造」すると引き上げられる。</td>
+				</tr>
+				<tr>
+					<td class="category">修正値限界値</td>
+					<td>
+						武器に付与できる修正値の限界。<br>
+						これ以上の修正値をつけると武器がこわれやすくなる。<br>
+                      　「改造」すると引き上げられる。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">熟練度</td>
+					<td>現在の熟練度。装備して使い込むことでたまっていき、<b>たまった量に比例して攻撃力・防御力が強化される</b>。</td>
+				</tr>
+			</tbody></table>
+
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">打刀</td>
+					<td>
+						侍が持つ刀。日本刀。<br>
+						数打物なのでたいした攻撃力はない。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">ドリル羽衣</td>
+					<td>
+						ドリル状になった羽衣。<br>
+						壁が掘れる。<br>
+						掘りすぎると壊れてしまう。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+
+	<a name="Card"><h1><img class="ItemIcon" src="./Item_files/Item_Card.png">スペルカード</h1></a>
+		幻想郷の住人が弾幕勝負で使うカードです。<br>
+		使い方によってさまざまな効果を発揮します。
+
+		<table><tbody><tr><td>
+			<h2>使い方</h2>
+			<table><tbody><tr><td>
+				<h3>宣言する</h3>
+				コマンドから「宣言する」を選択すると、<b>その場で「宣言時効果」が発動します</b>。<br>
+				宣言したスペルカードはその場でなくなります。
+
+				<h3>装備する</h3>
+				<ul>
+					<li>
+						コマンドから「装備する」を選択して装備すると、<b>装備している間「装備時効果」が発動します</b>。<br>
+						スペルカードは「壱符」「弐符」の2つまで装備できます。
+					</li>
+					<li>
+						装備したスペルカードは、<b>通常の方法では自由に着脱することができません</b>。<br>
+						はずしたい・他のスペルカードを装備したいときは、装備中のスペルカードを「破壊」することになります。
+					</li>
+					<li>
+						ダメージを受けたり、「装備時効果」が発動するたびに、スペルカードにも少しずつダメージがたまっていきます。<br>
+						<b>ある程度ダメージを受けると亀裂が入り、ゆくゆくは破壊されてしまいます</b>。<br>
+						亀裂の入ったスペルカードは宣言できません。
+					</li>
+					<li>
+						スペルカードを装備した状態でHPが0になると、<b>「宣言時効果」が発動するとともにHP1で踏みとどまることができます(ラストスペル)</b>。<br>
+						ラストスペルが発動するとスペルカードは破壊されます。<br>
+						スペルカードを複数装備していた場合は、「壱符」のスペルカードが宣言されます。
+					</li>
+				</ul>
+
+				<h3>敵に投げる</h3>
+				<ul>
+					<li>
+						スペルカードを敵に投げると、強制的に装備させることができます。<br>
+						装備させた敵に対して「装備時効果」が発動します。
+					</li>
+					<li>
+						スペルカードを装備した敵を倒すと、ラストスペルが発動します。<br>
+						<b>ただし、HP1で踏みとどまる効果はありません</b>。
+					</li>
+				</ul>
+			</td></tr></tbody></table>
+			
+			
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">修正値</td>
+					<td>効果が増減する(一部例外あり)。</td>
+				</tr>
+				<tr>
+					<td class="category">呪い</td>
+					<td>
+						宣言ができなくなる。<br>
+						装備した場合、「破壊」ができなくなり、ラストスペルが発動せずにこわれる。<br>
+						呪われていても装備時効果は発揮される。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>
+						宣言してもなくならない。<br>
+						装備時に亀裂が入るのを防ぐ。
+					</td>
+				</tr>
+			</tbody></table>
+		
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">覚識「森近霖之助」</td>
+					<td>
+						宣言すると、アイテムを1つ識別できる。<br>
+						装備すると、拾ったアイテムの状態と品質が識別できる。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">宵闇「ルーミア」</td>
+					<td>
+						宣言すると、マップを忘れてしまう。<br>
+						装備すると、寝ている敵を起こさずに行動できる。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+
+	<a name="Bullet"><h1><img class="ItemIcon" src="./Item_files/Item_Bullet.png">弾幕</h1></a>
+		遠距離攻撃に使える道具です。<br>
+		「撃つ」ことで遠くから敵にダメージを与えることができます。
+		<ul>
+			<li>
+				いくつかの弾がまとまって落ちています。<br>
+				<b>弾幕のみ例外的に、同じ種類の弾幕が1つのアイテムにまとまります</b>。
+			</li>
+			<li>
+				「撃つ」コマンドで1発ずつ撃つことができます。<br>
+				実弾の場合、壁にあたった弾は床に落ちます。
+			</li>
+			<li>
+				まとまった弾幕を「投げる」こともできます。<br>
+				特殊効果はそのままに、弾数に応じてダメージが上昇します。
+			</li>
+			<li>「装備」すると、【ショット】キーで手軽に撃つことができます。</li>
+		</ul>
+		
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">呪い</td>
+					<td>
+						威力が半減する。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>威力が上がる。</td>
+				</tr>
+			</tbody></table>
+			
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">気の矢の弾</td>
+					<td>
+						気で作られた矢。<br>
+						気なので弓なしで発射できる。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">ホーミング札の弾</td>
+					<td>
+						敵が斜線上にいなくても攻撃することができる。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+
+	<a name="Book"><h1><img class="ItemIcon" src="./Item_files/Item_Book.png">本</h1></a>
+		読むだけで魔法が使える、便利な道具です。
+		<ul>
+			<li>「読む」と、向いている方向に魔法弾を発射します。</li>
+			<li>
+				魔力が切れると、魔法弾が出なくなります。<br>
+				魔力は、道具名の横に[]書きで表示されます。<br>
+				<b>未識別の場合は魔力残数を知ることができず</b>、使った回数がマイナス値で表示されます。
+			</li>
+			<li><b>投げると、魔法弾と同等の効果を発揮します</b>。</li>
+			<li>
+				斜めに魔法弾を撃つと、<b>一回だけ壁で反射します</b></li>
+		</ul>
+		
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">呪い</td>
+					<td>読めなくなる。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>魔法力を消費せずに読める。</td>
+				</tr>
+				<tr>
+					<td class="category">濡れ</td>
+					<td>読めなくなる。投げつけて使うことはできる。フロア進行で自然解除。</td>
+				</tr>
+			</tbody></table>
+
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">火炎の魔導書</td>
+					<td>
+						なんだか燃え出しそうな雰囲気が漂う本。<br>
+						魔法弾を敵に当てると火柱が発生する。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">封印の魔導書</td>
+					<td>
+						なんだか封じられそうな雰囲気が漂う本。<br>
+						魔法弾を敵に当てると封印状態にする。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+		
+	<a name="Box"><h1><img class="ItemIcon" src="./Item_files/Item_Box.png">箱</h1>
+		何かが詰まっている道具です。
+		<ul>
+			<li>
+				基本的に、道具を「入れる」ことができます。<br>
+				入れる道具を選択するとき、斜め固定ボタン(デフォルト：Shift、ボタン5)を押すと複数の道具をまとめて入れられます。<br>
+				箱によっては、<b>何かを入れた際に効果が発動します</b>。
+			</li>
+			<li>
+				われものです。<br>
+				投げると<b>必ずこわれます</b>。<br>
+				落としても<b>たまにこわれます</b>。
+			</li>
+			<li>箱によっては、中身をのぞくことができます。</li>
+			<li>
+				箱によっては、「開ける」ことができます。<br>
+				「開ける」ことのできる箱は、<b>「開ける」ことによって効果が発動します</b>。
+			</li>
+			<li>
+				箱には容量があり、容量の分だけ道具を入れたり、中身が入っていたりします。<br>
+				容量は、道具名の横に[]書きで表示されます。
+			</li>
+			<li>投げて壁や敵に当たると、<b>箱が壊れて中身がばらまかれます</b>。</li>
+		</ul>
+				
+		<table><tbody><tr><td>
+			<h2>状態変動一覧</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">呪い</td>
+					<td>ふたが開かなくなり、「入れる」「開ける」「のぞく」などのほとんどのコマンドが使用不能。</td>
+				</tr>
+				<tr>
+					<td class="category">信仰</td>
+					<td>効果が上がる。</td>
+				</tr>
+				<tr>
+					<td class="category">静電気</td>
+					<td>ふたが開かなくなる。フロア進行で自然解除。</td>
+				</tr>
+			</tbody></table>
+
+			<h2>アイテム紹介</h2>
+			<table>
+				<tbody><tr>
+					<td class="category">空箱</td>
+					<td>
+						さまざまなアイテムを出し入れできる。<br>
+						いれたままの使用も可能。
+					</td>
+				</tr>
+				<tr>
+					<td class="category">やりすごしの箱</td>
+					<td>
+						開けると中に吸い込まれてしばらくやりすごし状態になる。<br>
+						やりすごし状態では敵に見つからない。<br>
+						攻撃を受けたり、攻撃したり、アイテムを使用すると解除される。
+					</td>
+				</tr>
+			</tbody></table>
+		</td></tr></tbody></table>
+		
+	</a><a name="Money"><h1><img class="ItemIcon" src="./Item_files/Item_Money.png">お金</h1></a>
+		金は命より重いっ…！！
+		<ul>
+			<li>拾うと所持金に加算されます。</li>
+			<li>お店での取引に使います。</li>
+			<li>敵に投げると、<b>金額に応じたダメージを与えることができます</b>。</li>
+			<li>箱に入れることで、所持金に加算せずに持ち歩けます。</li>
+		</ul>
+
+	
+
+</body></html>

@@ -19,6 +19,12 @@ Before publishing or reusing anything from this repository, read:
 - `LICENSE.md`
 - `NOTICE.md`
 
+The original online manual is archived in `docs/manual/`. Open
+`docs/manual/index.html` to read it locally.
+When GitHub Pages is enabled for this repository from the `public` branch
+`/docs` directory, it is available at
+`https://shiromac.github.io/gensoukyougensounikki/manual/`.
+
 Binary release packages may be unpacked to run the game, but the packed runtime assets must not be extracted, redistributed, or reused as standalone BGM/music, sound, image, texture, script, or data materials. Included BGM/music may only be used as part of playing this game.
 
 The project also depends on external SDKs/libraries that are not vendored here, including Boost, Lua 5.1, luabind 0.9.1, zlib, DirectX/DirectSound, and Windows platform SDK headers.
