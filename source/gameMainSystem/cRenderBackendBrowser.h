@@ -176,7 +176,8 @@ struct cRenderPresentParameters
 struct cRenderDevice
 {
 	cRenderDevice()
-		: width(800), height(600), viewportWidth(800), viewportHeight(600),
+		: width(800), height(600), logicalWidth(800), logicalHeight(600),
+		  viewportWidth(800), viewportHeight(600), backBufferScaleX(1.0f), backBufferScaleY(1.0f),
 		  renderTarget(NULL), currentTexture(NULL), alphaBlendEnabled(false),
 		  colorMode(0), blendFactors(0), blendOperation(0)
 	{
@@ -185,10 +186,19 @@ struct cRenderDevice
 
 	bool initialize(int newWidth, int newHeight)
 	{
-		width = newWidth;
-		height = newHeight;
-		viewportWidth = newWidth;
-		viewportHeight = newHeight;
+		logicalWidth = newWidth;
+		logicalHeight = newHeight;
+		float scale = chooseBackBufferScale();
+		width = (int)((float)newWidth * scale + 0.5f);
+		height = (int)((float)newHeight * scale + 0.5f);
+		if(width < 1) width = 1;
+		if(height < 1) height = 1;
+		if(width > newWidth) width = newWidth;
+		if(height > newHeight) height = newHeight;
+		backBufferScaleX = (float)width / (float)logicalWidth;
+		backBufferScaleY = (float)height / (float)logicalHeight;
+		viewportWidth = logicalWidth;
+		viewportHeight = logicalHeight;
 		renderTarget = NULL;
 		currentTexture = NULL;
 		return backBuffer.resize(width, height);
@@ -200,6 +210,55 @@ struct cRenderDevice
 		return &backBuffer;
 	}
 
+	static float chooseBackBufferScale()
+	{
+#ifdef __EMSCRIPTEN__
+		double scale = EM_ASM_DOUBLE({
+			function clamp(value) {
+				if (!isFinite(value) || value <= 0) return 1.0;
+				return Math.max(0.25, Math.min(1.0, value));
+			}
+			if (typeof Module['ggnRenderScale'] !== 'undefined') {
+				var moduleScale = parseFloat(Module['ggnRenderScale']);
+				if (isFinite(moduleScale) && moduleScale > 0) return clamp(moduleScale);
+			}
+			var paramScale = NaN;
+			try {
+				paramScale = parseFloat(new URLSearchParams(location.search).get('renderScale'));
+			} catch (e) {
+			}
+			if (isFinite(paramScale) && paramScale > 0) return clamp(paramScale);
+			var coarse = false;
+			try {
+				coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+			} catch (e) {
+			}
+			var layoutShortSide = Math.min(window.innerWidth || 800, window.innerHeight || 600);
+			var screenShortSide = layoutShortSide;
+			try {
+				if (window.screen && screen.width > 0 && screen.height > 0) {
+					screenShortSide = Math.min(screen.width, screen.height);
+				}
+			} catch (e) {
+			}
+			var shortSide = Math.min(layoutShortSide, screenShortSide);
+			if (shortSide <= 520) return 0.375;
+			if (coarse || shortSide <= 700) return 0.5;
+			return 1.0;
+		});
+		if(scale < 0.25) scale = 0.25;
+		if(scale > 1.0) scale = 1.0;
+		return (float)scale;
+#else
+		return 1.0f;
+#endif
+	}
+
+	bool isBackBufferTarget(cRenderTexture* target) const
+	{
+		return target == &backBuffer;
+	}
+
 	int SetTexture(DWORD stage, cRenderTexture* texture);
 	int SetFVF(DWORD fvf);
 	int SetTextureStageState(DWORD stage, DWORD state, DWORD value);
@@ -209,8 +268,12 @@ struct cRenderDevice
 
 	int width;
 	int height;
+	int logicalWidth;
+	int logicalHeight;
 	int viewportWidth;
 	int viewportHeight;
+	float backBufferScaleX;
+	float backBufferScaleY;
 	cRenderTexture backBuffer;
 	cRenderSurface* renderTarget;
 	cRenderTexture* currentTexture;
@@ -1183,13 +1246,26 @@ inline void cRenderDrawSoftwareTriangle(cRenderDevice* device, const cRenderDraw
 	cRenderTexture* target = device->targetTexture();
 	if(target == NULL || target->pixels == NULL) return;
 
-	float area = cRenderEdge(v0.x, v0.y, v1.x, v1.y, v2.x, v2.y);
+	cRenderDrawVertex sv0 = v0;
+	cRenderDrawVertex sv1 = v1;
+	cRenderDrawVertex sv2 = v2;
+	if(device->isBackBufferTarget(target))
+	{
+		sv0.x *= device->backBufferScaleX;
+		sv0.y *= device->backBufferScaleY;
+		sv1.x *= device->backBufferScaleX;
+		sv1.y *= device->backBufferScaleY;
+		sv2.x *= device->backBufferScaleX;
+		sv2.y *= device->backBufferScaleY;
+	}
+
+	float area = cRenderEdge(sv0.x, sv0.y, sv1.x, sv1.y, sv2.x, sv2.y);
 	if(area > -0.0001f && area < 0.0001f) return;
 
-	int minX = cRenderClampInt((int)floorf(cRenderMin3(v0.x, v1.x, v2.x)), 0, target->width - 1);
-	int maxX = cRenderClampInt((int)ceilf(cRenderMax3(v0.x, v1.x, v2.x)), 0, target->width - 1);
-	int minY = cRenderClampInt((int)floorf(cRenderMin3(v0.y, v1.y, v2.y)), 0, target->height - 1);
-	int maxY = cRenderClampInt((int)ceilf(cRenderMax3(v0.y, v1.y, v2.y)), 0, target->height - 1);
+	int minX = cRenderClampInt((int)floorf(cRenderMin3(sv0.x, sv1.x, sv2.x)), 0, target->width - 1);
+	int maxX = cRenderClampInt((int)ceilf(cRenderMax3(sv0.x, sv1.x, sv2.x)), 0, target->width - 1);
+	int minY = cRenderClampInt((int)floorf(cRenderMin3(sv0.y, sv1.y, sv2.y)), 0, target->height - 1);
+	int maxY = cRenderClampInt((int)ceilf(cRenderMax3(sv0.y, sv1.y, sv2.y)), 0, target->height - 1);
 
 	for(int y = minY; y <= maxY; ++y)
 	{
@@ -1197,14 +1273,14 @@ inline void cRenderDrawSoftwareTriangle(cRenderDevice* device, const cRenderDraw
 		{
 			float px = (float)x + 0.5f;
 			float py = (float)y + 0.5f;
-			float w0 = cRenderEdge(v1.x, v1.y, v2.x, v2.y, px, py) / area;
-			float w1 = cRenderEdge(v2.x, v2.y, v0.x, v0.y, px, py) / area;
-			float w2 = cRenderEdge(v0.x, v0.y, v1.x, v1.y, px, py) / area;
+			float w0 = cRenderEdge(sv1.x, sv1.y, sv2.x, sv2.y, px, py) / area;
+			float w1 = cRenderEdge(sv2.x, sv2.y, sv0.x, sv0.y, px, py) / area;
+			float w2 = cRenderEdge(sv0.x, sv0.y, sv1.x, sv1.y, px, py) / area;
 			if(w0 < -0.0001f || w1 < -0.0001f || w2 < -0.0001f) continue;
 
-			float u = v0.tu * w0 + v1.tu * w1 + v2.tu * w2;
-			float v = v0.tv * w0 + v1.tv * w1 + v2.tv * w2;
-			unsigned long vertexColor = cRenderInterpolateColor(v0.color, v1.color, v2.color, w0, w1, w2);
+			float u = sv0.tu * w0 + sv1.tu * w1 + sv2.tu * w2;
+			float v = sv0.tv * w0 + sv1.tv * w1 + sv2.tv * w2;
+			unsigned long vertexColor = cRenderInterpolateColor(sv0.color, sv1.color, sv2.color, w0, w1, w2);
 			unsigned long textureColor = cRenderSampleTexture(device->currentTexture, u, v);
 			unsigned long source = cRenderApplyTextureColor(device, textureColor, vertexColor);
 			unsigned long& destination = target->pixels[y * target->width + x];
@@ -1569,15 +1645,42 @@ inline cRenderResult cRenderPresent(cRenderDevice* device)
 		}
 		var pixels = HEAPU32.subarray(ptr >>> 2, (ptr >>> 2) + width * height);
 		var output = image.data;
-		for (var i = 0, j = 0; i < pixels.length; ++i, j += 4) {
+		var output32 = Module['ggnImageData32'];
+		if (!output32 || output32.buffer !== output.buffer) {
+			output32 = new Uint32Array(output.buffer);
+			Module['ggnImageData32'] = output32;
+		}
+		for (var i = 0; i < pixels.length; ++i) {
 			var color = pixels[i] >>> 0;
-			output[j] = (color >>> 16) & 255;
-			output[j + 1] = (color >>> 8) & 255;
-			output[j + 2] = color & 255;
-			output[j + 3] = (color >>> 24) & 255;
+			output32[i] = (color & 0xff000000) | ((color & 0x000000ff) << 16) | (color & 0x0000ff00) | ((color & 0x00ff0000) >>> 16);
 		}
 		context.putImageData(image, 0, 0);
-	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height);
+		var now = performance.now();
+		Module['ggnPresentCount'] = (Module['ggnPresentCount'] || 0) + 1;
+		if (!Module['ggnPresentFpsStart']) {
+			Module['ggnPresentFpsStart'] = now;
+			Module['ggnPresentFpsFrames'] = 0;
+		}
+		Module['ggnPresentFpsFrames'] = (Module['ggnPresentFpsFrames'] || 0) + 1;
+		var elapsed = now - Module['ggnPresentFpsStart'];
+		if (elapsed >= 1000) {
+			Module['ggnPresentFps'] = Module['ggnPresentFpsFrames'] * 1000 / elapsed;
+			Module['ggnPresentFpsStart'] = now;
+			Module['ggnPresentFpsFrames'] = 0;
+		}
+		var renderInfo = Module['ggnRenderInfo'];
+		if (!renderInfo) {
+			renderInfo = new Object();
+			Module['ggnRenderInfo'] = renderInfo;
+		}
+		renderInfo['width'] = width;
+		renderInfo['height'] = height;
+		renderInfo['logicalWidth'] = $3 | 0;
+		renderInfo['logicalHeight'] = $4 | 0;
+		renderInfo['scaleX'] = +$5;
+		renderInfo['scaleY'] = +$6;
+		renderInfo['presentFps'] = Module['ggnPresentFps'] || 0;
+	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY);
 #endif
 	return 0;
 }
