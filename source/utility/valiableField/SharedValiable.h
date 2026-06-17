@@ -258,9 +258,9 @@ protected:
 
 public:
 	// 補助関数
-	inline T& valiable()		{return *valiable_;};
-	inline T  valiable() const	{return *valiable_;};
-	inline Pointer pointer()	{return valiable_;};
+	inline T& valiable()		{return *pValiable_;};
+	inline T  valiable() const	{return *pValiable_;};
+	inline Pointer pointer()	{return pValiable_;};
 public:
 	SharedValiable_likeVector()
 		:pValiable_(new T)		{};
@@ -350,14 +350,14 @@ protected:
 
 public:
 	// 補助関数
-	inline T& valiable()		{return *valiable_;};
-	inline T  valiable() const	{return *valiable_;};
-	inline Pointer pointer()	{return valiable_;};
+	inline T& valiable()		{return *pValiable_;};
+	inline T  valiable() const	{return *pValiable_;};
+	inline Pointer pointer()	{return pValiable_;};
 public:
 	SharedObject()
 		:pValiable_(new T)		{};
 	SharedObject(const T& t)
-		:pValiable_(new T)		{valiable() = valiable;};//非明示的変換
+		:pValiable_(new T)		{valiable() = t;};//非明示的変換
 	// コピーコンストラクタ
 	SharedObject(const SharedObject& SharedObject)
 		:pValiable_(new T)		{valiable() = SharedObject.valiable();};

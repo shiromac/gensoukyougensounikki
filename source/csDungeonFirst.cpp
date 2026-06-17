@@ -37,7 +37,7 @@ csDungeonFirst::~csDungeonFirst(void)
 }
 
 
-bool csDungeonFirst::SceneInitialaze(IDirect3DDevice9 *pDev)
+bool csDungeonFirst::SceneInitialaze(cRenderDevice *pDev)
 {
 	//sg_pDungeonSystem->InitSystem(pDev);
 	{
@@ -72,12 +72,12 @@ void csDungeonFirst::SceneFinalize()
 	
 }
 
-void csDungeonFirst::SceneSystemDraw(IDirect3DDevice9 *pDev)
+void csDungeonFirst::SceneSystemDraw(cRenderDevice *pDev)
 {
 
 }
 
-void csDungeonFirst::SceneDraw(IDirect3DDevice9 *pDev)
+void csDungeonFirst::SceneDraw(cRenderDevice *pDev)
 {
 
 	
@@ -85,7 +85,7 @@ void csDungeonFirst::SceneDraw(IDirect3DDevice9 *pDev)
 	sg_pDungeonSystem->Draw(pDev);
 }
 
-void csDungeonFirst::SceneProcess(IDirect3DDevice9 *pDev)
+void csDungeonFirst::SceneProcess(cRenderDevice *pDev)
 {
 	if(sg_pDungeonSystem->process(pDev))
 	{

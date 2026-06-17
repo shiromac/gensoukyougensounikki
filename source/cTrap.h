@@ -94,11 +94,11 @@ public://踏んだ数
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 	//--------------------------------------------------------
 	//コマンド群
-	//virtual int 踏む(IDirect3DDevice9 *pDev);
+	//virtual int 踏む(cRenderDevice *pDev);
 	//virtual int 踏み要請();
 
 	virtual void CutIn(タイミング timing, cValiableField& valiable);

@@ -13,7 +13,7 @@ caMessage::~caMessage()
 }
 
 
-int caMessage::process(IDirect3DDevice9 *pDev)
+int caMessage::process(cRenderDevice *pDev)
 {
 
 	sg_pDungeonSystem->MessageW().addMessage(Message);

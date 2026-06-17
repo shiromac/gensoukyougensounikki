@@ -73,7 +73,7 @@ public:
 public:
 	virtual ~cBoss(void);
 
-	virtual void InitSub(IDirect3DDevice9 *pDev);//子クラスで使うかも
+	virtual void InitSub(cRenderDevice *pDev);//子クラスで使うかも
 
 	virtual void settingInit();
 
@@ -97,7 +97,7 @@ public:
 	virtual int spellIndex(){return spellIndex_;};
 	virtual pcBossSpell nowSpell(){return nowSpell_;};
 protected:
-	virtual void DrawShadow(IDirect3DDevice9 *pDev);
+	virtual void DrawShadow(cRenderDevice *pDev);
 	cDrawingObject mouhoujin;
 	double mahoujin_count;
 public:

@@ -67,7 +67,7 @@ public:
 	virtual inline int IconForIconFileIndexX(){return IconFileIndexX() + 装備されている();};
 	virtual inline int IconForIconFileIndexY(){return IconFileIndexY();};
 
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
@@ -91,7 +91,7 @@ public:
 
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 
 public:
@@ -199,8 +199,8 @@ public:
 	//--------------------------------------------------------
 	//コマンド群
 	
-	//virtual int 装備(IDirect3DDevice9 *pDev, int part);
-	//virtual int 装備選択(IDirect3DDevice9 *pDev);
+	//virtual int 装備(cRenderDevice *pDev, int part);
+	//virtual int 装備選択(cRenderDevice *pDev);
 	//virtual int 装備要請(pcCharacter pchara, int part);
 
 
@@ -214,7 +214,7 @@ public:
 	virtual int 装備メッセージ定型(pcCharacter pchara, int part);
 
 
-	//virtual int はずす(IDirect3DDevice9 *pDev);
+	//virtual int はずす(cRenderDevice *pDev);
 	//virtual int 装備はずし要請(pcCharacter pchara);
 
 	
@@ -238,7 +238,7 @@ public:
 	virtual int 破壊メッセージ定型(pcCharacter pchara);
 
 	
-	//virtual int 宣言(IDirect3DDevice9 *pDev ,vector<pcDroping> &ObjectList);
+	//virtual int 宣言(cRenderDevice *pDev ,vector<pcDroping> &ObjectList);
 	//virtual int 宣言要請(pcCharacter pchara ,vector<pcDroping> &ObjectList);
 
 	//破壊される時true;

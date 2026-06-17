@@ -9,6 +9,8 @@
 #include "SpriteText.h"
 #include <stdio.h>
 #include <assert.h>
+#include <limits.h>
+#include <string.h>
 
 #include "debug.h"
 
@@ -19,10 +21,9 @@
 //======================================================================
 SpriteText::SpriteText()
 {
-	m_hFont = m_hOldFont = NULL;
 	m_lpTex = NULL;
 	m_fRot = 0.0f;
-	m_fSize = D3DXVECTOR2(1.0f,1.0f);
+	m_fSize = cRenderVector2(1.0f,1.0f);
 	m_AntiAlias = 1;
 	m_Weight = FW_REGULAR;
 
@@ -49,11 +50,10 @@ SpriteText::~SpriteText()
 //		初期化
 //
 //======================================================================
-bool SpriteText::Init( LPDIRECT3DDEVICE9 lpDev,long num, DWORD w, DWORD h)
+bool SpriteText::Init( cRenderDevice* lpDev,long num, DWORD w, DWORD h)
 {
 	m_lpTex = NULL;
 	
-	HRESULT hr;
 	long i;
 
 
@@ -64,17 +64,17 @@ bool SpriteText::Init( LPDIRECT3DDEVICE9 lpDev,long num, DWORD w, DWORD h)
 
 
 
-	hr = D3DXCreateTexture( lpDev, w, h, 0, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_lpTex );
-	if(hr != S_OK)
+	if(!cRenderCreateManagedTexture(lpDev, w, h, &m_lpTex))
 	{
 		return 1;
 	}
 
-	D3DSURFACE_DESC desc;
-	m_lpTex->GetLevelDesc( 0, &desc );
+	int textureWidth = 0;
+	int textureHeight = 0;
+	cRenderGetTextureSize(m_lpTex, textureWidth, textureHeight);
 	
-	m_dwWidth = desc.Width;
-	m_dwHeight = desc.Height;
+	m_dwWidth = textureWidth;
+	m_dwHeight = textureHeight;
 
 	//*************************
 	//追加
@@ -93,8 +93,7 @@ void SpriteText::UnInit( void )
 {
 	if(m_lpTex != NULL)
 	{
-		m_lpTex->Release();
-		m_lpTex = NULL;
+		 cRenderRelease(m_lpTex);
 	}
 }
 
@@ -106,7 +105,7 @@ void SpriteText::UnInit( void )
 //		作成したテクスチャを取得します。
 //
 //======================================================================
-LPDIRECT3DTEXTURE9 SpriteText::GetTex()
+cRenderTexture* SpriteText::GetTex()
 {
 	return m_lpTex;
 }
@@ -122,17 +121,16 @@ LPDIRECT3DTEXTURE9 SpriteText::GetTex()
 void SpriteText::CleatText( void )
 {
 
-	D3DLOCKED_RECT TexRect;
+	cRenderLockedRect TexRect;
 	m_fRot = 0.0f;
-	m_fSize = D3DXVECTOR2(1.0f,1.0f);
+	m_fSize = cRenderVector2(1.0f,1.0f);
 
 	if(m_lpTex != NULL)
 	{
-		HRESULT hr = m_lpTex->LockRect( 0, &TexRect, NULL, 0 );
-		if SUCCEEDED( hr )
+		if(cRenderLockTexture(m_lpTex, TexRect))
 		{
 			memset( TexRect.pBits, 0x00, TexRect.Pitch*m_dwHeight );
-			m_lpTex->UnlockRect( 0 );
+			cRenderUnlockTexture(m_lpTex);
 		}
 	}
 }
@@ -144,33 +142,8 @@ void SpriteText::CleatText( void )
 //======================================================================
 void SpriteText::BeginText(const TCHAR* face, DWORD size )
 {
-	m_hwnd = GetActiveWindow();
-	m_hdc = GetDC( m_hwnd );
 	m_dwTexSize = size;
-
-	//============================================
-	//		フォント生成
-	//============================================
-	m_hFont = CreateFont(
-				size,						// フォント高さ
-				0,							// 文字幅
-				0,							// テキストの角度	
-				0,							// ベースラインとｘ軸との角度
-				m_Weight,					// フォントの重さ（太さ）
-				FALSE,						// イタリック体
-				FALSE,						// アンダーライン
-				FALSE,						// 打ち消し線
-				SHIFTJIS_CHARSET,			// 文字セット
-				OUT_TT_PRECIS,				// 出力精度
-				CLIP_DEFAULT_PRECIS,		// クリッピング精度
-				PROOF_QUALITY,				// 出力品質
-				FIXED_PITCH | FF_MODERN,	// ピッチとファミリー
-				face						// 書体名
-			);
-
-	m_hOldFont = (HFONT)SelectObject( m_hdc, m_hFont );
-
-
+	cRenderBeginText(m_textContext, face, size, m_Weight);
 }
 
 //======================================================================
@@ -180,8 +153,7 @@ void SpriteText::BeginText(const TCHAR* face, DWORD size )
 //======================================================================
 void SpriteText::EndText( void )
 {
-	DeleteObject( SelectObject( m_hdc, m_hOldFont ) );
-	ReleaseDC( m_hwnd, m_hdc );
+	cRenderEndText(m_textContext);
 }
 
 
@@ -190,7 +162,7 @@ void SpriteText::EndText( void )
 //		テキスト色
 //
 //======================================================================
-void SpriteText::SetColor( D3DCOLOR color )
+void SpriteText::SetColor( DWORD color )
 {
 	m_a = (BYTE)((color & 0xFF000000) >> 24);
 	m_rgb = color & 0x00FFFFFF;
@@ -266,7 +238,7 @@ void SpriteText::DrawText(StyleString str)
 	}
 
 	SetColor(0xFFFFFFFF);
-	D3DXVECTOR2 v(1.0f,1.0f);
+	cRenderVector2 v(1.0f,1.0f);
 	SetSize(v);
 }
 
@@ -290,44 +262,48 @@ void SpriteText::DrawText( DWORD x, DWORD y, TCHAR* tstring)
 //		1文字のみ描画します。
 //
 //======================================================================
-void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &tm)
+void SpriteText::DrawChar(unsigned int code,cRenderLockedRect &TexRect,const cRenderTextMetrics &tm)
 {
-	GLYPHMETRICS gm;
-	ABC abc;
+	cRenderGlyphMetrics gm;
+	cRenderGlyphABC abc;
 
 	//==================================================
 	// フォントバッファ格納
 	//==================================================
-	LPBYTE lpFont = NULL;
+	BYTE* lpFont = NULL;
 
 	// フォントバッファ取得
 	DWORD DataSize = GetFontBuffer( code, &gm, &lpFont );
 	if(lpFont == NULL) return;
 
 	// フォント幅取得
-	GetCharABCWidths( m_hdc, code, code, &abc );
+	if(!cRenderGetGlyphABC(m_textContext, code, abc))
+	{
+		delete [] lpFont;
+		return;
+	}
 
-	LPBYTE p2 = lpFont;
+	BYTE* p2 = lpFont;
 
 
 	// 描画位置を進める
 	/*
-	int a = (abc.abcA)?(2):(0);	//文字の左淵の大きさ
-	int b = abc.abcB;			//文字の大きさ
-	int c = (abc.abcC)?(2):(0);	//文字の右淵の大きさ
+	int a = (abc.a)?(2):(0);	//文字の左淵の大きさ
+	int b = abc.b;			//文字の大きさ
+	int c = (abc.c)?(2):(0);	//文字の右淵の大きさ
 	*/
 	int a;	//文字の左淵の大きさ
 	int b;	//文字の大きさ
 	int c;	//文字の右淵の大きさ
 
-	a = abc.abcA;	//文字の左淵の大きさ
-	b = abc.abcB;	//文字の大きさ
-	c = abc.abcC;	//文字の右淵の大きさ
+	a = abc.a;	//文字の左淵の大きさ
+	b = abc.b;	//文字の大きさ
+	c = abc.c;	//文字の右淵の大きさ
 
 	//**************************************************
 	//追加点　強制改行
 	//**************************************************
-	if(m_dwX + m_fSize.x * (c + a + gm.gmBlackBoxX) > m_ReturnWidth) NL(m_dwBackX);
+	if(m_dwX + m_fSize.x * (c + a + gm.blackBoxX) > m_ReturnWidth) NL(m_dwBackX);
 
 	m_dwX += m_fSize.x * (a);
 
@@ -335,8 +311,15 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 
 
 	// サイズ取得
-	lWidth = (long)gm.gmBlackBoxX;
-	lHeight = (long)gm.gmBlackBoxY;
+	lWidth = (long)gm.blackBoxX;
+	lHeight = (long)gm.blackBoxY;
+	DWORD advance = (DWORD)(m_fSize.x * (c) + gm.blackBoxX);
+	if(m_dwX >= m_dwWidth || m_dwY >= m_dwHeight || lWidth <= 0 || lHeight <= 0)
+	{
+		m_dwX += advance;
+		delete [] lpFont;
+		return;
+	}
 	
 
 
@@ -349,6 +332,12 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	{
 		lHeight = m_dwHeight - m_dwY;
 	}
+	if(lWidth <= 0 || lHeight <= 0)
+	{
+		m_dwX += advance;
+		delete [] lpFont;
+		return;
+	}
 
 
 	
@@ -358,7 +347,7 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	//==================================================
 	// 描画先サーフェイスのポインタ
 	//==================================================
-	LPDWORD p1 = (LPDWORD)TexRect.pBits;
+	DWORD* p1 = (DWORD*)TexRect.pBits;
 	DWORD pitch = TexRect.Pitch / 4;
 
 
@@ -376,10 +365,10 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	/*
 	if(m_Over)
 	{
-		LPDWORD pt = (LPDWORD)TexRect.pBits;
+		DWORD* pt = (DWORD*)TexRect.pBits;
 		pt += m_dwX + (m_dwY) * pitch;
-		int width = (int)(m_fSize.x * (2 + 2) + gm.gmBlackBoxX);
-		int height = tm.tmHeight + tm.tmExternalLeading * 2;
+		int width = (int)(m_fSize.x * (2 + 2) + gm.blackBoxX);
+		int height = tm.height + tm.externalLeading * 2;
 		for ( long y = 0; y <  height; y++ )
 		{
 			memset(pt, 0x00, width * sizeof(DWORD));
@@ -390,10 +379,10 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	*/
 	if(m_Over)
 	{
-		LPDWORD pt = (LPDWORD)TexRect.pBits;
+		DWORD* pt = (DWORD*)TexRect.pBits;
 		pt += m_dwX + (m_dwY) * pitch;
-		int width = (int)(m_fSize.x * (a + c) + gm.gmBlackBoxX);
-		int height = tm.tmHeight + tm.tmExternalLeading * 2;
+		int width = (int)(m_fSize.x * (a + c) + gm.blackBoxX);
+		int height = tm.height + tm.externalLeading * 2;
 		if(m_dwHeight > m_dwY)
 		{
 			for ( long y = 0; y <  height; y++ )
@@ -406,7 +395,7 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	//==================================================
 	// Ｙ開始位置取得
 	//==================================================
-	int sy = tm.tmAscent  - gm.gmptGlyphOrigin.y;
+	int sy = tm.ascent  - gm.glyphOriginY;
 
 	int add = m_dwX + (m_dwY + sy) * pitch;
 
@@ -414,7 +403,7 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	{
 		add = 0;
 	}
-	p1 = (LPDWORD)TexRect.pBits;
+	p1 = (DWORD*)TexRect.pBits;
 	p1 += add;
 
 
@@ -427,8 +416,8 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	DWORD fontPitch;
 	if(m_AntiAlias)
 	{
-		if(gm.gmBlackBoxY == 0) fontPitch = INT_MAX & ~0x03;
-		else fontPitch = (DataSize / gm.gmBlackBoxY) & ~0x03;
+		if(gm.blackBoxY == 0) fontPitch = INT_MAX & ~0x03;
+		else fontPitch = (DataSize / gm.blackBoxY) & ~0x03;
 		
 		for ( long y = 0; y < lHeight ; y++ )
 		{
@@ -448,8 +437,8 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	}
 	else
 	{
-		LPBYTE lpCurrent; // 現在チェック中のBYTE位置
-		fontPitch = ( ( gm.gmBlackBoxX + 0x1f ) & ~0x1f ) / 8; // 1行分のバイト数
+		BYTE* lpCurrent; // 現在チェック中のBYTE位置
+		fontPitch = ( ( gm.blackBoxX + 0x1f ) & ~0x1f ) / 8; // 1行分のバイト数
 		BYTE byMask; // ビットマスク
 
 		for (int y = 0; y < lHeight; y++)
@@ -484,8 +473,8 @@ void SpriteText::DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &
 	
 
 
-	//m_dwX += (DWORD)(m_fSize.x * (a + c) + gm.gmBlackBoxX);
-	m_dwX += (DWORD)(m_fSize.x * (c) + gm.gmBlackBoxX);
+	//m_dwX += (DWORD)(m_fSize.x * (a + c) + gm.blackBoxX);
+	m_dwX += advance;
 				
 
 
@@ -532,15 +521,18 @@ void SpriteText::SetDrawText(TCHAR* Buffer)
 	//===========================================================
 	// テクスチャロック
 	//===========================================================
-	D3DLOCKED_RECT TexRect;
-	HRESULT hr = m_lpTex->LockRect( 0, &TexRect, NULL, 0 );
-	if FAILED( hr ) return;
+	cRenderLockedRect TexRect;
+	if(!cRenderLockTexture(m_lpTex, TexRect)) return;
 	// 文字長
 	DWORD len = (DWORD)_tcslen( Buffer );
 
 	// フォント高さ取得-
-	TEXTMETRIC tm;
-	GetTextMetrics( m_hdc, &tm );
+	cRenderTextMetrics tm;
+	if(!cRenderGetTextMetrics(m_textContext, tm))
+	{
+		cRenderUnlockTexture(m_lpTex);
+		return;
+	}
 
 
 	//m_dwBackX = m_dwX;	//開業するときに必要。
@@ -584,7 +576,7 @@ void SpriteText::SetDrawText(TCHAR* Buffer)
 		}
 	}
 
-	m_lpTex->UnlockRect( 0 );
+	cRenderUnlockTexture(m_lpTex);
 }
 
 //************************************************************************
@@ -623,7 +615,7 @@ int SpriteText::GetTextWidth(const TCHAR* tstring)
 		switch ( code )
 		{
 		case _T('\n'):
-			maxwidth = max(maxwidth,width);
+			if(width > maxwidth) maxwidth = width;
 			width = 0;
 			break;
 		//**************************************************
@@ -641,24 +633,29 @@ int SpriteText::GetTextWidth(const TCHAR* tstring)
 		}
 	}
 
-	return maxwidth = max(maxwidth,width);
+	if(width > maxwidth) maxwidth = width;
+	return maxwidth;
 }
 int SpriteText::GetcharWidth(unsigned int code)
 {
-	GLYPHMETRICS gm;
-	ABC abc;
+	cRenderGlyphMetrics gm;
+	cRenderGlyphABC abc;
 
 	//==================================================
 	// フォントバッファ格納
 	//==================================================
-	LPBYTE lpFont = NULL;
+	BYTE* lpFont = NULL;
 
 	// フォントバッファ取得
 	DWORD DataSize = GetFontBuffer( code, &gm, &lpFont );
 	if(lpFont == NULL) return 0;
 
 	// フォント幅取得
-	GetCharABCWidths( m_hdc, code, code, &abc );
+	if(!cRenderGetGlyphABC(m_textContext, code, abc))
+	{
+		delete [] lpFont;
+		return 0;
+	}
 
 	// バッファ開放
 	if ( lpFont != NULL )
@@ -667,7 +664,7 @@ int SpriteText::GetcharWidth(unsigned int code)
 		lpFont = NULL;
 	}
 
-	return (DWORD)((int)(m_fSize.x * abc.abcA) + (m_fSize.x * abc.abcC) + gm.gmBlackBoxX);
+	return (DWORD)((int)(m_fSize.x * abc.a) + (m_fSize.x * abc.c) + gm.blackBoxX);
 }
 
 
@@ -683,7 +680,7 @@ void SpriteText::NL(DWORD dwBackX)
 //************************************************************************
 void SpriteText::FitTextWidth(StyleString& sstr, int Width)
 {
-	D3DXVECTOR2 vec(1.0,1.0);
+	cRenderVector2 vec(1.0,1.0);
 	sstr.setSameSize(vec);
 	int textwidth = GetTextWidth(sstr.c_str());
 	if( textwidth > Width)
@@ -700,15 +697,7 @@ void SpriteText::FitTextWidth(StyleString& sstr, int Width)
 //=======================================================================
 void SpriteText::UpDate()
 {
-	float fCos = cos(m_fRot);
-	float fSin = sin(m_fRot);
-
-    long m11 = (long)(m_fSize.x * fCos * 65536.0);	long m12 = (long)(m_fSize.y * fSin * 65536.0);
-    long m21 = (long)(-m_fSize.x * fSin * 65536.0);	long m22 = (long)(m_fSize.y * fCos * 65536.0);
-
-	m_mat.eM11 = *( (FIXED *)&m11 );	m_mat.eM12 = *( (FIXED *)&m12 );
-	m_mat.eM21 = *( (FIXED *)&m21 );	m_mat.eM22 = *( (FIXED *)&m22 );
-
+	cRenderBuildTextTransform(m_textTransform, m_fSize.x, m_fSize.y, m_fRot);
 }
 
 //=======================================================================
@@ -716,7 +705,7 @@ void SpriteText::UpDate()
 //		大きさを更新します。
 //
 //=======================================================================
-void SpriteText::SetSize(D3DXVECTOR2 &vec2Size)
+void SpriteText::SetSize(const cRenderVector2 &vec2Size)
 {
 	m_fSize = vec2Size;
 	UpDate();
@@ -769,36 +758,9 @@ void SpriteText::SetReturnFontMargin(DWORD margin)
 //			フォントバッファ取得
 //
 //==========================================================================
-DWORD SpriteText::GetFontBuffer( long code, GLYPHMETRICS *pgm, LPBYTE *lpData)
+DWORD SpriteText::GetFontBuffer( long code, cRenderGlyphMetrics *pgm, BYTE **lpData)
 {
-	ZeroMemory( pgm, sizeof(GLYPHMETRICS) );
-
-	//=============================================================
-	// フォントデータ取得
-	//=============================================================
-
-	int theBitMap = GGO_BITMAP;
-	if(m_AntiAlias)
-	{
-		theBitMap = GGO_GRAY8_BITMAP;
-	}
-
-	// 16階調のアンチェリフォント
-	DWORD Size;
-	// バッファサイズ受信
-	Size = GetGlyphOutline( m_hdc, code, theBitMap, pgm, 0, NULL, &m_mat );
-	
-	if( Size == GDI_ERROR ){
-		//エラー
-		*lpData = NULL;
-		return Size;
-	}
-	// バッファ取得
-	*lpData = new BYTE [Size ];
-	// バッファにフォント受信
-	GetGlyphOutline( m_hdc, code, theBitMap, pgm, Size, *lpData, &m_mat );
-
-	return Size;
+	return cRenderGetGlyphBitmap(m_textContext, code, m_AntiAlias, m_textTransform, *pgm, lpData);
 }
 
 //==========================================================================

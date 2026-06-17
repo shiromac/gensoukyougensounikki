@@ -21,7 +21,11 @@
 
 #define MINIMUM_FPS				(50)						///< FPS‚ª‚±‚Ì’lˆÈ‰º‚É‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é
 
+#ifdef __EMSCRIPTEN__
+#define ERROR_RETURN(str)		{ return false; }
+#else
 #define ERROR_RETURN(str)		{ ::MessageBox( NULL, str, _T("Error"), MB_OK|MB_ICONERROR ); return false; }
+#endif
 
 
 //=============================================================================

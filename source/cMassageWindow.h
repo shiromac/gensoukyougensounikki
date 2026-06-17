@@ -16,12 +16,12 @@ class cMassageWindow :
 public:
 	cMassageWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int NewRoll(IDirect3DDevice9 *pDev);
-	virtual int RenderText(IDirect3DDevice9 *pDev);
-	virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
+	virtual int NewRoll(cRenderDevice *pDev);
+	virtual int RenderText(cRenderDevice *pDev);
+	virtual int TextDrawSub(cRenderDevice *pDev);
 
 	deque<psstring> massagelogs;
 	deque<psstring> rollmassages;
@@ -34,7 +34,7 @@ protected:
 	int forcusTop;
 
 	int Waiting;//‘Ò‚¿ƒtƒ‰ƒO
-	IDirect3DTexture9* pTex_cursol;
+	cRenderTexture* pTex_cursol;
 
 public:
 	virtual int Wait();
@@ -46,10 +46,10 @@ public:
 	virtual ~cMassageWindow(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int addMassage(StyleString massage);
 
-	virtual int textclear(IDirect3DDevice9 *pDev);
+	virtual int textclear(cRenderDevice *pDev);
 };

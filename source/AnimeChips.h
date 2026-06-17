@@ -2,7 +2,7 @@
 #include "utility/VariationNumber.h"
 #include "cAnimation.h"
 #include "utility/cNumField.h"
-#include <d3d9types.h>
+#include "gameMainSystem/cRenderBackend.h"
 #include <tstring_ph.h>
 #include <LuaUtility/LuaStringUtility.h>
 
@@ -13,10 +13,10 @@ class AnimeChip;
 typedef boost::shared_ptr<AnimeChip> pAnimeChip;
 typedef boost::weak_ptr<AnimeChip> wpAnimeChip;
 
-typedef D3DXVECTOR3 PositionPerGrid;
-typedef D3DXVECTOR4 TextureRangeRect;
-typedef D3DXVECTOR2 BeltRange;
-typedef D3DXVECTOR2 PerticleSize;
+typedef cRenderVector3 PositionPerGrid;
+typedef cRenderVector4 TextureRangeRect;
+typedef cRenderVector2 BeltRange;
+typedef cRenderVector2 PerticleSize;
 
 //-----------------------------------------------------
 template <class T> T& pointer_to_ref(boost::shared_ptr<T> this_pointer)
@@ -40,11 +40,11 @@ public:
 
 
 	virtual int Process() = 0;
-	virtual int process(IDirect3DDevice9 *pDev){return Process();};
+	virtual int process(cRenderDevice *pDev){return Process();};
 
 
 	//これを呼び出すと後は全て描画される
-	virtual int Draw(IDirect3DDevice9 *pDev) = 0;
+	virtual int Draw(cRenderDevice *pDev) = 0;
 	virtual int Init(pcAnimation me) = 0;
 
 protected:
@@ -88,7 +88,7 @@ public:
 public:
 	virtual ~AnimeChip_Chain(void);
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	virtual int Process();
 	virtual int Init(pcAnimation me);
 
@@ -109,7 +109,7 @@ public:
 	void setDelay(const int delay){delay_ = delay;};
 	void setWorldRotation(double rotation){worldRotation_ = rotation;};
 public:
-	virtual void selfDraw(IDirect3DDevice9 *pDev) = 0;
+	virtual void selfDraw(cRenderDevice *pDev) = 0;
 	virtual void selfProcessInitialize(){return;};
 	virtual void selfProcess() = 0;
 	virtual void selfProcessFinalize(){return;};
@@ -182,9 +182,9 @@ public:
 	};
 
 	virtual void selfProcess(){return;};
-	virtual void selfDraw(IDirect3DDevice9 *pDev){return;};
+	virtual void selfDraw(cRenderDevice *pDev){return;};
 	virtual int Process();
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	virtual bool selfEnd(){return true;};
 	virtual int Init(pcAnimation me);
 	virtual PositionPerGrid localPosition();
@@ -229,9 +229,9 @@ public:
 
 	virtual void selfProcess();
 
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 
-	D3DXVECTOR2 perticleSize_;
+	cRenderVector2 perticleSize_;
 public:
 
 	VariationValue<double> rotationBefore;
@@ -261,7 +261,7 @@ public:
 
 	virtual void selfProcess();
 
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 
 	cNumField::PositionArrangeX arrangeX_;
 	cNumField::PositionArrangeY arrangeY_;
@@ -300,7 +300,7 @@ public:
 
 	virtual void selfProcess();
 
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 
 	//精度（ポリゴン数/2）
 	int Accuracy_;
@@ -345,7 +345,7 @@ public:
 
 	virtual void selfProcess();
 
-	//virtual void selfDraw(IDirect3DDevice9 *pDev);
+	//virtual void selfDraw(cRenderDevice *pDev);
 
 	virtual bool selfEnd();
 public:
@@ -387,7 +387,7 @@ public:
 		return sound;
 	};
 
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 	virtual void selfProcess();
 	virtual bool selfEnd();
 public:
@@ -425,7 +425,7 @@ public:
 	virtual ~AnimeChip_Chara(void);
 	static pAnimeChip_Chara new_shared_ptr(pcCharacter pchara, const int life);
 
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 	virtual void selfProcess();
 	virtual void selfProcessFinalize();
 protected:
@@ -462,7 +462,7 @@ public:
 
 	virtual void selfProcess();
 	virtual void selfProcessFinalize();
-	virtual void selfDraw(IDirect3DDevice9 *pDev);
+	virtual void selfDraw(cRenderDevice *pDev);
 
 	virtual PositionPerGrid localPosition();
 protected:

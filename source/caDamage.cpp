@@ -97,7 +97,7 @@ int caDamage::Init(pcAnimation me)
 }
 
 
-int caDamage::process(IDirect3DDevice9 *pDev)
+int caDamage::process(cRenderDevice *pDev)
 {
 
 	count += speed;
@@ -203,7 +203,7 @@ int caRecover::Init(pcAnimation me)
 }
 
 
-int caRecover::process(IDirect3DDevice9 *pDev)
+int caRecover::process(cRenderDevice *pDev)
 {
 
 	count += speed;

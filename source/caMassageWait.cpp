@@ -15,7 +15,7 @@ caMassageWait::~caMassageWait()
 }
 
 
-int caMassageWait::process(IDirect3DDevice9 *pDev)
+int caMassageWait::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed == 0)
@@ -43,7 +43,7 @@ int caMassageWait::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caMassageWait::Draw(IDirect3DDevice9 *pDev)
+int caMassageWait::Draw(cRenderDevice *pDev)
 {
 	return true;
 }

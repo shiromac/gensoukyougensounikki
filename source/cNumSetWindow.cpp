@@ -20,7 +20,7 @@ cNumSetWindow::~cNumSetWindow(void)
 {
 
 }
-void cNumSetWindow::Init(IDirect3DDevice9 *pDev,
+void cNumSetWindow::Init(cRenderDevice *pDev,
 						 unsigned long int *valuepointer,
 						 unsigned long int min,
 						 unsigned long int max,
@@ -45,18 +45,18 @@ void cNumSetWindow::Init(IDirect3DDevice9 *pDev,
 	cGameWindow::Init(pDev,letterXnum,letterYnum);
 }
 
-void cNumSetWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cNumSetWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	//Init(pDev);
 }
 
-int cNumSetWindow::Draw(IDirect3DDevice9 *pDev)
+int cNumSetWindow::Draw(cRenderDevice *pDev)
 {
 	cGameWindow::Draw(pDev);
 
 	return true;
 }
-int cNumSetWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cNumSetWindow::TextDraw(cRenderDevice *pDev)
 {
 	if(preRendar == false)
 	{
@@ -110,7 +110,7 @@ int cNumSetWindow::TextDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cNumSetWindow::pageDraw(IDirect3DDevice9 *pDev)
+int cNumSetWindow::pageDraw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;
@@ -146,7 +146,7 @@ int cNumSetWindow::pageDraw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cNumSetWindow::process(IDirect3DDevice9 *pDev)
+int cNumSetWindow::process(cRenderDevice *pDev)
 {
 	int i;
 

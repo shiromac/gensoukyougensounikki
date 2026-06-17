@@ -267,7 +267,7 @@ int ceaiShopOwner::Attack()
 }
 
 //商品を買う
-int cCommand_ShopBuy::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopBuy::Action(cRenderDevice *pDev)
 {
 	int money = sg_pDungeonSystem->店請求金額(powner_);
 	map<tstring, StyleString> val;
@@ -331,7 +331,7 @@ StyleString cCommand_ShopBuy::shortExplanationText()
 }
 
 //床のアイテムを売る
-int cCommand_ShopSell::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopSell::Action(cRenderDevice *pDev)
 {
 	map<tstring, StyleString> val;
 	sg_pDungeonSystem->店アイテム売却清算(powner_);
@@ -376,7 +376,7 @@ StyleString cCommand_ShopSell::shortExplanationText()
 }
 
 //持ち物を売る
-int cCommand_ShopSellHold::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopSellHold::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//売る
@@ -439,7 +439,7 @@ StyleString cCommand_ShopSellHold::shortExplanationText()
 }
 
 //持ち物を買う
-int cCommand_ShopBuyHold::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopBuyHold::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//買う
@@ -501,7 +501,7 @@ StyleString cCommand_ShopBuyHold::shortExplanationText()
 }
 
 //後払い金を請求する
-int cCommand_ShopChargeMoney::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopChargeMoney::Action(cRenderDevice *pDev)
 {
 	map<tstring, StyleString> val;
 	if(sg_pDungeonSystem->店主持ち金() >= 0)
@@ -537,7 +537,7 @@ StyleString cCommand_ShopChargeMoney::shortExplanationText()
 	return sstr;
 }
 //店を出る
-int cCommand_ShopExit::Action(IDirect3DDevice9 *pDev)
+int cCommand_ShopExit::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->移動要請(sg_pDungeonSystem->pPlayerChara(),sg_pDungeonSystem->pPlayerChara()->aspect);
 	sg_pDungeonSystem->ターンエンド();

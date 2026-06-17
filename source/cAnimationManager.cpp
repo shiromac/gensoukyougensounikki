@@ -22,7 +22,7 @@ cAnimationManager::~cAnimationManager(void)
 	MovePool.clear();
 }
 
-int cAnimationManager::Init(IDirect3DDevice9 *pDev)
+int cAnimationManager::Init(cRenderDevice *pDev)
 {
 	int i;
 
@@ -38,7 +38,7 @@ int cAnimationManager::Init(IDirect3DDevice9 *pDev)
 }
 
 //trueを返した時プロセス無し
-int cAnimationManager::process(IDirect3DDevice9 *pDev)
+int cAnimationManager::process(cRenderDevice *pDev)
 {
 
 	if(!MoveAnimeprocess(pDev)) return false;
@@ -48,7 +48,7 @@ int cAnimationManager::process(IDirect3DDevice9 *pDev)
 	if(ParallelCriticalAnimeList.size() > 0) return false;
 	return true;
 }
-void cAnimationManager::process_parallel(IDirect3DDevice9 *pDev)
+void cAnimationManager::process_parallel(cRenderDevice *pDev)
 {
 	//リアルタイムアニメ
 	{
@@ -82,7 +82,7 @@ void cAnimationManager::process_parallel(IDirect3DDevice9 *pDev)
 
 
 //trueを返した時プロセス無し
-int cAnimationManager::MoveAnimeprocess(IDirect3DDevice9 *pDev)
+int cAnimationManager::MoveAnimeprocess(cRenderDevice *pDev)
 {
 	int i,endcount = 0;
 	int processcount = 0;
@@ -137,7 +137,7 @@ int cAnimationManager::MoveAnimeprocess(IDirect3DDevice9 *pDev)
 
 }
 
-int cAnimationManager::AttackAnimeprocess(IDirect3DDevice9 *pDev)
+int cAnimationManager::AttackAnimeprocess(cRenderDevice *pDev)
 {
 
 	int Layer[LAYERLEVEL_LAYERMAXNUM] = {0};
@@ -227,7 +227,7 @@ int cAnimationManager::AttackAnimeprocess(IDirect3DDevice9 *pDev)
 }
 
 
-int cAnimationManager::StrongInvocation(IDirect3DDevice9 *pDev)
+int cAnimationManager::StrongInvocation(cRenderDevice *pDev)
 {
 
 	int i,j,k;
@@ -390,7 +390,7 @@ int cAnimationManager::StrongInvocation(IDirect3DDevice9 *pDev)
 	Enpty = true;
 	return true;
 }
-int cAnimationManager::WeekInvocation(IDirect3DDevice9 *pDev)
+int cAnimationManager::WeekInvocation(cRenderDevice *pDev)
 {
 
 	int i;
@@ -414,7 +414,7 @@ int cAnimationManager::WeekInvocation(IDirect3DDevice9 *pDev)
 	return false;
 }
 
-int cAnimationManager::Draw(IDirect3DDevice9 *pDev)
+int cAnimationManager::Draw(cRenderDevice *pDev)
 {
 
 
@@ -423,7 +423,7 @@ int cAnimationManager::Draw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-void cAnimationManager::Draw_parallel(IDirect3DDevice9 *pDev)
+void cAnimationManager::Draw_parallel(cRenderDevice *pDev)
 {
 	{
 		list<pcAnimation>::iterator itr = ParallelAnimeList.begin();
@@ -442,7 +442,7 @@ void cAnimationManager::Draw_parallel(IDirect3DDevice9 *pDev)
 	}
 }
 
-int cAnimationManager::AttackAnimeDraw(IDirect3DDevice9 *pDev)
+int cAnimationManager::AttackAnimeDraw(cRenderDevice *pDev)
 {
 	int Layer[LAYERLEVEL_LAYERMAXNUM] = {0};
 

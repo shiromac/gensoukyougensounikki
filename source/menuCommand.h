@@ -18,7 +18,7 @@ public:\
 	cCommand##name##(void){caption = deftext;};\
 	cCommand##name##(StyleString s){caption = s;};\
 	virtual ~cCommand##name##(void){};\
-	virtual int Action(IDirect3DDevice9 *pDev);\
+	virtual int Action(cRenderDevice *pDev);\
 
 
 	

@@ -21,10 +21,10 @@ public:
 
 	double halfWidth;
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	//基礎しかサポートし無い高速ドロー
 	//(テクスチャサポートしない)
 	//(加算サポートしない)
-	virtual int EasyDraw(IDirect3DDevice9 *pDev);
+	virtual int EasyDraw(cRenderDevice *pDev);
 };

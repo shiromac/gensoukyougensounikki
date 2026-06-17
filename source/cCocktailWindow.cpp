@@ -31,11 +31,11 @@ public:\
 	cCommand##name##(void){caption = deftext;};\
 	cCommand##name##(StyleString s){caption = s;};\
 	virtual ~cCommand##name##(void){};\
-	virtual int Action(IDirect3DDevice9 *pDev);\
+	virtual int Action(cRenderDevice *pDev);\
 
 DEF_COMMANDCLASS(_Null,g_Lang(_T("何もない")))
 };
-int cCommand_Null::Action(IDirect3DDevice9 *pDev)
+int cCommand_Null::Action(cRenderDevice *pDev)
 {
 	return true;
 }
@@ -48,7 +48,7 @@ DEF_COMMANDCLASS(_cocktailRecipe,g_Lang(_T("レシピ")))
 	int* ptgtid;
 	int* ptgtquality;
 };
-int cCommand_cocktailRecipe::Action(IDirect3DDevice9 *pDev)
+int cCommand_cocktailRecipe::Action(cRenderDevice *pDev)
 {
 	*ptgtid = id;
 	*ptgtquality = quality;
@@ -74,7 +74,7 @@ DEF_COMMANDCLASS(_cocktailMenu,g_Lang(_T("menu")))
 	bool unappreciatedCooktailable_;
 	vector<int> materials;
 };
-int cCommand_cocktailMenu::Action(IDirect3DDevice9 *pDev)
+int cCommand_cocktailMenu::Action(cRenderDevice *pDev)
 {
 	if(id == 0)
 	{
@@ -194,7 +194,7 @@ DEF_COMMANDCLASS(_cocktailDecition,g_Lang(_T("作る")))
 	virtual StyleString shortExplanationText();
 	int id;
 };
-int cCommand_cocktailDecition::Action(IDirect3DDevice9 *pDev)
+int cCommand_cocktailDecition::Action(cRenderDevice *pDev)
 {
 	//ダミー
 
@@ -223,12 +223,12 @@ cCocktailWindow::~cCocktailWindow(void)
 	commandList.clear();
 }
 
-void cCocktailWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cCocktailWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	InitBasic(pDev,letterXnum,letterYnum);
 
 }
-void cCocktailWindow::Init(IDirect3DDevice9 *pDev, pcDroping pbox)
+void cCocktailWindow::Init(cRenderDevice *pDev, pcDroping pbox)
 {
 
 	pcBox_ID_24 pcocktailBox = boost::dynamic_pointer_cast<cBox_ID_24>(pbox);
@@ -239,7 +239,7 @@ void cCocktailWindow::Init(IDirect3DDevice9 *pDev, pcDroping pbox)
 
 	Init(pDev, pbox->includedItem, materials, true);
 }
-void cCocktailWindow::Init(IDirect3DDevice9 *pDev, vector<pcDroping> materialList, vector<int> materials, bool unappreciatedCooktailable)
+void cCocktailWindow::Init(cRenderDevice *pDev, vector<pcDroping> materialList, vector<int> materials, bool unappreciatedCooktailable)
 {
 	InitBasic(pDev,0,0);
 	pFromSelectW_ = pcSelectWindow(new cSelectWindow);
@@ -306,13 +306,13 @@ void cCocktailWindow::Init(IDirect3DDevice9 *pDev, vector<pcDroping> materialLis
 }
 
 
-StyleString cCocktailWindow::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cCocktailWindow::shortExplanationString(cRenderDevice *pDev)
 {
 	return pToSelectW_->shortExplanationString(pDev);
 }
 
 
-int cCocktailWindow::Draw(IDirect3DDevice9 *pDev)
+int cCocktailWindow::Draw(cRenderDevice *pDev)
 {
 	pMaterialW_->Draw(pDev);
 	pFromCaptionW_->Draw(pDev);
@@ -323,7 +323,7 @@ int cCocktailWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCocktailWindow::process(IDirect3DDevice9 *pDev)
+int cCocktailWindow::process(cRenderDevice *pDev)
 {
 		if(g_pPlayerInput()->cancel().justOn)
 		{
@@ -543,7 +543,7 @@ int cCocktailWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCocktailWindow::CursorDraw(IDirect3DDevice9 *pDev)
+int cCocktailWindow::CursorDraw(cRenderDevice *pDev)
 {
 	/*
 	m_DO.setTexture(m_pTexture_Cursor, CURSORSIZE, CURSORSIZE);
@@ -663,7 +663,7 @@ int cCocktailWindow::ReRendarText()
 	pToSelectW_->ReRendarText();
 	return true;
 }
-int cCocktailWindow::RerenderDraw(IDirect3DDevice9 *pDev)
+int cCocktailWindow::RerenderDraw(cRenderDevice *pDev)
 {
 	//pFromSelectW_->RerenderDraw(pDev);
 	//pToSelectW_->RerenderDraw(pDev);
@@ -671,7 +671,7 @@ int cCocktailWindow::RerenderDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCocktailWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cCocktailWindow::TextDraw(cRenderDevice *pDev)
 {
 	//pFromSelectW_->TextDraw(pDev);
 	//pToSelectW_->TextDraw(pDev);

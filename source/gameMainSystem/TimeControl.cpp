@@ -1,5 +1,8 @@
 #include "TimeControl.h"
+#include <cstring>
+#ifndef __EMSCRIPTEN__
 #pragma comment(lib, "winmm.lib")
+#endif
 
 //======================================================
 //コンストラクタ
@@ -10,7 +13,7 @@ TimeControl::TimeControl(DWORD dwFps, bool bFrameSkip)
 	m_bInit = 1;
 	m_bFrameSkip = bFrameSkip;
 	SetFPS(dwFps);
-	timeBeginPeriod(1);
+	cPlatformBeginTimerPeriod(1);
 	SetmaxSkip(dwFps);
 	m_SkipCount = 0;
 }
@@ -21,7 +24,7 @@ TimeControl::TimeControl(DWORD dwFps, bool bFrameSkip)
 //======================================================
 TimeControl::~TimeControl()
 {
-	timeEndPeriod(1);
+	cPlatformEndTimerPeriod(1);
 }
 
 //======================================================
@@ -34,13 +37,13 @@ void TimeControl::TimeRegular()
 	
 	if(m_bInit == 1)
 	{
-		m_dwLastMinitues = timeGetTime();
+		m_dwLastMinitues = cPlatformGetMilliseconds();
 		m_bInit = 0;
 		m_bDrawFlag = 1;
 		return;
 	}
 
-	if(m_bFrameSkip == 1 && timeGetTime()  > (DWORD)((m_dwFrameCount + 1) * m_fFrameTime + m_dwLastMinitues)
+	if(m_bFrameSkip == 1 && cPlatformGetMilliseconds()  > (DWORD)((m_dwFrameCount + 1) * m_fFrameTime + m_dwLastMinitues)
 		&& (m_maxSkip > m_SkipCount))
 	{
 		m_bDrawFlag = 0;
@@ -51,23 +54,23 @@ void TimeControl::TimeRegular()
 	{
 		//===========================================================
 		//項の移動をしたことで無駄な演算を減らしました。
-		//条件			timeGetTime() - m_dwLastMinitues <= (DWORD)((m_dwFrameCount + 1) * m_fFrameTime)
-		//項の移動		timeGetTime()  <= (DWORD)((m_dwFrameCount + 1) * m_fFrameTime) +  m_dwLastMinitues
-		//変数置き換え	timeGetTime()　<= dwTime
+		//条件			cPlatformGetMilliseconds() - m_dwLastMinitues <= (DWORD)((m_dwFrameCount + 1) * m_fFrameTime)
+		//項の移動		cPlatformGetMilliseconds()  <= (DWORD)((m_dwFrameCount + 1) * m_fFrameTime) +  m_dwLastMinitues
+		//変数置き換え	cPlatformGetMilliseconds()　<= dwTime
 		//===========================================================
 		DWORD dwTime = (DWORD)(m_dwFrameCount * m_fFrameTime + m_dwLastMinitues);
-		while(timeGetTime() <= dwTime)
+		while(cPlatformGetMilliseconds() <= dwTime)
 		{
-			Sleep(1);
+			cPlatformSleepMilliseconds(1);
 		}
 		m_bDrawFlag = 1;
 		m_SkipCount = 0;
 	}
 
 	
-	if(timeGetTime() - m_dwLastMinitues >= 1000)
+	if(cPlatformGetMilliseconds() - m_dwLastMinitues >= 1000)
 	{
-		m_dwLastMinitues = timeGetTime();
+		m_dwLastMinitues = cPlatformGetMilliseconds();
 		m_dwFrameRate = m_dwFrameCount;
 		m_dwFrameCount = 0;
 		m_dwSkipRate = m_dwSkipCount;
@@ -82,9 +85,9 @@ void TimeControl::Measure()
 {
 	m_dwFrameCount++;
 	m_bDrawFlag = 1;
-	if(timeGetTime() - m_dwLastMinitues >= 1000)
+	if(cPlatformGetMilliseconds() - m_dwLastMinitues >= 1000)
 	{
-		m_dwLastMinitues = timeGetTime();
+		m_dwLastMinitues = cPlatformGetMilliseconds();
 		m_dwFrameRate = m_dwFrameCount;
 		m_dwFrameCount = 0;
 		m_dwSkipRate = m_dwSkipCount;

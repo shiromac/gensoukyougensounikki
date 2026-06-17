@@ -34,13 +34,13 @@ public:
 	virtual ~caEspell(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	
 
 	virtual int Init();
 protected:
-	virtual int preprocess(IDirect3DDevice9 *pDev);
+	virtual int preprocess(cRenderDevice *pDev);
 	int preprocessed;
 
 public:
@@ -100,8 +100,8 @@ public:
 	virtual ~caBossEspell(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	
 
 	virtual int Init();
@@ -112,7 +112,7 @@ public:
 	void setTurn(int turn, bool isBig);
 	void setRestSpellNum(int num){restSpellNum_ = num;};
 protected:
-	virtual int preprocess(IDirect3DDevice9 *pDev);
+	virtual int preprocess(cRenderDevice *pDev);
 
 	wpcCharacter boss_;
 

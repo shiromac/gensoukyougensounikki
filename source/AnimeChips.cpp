@@ -5,25 +5,27 @@
 #include "gameMainSystem/cEnvironment.h"
 
 const double FRAMEPARSECOND = 60.0;
+#ifndef M_PI
 const double M_PI = 3.14159265358979;
+#endif
 
-void compatible(c4DVector& vec, const D3DXVECTOR3& d3dvec)
+void compatible(c4DVector& vec, const cRenderVector3& d3dvec)
 {
 	vec.x = d3dvec.x;
 	vec.y = d3dvec.y;
 	vec.z = d3dvec.z;
 	vec.t = 0;
 }
-void compatible(D3DXVECTOR3& d3dvec, const c4DVector& vec)
+void compatible(cRenderVector3& d3dvec, const c4DVector& vec)
 {
 	d3dvec.x = vec.x;
 	d3dvec.y = vec.y;
 	d3dvec.z = vec.z;
 }
-void turnOnHorizon(D3DXVECTOR3& d3dvec , const double degree)
+void turnOnHorizon(cRenderVector3& d3dvec , const double degree)
 {
     double rad = degree * V_PI / 180;
-	D3DXVECTOR3 tmp(d3dvec);
+	cRenderVector3 tmp(d3dvec);
 	double s = sin(rad),c = cos(rad);
 
 	d3dvec.x = tmp.x * c - tmp.y * s;
@@ -69,7 +71,7 @@ AnimeChip_Chain::~AnimeChip_Chain()
 {
 	return;
 }
-int AnimeChip_Chain::Draw(IDirect3DDevice9 *pDev)
+int AnimeChip_Chain::Draw(cRenderDevice *pDev)
 {
 	if(selfEnd())
 	{
@@ -261,7 +263,7 @@ AnimeChip_Hab::~AnimeChip_Hab()
 {
 	return;
 }
-int AnimeChip_Hab::Draw(IDirect3DDevice9 *pDev)
+int AnimeChip_Hab::Draw(cRenderDevice *pDev)
 {
 	if(End)
 	{
@@ -421,9 +423,9 @@ void AnimeChip_Perticle::selfProcess()
 {
 	return;
 }
-void AnimeChip_Perticle::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Perticle::selfDraw(cRenderDevice *pDev)
 {
-	D3DXVECTOR3 pos = worldPosition();
+	cRenderVector3 pos = worldPosition();
 	c4DVector pv = sg_pDungeonSystem->Map().visibleplace( c4DVector(pos.x, pos.y, pos.z, 0));
 	DO.CenterX = pv.x;
 	DO.CenterY = pv.y;
@@ -451,7 +453,7 @@ void AnimeChip_Perticle::setTexture(const tstring& textureFileName)
 {
 	DO.setTexture(g_GameEnv.m_GlobalResourse->getTextureFromFile(sg_pDungeonSystem->pDevice_D3D, textureFileName.c_str()));
 }
-void AnimeChip_Perticle::setPerticleSize(const D3DXVECTOR2& perticleSize)
+void AnimeChip_Perticle::setPerticleSize(const cRenderVector2& perticleSize)
 {
 	perticleSize_ = perticleSize;
 }
@@ -474,9 +476,9 @@ void AnimeChip_Num::selfProcess()
 {
 	return;
 }
-void AnimeChip_Num::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Num::selfDraw(cRenderDevice *pDev)
 {
-	D3DXVECTOR3 pos = worldPosition();
+	cRenderVector3 pos = worldPosition();
 	c4DVector pv = sg_pDungeonSystem->Map().visibleplace( c4DVector(pos.x, pos.y, pos.z, 0));
 	
 	num_.position = pv;
@@ -545,9 +547,9 @@ void AnimeChip_Belt::selfProcess()
 {
 	return;
 }
-void AnimeChip_Belt::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Belt::selfDraw(cRenderDevice *pDev)
 {
-	D3DXVECTOR3 pos = worldPosition();
+	cRenderVector3 pos = worldPosition();
 	c4DVector pv;
 	compatible(pv, pos);
 	//c4DVector pv = sg_pDungeonSystem->Map().visibleplace( c4DVector(pos.x, pos.y, pos.z, 0));
@@ -791,7 +793,7 @@ AnimeChip_Bound::~AnimeChip_Bound()
 	return;
 }
 /*
-void AnimeChip_Bound::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Bound::selfDraw(cRenderDevice *pDev)
 {
 
 	return;
@@ -863,7 +865,7 @@ AnimeChip_Sound::~AnimeChip_Sound()
 {
 	return;
 }
-void AnimeChip_Sound::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Sound::selfDraw(cRenderDevice *pDev)
 {
 
 	return;
@@ -954,7 +956,7 @@ void AnimeChip_Chara::selfProcess()
 	pchara_->anime_position.turn(worldRotation_);
 	return;
 }
-void AnimeChip_Chara::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Chara::selfDraw(cRenderDevice *pDev)
 {
 	return;
 }
@@ -1051,7 +1053,7 @@ void AnimeChip_Quake::selfProcess()
 
 	return;
 }
-void AnimeChip_Quake::selfDraw(IDirect3DDevice9 *pDev)
+void AnimeChip_Quake::selfDraw(cRenderDevice *pDev)
 {
 	return;
 }

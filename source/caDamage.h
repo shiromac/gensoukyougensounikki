@@ -25,7 +25,7 @@ public:
 	virtual ~caDamage(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	virtual int Init(pcAnimation me);
 
 	virtual bool isOnScreen();
@@ -56,7 +56,7 @@ public:
 	virtual ~caRecover(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	virtual int Init(pcAnimation me);
 
 	virtual bool isOnScreen();

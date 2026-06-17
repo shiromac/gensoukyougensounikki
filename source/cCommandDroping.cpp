@@ -32,7 +32,7 @@ StyleString cCommandDroping::longExplanation()
 		return pdropingfunc->LastObject()->longExplanation();
 	return _T("");
 }
-void cCommandDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cCommandDroping::DrawIcon(cRenderDevice *pDev,int x,int y)
 {
 	if(pdropingfunc->LastObject()!=NULL)
 	{
@@ -40,7 +40,7 @@ void cCommandDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
 		pdropingfunc->LastObject()->DrawIcon(pDev,x,y);
 	}
 }
-void cCommandDroping::DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cCommandDroping::DrawStateIcon(cRenderDevice *pDev,int x,int y)
 {
 	if(pdropingfunc->LastObject()!=NULL)
 	{
@@ -48,7 +48,7 @@ void cCommandDroping::DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y)
 		pdropingfunc->LastObject()->DrawStateIcon(pDev,x,y);
 	}
 }
-void cCommandDroping::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cCommandDroping::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	if(pdropingfunc->LastObject()!=NULL)
 	{
@@ -63,7 +63,7 @@ int cCommandDroping::RerenderText(SpriteText & sprite,int MaxLetterLength)
 	return false;
 }
 //メニューで選択時に最初に呼ばれる
-int cCommandDroping::Action(IDirect3DDevice9 *pDev)
+int cCommandDroping::Action(cRenderDevice *pDev)
 {
 	return pdropingfunc->Action(pDev);
 }
@@ -147,7 +147,7 @@ StyleString cObjectiveDroping::longExplanation()
 		return surface_->longExplanation();
 	return _T("");
 }
-void cObjectiveDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cObjectiveDroping::DrawIcon(cRenderDevice *pDev,int x,int y)
 {
 	if(surface_!=NULL)
 	{
@@ -155,7 +155,7 @@ void cObjectiveDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
 		surface_->DrawIcon(pDev,x,y);
 	}
 }
-void cObjectiveDroping::DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cObjectiveDroping::DrawStateIcon(cRenderDevice *pDev,int x,int y)
 {
 	if(surface_!=NULL)
 	{
@@ -163,7 +163,7 @@ void cObjectiveDroping::DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y)
 		surface_->DrawStateIcon(pDev,x,y);
 	}
 }
-void cObjectiveDroping::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cObjectiveDroping::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	if(surface_!=NULL)
 	{
@@ -178,7 +178,7 @@ int cObjectiveDroping::RerenderText(SpriteText & sprite,int MaxLetterLength)
 	return false;
 }
 //メニューで選択時に最初に呼ばれる
-int cObjectiveDroping::Action(IDirect3DDevice9 *pDev)
+int cObjectiveDroping::Action(cRenderDevice *pDev)
 {
 	return action_->Action(pDev);
 }

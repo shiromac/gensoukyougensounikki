@@ -37,7 +37,7 @@ int caRetire::Init(pcAnimation me)
 	return true;
 }
 
-int caRetire::process(IDirect3DDevice9 *pDev)
+int caRetire::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -64,7 +64,7 @@ int caRetire::process(IDirect3DDevice9 *pDev)
 	
 	return true;
 }
-int caRetire::Draw(IDirect3DDevice9 *pDev)
+int caRetire::Draw(cRenderDevice *pDev)
 {
 	c4DVector center;
 	center.set(pRetirer->placeX ,pRetirer->placeY ,0,0);

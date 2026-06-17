@@ -97,7 +97,7 @@ void inforOfHero(StyleString & infor)
 //道具
 vector<pcDroping> 足元リスト;
 vector<pcDroping> エスケープリスト;
-int cCommand_menuItem::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuItem::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcListWindowAdv pcladw;
@@ -153,7 +153,7 @@ StyleString cCommand_menuItem::shortExplanationText()
 }
 
 //足元
-int cCommand_menuFoot::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuFoot::Action(cRenderDevice *pDev)
 {
 	vector<pcDroping> vpdrop;
 
@@ -206,7 +206,7 @@ StyleString cCommand_menuFoot::shortExplanationText()
 
 
 //状態
-int cCommand_menuStates::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuStates::Action(cRenderDevice *pDev)
 {
 
 	sg_pDungeonSystem->pPlayerChara()->Condition.MakeExplainWindow(pDev);
@@ -222,7 +222,7 @@ StyleString cCommand_menuStates::shortExplanationText()
 
 
 //その他
-int cCommand_menuOther::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -273,7 +273,7 @@ StyleString cCommand_menuOther::shortExplanationText()
 }
 
 //メッセージ履歴
-int cCommand_menuOther_MessageHistory::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_MessageHistory::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcListWindow pclw;
@@ -316,7 +316,7 @@ StyleString cCommand_menuOther_MessageHistory::shortExplanationText()
 //デバッグ
 //-------------------------------------------------------------------------------------
 //デバッグ召喚
-int cCommand_menuOther_Summon::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Summon::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -348,7 +348,7 @@ int cCommand_menuOther_Summon::Action(IDirect3DDevice9 *pDev)
 StyleString cCommand_menuOther_Summon::shortExplanationText()
 {return _T("敵キャラクターを召喚する。\n");}
 
-int cCommand_menuOther_Summon_Chara::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Summon_Chara::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -401,7 +401,7 @@ StyleString cCommand_menuOther_Summon_Chara::shortExplanationText()
 	return str;
 }
 
-int cCommand_menuOther_Summon_Chara_Class::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Summon_Chara_Class::Action(cRenderDevice *pDev)
 {
 	pcCharacter pchara = sg_pDungeonSystem->DataBase.GetSampleCharacter(chara_ID);
 	sg_pDungeonSystem->キャラクター生成(chara_ID,CLASS,Forse,
@@ -456,7 +456,7 @@ StyleString cCommand_menuOther_Summon_Chara_Class::shortExplanationText()
 }
 
 //デバッグ生成
-int cCommand_menuOther_Make::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -492,7 +492,7 @@ StyleString cCommand_menuOther_Make::shortExplanationText()
 {return _T("アイテム類を生成する。\n");}
 
 //ランダムアイテム生成
-int cCommand_menuOther_Make_randomDrop::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make_randomDrop::Action(cRenderDevice *pDev)
 {
 	
 	unsigned int itemID = sg_pDungeonSystem->pDungeon()->pfloor(sg_pDungeonSystem->FloorLevel())->dropitemDP().get(random());
@@ -513,7 +513,7 @@ StyleString cCommand_menuOther_Make_randomDrop::shortExplanationText()
 }
 
 //アイテム
-int cCommand_menuOther_Make_Drop::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make_Drop::Action(cRenderDevice *pDev)
 {
 
 	pcControlLayer pccl;
@@ -568,7 +568,7 @@ StyleString cCommand_menuOther_Make_Drop::shortExplanationText()
 	return str;
 }
 
-int cCommand_menuOther_Make_Drop_Natural::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make_Drop_Natural::Action(cRenderDevice *pDev)
 {
 	pcDroping pdrop = sg_pDungeonSystem->落ち物生成(Drop_ID,NULL,
 		sg_pDungeonSystem->Map().Land(sg_pDungeonSystem->pPlayerChara()->placeX,sg_pDungeonSystem->pPlayerChara()->placeY));
@@ -593,7 +593,7 @@ StyleString cCommand_menuOther_Make_Drop_Natural::shortExplanationText()
 }
 
 //状態
-int cCommand_menuOther_Make_Drop_State::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make_Drop_State::Action(cRenderDevice *pDev)
 {
 
 	pcControlLayer pccl;
@@ -644,7 +644,7 @@ StyleString cCommand_menuOther_Make_Drop_State::shortExplanationText()
 }
 
 //修正値
-int cCommand_menuOther_Make_Drop_State_Quality::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Make_Drop_State_Quality::Action(cRenderDevice *pDev)
 {
 
 	pcDroping pdrop = sg_pDungeonSystem->DataBase.GetSampleDroping(Drop_ID);
@@ -665,7 +665,7 @@ StyleString cCommand_menuOther_Make_Drop_State_Quality::shortExplanationText()
 	return _T("");
 }
 //----------------------------------------------------------------------------------------------------------------
-int cCommand_menuOther_Get::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Get::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -699,7 +699,7 @@ StyleString cCommand_menuOther_Get::shortExplanationText()
 	return StyleString(_T(""));
 }
 
-int cCommand_menuOther_Get_EquipUp::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Get_EquipUp::Action(cRenderDevice *pDev)
 {
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(sg_pDungeonSystem->pPlayerChara()->attackequipment);
 	if(pcEqu) {
@@ -716,7 +716,7 @@ StyleString cCommand_menuOther_Get_EquipUp::shortExplanationText()
 	return StyleString(_T(""));
 }
 
-int cCommand_menuOther_Get_MoneyUp::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Get_MoneyUp::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->主人公お金増減(+100000);
 
@@ -727,7 +727,7 @@ StyleString cCommand_menuOther_Get_MoneyUp::shortExplanationText()
 	return StyleString(_T(""));
 }
 
-int cCommand_menuOther_Get_Level10Up::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Get_Level10Up::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->レベルアップ(sg_pDungeonSystem->pPlayerChara(), 10);
 
@@ -738,7 +738,7 @@ StyleString cCommand_menuOther_Get_Level10Up::shortExplanationText()
 	return StyleString(_T(""));
 }
 
-int cCommand_menuOther_Get_MaxHP100Up::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_Get_MaxHP100Up::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->最大HP拡張要請(sg_pDungeonSystem->pPlayerChara(), 100);
 
@@ -749,7 +749,7 @@ StyleString cCommand_menuOther_Get_MaxHP100Up::shortExplanationText()
 	return StyleString(_T(""));
 }
 //----------------------------------------------------------------------------------------------------------------
-int cCommand_menuOther_String::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_String::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -781,7 +781,7 @@ StyleString cCommand_menuOther_String::shortExplanationText()
 	return StyleString(_T(""));
 }
 //デバッグ生成
-int cCommand_menuOther_String_AllItemLongExplanation::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_String_AllItemLongExplanation::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -815,7 +815,7 @@ StyleString cCommand_menuOther_String_AllItemLongExplanation::shortExplanationTe
 {
 	return StyleString(_T(""));
 }
-int cCommand_menuOther_String_AllItemLongExplanation_ID::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_String_AllItemLongExplanation_ID::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcGameWindow pcgw;
@@ -842,7 +842,7 @@ StyleString cCommand_menuOther_String_AllItemLongExplanation_ID::shortExplanatio
 	pcDroping pdrop = sg_pDungeonSystem->DataBase.GetSampleDroping(Drop_ID);
 	return pdrop->shortExplanation();
 }
-int cCommand_menuOther_String_AllMassage::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_String_AllMassage::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -879,7 +879,7 @@ StyleString cCommand_menuOther_String_AllMassage::shortExplanationText()
 	return StyleString(_T(""));
 }
 
-int cCommand_menuOther_String_AllMassage_Massage::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_String_AllMassage_Massage::Action(cRenderDevice *pDev)
 {
 	/*
 	pcControlLayer pccl;
@@ -917,7 +917,7 @@ StyleString cCommand_menuOther_String_AllMassage_Massage::shortExplanationText()
 }
 //----------------------------------------------------------------------------------------------------------------
 //外部データ再読み込み
-int cCommand_menuOther_ReImport::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_ReImport::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->DataBase.ReImportData();
 	sg_pDungeonSystem->メニューを閉じる();
@@ -929,7 +929,7 @@ StyleString cCommand_menuOther_ReImport::shortExplanationText()
 }
 
 //外部データ再読み込み
-int cCommand_menuOther_ReImportGraphic::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_ReImportGraphic::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->メニューを閉じる();
 	sg_pDungeonSystem->フロア更新要請();
@@ -941,7 +941,7 @@ StyleString cCommand_menuOther_ReImportGraphic::shortExplanationText()
 }
 
 //外部読み込み形式エラーチェック
-int cCommand_menuOther_ImportDataCheck::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_ImportDataCheck::Action(cRenderDevice *pDev)
 {
 	int id;
 
@@ -987,7 +987,7 @@ StyleString cCommand_menuOther_ImportDataCheck::shortExplanationText()
 	return _T("外部データを再読み込みした後、読み込みデータの形式に不備が無いがチェックします。\n外部データの保存し忘れに注意してください。");
 }
 
-int cCommand_menuOther_RetireChoice::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_RetireChoice::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -1010,7 +1010,7 @@ StyleString cCommand_menuOther_RetireChoice::shortExplanationText()
 {
 	return g_Lang(_T("あきらめるExplanation"));
 }
-int cCommand_menuOther_RetireChoice_Yes::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_RetireChoice_Yes::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->GameOver();
 	sg_pDungeonSystem->メニューを閉じる();
@@ -1020,7 +1020,7 @@ StyleString cCommand_menuOther_RetireChoice_Yes::shortExplanationText()
 {
 	return g_Lang(_T("本当にあきらめるExplanation"));
 }
-int cCommand_menuOther_RetireChoice_No::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_RetireChoice_No::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
@@ -1029,7 +1029,7 @@ StyleString cCommand_menuOther_RetireChoice_No::shortExplanationText()
 {
 	return g_Lang(_T("あきらめないExplanation"));
 }
-int cCommand_menuOther_ReturnTitle::Action(IDirect3DDevice9 *pDev)
+int cCommand_menuOther_ReturnTitle::Action(cRenderDevice *pDev)
 {	
 	g_GameEnv.m_SceneManage->SceneChange(pDev,new csTitle);
 	sg_pDungeonSystem->メニューを閉じる();

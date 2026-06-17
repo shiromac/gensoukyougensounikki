@@ -29,7 +29,7 @@ cMessageWindow::~cMessageWindow(void)
 }
 
 #define WAITTEXPATH _T("skin\\wait.png")
-void cMessageWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cMessageWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	Width = letterXnum * GWFONTSIZE + sideEdgeWith()*2;
 	Height = letterYnum * lineheight() + EDGEWIDTH*2;
@@ -88,7 +88,7 @@ int cMessageWindow::addMessage(StyleString Message)
 	return true;
 }
 
-int cMessageWindow::process(IDirect3DDevice9 *pDev)
+int cMessageWindow::process(cRenderDevice *pDev)
 {
 
 	if(m_SpriteText.GetY() - forcusTop > (lineNum)*lineheight())
@@ -116,7 +116,7 @@ int cMessageWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cMessageWindow::Draw(IDirect3DDevice9 *pDev)
+int cMessageWindow::Draw(cRenderDevice *pDev)
 {
 	if(!VisibleCount) return false;
 
@@ -151,7 +151,7 @@ int cMessageWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cMessageWindow::RenderText(IDirect3DDevice9 *pDev)
+int cMessageWindow::RenderText(cRenderDevice *pDev)
 {
 
 	if(m_SpriteText.GetY() - forcusTop <= (lineNum)*lineheight())
@@ -191,7 +191,7 @@ int cMessageWindow::RenderText(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cMessageWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cMessageWindow::TextDraw(cRenderDevice *pDev)
 {
 	
 
@@ -207,7 +207,7 @@ int cMessageWindow::TextDraw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cMessageWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cMessageWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left();
 	int t = Top();
@@ -255,7 +255,7 @@ int cMessageWindow::TextDrawSub(IDirect3DDevice9 *pDev)
 }
 
 
-int cMessageWindow::NewRoll(IDirect3DDevice9 *pDev)
+int cMessageWindow::NewRoll(cRenderDevice *pDev)
 {
 	if(rolldiff == -1)
 	{
@@ -287,7 +287,7 @@ int cMessageWindow::NewRoll(IDirect3DDevice9 *pDev)
 }
 
 
-int cMessageWindow::textclear(IDirect3DDevice9 *pDev)
+int cMessageWindow::textclear(cRenderDevice *pDev)
 {
 	m_SpriteText.CleatText();
 	m_SpriteText.SetCursolPos(0,linetop(0));

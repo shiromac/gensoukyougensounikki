@@ -18,7 +18,7 @@ caMessageWait::~caMessageWait()
 }
 
 
-int caMessageWait::process(IDirect3DDevice9 *pDev)
+int caMessageWait::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed == 0)
@@ -70,7 +70,7 @@ int caMessageWait::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caMessageWait::Draw(IDirect3DDevice9 *pDev)
+int caMessageWait::Draw(cRenderDevice *pDev)
 {
 	return true;
 }
@@ -93,7 +93,7 @@ caPrimaryInterfaceWait::~caPrimaryInterfaceWait()
 }
 
 
-int caPrimaryInterfaceWait::process(IDirect3DDevice9 *pDev)
+int caPrimaryInterfaceWait::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed == 0)
@@ -121,7 +121,7 @@ int caPrimaryInterfaceWait::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caPrimaryInterfaceWait::Draw(IDirect3DDevice9 *pDev)
+int caPrimaryInterfaceWait::Draw(cRenderDevice *pDev)
 {
 	return true;
 }
@@ -145,7 +145,7 @@ caMessageClear::~caMessageClear()
 }
 
 
-int caMessageClear::process(IDirect3DDevice9 *pDev)
+int caMessageClear::process(cRenderDevice *pDev)
 {
 
 
@@ -159,7 +159,7 @@ int caMessageClear::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caMessageClear::Draw(IDirect3DDevice9 *pDev)
+int caMessageClear::Draw(cRenderDevice *pDev)
 {
 	return true;
 }

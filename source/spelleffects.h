@@ -41,12 +41,12 @@ public:
 public:
 	virtual ~caESpell_ID_1(void);
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int Init();
 protected:
-	virtual int preprocess(IDirect3DDevice9 *pDev);
+	virtual int preprocess(cRenderDevice *pDev);
 	int preprocessed;
 	int num_;
 	class firefly

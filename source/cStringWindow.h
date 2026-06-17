@@ -84,20 +84,20 @@ public:
 	cStringWindow(void);
 
 	//cStringWindowは縦横の指定が不可能
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev);
 
 	pcMemoString targetStr;
 	tstring* targetStr2;
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int CursorDraw(IDirect3DDevice9 *pDev);
-	//virtual int pageDraw(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
+	virtual int CursorDraw(cRenderDevice *pDev);
+	//virtual int pageDraw(cRenderDevice *pDev);
 
-	virtual int RerenderDraw(IDirect3DDevice9 *pDev);
+	virtual int RerenderDraw(cRenderDevice *pDev);
 
 
-	IDirect3DTexture9* m_pTexture_Multiselect;
+	cRenderTexture* m_pTexture_Multiselect;
 
 
 	//上のウィンドウのテキストに干渉できないので外部から描画する。
@@ -113,7 +113,7 @@ protected:
 	int StrSet;
 	int cursolforcus;
 
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	virtual StyleString shortExplanationString(cRenderDevice *pDev);
 
 
 	//vector<tstring> strSample_;
@@ -159,8 +159,8 @@ public:
 	virtual ~cStringWindow(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int pageIndexMaxF(){return pageIndexMax;};
 };

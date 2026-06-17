@@ -18,6 +18,9 @@
 
 #define DEF_ICON_INDEXSIZE 4.0
 
+const int cDroping::BREAKFLAG_NORMAL;
+const int cDroping::BREAKFLAG_LOSS;
+
 
 cDroping::cDroping(void)
 {
@@ -143,7 +146,7 @@ StyleString cDroping::longExplanation()
 }
 
 
-void cDroping::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cDroping::Init(cRenderDevice *pDev,pcDroping self)
 {
 
 	m_pTexture_Icon = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev, IconFileName().c_str());
@@ -178,7 +181,7 @@ void cDroping::setattribute_pri()
 	setattribute();
 }
 
-void cDroping::Draw(IDirect3DDevice9 *pDev)
+void cDroping::Draw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	GetIcon(DO);
@@ -249,7 +252,7 @@ void cDroping::visibleReset()
 		setExtraMaterialColor(255,255,255,255); 
 	}
 }
-void cDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cDroping::DrawIcon(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -270,7 +273,7 @@ void cDroping::DrawIcon(IDirect3DDevice9 *pDev,int x,int y)
 	DrawAddShadowDO_mini(DO,pDev);
 
 }
-void cDroping::DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y)
+void cDroping::DrawStateIcon(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -380,7 +383,7 @@ int cDroping::RerenderText(SpriteText & sprite,int MaxLetterLength)
 	return true;
 }
 
-int cDroping::SetMenu(IDirect3DDevice9 *pDev)
+int cDroping::SetMenu(cRenderDevice *pDev)
 {
 	vector<tstring> captions;
 	GetmenuCaption(captions);
@@ -468,7 +471,7 @@ int cDroping::SetMenu(IDirect3DDevice9 *pDev)
 }
 
 //メニューで選択時に最初に呼ばれる
-int cDroping::Action(IDirect3DDevice9 *pDev)
+int cDroping::Action(cRenderDevice *pDev)
 {
 	SetMenu(pDev);
 	return true;
@@ -477,7 +480,7 @@ int cDroping::Action(IDirect3DDevice9 *pDev)
 
 /*
 //コマンドを解決する;
-int cDroping::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cDroping::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("説明")) 説明(pDev);
@@ -492,7 +495,7 @@ int cDroping::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping
 */
 
 /*
-int cDroping::説明(IDirect3DDevice9 *pDev)
+int cDroping::説明(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcGameWindow pcgw;
@@ -516,7 +519,7 @@ int cDroping::説明(IDirect3DDevice9 *pDev)
 */
 
 /*
-int cDroping::置く(IDirect3DDevice9 *pDev)
+int cDroping::置く(cRenderDevice *pDev)
 {
 
 	if(sg_pDungeonSystem->足元設置要請(sg_pDungeonSystem->pPlayerChara(), me()))
@@ -534,7 +537,7 @@ int cDroping::置く(IDirect3DDevice9 *pDev)
 */
 
 /*
-int cDroping::拾う(IDirect3DDevice9 *pDev)
+int cDroping::拾う(cRenderDevice *pDev)
 {
 
 	pcDroping pdrop = sg_pDungeonSystem->pPlayerChara()->足元();
@@ -564,7 +567,7 @@ int cDroping::拾う(IDirect3DDevice9 *pDev)
 */
 
 /*
-int cDroping::投げる(IDirect3DDevice9 *pDev)
+int cDroping::投げる(cRenderDevice *pDev)
 {
 
 	if(sg_pDungeonSystem->投擲要請(sg_pDungeonSystem->pPlayerChara(), me()))
@@ -578,7 +581,7 @@ int cDroping::投げる(IDirect3DDevice9 *pDev)
 }
 */
 /*
-int cDroping::交換(IDirect3DDevice9 *pDev)
+int cDroping::交換(cRenderDevice *pDev)
 {
 	
 	pcDroping pdrop = sg_pDungeonSystem->pPlayerChara()->足元();

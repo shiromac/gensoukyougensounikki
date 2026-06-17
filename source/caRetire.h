@@ -23,8 +23,8 @@ public:
 	virtual ~caRetire(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	virtual int Init(pcAnimation me);
 
 

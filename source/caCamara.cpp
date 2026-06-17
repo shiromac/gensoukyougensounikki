@@ -25,7 +25,7 @@ int caCameraMove::Init()
 	preprocess_ = 0;
 	return true;
 }
-int caCameraMove::process(IDirect3DDevice9 *pDev)
+int caCameraMove::process(cRenderDevice *pDev)
 {
 	if(!preprocess_)
 	{
@@ -67,7 +67,7 @@ int caCameraMove::process(IDirect3DDevice9 *pDev)
 	
 	return true;
 }
-int caCameraMove::Draw(IDirect3DDevice9 *pDev)
+int caCameraMove::Draw(cRenderDevice *pDev)
 {
 	return true;
 }

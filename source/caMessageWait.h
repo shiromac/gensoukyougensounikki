@@ -20,10 +20,10 @@ public:
 public:
 	virtual ~caMessageWait(void);
 
-	//IDirect3DTexture9* pTex;
+	//cRenderTexture* pTex;
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 
@@ -50,10 +50,10 @@ public:
 
 	int preprocessed;
 
-	//IDirect3DTexture9* pTex;
+	//cRenderTexture* pTex;
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 
@@ -73,10 +73,10 @@ public:
 public:
 	virtual ~caPrimaryInterfaceWait(void);
 
-	//IDirect3DTexture9* pTex;
+	//cRenderTexture* pTex;
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 

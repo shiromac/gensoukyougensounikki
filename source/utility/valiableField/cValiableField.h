@@ -99,7 +99,7 @@ public:
 	//cValiableField& operator =(const cValiableField& rother);//=演算子
 
 	//変数を定義
-	TYPE& dim(tstring& name)
+	TYPE& dim(const tstring& name)
 	{
 		return dim(name.c_str());
 	};
@@ -124,21 +124,21 @@ public:
 	};
 
 	//変数を定義
-	TYPE& dim(tstring& name, TYPE& data)
+	TYPE& dim(const tstring& name, const TYPE& data)
 	{
 		return dim(name.c_str(), data);
 	};
-	TYPE& dim(const TCHAR* name, TYPE& data)
+	TYPE& dim(const TCHAR* name, const TYPE& data)
 	{
 		stringmap_.insert( pair<tstring, TYPE>( name, data ) );
 		return stringmap_[name];
 	};
-	TYPE& dim(const pLuaString name, TYPE& data)
+	TYPE& dim(const pLuaString name, const TYPE& data)
 	{
 		stringmap_.insert( pair<tstring, TYPE>( luaString2tstring(name), data ) );
 		return stringmap_[name];
 	};
-	TYPE& dim(変数インデックス name, TYPE& data)
+	TYPE& dim(変数インデックス name, const TYPE& data)
 	{
 		intmap_.insert( pair<変数インデックス, TYPE>( name, data ) );
 		return intmap_[name];
@@ -161,11 +161,13 @@ public:
 	//参照を返す。
 	TYPE& val(const TCHAR* name)
 	{
-		std::map<tstring, TYPE>::iterator itr;
+		typename std::map<tstring, TYPE>::iterator itr;
 		itr = stringmap_.find(name);
 		if(itr == stringmap_.end())
 		{//見つからない（エラー）
+#ifndef __EMSCRIPTEN__
 			MessageBox(NULL,_T("不明な変数が参照されました"),name,MB_OK);
+#endif
 			return dumy;
 		}
 		return itr->second;
@@ -173,11 +175,13 @@ public:
 	//参照を返す。
 	TYPE& val(変数インデックス name)
 	{
-		std::map<変数インデックス, TYPE>::iterator itr;
+		typename std::map<変数インデックス, TYPE>::iterator itr;
 		itr = intmap_.find(name);
 		if(itr == intmap_.end())
 		{//見つからない（エラー）
+#ifndef __EMSCRIPTEN__
 			MessageBox(NULL,_T("不明な変数が参照されました"),setStyle((int)name).c_str(),MB_OK);
+#endif
 			
 			return dumy;
 		}
@@ -186,12 +190,14 @@ public:
 	//参照を返す。
 	TYPE& val(const pLuaString name)
 	{
-		std::map<tstring, TYPE>::iterator itr;
+		typename std::map<tstring, TYPE>::iterator itr;
 		tstring name_tstr(luaString2tstring(name));
 		itr = stringmap_.find(name_tstr);
 		if(itr == stringmap_.end())
 		{//見つからない（エラー）
+#ifndef __EMSCRIPTEN__
 			MessageBox(NULL,_T("不明な変数が参照されました"),setStyle(name_tstr).c_str(),MB_OK);
+#endif
 			
 			return dumy;
 		}
@@ -206,20 +212,20 @@ public:
 	};
 	bool exist(const TCHAR* name)
 	{
-		std::map<tstring, TYPE>::iterator itr;
+		typename std::map<tstring, TYPE>::iterator itr;
 		itr = stringmap_.find(name);
 		return (itr != stringmap_.end());
 	};
 	bool exist(const pLuaString name)
 	{
-		std::map<tstring, TYPE>::iterator itr;
+		typename std::map<tstring, TYPE>::iterator itr;
 		itr = stringmap_.find(luaString2tstring(name));
 		return (itr != stringmap_.end());
 	};
 
 	bool exist(変数インデックス name)
 	{
-		std::map<変数インデックス, TYPE>::iterator itr;
+		typename std::map<変数インデックス, TYPE>::iterator itr;
 		itr = intmap_.find(name);
 		return (itr != intmap_.end());
 	};

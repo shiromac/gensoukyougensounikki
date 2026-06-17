@@ -14,7 +14,7 @@ cSceneManager::~cSceneManager(void)
 
 }
 
-bool cSceneManager::initialize(IDirect3DDevice9 *pDev)
+bool cSceneManager::initialize(cRenderDevice *pDev)
 {
 	//èâä˙âª
 
@@ -36,12 +36,12 @@ void cSceneManager::finalize()
 
 }
 
-void cSceneManager::SceneChange(IDirect3DDevice9 *pDev, cSceneVirtual* nextScene)
+void cSceneManager::SceneChange(cRenderDevice *pDev, cSceneVirtual* nextScene)
 {
 	m_NextScene = pcSceneVirtual(nextScene);
 }
 
-void cSceneManager::SceneCheck(IDirect3DDevice9 *pDev)
+void cSceneManager::SceneCheck(cRenderDevice *pDev)
 {
 
 	if(m_NextScene != NULL)

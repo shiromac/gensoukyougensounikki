@@ -81,7 +81,7 @@ int caThrow::preprocess()
 	return true;
 }
 
-int caThrow::process(IDirect3DDevice9 *pDev)
+int caThrow::process(cRenderDevice *pDev)
 {
 
 	c4DVector position;
@@ -175,7 +175,7 @@ int caThrow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caThrow::Draw(IDirect3DDevice9 *pDev)
+int caThrow::Draw(cRenderDevice *pDev)
 {
 	if(flag!=0)
 	{//Ç’ÇËÉvÉçÉZÉXÇµÇΩ

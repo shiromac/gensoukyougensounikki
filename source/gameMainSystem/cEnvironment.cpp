@@ -34,18 +34,18 @@ cEnvironment::~cEnvironment(void)
 
 	pmTextureVforGlobalIndex.clear();
 }
-bool cEnvironment::ResetDevice(LPDIRECT3DDEVICE9 pDev)//デバイスのリセット
+bool cEnvironment::ResetDevice(cRenderDevice* pDev)//デバイスのリセット
 {
 	m_GlobalResourse->ResetedDevice();
 
 	return true;
 }
-void cEnvironment::init(LPDIRECT3DDEVICE9 pDev)
+void cEnvironment::init(cRenderDevice* pDev)
 {
 	
 #ifdef _UNRELEASE
 	CFilePack graphicpack;
-	cScriptReader SR(GRAPHICFOLDER _T("graphicpass.id"));
+	cScriptReader SR(g_GraphicAssetPath(_T("graphicpass.id")));
 	SR.load();
 
 	vector<tstring> passes;
@@ -56,13 +56,13 @@ void cEnvironment::init(LPDIRECT3DDEVICE9 pDev)
 	{
 		graphicpack.AddFile(passes[i].c_str(),passes[i].c_str());
 	}
-	graphicpack.OutPutPackFile(GRAPHICFOLDER _T("graphicpack"));
+	graphicpack.OutPutPackFile(g_GraphicAssetPath(_T("graphicpack")).c_str());
 
 #else
 
 #endif
 
-	FilePackLoad_.LoadPackFile(GRAPHICFOLDER _T("graphicpack"),pDev);
+	FilePackLoad_.LoadPackFile(g_GraphicAssetPath(_T("graphicpack")).c_str(),pDev);
 
 	//リソース確保
 	m_GlobalResourse = new cResourseManage(&FilePackLoad_);

@@ -12,7 +12,7 @@ cHomeResultWindow::~cHomeResultWindow()
 
 }
 
-void cHomeResultWindow::Init(IDirect3DDevice9 *pDev,
+void cHomeResultWindow::Init(cRenderDevice *pDev,
 						const int levelBefore,
 						const int experienceBefore,
 						const int experienceAddition,
@@ -52,7 +52,7 @@ void cHomeResultWindow::Init(IDirect3DDevice9 *pDev,
 	expGage.edgeColor.ARGB(128,255,255,255);
 }
 
-int cHomeResultWindow::process(IDirect3DDevice9 *pDev)
+int cHomeResultWindow::process(cRenderDevice *pDev)
 {
 	if(state_ == kInited)
 	{
@@ -129,7 +129,7 @@ int cHomeResultWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cHomeResultWindow::Draw(IDirect3DDevice9 *pDev)
+int cHomeResultWindow::Draw(cRenderDevice *pDev)
 {
 	
 	WindowDraw(pDev);

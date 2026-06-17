@@ -39,15 +39,15 @@ void cResourseManage::deleteTexture()
 
 	//テクスチャを全部開放
 
-	map<tstring, IDirect3DTexture9*>::iterator itr    = m_pTextureM.begin();
-	map<tstring, IDirect3DTexture9*>::iterator itrEnd = m_pTextureM.end();
+	map<tstring, cRenderTexture*>::iterator itr    = m_pTextureM.begin();
+	map<tstring, cRenderTexture*>::iterator itrEnd = m_pTextureM.end();
 	// 要素をすべて削除
 	for( ; itr != itrEnd ; itr++ )
 	{
 		if ( itr->second != NULL )
 		{
 
-			itr->second->Release();//強制開放
+			cRenderRelease(itr->second);//強制開放
 
 			/*
 			サーフェイスを開放するとテクスチャが消失する？
@@ -69,13 +69,13 @@ void cResourseManage::deleteOnlyTextureD()
 	{
 		if ( (m_pTextureD[i]) != NULL)
 		{
-			(m_pTextureD[i])->Release();//強制開放
+			cRenderRelease(m_pTextureD[i]);//強制開放
 
 			(m_pTextureD[i]) = NULL;
 		}
 	}
 	m_pTextureD.clear();//掃除
-	
+
 }
 void cResourseManage::ResetedDevice()
 {
@@ -93,13 +93,13 @@ void cResourseManage::deleteSurface()
 	{
 		if ( (m_pSurfaceV[i]) != NULL)
 		{
-			(m_pSurfaceV[i])->Release() ;//強制開放
+			cRenderRelease(m_pSurfaceV[i]) ;//強制開放
 
 			(m_pSurfaceV[i]) = NULL;
 		}
 	}
 	m_pSurfaceV.clear();//掃除
-	
+
 }
 
 void cResourseManage::deleteXfile()
@@ -133,15 +133,14 @@ void cResourseManage::deleteThis(vector<void*>* pSomethingV)
 		}
 	}
 	(*pSomethingV).clear();//掃除
-	
+
 }
 
 //ファイルからテクスチャを読み込む
-IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice,const TCHAR* name)
+cRenderTexture* cResourseManage::getTextureFromFile(cRenderDevice* pDevice,const TCHAR* name)
 {
-	HRESULT hr;
-	IDirect3DTexture9 *pTexture = NULL;
-	TCHAR path[128] = _T("");
+	cRenderTexture *pTexture = NULL;
+	tstring path = g_GraphicAssetPath(name);
 	//--------------------------------------------------------------
 	// テクスチャ読み込み
 	//--------------------------------------------------------------
@@ -150,12 +149,12 @@ IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice
 
 
 
-	_stprintf(path,_T("%s%s"),GRAPHICFOLDER,name);
 
 
 
-	map<tstring, IDirect3DTexture9*>::iterator itr;
-	map<tstring, IDirect3DTexture9*>::iterator itrEnd = m_pTextureM.end();
+
+	map<tstring, cRenderTexture*>::iterator itr;
+	map<tstring, cRenderTexture*>::iterator itrEnd = m_pTextureM.end();
 
 
 	itr = m_pTextureM.find(path);
@@ -171,11 +170,11 @@ IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice
 	//持って無いからロード
 	if(pFilePackLoad_ != NULL)
 	{
-		pTexture = pFilePackLoad_->GetTextureFile(path);
+		pTexture = pFilePackLoad_->GetTextureFile(path.c_str());
 		if(pTexture != NULL)
-		{	
+		{
 			//確保リストに追加
-			m_pTextureM.insert( pair<tstring, IDirect3DTexture9*>(path, pTexture));
+			m_pTextureM.insert( pair<tstring, cRenderTexture*>(path, pTexture));
 
 			return pTexture;
 		}
@@ -183,43 +182,21 @@ IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice
 	}
 
 
-	hr = D3DXCreateTextureFromFileEx(
-		pDevice,
-		path,	//画像
-		0, 0, 0, 0,
-		D3DFMT_A8B8G8R8,
-		D3DPOOL_MANAGED,
-		D3DX_FILTER_LINEAR,
-		D3DX_FILTER_LINEAR,
-		0,
-		NULL,
-		NULL,
-		&pTexture);
+	bool loaded = cRenderLoadTextureFromFile(pDevice, path.c_str(), &pTexture);
 
-	
-	if FAILED( hr ) 
-	{//再試行//直下
-		hr = D3DXCreateTextureFromFileEx(
-			pDevice,
-			name,	//画像
-			0, 0, 0, 0,
-			D3DFMT_A8B8G8R8,
-			D3DPOOL_MANAGED,
-			D3DX_FILTER_LINEAR,
-			D3DX_FILTER_LINEAR,
-			0,
-			NULL,
-			NULL,
-			&pTexture);
+
+	if(!loaded)
+	{//再失敗//仮
+		loaded = cRenderLoadTextureFromFile(pDevice, name, &pTexture);
 
 		int i=0;
 	}
 
-	if FAILED( hr ) 
+	if(!loaded)
 	{
 		if (pTexture != NULL)
 		{	//保険
-			pTexture->Release();
+			cRenderRelease(pTexture);
 			pTexture = NULL;
 		}
 		tstring ods = _T("");
@@ -231,7 +208,7 @@ IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice
 	{
 
 		//確保リストに追加
-		m_pTextureM.insert( pair<tstring, IDirect3DTexture9*>(path, pTexture));
+		m_pTextureM.insert( pair<tstring, cRenderTexture*>(path, pTexture));
 
 	}
 
@@ -239,21 +216,19 @@ IDirect3DTexture9* cResourseManage::getTextureFromFile(IDirect3DDevice9* pDevice
 }
 
 //テクスチャ作成
-IDirect3DTexture9** cResourseManage::makeTexture(IDirect3DDevice9* pDevice, int width, int height)
+cRenderTexture** cResourseManage::makeTexture(cRenderDevice* pDevice, int width, int height)
 {
-	HRESULT hr;
-	IDirect3DTexture9 *pTexture = NULL;
+	cRenderTexture *pTexture = NULL;
 	//--------------------------------------------------------------
 	// テクスチャ読み込み
 	//--------------------------------------------------------------
-	hr = pDevice->CreateTexture(width, height, 0, D3DUSAGE_RENDERTARGET,
-			 D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &pTexture, NULL);
-	
-	if FAILED( hr ) 
+	bool created = cRenderCreateRenderTargetTexture(pDevice, width, height, &pTexture);
+
+	if(!created)
 	{
 		if (pTexture != NULL)
 		{	//保険
-			pTexture->Release();
+			cRenderRelease(pTexture);
 			pTexture = NULL;
 		}
 		OutputDebugString( _T("テクスチャの作成に失敗\n") );
@@ -262,15 +237,15 @@ IDirect3DTexture9** cResourseManage::makeTexture(IDirect3DDevice9* pDevice, int 
 	if (pTexture != NULL)
 	{
 		/*
-		map<tstring, IDirect3DTexture9*>::iterator itr;
+		map<tstring, cRenderTexture*>::iterator itr;
 
 		TCHAR tmpName[64] = _T("");
 
 		_stprintf(tmpName,_T("%s%d"),_T("\\\\\\origin"),m_pTextureM.size());
-		
+
 		//確保リストに追加
-		m_pTextureM.insert( pair<tstring, IDirect3DTexture9*>(tmpName, pTexture));
-		//内部で作成したテクスチャは常にオリジナルとなる。
+		m_pTextureM.insert( pair<tstring, cRenderTexture*>(tmpName, pTexture));
+		//ここで作成したテクスチャは常にオリジナルとなる。
 		*/
 		m_pTextureD.push_back(pTexture);
 		return &(m_pTextureD.back());
@@ -280,17 +255,15 @@ IDirect3DTexture9** cResourseManage::makeTexture(IDirect3DDevice9* pDevice, int 
 }
 
 //テクスチャのポインタからサーフェイスを読み込んでポインタを返す。失敗した場合ＮＵＬＬを返す。
-bool cResourseManage::getSurfaceFromTexture(IDirect3DTexture9*& pTexture, IDirect3DSurface9*& pSurface)
+bool cResourseManage::getSurfaceFromTexture(cRenderTexture*& pTexture, cRenderSurface*& pSurface)
 {
-	HRESULT hr;
 	pSurface = NULL;
 
-	hr = pTexture->GetSurfaceLevel(0, &pSurface);
-	if FAILED( hr ) 
+	if(!cRenderGetSurfaceFromTexture(pTexture, &pSurface))
 	{
 		if (pSurface != NULL)
 		{	//保険
-			pSurface->Release();
+			cRenderRelease(pSurface);
 			pSurface = NULL;
 		}
 		ERROR_RETURN( _T("バックバッファの取得に失敗") );
@@ -307,17 +280,15 @@ bool cResourseManage::getSurfaceFromTexture(IDirect3DTexture9*& pTexture, IDirec
 }
 
 //バックバッファのサーフェイスを読み込んでポインタを返す。失敗した場合ＮＵＬＬを返す。
-IDirect3DSurface9* cResourseManage::getBackBuffer(IDirect3DDevice9* pDevice)
+cRenderSurface* cResourseManage::getBackBuffer(cRenderDevice* pDevice)
 {
-	HRESULT hr;
-	IDirect3DSurface9* pBackBuffer = NULL;
+	cRenderSurface* pBackBuffer = NULL;
 
-	hr = pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-	if FAILED( hr ) 
+	if(!cRenderGetBackBuffer(pDevice, &pBackBuffer))
 	{
 		if (pBackBuffer != NULL)
 		{	//保険
-			pBackBuffer->Release();
+			cRenderRelease(pBackBuffer);
 			pBackBuffer = NULL;
 		}
 		OutputDebugString( _T("バックバッファの取得に失敗") );

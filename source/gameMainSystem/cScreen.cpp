@@ -2,17 +2,13 @@
 
 #include "cScreen.h"
 #include "../utility/cColor.h"
-#include <d3d9.h>
+
 
 namespace
 {
-void SetScreenPointSampler(IDirect3DDevice9* pDevice, DWORD sampler)
+void SetScreenPointSampler(cRenderDevice* pDevice, DWORD sampler)
 {
-	pDevice->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	pDevice->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-	pDevice->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-	pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-	pDevice->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+	cRenderSetPointSampler(pDevice, sampler);
 }
 }
 
@@ -24,7 +20,7 @@ cScreen::~cScreen(void)
 {
 }
 
-void cScreen::initScreen(IDirect3DDevice9* pDevice)
+void cScreen::initScreen(cRenderDevice* pDevice)
 {
 	cResourseManage* RManager = g_GameEnv.m_GlobalResourse;
 	//バックバッファの保存
@@ -69,22 +65,13 @@ void cScreen::initScreen(IDirect3DDevice9* pDevice)
 	m_OffScreenEnable = true;
 }
 
-void cScreen::Draw(IDirect3DDevice9* pDevice)
+void cScreen::Draw(cRenderDevice* pDevice)
 {
 
 
 
 	//HRESULT hr;
-	D3DVIEWPORT9 vp;	//ビューポート
-	//ビューポート設定(左上)
-	vp.X = 0;
-	vp.Y = 0;
-	vp.Width = SCREEN_X ;
-	vp.Height = SCREEN_Y ;
-	vp.MinZ = 0.0f;
-	vp.MaxZ = 1.0f;
-	//ビューポートセット
-	pDevice->SetViewport(&vp);
+	cRenderSetViewport(pDevice, SCREEN_X, SCREEN_Y);
 	SetScreenPointSampler(pDevice, 0);
 	SetScreenPointSampler(pDevice, 1);
 
@@ -142,10 +129,10 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 			{ msRight	, msBottom,	0, 1, tmRight, tmBottom }
 		};
 	VERTEX2D_COLORED MiniBlack[] = {
-			{ msLeft	, msTop	,	0, 1,D3DCOLOR_ARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
-			{ msRight	, msTop	,	0, 1,D3DCOLOR_ARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
-			{ msLeft	, msBottom,	0, 1,D3DCOLOR_ARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
-			{ msRight	, msBottom,	0, 1,D3DCOLOR_ARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
+			{ msLeft	, msTop	,	0, 1,cRenderColorARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
+			{ msRight	, msTop	,	0, 1,cRenderColorARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
+			{ msLeft	, msBottom,	0, 1,cRenderColorARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
+			{ msRight	, msBottom,	0, 1,cRenderColorARGB((int)(255*(1-m_MiniBlurValue)),0,0,0), 0.0f		 , 0.0f },
 	};
 
 
@@ -187,15 +174,15 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		//ターゲットを背景に
 		setRenderTarget(pDevice, SCREEN_BACKGROUND);
 		//テクスチャをオフスクリーンに
-		pDevice->SetTexture(0, (m_pOffScreenTexture));
+		cRenderSetTexture(pDevice, 0, (m_pOffScreenTexture));
 		// 頂点ＦＶＦを設定
-		pDevice->SetFVF( VERTEX2D::FVF );
+		cRenderSetTexturedVertexFormat(pDevice);
 
 		//アルファ合成を可に
-		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		cRenderSetAlphaBlendEnabled(pDevice, true);
 
 		// ポリゴンを描画
-		pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData, sizeof(VERTEX2D) );
+		cRenderDrawTriangleStrip(pDevice, 2, VxData);
 
 	}
 
@@ -302,40 +289,34 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		//ターゲットをバックに
 		setRenderTarget(pDevice, SCREEN_BACKGROUND);
 		//テクスチャをレイヤーに
-		pDevice->SetTexture(0, (m_pLayerTexture));
+		cRenderSetTexture(pDevice, 0, (m_pLayerTexture));
 
 		// 頂点ＦＶＦを設定
-		pDevice->SetFVF( VERTEX2D_COLORED::FVF );
+		cRenderSetColoredVertexFormat(pDevice);
 
 		// 頂点色を乗算する
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-		
-		pDevice->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
-		pDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-		pDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+		cRenderSetTextureColorMode(pDevice, 0, C_RENDER_TEXTURE_COLOR_MODULATE);
 
 		// ポリゴンを描画
-		pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxDataColor, sizeof(VERTEX2D_COLORED) );
+		cRenderDrawColoredTriangleStrip(pDevice, 2, VxDataColor);
 
 
 
 		if(m_LayerMode == ALPHA_MODE_ANTIADDITION)
 		{
 			// テクスチャを設定
-			pDevice->SetTexture( 0, NULL );
+			cRenderSetTexture(pDevice, 0, NULL);
 			
 			g_GameEnv.m_Screen->setRenderTarget(pDevice, SCREEN_OFFSCREEN);
 			
 			// 頂点ＦＶＦを設定
-			pDevice->SetFVF( VERTEX2D_COLORED::FVF );
+			cRenderSetColoredVertexFormat(pDevice);
 
 
 			setAlphaMode(pDevice, ALPHA_MODE_ADDITION);
 
 
-			pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxDataBlack, sizeof(VERTEX2D_COLORED) );
+			cRenderDrawColoredTriangleStrip(pDevice, 2, VxDataBlack);
 
 		}
 
@@ -362,53 +343,52 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		if (m_MiniBlur)
 		{
 			//ターゲットをミニレイヤーに
-			pDevice->SetRenderTarget(0, m_pMiniSurface[m_MiniRotation]);
+			cRenderSetRenderTarget(pDevice, 0, m_pMiniSurface[m_MiniRotation]);
 			//テクスチャをNULLに
-			pDevice->SetTexture(0, NULL);
+			cRenderSetTexture(pDevice, 0, NULL);
 			// 頂点ＦＶＦを設定
-			pDevice->SetFVF( VERTEX2D_COLORED::FVF );
+			cRenderSetColoredVertexFormat(pDevice);
 
 			//アルファ合成を通常に
 			setAlphaMode(pDevice, ALPHA_MODE_NORMAL);
 
 			// ポリゴンを描画
-			pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, MiniBlack, sizeof(VERTEX2D_COLORED) );
+			cRenderDrawColoredTriangleStrip(pDevice, 2, MiniBlack);
 
 			//テクスチャをオフスクリーンに
-			pDevice->SetTexture(0, (m_pOffScreenTexture));
+			cRenderSetTexture(pDevice, 0, (m_pOffScreenTexture));
 
 		
 			// 頂点ＦＶＦを設定
-			pDevice->SetFVF( VERTEX2D::FVF );
+			cRenderSetTexturedVertexFormat(pDevice);
 
 			//アルファ合成を加算に//加算縛り
 			setAlphaMode(pDevice, ALPHA_MODE_ADDITION);
 
 			// ポリゴンを描画
-			pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxDataToMini, sizeof(VERTEX2D) );
+			cRenderDrawTriangleStrip(pDevice, 2, VxDataToMini);
 			
 		}
 		else
 		{
 			//ターゲットをミニレイヤーに
-			pDevice->SetRenderTarget(0, m_pMiniSurface[m_MiniRotation]);
+			cRenderSetRenderTarget(pDevice, 0, m_pMiniSurface[m_MiniRotation]);
 			
 			//くりあ
-			pDevice->Clear( 0, NULL, D3DCLEAR_TARGET,//|D3DCLEAR_ZBUFFER,
-				D3DCOLOR_ARGB(255,0,0,0), 1.0f, 0 );
+			cRenderClearTarget(pDevice, cRenderColorARGB(255,0,0,0));
 
 			//テクスチャをオフスクリーンに
-			pDevice->SetTexture(0, (m_pOffScreenTexture));
+			cRenderSetTexture(pDevice, 0, (m_pOffScreenTexture));
 
 		
 			// 頂点ＦＶＦを設定
-			pDevice->SetFVF( VERTEX2D::FVF );
+			cRenderSetTexturedVertexFormat(pDevice);
 
 			//アルファ合成を不可に
-			pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+			cRenderSetAlphaBlendEnabled(pDevice, false);
 
 			// ポリゴンを描画
-			pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxDataToMini, sizeof(VERTEX2D) );
+			cRenderDrawTriangleStrip(pDevice, 2, VxDataToMini);
 			
 			//m_MiniRotation = !m_MiniRotation;//反転
 		}
@@ -424,19 +404,11 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		//クリア
 		pDevice->SetRenderTarget(0, m_pMiniSurface);
 		pDevice->Clear( 0, NULL, D3DCLEAR_TARGET,//|D3DCLEAR_ZBUFFER,
-			D3DCOLOR_ARGB(255,255,255,255), 1.0f, 0 );
+			cRenderColorARGB(255,255,255,255), 1.0f, 0 );
 */
 		m_MiniRotation = 0;
 
-		//ビューポート設定(左上)
-		vp.X = 0;
-		vp.Y = 0;
-		vp.Width = SCREEN_X ;
-		vp.Height = SCREEN_Y ;
-		vp.MinZ = 0.0f;
-		vp.MaxZ = 1.0f;
-		//ビューポートセット
-		pDevice->SetViewport(&vp);
+		cRenderSetViewport(pDevice, SCREEN_X, SCREEN_Y);
 		SetScreenPointSampler(pDevice, 0);
 		SetScreenPointSampler(pDevice, 1);
 
@@ -446,89 +418,69 @@ void cScreen::Draw(IDirect3DDevice9* pDevice)
 		//ターゲットを背景に
 		setRenderTarget(pDevice, SCREEN_BACKGROUND);
 		//テクスチャをミニレイヤーに
-		pDevice->SetTexture(0, (m_pMiniTexture[m_MiniRotation]));
+		cRenderSetTexture(pDevice, 0, (m_pMiniTexture[m_MiniRotation]));
 
 		// 頂点ＦＶＦを設定
-		pDevice->SetFVF( VERTEX2D_COLORED::FVF );
+		cRenderSetColoredVertexFormat(pDevice);
 
 		// 頂点色を乗算する
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-		pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-
-		pDevice->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
-		pDevice->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-		pDevice->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+		cRenderSetTextureColorMode(pDevice, 0, C_RENDER_TEXTURE_COLOR_MODULATE);
 
 		// ポリゴンを描画
-		pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxDataMIniToBG, sizeof(VERTEX2D_COLORED) );
+		cRenderDrawColoredTriangleStrip(pDevice, 2, VxDataMIniToBG);
 	}
 
 	//なぜかこれ入れないとばぐる
-		//pDevice->SetFVF( VERTEX2D::FVF );
+		//cRenderSetTexturedVertexFormat(pDevice);
 }
 
-void cScreen::Clear(IDirect3DDevice9* pDevice, cColor& c)
+void cScreen::Clear(cRenderDevice* pDevice, cColor& c)
 {
 
 
-	pDevice->Clear( 0, NULL, D3DCLEAR_TARGET,//|D3DCLEAR_ZBUFFER,
-						c.D3Dcolor(), 1.0f, 0 );
+	cRenderClearTarget(pDevice, c.D3Dcolor());
 
 
 }
 
-void cScreen::setRenderTarget(IDirect3DDevice9* pDevice, int screen_ID)
+void cScreen::setRenderTarget(cRenderDevice* pDevice, int screen_ID)
 {
 	//ターゲットをオフスクリーンに
 	if(screen_ID == SCREEN_OFFSCREEN)
-		pDevice->SetRenderTarget(0, m_pOffScreenSurface);
+		cRenderSetRenderTarget(pDevice, 0, m_pOffScreenSurface);
 
 	//ターゲットをレイヤーに
 	else if(screen_ID == SCREEN_LAYER)
-		pDevice->SetRenderTarget(0, m_pLayerSurface);
+		cRenderSetRenderTarget(pDevice, 0, m_pLayerSurface);
 
 	//ターゲットをレイヤーに
 	else if(screen_ID == SCREEN_BACKGROUND)
-		pDevice->SetRenderTarget(0, (m_pBackBufferSurface));
+		cRenderSetRenderTarget(pDevice, 0, (m_pBackBufferSurface));
 
 }
 
-void cScreen::setAlphaMode(IDirect3DDevice9* pDevice, int alpha_mode)
+void cScreen::setAlphaMode(cRenderDevice* pDevice, int alpha_mode)
 {
-	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	cRenderSetAlphaBlendEnabled(pDevice, true);
 	switch(alpha_mode)
 	{
 	case ALPHA_MODE_ADDITION:
-		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		cRenderSetBlendFactors(pDevice, C_RENDER_BLEND_FACTORS_ADDITION);
 		break;
 	case ALPHA_MODE_ANTIADDITION:
-		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
-		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO);
+		cRenderSetBlendFactors(pDevice, C_RENDER_BLEND_FACTORS_ANTIADDITION);
 		break;
 	case ALPHA_MODE_NORMAL:
-		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		cRenderSetBlendFactors(pDevice, C_RENDER_BLEND_FACTORS_NORMAL);
 		break;
 	case ALPHA_MODE_HALFADDITION:
-		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		cRenderSetBlendFactors(pDevice, C_RENDER_BLEND_FACTORS_HALFADDITION);
 		break;
 	}
 }
-void cScreen::DebugDraw(IDirect3DDevice9* pDevice)
+void cScreen::DebugDraw(cRenderDevice* pDevice)
 {
-	D3DVIEWPORT9 vp;	//ビューポート
-	//ビューポート設定(左上)
-	vp.X = 0;
-	vp.Y = 0;
-	vp.Width = SCREEN_X ;
-	vp.Height = SCREEN_Y ;
-	vp.MinZ = 0.0f;
-	vp.MaxZ = 1.0f;
-	//ビューポートセット
-	pDevice->SetViewport(&vp);
+	cRenderSetViewport(pDevice, SCREEN_X, SCREEN_Y);
 	SetScreenPointSampler(pDevice, 0);
 	SetScreenPointSampler(pDevice, 1);
 
@@ -556,31 +508,29 @@ void cScreen::DebugDraw(IDirect3DDevice9* pDevice)
 		};
 
 	//アルファ合成を不可に
-	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	cRenderSetAlphaBlendEnabled(pDevice, false);
 	// 頂点ＦＶＦを設定
-	pDevice->SetFVF( VERTEX2D::FVF );
+	cRenderSetTexturedVertexFormat(pDevice);
 
 	//ターゲットを背景に
 	setRenderTarget(pDevice, SCREEN_BACKGROUND);
 
-	pDevice->SetTexture(0, (m_pOffScreenTexture));
+	cRenderSetTexture(pDevice, 0, (m_pOffScreenTexture));
 	// ポリゴンを描画
-	pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData, sizeof(VERTEX2D) );
+	cRenderDrawTriangleStrip(pDevice, 2, VxData);
 
 	// 頂点色を乗算する
-	pDevice->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-	pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-	pDevice->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_CURRENT );
+	cRenderSetTextureAlphaCurrent(pDevice, 0);
 	// 頂点ＦＶＦを設定
-	pDevice->SetFVF( VERTEX2D_COLORED::FVF );
+	cRenderSetColoredVertexFormat(pDevice);
 
-	pDevice->SetTexture(0, (m_pLayerTexture));
+	cRenderSetTexture(pDevice, 0, (m_pLayerTexture));
 	// ポリゴンを描画
-	pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData2, sizeof(VERTEX2D_COLORED) );
+	cRenderDrawColoredTriangleStrip(pDevice, 2, VxData2);
 
-	pDevice->SetTexture(0, (m_pMiniTexture[m_MiniRotation]));
+	cRenderSetTexture(pDevice, 0, (m_pMiniTexture[m_MiniRotation]));
 	// ポリゴンを描画
-	pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData3, sizeof(VERTEX2D_COLORED) );
+	cRenderDrawColoredTriangleStrip(pDevice, 2, VxData3);
 
 
 }

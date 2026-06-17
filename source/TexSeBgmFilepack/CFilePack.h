@@ -11,8 +11,9 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <windows.h>
-#include <d3dx9.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "../gameMainSystem/cRenderBackend.h"
 
 using namespace std;
 
@@ -92,7 +93,9 @@ public:
 		if(fp == NULL) 
 		{
 			printf("%s が見つかりません。スキップします\n", FileName);
+#ifndef __EMSCRIPTEN__
 			Sleep(1000);
+#endif
 			return false;
 		}
 		SaveFileHeader fh;
@@ -100,9 +103,9 @@ public:
 		fh.fSavename = SaveName;
 
 		/* ファイルサイズを調査 */ 
-		fseek(fp, 0, SEEK_END); 
-		fpos_t Size = 0;
-		fgetpos(fp, &Size); 
+		fseek(fp, 0, SEEK_END);
+		long Size = ftell(fp);
+		if(Size < 0) Size = 0; 
 
 		fh.fSize = (int)Size;		// サイズ保存
 		fh.fPlace = 0;				// 仮のSEEK位置
@@ -218,7 +221,7 @@ class CFilePackLoad
 {
 
 private:
-	LPDIRECT3DDEVICE9 m_Device;
+	cRenderDevice* m_Device;
 	basic_string<TCHAR> PackFileName;
 	int ChangeKey;
 
@@ -232,7 +235,7 @@ public:
 	//=====================================================
 	// パックファイルを読み込んで、ヘッダ情報だけを抽出
 	//=====================================================
-	bool LoadPackFile(const TCHAR* FileName, LPDIRECT3DDEVICE9 inDevice=NULL)
+	bool LoadPackFile(const TCHAR* FileName, cRenderDevice* inDevice=NULL)
 	{
 		Files.clear();
 
@@ -241,12 +244,17 @@ public:
 		_tfopen_s(&fp, FileName, _T("rb") );
 		if(fp == NULL)
 		{
+#ifdef __EMSCRIPTEN__
+			PackFileName = FileName;
+			return false;
+#else
 			#ifdef _UNRELEASE
 			printf("ファイルが見つかりません");
 			MessageBox(NULL, _T("ファイルが見つかりません"), 0, 0);
 			#endif
 			exit(0);
 			return false;
+#endif
 		}
 
 		PackFileName = FileName;
@@ -305,41 +313,52 @@ public:
 	//=====================================================
 	// 欲しいテクスチャの部分を読み込み、テクスチャ作成
 	//=====================================================
-	LPDIRECT3DTEXTURE9 GetTextureFile(const TCHAR* FileName, D3DFORMAT format=D3DFMT_A8R8G8B8, DWORD colorkey=0x00000000)
+	bool ReadFileData(const TCHAR* FileName, vector<BYTE>& data)
 	{
+		data.clear();
+
 		basic_string<TCHAR> theKey(FileName);
 		map<basic_string<TCHAR>, LoadFileHeader>::iterator p = Files.find(theKey);
 		if(p == Files.end())
 		{
-			return NULL;
+			return false;
 		}
-		else
+
+		FILE *fp;
+		_tfopen_s(&fp, PackFileName.c_str(), _T("rb") );
+		if(fp == NULL)
 		{
-			// ファイル名発見した↓
-			// ヘッダはもう読んであるので再度読む必要なし
-			// パックデータから読み込む
-			LPDIRECT3DTEXTURE9 pTex = NULL;
-			FILE *fp;
-			_tfopen_s(&fp, PackFileName.c_str(), _T("rb") );
-
-			if(fp != NULL)
-			{
-				// 実際のデータ読み込み
-				BYTE *fData = new BYTE[p->second.fSize];
-				fseek(fp, p->second.fPlace, SEEK_SET);
-				fread( fData, sizeof(BYTE), p->second.fSize, fp);
-				fclose(fp);
-
-				D3DXCreateTextureFromFileInMemoryEx(m_Device, fData, p->second.fSize, 0, 0, 0, 0,
-					format, D3DPOOL_MANAGED, D3DX_FILTER_LINEAR, D3DX_FILTER_LINEAR, colorkey, NULL, NULL, &pTex);
-
-				delete [] fData;
-
-			}
-			// 作成したテクスチャをリターン
-			// このクラスでは解放しないので必要なくなったら使う方で解放しないといけない
-			return pTex;
+			return false;
 		}
+
+		data.resize(p->second.fSize);
+		fseek(fp, p->second.fPlace, SEEK_SET);
+		size_t readSize = 0;
+		if(!data.empty())
+		{
+			readSize = fread( &data[0], sizeof(BYTE), p->second.fSize, fp);
+		}
+		fclose(fp);
+
+		if(readSize != static_cast<size_t>(p->second.fSize))
+		{
+			data.clear();
+			return false;
+		}
+
+		return true;
+	}
+
+	cRenderTexture* GetTextureFile(const TCHAR* FileName, cRenderTextureFormat format=C_RENDER_TEXTURE_FORMAT_A8R8G8B8, DWORD colorkey=0x00000000)
+	{
+		cRenderTexture* pTex = NULL;
+		vector<BYTE> fileData;
+		if(ReadFileData(FileName, fileData) && !fileData.empty())
+		{
+			cRenderCreateTextureFromMemory(m_Device, &fileData[0], static_cast<UINT>(fileData.size()), format, colorkey, &pTex);
+		}
+
+		return pTex;
 	}
 
 	//=====================================================

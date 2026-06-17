@@ -2,7 +2,7 @@
 #include "gamemainsystem\cobject.h"
 #include "utility\cRectObj.h"
 #include "utility\cColor.h"
-#include <d3d9.h>
+#include "gameMainSystem/cRenderBackend.h"
 
 #include <vector>
 
@@ -18,12 +18,12 @@ public:
 
 protected:
 	virtual bool culculateRealTexRange();
-	IDirect3DTexture9* m_pTexture;
+	cRenderTexture* m_pTexture;
 	cRectObj m_RealTexRange;
 	int m_TexSizeX;
 	int m_TexSizeY;
 
-	virtual int SetRenderMode(IDirect3DDevice9 *pDev);
+	virtual int SetRenderMode(cRenderDevice *pDev);
 public:
 	cColor m_color;
 	std::vector<cColor> vm_color;//4隅の色を変える
@@ -45,10 +45,10 @@ public:
 	};
 	DrawMode AddingDraw;
 
-	void setTexture(IDirect3DTexture9* pTexture,int TexSizeX, int TexSizeY);
-	void setTexture(IDirect3DTexture9* pTexture);
+	void setTexture(cRenderTexture* pTexture,int TexSizeX, int TexSizeY);
+	void setTexture(cRenderTexture* pTexture);
 
-	virtual int Draw(IDirect3DDevice9 *pDev){return false;};
+	virtual int Draw(cRenderDevice *pDev){return false;};
 
 
 	virtual int getTexSizeX(){return m_TexSizeX;};
@@ -73,10 +73,10 @@ public:
 	double ScaleY;//大きさY
 	double Rotation2;//回転2(度数法)
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	//基礎しかサポートし無い高速ドロー
 	//(テクスチャサポートしない)
 	//(加算サポートしない)
-	virtual int EasyDraw(IDirect3DDevice9 *pDev);
+	virtual int EasyDraw(cRenderDevice *pDev);
 };

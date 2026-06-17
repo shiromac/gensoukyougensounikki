@@ -85,7 +85,7 @@ double cDungeonSystem::Floortime()
 }
 
 
-int cDungeonSystem::InitSystem(IDirect3DDevice9 *pDev)
+int cDungeonSystem::InitSystem(cRenderDevice *pDev)
 {
 	pDevice_D3D = pDev;
 
@@ -135,7 +135,7 @@ int cDungeonSystem::InitSystem(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cDungeonSystem::InitDungeon(IDirect3DDevice9 *pDev)
+int cDungeonSystem::InitDungeon(cRenderDevice *pDev)
 {
 
 	int prehome = 0;
@@ -379,7 +379,7 @@ int cDungeonSystem::InitDungeon(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cDungeonSystem::FinalizeDungeon(IDirect3DDevice9 *pDev)
+int cDungeonSystem::FinalizeDungeon(cRenderDevice *pDev)
 {
 	int i, size = CharaList().size();
 	for(i=0;i<size;i++)
@@ -406,13 +406,13 @@ int cDungeonSystem::PlayBGM()
 
 	return true;
 }
-int cDungeonSystem::resetedDevice(IDirect3DDevice9 *pDev)
+int cDungeonSystem::resetedDevice(cRenderDevice *pDev)
 {
 	if(pFloorInstance_) Map().ResetMiniMap();
 	return true;
 }
 
-int cDungeonSystem::InitFloor(IDirect3DDevice9 *pDev)
+int cDungeonSystem::InitFloor(cRenderDevice *pDev)
 {
 	pFloorInstance_ = pcFloorInstance(new cFloorInstance);
 
@@ -813,7 +813,7 @@ int cDungeonSystem::InitFloor(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cDungeonSystem::StartFloor(IDirect3DDevice9 *pDev)
+int cDungeonSystem::StartFloor(cRenderDevice *pDev)
 {
 
 	現在地からマッピング(pPlayerChara());
@@ -936,7 +936,7 @@ const int cDungeonSystem::独立モード()
 	return false;
 }
 
-int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::gameTurnprocess(cRenderDevice *pDev)
 {
 /*
 	static int s_phase() = GAME_PHASE_INPUT;
@@ -1273,7 +1273,7 @@ int cDungeonSystem::gameTurnprocess(IDirect3DDevice9 *pDev)
 
 static const int shootAndShortCut_startDrawWindowFrame = 15;
 
-int cDungeonSystem::Draw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Draw(cRenderDevice *pDev)
 {
 	int i;
 
@@ -1366,7 +1366,7 @@ int cDungeonSystem::Draw(IDirect3DDevice9 *pDev)
 #define GAME_PROCESSMODE_MINIMAP (3)
 
 //trueを返した時入力待ち状態
-int cDungeonSystem::process(IDirect3DDevice9 *pDev)
+int cDungeonSystem::process(cRenderDevice *pDev)
 {
 	int i;
 	//常に行う
@@ -1724,7 +1724,7 @@ bool cDungeonSystem::isInputWaiting()
 
 
 //trueを返した時処理無し
-int cDungeonSystem::Inputprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Inputprocess(cRenderDevice *pDev)
 {
 
 	if(pPlayerChara()->Condition.行動不能である())
@@ -2062,7 +2062,7 @@ int cDungeonSystem::Inputprocess(IDirect3DDevice9 *pDev)
 }
 
 //一ターンに一度実行される
-int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Turnprocess(cRenderDevice *pDev)
 {
 	
 	int i;
@@ -2225,7 +2225,7 @@ int cDungeonSystem::Turnprocess(IDirect3DDevice9 *pDev)
 }
 
 //trueを返した時メニュー無し
-int cDungeonSystem::menuCommandprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::menuCommandprocess(cRenderDevice *pDev)
 {
 
 	if(menuControlLayerV().size() == 0)
@@ -2314,7 +2314,7 @@ int cDungeonSystem::EventDrawUnderObject()
 }
 
 //インプットの直前に一度初期化する
-int cDungeonSystem::resetTurnInformation(IDirect3DDevice9 *pDev)
+int cDungeonSystem::resetTurnInformation(cRenderDevice *pDev)
 {
 
 	turnEnd_flag() = FALSE;
@@ -2362,7 +2362,7 @@ int cDungeonSystem::resetTurnInformation(IDirect3DDevice9 *pDev)
 }
 
 //整理して使われなくなったオブジェクトを消す。
-int cDungeonSystem::arrangementObject(IDirect3DDevice9 *pDev)
+int cDungeonSystem::arrangementObject(cRenderDevice *pDev)
 {
 	vector<pcCharacter>::iterator chitr = visibleCharaList().begin();
 
@@ -2416,7 +2416,7 @@ int cDungeonSystem::arrangementObject(IDirect3DDevice9 *pDev)
 
 
 //trueを返した時処理無し
-int cDungeonSystem::minimapViewprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::minimapViewprocess(cRenderDevice *pDev)
 {
 	
 	s_AltaofminimapViewprocess().process(g_GameEnv.m_Input.PlayerInput.miniMap().on);
@@ -2445,7 +2445,7 @@ int cDungeonSystem::minimapViewprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cDungeonSystem::Refreshminimap(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Refreshminimap(cRenderDevice *pDev)
 {
 
 	Map().RefreshMiniMap();
@@ -2454,7 +2454,7 @@ int cDungeonSystem::Refreshminimap(IDirect3DDevice9 *pDev)
 }
 
 //ミニマップを消して書き直す。
-int cDungeonSystem::Resetminimap(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Resetminimap(cRenderDevice *pDev)
 {
 
 	Map().ResetMiniMap();
@@ -2462,7 +2462,7 @@ int cDungeonSystem::Resetminimap(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cDungeonSystem::minimapDrawDelegate(IDirect3DDevice9 *pDev, const cCoordinate& leftTop, const int boxSize, const int alpha)
+int cDungeonSystem::minimapDrawDelegate(cRenderDevice *pDev, const cCoordinate& leftTop, const int boxSize, const int alpha)
 {
 	EventManager().minimapDraw(leftTop, boxSize, alpha);
 	return true;
@@ -2547,7 +2547,7 @@ int cDungeonSystem::自動振り向き(int& notfirstflag)
 	return true;
 }
 //trueを返した時処理無し
-int cDungeonSystem::aspectTurnprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::aspectTurnprocess(cRenderDevice *pDev)
 {
 	/*
 	//ダッシュボタンタップ
@@ -2622,14 +2622,14 @@ int cDungeonSystem::aspectTurnprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 //trueを返した時処理無し
-int cDungeonSystem::aspectDiagonprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::aspectDiagonprocess(cRenderDevice *pDev)
 {
 	s_aspectDiagonprocess().process(g_pPlayerInput()->diagon().on);
 
 	return true;
 
 }
-int cDungeonSystem::shootAndShortCutprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::shootAndShortCutprocess(cRenderDevice *pDev)
 {
 	if(pSaveData->ShortCutsManager == NULL)
 	{
@@ -2808,14 +2808,14 @@ int cDungeonSystem::shootAndShortCutprocess(IDirect3DDevice9 *pDev)
 
 
 
-int cDungeonSystem::LandDraw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::LandDraw(cRenderDevice *pDev)
 {
 
 	Map().Draw(pDev);
 	return true;
 }
 
-int cDungeonSystem::MiniMapDraw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::MiniMapDraw(cRenderDevice *pDev)
 {
 
 	if(s_minimapHiding()){
@@ -2842,7 +2842,7 @@ bool NearDrop(pcDroping a, pcDroping b){
 }
 
 
-int cDungeonSystem::CharacterDraw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::CharacterDraw(cRenderDevice *pDev)
 {
 	if(s_aspectTurnprocess().on)
 	{
@@ -2921,7 +2921,7 @@ int cDungeonSystem::CharacterDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cDungeonSystem::DropingDraw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::DropingDraw(cRenderDevice *pDev)
 {
 	int i;
 	sort( visibleDropList().begin(), visibleDropList().end(), ::NearDrop  );
@@ -2947,7 +2947,7 @@ int cDungeonSystem::DropingDraw(IDirect3DDevice9 *pDev)
 }
 	
 
-int cDungeonSystem::FrameDraw(IDirect3DDevice9 *pDev)
+int cDungeonSystem::FrameDraw(cRenderDevice *pDev)
 {
 	if(pFrameTexture == NULL) return false;
 

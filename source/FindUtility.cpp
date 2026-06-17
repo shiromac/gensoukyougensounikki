@@ -191,6 +191,7 @@ pcLandform FindUtility::部屋外優先_各部屋等確率_ランダム地形検索_非配置安全(pcLa
 				safelandlist.push_back(landlist[i]);
 			}
 		}
+		if(safelandlist.empty()) return NULLLAND;
 		int landindex = safelandlist.size()*random();
 		return safelandlist[landindex];
 	}
@@ -210,6 +211,7 @@ pcLandform FindUtility::部屋外優先_各部屋等確率_ランダム地形検索_非配置安全(pcLa
 				safelandlist.push_back(landlist[i]);
 			}
 		}
+		if(safelandlist.empty()) return NULLLAND;
 		int landindex = safelandlist.size()*random();
 		return safelandlist[landindex];
 	}

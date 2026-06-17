@@ -83,7 +83,7 @@ public:
 
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 	
 	
 	virtual double 弱衝撃時破壊率();
@@ -160,7 +160,7 @@ private:
 public:
 	//--------------------------------------------------------
 	//コマンド群
-	//virtual int 入れる(IDirect3DDevice9 *pDev, pcDroping pdrop);
+	//virtual int 入れる(cRenderDevice *pDev, pcDroping pdrop);
 	//virtual int 入れ要請(pcDroping pdrop);
 
 	//破壊される時true;
@@ -174,7 +174,7 @@ public:
 	virtual int 入れるメッセージ定型(pcDroping pdrop);
 
 
-	//virtual int 見る(IDirect3DDevice9 *pDev);
+	//virtual int 見る(cRenderDevice *pDev);
 	//virtual int 見る要請();
 
 	//破壊される時true;
@@ -188,7 +188,7 @@ public:
 	virtual int 見るメッセージ定型();
 
 
-	//virtual int 出す(IDirect3DDevice9 *pDev, pcDroping pdrop);
+	//virtual int 出す(cRenderDevice *pDev, pcDroping pdrop);
 	//virtual int 出し要請(pcDroping pdrop, pcCharacter receiver);
 
 	//破壊される時true;
@@ -202,7 +202,7 @@ public:
 	virtual int 出すメッセージ定型(pcDroping pdrop, pcCharacter receiver);
 
 
-	//virtual int 入れ替え(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pdrop2);
+	//virtual int 入れ替え(cRenderDevice *pDev, pcDroping pdrop, pcDroping pdrop2);
 	//virtual int 入れ替え要請(pcDroping pdrop, pcDroping pdrop2);
 
 	//破壊される時true;

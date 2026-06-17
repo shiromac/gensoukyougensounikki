@@ -1,7 +1,14 @@
 #include "cFileManager.h"
 
 #include "../../utility/ATLcompati/CString.h"
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
+#else
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <emscripten/emscripten.h>
+#endif
 
 using namespace std;
 
@@ -11,11 +18,99 @@ const int CHARCODE_UNKNOWN = 0;
 const int CHARCODE_SJIS = 1;
 const int CHARCODE_UNICODE_BE = 2;
 const int CHARCODE_UNICODE_LE = 3;
+#ifdef __EMSCRIPTEN__
+static void AppendUtf8CodePoint(string& output, unsigned long code)
+{
+	if(code <= 0x7f)
+	{
+		output.push_back(static_cast<char>(code));
+	}
+	else if(code <= 0x7ff)
+	{
+		output.push_back(static_cast<char>(0xc0 | ((code >> 6) & 0x1f)));
+		output.push_back(static_cast<char>(0x80 | (code & 0x3f)));
+	}
+	else if(code <= 0xffff)
+	{
+		output.push_back(static_cast<char>(0xe0 | ((code >> 12) & 0x0f)));
+		output.push_back(static_cast<char>(0x80 | ((code >> 6) & 0x3f)));
+		output.push_back(static_cast<char>(0x80 | (code & 0x3f)));
+	}
+	else
+	{
+		output.push_back('?');
+	}
+}
+
+static string TStringToUtf8(const tstring& value)
+{
+	string output;
+	for(size_t i = 0; i < value.size(); i++)
+	{
+		if(sizeof(TCHAR) == 1)
+		{
+			output.push_back(static_cast<char>(value[i]));
+		}
+		else
+		{
+			AppendUtf8CodePoint(output, static_cast<unsigned long>(value[i]));
+		}
+	}
+	return output;
+}
+
+static string TStringToBrowserPath(const tstring& value)
+{
+	string output = TStringToUtf8(value);
+	for(size_t i = 0; i < output.size(); i++)
+	{
+		if(output[i] == '\\') output[i] = '/';
+	}
+	return output;
+}
+
+static void OpenBrowserInputFile(ifstream& stream, const tstring& filename, unsigned flag)
+{
+	string path = TStringToBrowserPath(filename);
+	stream.open(path.c_str(), static_cast<std::ios_base::openmode>(flag));
+}
+
+static void OpenBrowserOutputFile(ofstream& stream, const tstring& filename, unsigned flag)
+{
+	string path = TStringToBrowserPath(filename);
+	stream.open(path.c_str(), static_cast<std::ios_base::openmode>(flag));
+}
+
+static void BrowserSyncPersistentStorage()
+{
+	EM_ASM({
+		if (typeof FS === 'undefined' || !Module['ggnSaveMounted']) return;
+		if (Module['ggnSaveSyncRunning']) {
+			Module['ggnSaveSyncAgain'] = 1;
+			return;
+		}
+
+		var runSync = function() {
+			Module['ggnSaveSyncRunning'] = 1;
+			FS.syncfs(false, function(err) {
+				if (err && typeof console !== 'undefined') console.error('save sync failed', err);
+				Module['ggnSaveSyncRunning'] = 0;
+				if (Module['ggnSaveSyncAgain']) {
+					Module['ggnSaveSyncAgain'] = 0;
+					runSync();
+				}
+			});
+		};
+		runSync();
+	});
+}
+#endif
 #ifdef UNICODE
 static tstring SjisToTString(const string& line)
 {
 	if(line.empty()) return tstring();
 
+#ifndef __EMSCRIPTEN__
 	int length = ::MultiByteToWideChar(932, 0, line.c_str(), static_cast<int>(line.size()), NULL, 0);
 	if(length <= 0)
 	{
@@ -27,6 +122,15 @@ static tstring SjisToTString(const string& line)
 	output.resize(length);
 	::MultiByteToWideChar(932, 0, line.c_str(), static_cast<int>(line.size()), &output[0], length);
 	return output;
+#else
+	tstring output;
+	output.reserve(line.size());
+	for(size_t i = 0; i < line.size(); i++)
+	{
+		output.push_back(static_cast<unsigned char>(line[i]));
+	}
+	return output;
+#endif
 }
 #endif
 
@@ -49,6 +153,22 @@ static void EnsureParentDirectory(const tstring& filename)
 	tstring directory = filename.substr(0, pos);
 	if(directory.empty()) return;
 
+#ifdef __EMSCRIPTEN__
+	string browserDirectory = TStringToBrowserPath(directory);
+	size_t start = 0;
+	while(start < browserDirectory.size())
+	{
+		size_t next = browserDirectory.find('/', start);
+		if(next == string::npos) break;
+		if(next > 0)
+		{
+			string partial = browserDirectory.substr(0, next);
+			if(!partial.empty()) mkdir(partial.c_str(), 0777);
+		}
+		start = next + 1;
+	}
+	mkdir(browserDirectory.c_str(), 0777);
+#else
 	for(size_t i = 0; i < directory.size(); i++)
 	{
 		if(directory[i] == _T('/')) directory[i] = _T('\\');
@@ -71,11 +191,17 @@ static void EnsureParentDirectory(const tstring& filename)
 	}
 
 	::CreateDirectory(directory.c_str(), NULL);
+#endif
 }
 int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<SByte>& data)
 {//バイナリ
 	EnsureParentDirectory(filename);
+	#ifdef __EMSCRIPTEN__
+	ofstream ofs;
+	OpenBrowserOutputFile(ofs, filename, flag);
+#else
 	ofstream ofs(filename.c_str(), flag);
+#endif
 	
 	if(ofs)
 	{
@@ -86,6 +212,9 @@ int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<S
 		}
 
 		ofs.close();
+#ifdef __EMSCRIPTEN__
+		BrowserSyncPersistentStorage();
+#endif
 	}
 	else
 	{//開けられない無い！
@@ -96,7 +225,12 @@ int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<S
 }
 int cFileManager::loadFile(const tstring& filename, unsigned flag, std::vector<SByte>& data)
 {//バイナリ
+    #ifdef __EMSCRIPTEN__
+    ifstream ifs;
+    OpenBrowserInputFile(ifs, filename, flag);
+#else
     ifstream ifs(filename.c_str(), flag);
+#endif
 
 	
 	if(ifs)
@@ -151,7 +285,12 @@ int cFileManager::saveEncryptFile(const tstring& filename, std::vector<SByte>& d
 	}
 
 	EnsureParentDirectory(truefilename);
+	#ifdef __EMSCRIPTEN__
+	ofstream ofs;
+	OpenBrowserOutputFile(ofs, truefilename, flag);
+#else
 	ofstream ofs(truefilename.c_str(), flag);
+#endif
 
 	SByte checksum = 0;
 	SByte firstkey = rand() >> 2;
@@ -173,6 +312,9 @@ int cFileManager::saveEncryptFile(const tstring& filename, std::vector<SByte>& d
 		easyrandnext = checksum;
 		ofs.put(static_cast<SByte>(easyrand()));
 		ofs.close();
+#ifdef __EMSCRIPTEN__
+		BrowserSyncPersistentStorage();
+#endif
 	}
 	else
 	{
@@ -191,7 +333,12 @@ int cFileManager::loadEncryptFile(const tstring& filename, std::vector<SByte>& d
 		truefilename += _T(".cdat");
 	}
 
+	#ifdef __EMSCRIPTEN__
+	ifstream ifs;
+	OpenBrowserInputFile(ifs, truefilename, flag);
+#else
 	ifstream ifs(truefilename.c_str(), flag);
+#endif
 
 	
 	if(ifs)
@@ -250,17 +397,29 @@ int cFileManager::loadEncryptFile(const tstring& filename, std::vector<SByte>& d
 int cFileManager::saveFile(const tstring& filename, unsigned flag, std::vector<tstring>& data)
 {
 	EnsureParentDirectory(filename);
+	#ifdef __EMSCRIPTEN__
+	ofstream ofs;
+	OpenBrowserOutputFile(ofs, filename, flag);
+#else
 	oftstream ofs(filename.c_str(), flag);
+#endif
 	
 	if(ofs)
 	{
 		vector<tstring>::iterator itr = data.begin();
 		for(;itr!=data.end();itr++)
 		{
+			#ifdef __EMSCRIPTEN__
+			ofs << TStringToUtf8(*itr);
+#else
 			ofs << *itr;
+#endif
 		}
 
 		ofs.close();
+#ifdef __EMSCRIPTEN__
+		BrowserSyncPersistentStorage();
+#endif
 	}
 	else
 	{
@@ -335,7 +494,7 @@ int cFileManager::decode_Unicode(const std::vector<SByte>& data, std::vector<tst
 
 	stringdata.clear();
 
-	wstring line;
+	tstring line;
 
 	//CHARCODE_UNICODE_BEの場合をデフォルトとする。
 	int firstbit = 8;
@@ -351,16 +510,16 @@ int cFileManager::decode_Unicode(const std::vector<SByte>& data, std::vector<tst
 	//BOM飛ばして2から
 	for(i=2;i<size;i+=2)
 	{
-		wchar_t wchar = 0;
+		TCHAR wchar = 0;
 		int newlineflag = 0;
 		wchar = ( ((UByte)data[i]) << firstbit | ((UByte)data[i+1]) << secondbit);
 		
 		
-		if(wchar == (wchar_t)0x000D)
+		if(wchar == (TCHAR)0x000D)
 		{//改行コードCR
 			newlineflag = 1;
 		}
-		else if(wchar == (wchar_t)0x000A)
+		else if(wchar == (TCHAR)0x000A)
 		{//改行コードLF
 			newlineflag = 1;
 		}
@@ -374,7 +533,7 @@ int cFileManager::decode_Unicode(const std::vector<SByte>& data, std::vector<tst
 			if(!line.empty())
 			{
 				//line.push_back((wchar_t)0x0000);
-				line.push_back(L'\n');
+				line.push_back(_T('\n'));
 #ifdef UNICODE
 				stringdata.push_back(line);
 #else
@@ -390,7 +549,7 @@ int cFileManager::decode_Unicode(const std::vector<SByte>& data, std::vector<tst
 			if(!line.empty())
 			{
 				//line.push_back((wchar_t)0x0000);
-				line.push_back(L'\n');
+				line.push_back(_T('\n'));
 #ifdef UNICODE
 				stringdata.push_back(line);
 #else
@@ -466,65 +625,68 @@ int cFileManager::decode_SJIS(const std::vector<SByte>& data, std::vector<tstrin
 
 int cFileManager::getLastWriteTime(const tstring& filename, FileTime* lastWriteTime)
 {
-	// ファイル情報
-	WIN32_FIND_DATA findData;
+#ifdef __EMSCRIPTEN__
+	struct stat status;
+	string path = TStringToBrowserPath(filename);
+	if(stat(path.c_str(), &status) != 0)
+	{
+		return ERROR_FM_FILE_ERROR;
+	}
 
-	// ファイル情報取得
+	unsigned long long value = static_cast<unsigned long long>(status.st_mtime);
+	lastWriteTime->dwLowDateTime = static_cast<unsigned long>(value & 0xffffffffUL);
+	lastWriteTime->dwHighDateTime = static_cast<unsigned long>((value >> 32) & 0xffffffffUL);
+	return SUCCESS;
+#else
+	WIN32_FIND_DATA findData;
 	HANDLE hFile = FindFirstFile(filename.c_str(), &findData);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		// 失敗(不正パス)
 		return ERROR_FM_FILE_ERROR;
 	}
 	else
 	{
-		// ファイル検索ハンドル閉じる
 		FindClose(hFile);
-
-		// 更新日時
 		FileTimeToLocalFileTime(&findData.ftLastWriteTime, reinterpret_cast<FILETIME*>(lastWriteTime));
 		return SUCCESS;
 	}
+#endif
 }
 
 int cFileManager::compareLastWriteTime(const tstring& filename, const FileTime oldLastWriteTime, FileTime* newLastWriteTime, bool* isRenew)
 {
-	// ファイル情報
+#ifdef __EMSCRIPTEN__
+	int error = getLastWriteTime(filename, newLastWriteTime);
+	if(error != SUCCESS) return error;
+	*isRenew = (oldLastWriteTime.dwHighDateTime != newLastWriteTime->dwHighDateTime
+		|| oldLastWriteTime.dwLowDateTime != newLastWriteTime->dwLowDateTime);
+	return SUCCESS;
+#else
 	WIN32_FIND_DATA findData;
-
-	// ファイル時間
 	FILETIME fileTime;
 	unsigned long lastWriteTime_low_new = 0;
-
-	// ファイル情報取得
 	HANDLE hFile = FindFirstFile(filename.c_str(), &findData);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		// 失敗(不正パス)
 		return ERROR_FM_FILE_ERROR;
 	}
 	else
 	{
-		// 成功
-		// ファイル検索ハンドル閉じる
 		FindClose(hFile);
-
-		// 更新日時
 		FileTimeToLocalFileTime(&findData.ftLastWriteTime, reinterpret_cast<FILETIME*>(newLastWriteTime));
 		if(oldLastWriteTime.dwHighDateTime != newLastWriteTime->dwHighDateTime
 			|| oldLastWriteTime.dwLowDateTime != newLastWriteTime->dwLowDateTime)
 		{
-			//更新された
 			*isRenew = true;
 		}
 		else
 		{
-			//更新されてない
 			*isRenew = false;
 		}
 
 		return SUCCESS;
 	}
+#endif
 }

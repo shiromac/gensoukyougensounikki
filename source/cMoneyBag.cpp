@@ -25,7 +25,7 @@ void cMoneyBag::Release()
 }
 
 
-void cMoneyBag::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cMoneyBag::Init(cRenderDevice *pDev,pcDroping self)
 {
 	cItem::Init(pDev,self);
 }
@@ -63,7 +63,7 @@ tstring cMoneyBag::FullNameBase()
 }
 
 
-void cMoneyBag::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cMoneyBag::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -141,7 +141,7 @@ int cMoneyBag::GetmenuCaption(vector<tstring> &CaptionList)
 
 /*
 //ƒRƒ}ƒ“ƒh‚ð‰ðŒˆ‚·‚é;
-int cMoneyBag::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cMoneyBag::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <d3dx9.h>
+#include "../gameMainSystem/cRenderBackend.h"
 #include "../gameMainSystem/filemanage/tstring_ph.h"
 #include <vector>
 
@@ -77,7 +77,7 @@ public:
 
 	vector<int> sector;
 	vector<unsigned long> colors;
-	vector<D3DXVECTOR2> sizes;
+	vector<cRenderVector2> sizes;
 	vector<unsigned> flags;
 
 	//色がデフォルトか
@@ -85,7 +85,7 @@ public:
 	//同色で一致させる
 	virtual void setSameColor(unsigned long color);
 	//同サイズで一致させる
-	virtual void setSameSize(D3DXVECTOR2 size);
+	virtual void setSameSize(cRenderVector2 size);
 	//同サイズで一致させる
 	virtual void setSameSize(double sizeX, double sizeY);
 	//同フラグで一致させる
@@ -142,7 +142,7 @@ public:
 	expandedString(const expandedString& str);
 
 	unsigned long color;
-	D3DXVECTOR2 size;
+	cRenderVector2 size;
 	unsigned long flag;
 };
 

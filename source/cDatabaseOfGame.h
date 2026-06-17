@@ -38,7 +38,7 @@ public:
 public:
 	virtual ~cDatabaseOfGame(void);
 
-	virtual int Init(IDirect3DDevice9 *pDev);
+	virtual int Init(cRenderDevice *pDev);
 
 
 protected:
@@ -124,23 +124,23 @@ public:
 
 	//デコードユーティリティ//Data
 	virtual pcScriptRLayer DropImportData(int ID);
-	virtual pcScriptRLayer DropImportData(int ID, tstring& dataname);
-	virtual pcScriptRLayer DropImportData(int ID, tstring& dataname, tstring& dataname2);
-	virtual pcScriptRLayer DropImportData(tstring& dataname);
-	virtual pcScriptRLayer DropImportData(tstring& dataname, tstring& dataname2);
+	virtual pcScriptRLayer DropImportData(int ID, const tstring& dataname);
+	virtual pcScriptRLayer DropImportData(int ID, const tstring& dataname, const tstring& dataname2);
+	virtual pcScriptRLayer DropImportData(const tstring& dataname);
+	virtual pcScriptRLayer DropImportData(const tstring& dataname, const tstring& dataname2);
 
-	virtual double DropImportData_Value(int ID, tstring& dataname, double defaultval, int index = 0);
-	virtual double DropImportData_Value(int ID, tstring& dataname, tstring& dataname2, double defaultval, int index = 0);
-	virtual double DropImportData_Value(tstring& dataname, double defaultval, int index = 0);
-	virtual double DropImportData_Value(tstring& dataname, tstring& dataname2, double defaultval, int index = 0);
+	virtual double DropImportData_Value(int ID, const tstring& dataname, double defaultval, int index = 0);
+	virtual double DropImportData_Value(int ID, const tstring& dataname, const tstring& dataname2, double defaultval, int index = 0);
+	virtual double DropImportData_Value(const tstring& dataname, double defaultval, int index = 0);
+	virtual double DropImportData_Value(const tstring& dataname, const tstring& dataname2, double defaultval, int index = 0);
 
-	virtual int DropImportData_ValueSize(int ID, tstring& dataname);
-	virtual int DropImportData_ValueSize(int ID, tstring& dataname, tstring& dataname2);
-	virtual int DropImportData_ValueSize(tstring& dataname);
-	virtual int DropImportData_ValueSize(tstring& dataname, tstring& dataname2);
+	virtual int DropImportData_ValueSize(int ID, const tstring& dataname);
+	virtual int DropImportData_ValueSize(int ID, const tstring& dataname, const tstring& dataname2);
+	virtual int DropImportData_ValueSize(const tstring& dataname);
+	virtual int DropImportData_ValueSize(const tstring& dataname, const tstring& dataname2);
 
 	//初期値は[0,1]
-	virtual void DropImportData_MapIntToInt(int ID, tstring& dataname, map<int,int>& mapii);
+	virtual void DropImportData_MapIntToInt(int ID, const tstring& dataname, map<int,int>& mapii);
 
 
 
@@ -165,10 +165,10 @@ public:
 
 	//デコードユーティリティ//Language
 	virtual pcScriptRLayer DropImportLanguage(int ID);
-	virtual pcScriptRLayer DropImportLanguage(int ID, tstring& dataname);
-	virtual pcScriptRLayer DropImportLanguage(int ID, tstring& dataname, tstring& dataname2);
-	virtual pcScriptRLayer DropImportLanguage(tstring& dataname);
-	virtual pcScriptRLayer DropImportLanguage(tstring& dataname, tstring& dataname2);
+	virtual pcScriptRLayer DropImportLanguage(int ID, const tstring& dataname);
+	virtual pcScriptRLayer DropImportLanguage(int ID, const tstring& dataname, const tstring& dataname2);
+	virtual pcScriptRLayer DropImportLanguage(const tstring& dataname);
+	virtual pcScriptRLayer DropImportLanguage(const tstring& dataname, const tstring& dataname2);
 
 
 protected:
@@ -220,18 +220,18 @@ public:
 
 
 	virtual pcScriptRLayer CharaImportData(int ID);
-	virtual pcScriptRLayer CharaImportData(int ID, tstring& dataname);
-	virtual pcScriptRLayer CharaImportData(int ID, tstring& dataname, tstring& dataname2);
-	virtual pcScriptRLayer CharaImportData(tstring& dataname);
-	virtual pcScriptRLayer CharaImportData(tstring& dataname, tstring& dataname2);
+	virtual pcScriptRLayer CharaImportData(int ID, const tstring& dataname);
+	virtual pcScriptRLayer CharaImportData(int ID, const tstring& dataname, const tstring& dataname2);
+	virtual pcScriptRLayer CharaImportData(const tstring& dataname);
+	virtual pcScriptRLayer CharaImportData(const tstring& dataname, const tstring& dataname2);
 
-	virtual double CharaImportData_Value(int ID, tstring& dataname, double defaultval, int index = 0);
-	virtual double CharaImportData_Value(int ID, tstring& dataname, tstring& dataname2, double defaultval, int index = 0);
-	virtual double CharaImportData_Value(tstring& dataname, double defaultval, int index = 0);
-	virtual double CharaImportData_Value(tstring& dataname, tstring& dataname2, double defaultval, int index = 0);
+	virtual double CharaImportData_Value(int ID, const tstring& dataname, double defaultval, int index = 0);
+	virtual double CharaImportData_Value(int ID, const tstring& dataname, const tstring& dataname2, double defaultval, int index = 0);
+	virtual double CharaImportData_Value(const tstring& dataname, double defaultval, int index = 0);
+	virtual double CharaImportData_Value(const tstring& dataname, const tstring& dataname2, double defaultval, int index = 0);
 
-	virtual int CharaImportData_ValueSize(int ID, tstring& dataname);
-	virtual int CharaImportData_ValueSize(int ID, tstring& dataname, tstring& dataname2);
+	virtual int CharaImportData_ValueSize(int ID, const tstring& dataname);
+	virtual int CharaImportData_ValueSize(int ID, const tstring& dataname, const tstring& dataname2);
 
 	virtual void CharaAttri(int ID, set<キャラ属性::キャラ属性リスト>& CharaAttriSet);
 	
@@ -249,7 +249,7 @@ public:
 	virtual void CharaWeekDefenceSmallAttri(int ID, set<攻撃属性::攻撃属性>& AttackAttriSet);
 	
 	//初期値は[0,1]
-	virtual void CharaImportData_MapIntToInt(int ID, tstring& dataname, map<int,int>& mapii);
+	virtual void CharaImportData_MapIntToInt(int ID, const tstring& dataname, map<int,int>& mapii);
 
 protected:
 	//--------------------------------------------------
@@ -317,8 +317,8 @@ public:
 
 	//デコードユーティリティ//Language
 	virtual pcScriptRLayer CharaImportLanguage(int ID);
-	virtual pcScriptRLayer CharaImportLanguage(int ID, tstring& dataname);
-	virtual pcScriptRLayer CharaImportLanguage(int ID, tstring& dataname, tstring& dataname2);
+	virtual pcScriptRLayer CharaImportLanguage(int ID, const tstring& dataname);
+	virtual pcScriptRLayer CharaImportLanguage(int ID, const tstring& dataname, const tstring& dataname2);
 
 protected:
 	//--------------------------------------------------

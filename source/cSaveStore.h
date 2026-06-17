@@ -8,7 +8,19 @@
 #include <vector>
 using namespace std;
 
-#define SAVEDATADIRCTORY _EXELOCATION _T("savedata/")
+inline tstring g_SaveDataDirectory()
+{
+#ifdef __EMSCRIPTEN__
+	return tstring(_T("/save/"));
+#else
+	return tstring(_EXELOCATION _T("savedata/"));
+#endif
+}
+
+inline tstring g_SaveDataPath(const tstring& filename)
+{
+	return g_SaveDataDirectory() + filename;
+}
 
 tstring g_VersionString();
 
@@ -18,8 +30,8 @@ typedef boost::weak_ptr<cShortCutsManager> wpcShortCutsManager;
 
 namespace mapUtility
 {
-	const int getMapValue(map<tstring,int>& mapObject, tstring& key, int defaultValue);
-	void setMapValue(map<tstring,int>& mapObject, tstring& key, int setValue);
+	const int getMapValue(map<tstring,int>& mapObject, const tstring& key, int defaultValue);
+	void setMapValue(map<tstring,int>& mapObject, const tstring& key, int setValue);
 };
 //コンフィグデータ
 class cSaveConfig
@@ -28,7 +40,7 @@ public:
 	cSaveConfig(void);
 	virtual ~cSaveConfig(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, tstring savefile);
+	virtual void Init(cRenderDevice *pDev, tstring savefile);
 
 	virtual void save();
 	
@@ -56,7 +68,7 @@ public:
 	cSaveQuest(void);
 	virtual ~cSaveQuest(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, tstring savefile);
+	virtual void Init(cRenderDevice *pDev, tstring savefile);
 
 	unsigned long randBase;
 	
@@ -141,7 +153,7 @@ public:
 	cSaveStore(void);
 	virtual ~cSaveStore(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, tstring savefile);
+	virtual void Init(cRenderDevice *pDev, tstring savefile);
 
 	//倉庫
 	vector<vector<pcDroping>> storeItem;
@@ -185,7 +197,7 @@ public:
 	cSaveData(void);
 	virtual ~cSaveData(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev);
 
 	virtual void save();//明示的にセーブ
 
@@ -279,7 +291,7 @@ public:
 	virtual ~cSaveResult(void);
 	cSaveResult(const cSaveResult& rother);
 
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev);
 
 
 public:
@@ -330,7 +342,7 @@ public:
 	cSaveRanking(void);
 	virtual ~cSaveRanking(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev,const tstring DungeonID);
+	virtual void Init(cRenderDevice *pDev,const tstring DungeonID);
 
 	int MaxFloor;
 	static const int RankingNum = 10;

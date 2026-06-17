@@ -11,13 +11,17 @@
 
 #include <time.h>
 
+#ifndef __EMSCRIPTEN__
 #include <Windows.h>
-
 #pragma comment(lib, "version.lib")
+#endif
 
 #define PTFIRSTVIRSION _T("PT_sp 0, 0, 0, 0")
 tstring g_VersionString()
 {
+#ifdef __EMSCRIPTEN__
+	return _T("1ST");
+#else
 	tstring ver = _T("1ST");
 	//ver += FILEVERSION;
 	TCHAR path[1024];
@@ -34,14 +38,10 @@ tstring g_VersionString()
 	if(pBlock == NULL) return FALSE;
 	GetFileVersionInfo(path, dwZero, dwVerInfoSize, pBlock);
 
-	//バージョンを取得する為のバッファ
 	void *pvVersion;
 	UINT VersionLen;
 
-	//言語のコードページが分かっている場合は、それを直接指定すればよい
-	//プロダクトバージョン
 	if(VerQueryValue(pBlock, TEXT("\\StringFileInfo\\041104b0\\ProductVersion"), &pvVersion, &VersionLen)){
-		//printf("ProductVersion:%d:%s\n", VersionLen, pvVersion);
 		int i;
 		for(i=0;i<VersionLen;i++)
 		{
@@ -51,6 +51,7 @@ tstring g_VersionString()
 
 	delete [] pBlock;
 	return ver;
+#endif
 }
 
 pcSaveData g_pSaveData()
@@ -109,14 +110,14 @@ void cSaveData::save()//明示的にセーブ
 	playersave_.save();
 }
 
-void cSaveData::Init(IDirect3DDevice9 *pDev)
+void cSaveData::Init(cRenderDevice *pDev)
 {
 	
 	ShortCutsManager = pcShortCutsManager(new cShortCutsManager);
 	pSaveStore_ = pcSaveStore(new cSaveStore);
 	pSaveStore_->Init(pDev,_T("save.dat"));
 
-	playersave_.savename() = SAVEDATADIRCTORY _T("player.dat");
+	playersave_.savename() = g_SaveDataPath(_T("player.dat"));
 	playersave_.load();
 	
 	if(playersave_.vv_int().size() < 1) return;
@@ -240,7 +241,7 @@ tstring cSaveData::globalFlagsKey_AppearedFlagKey(const tstring& dungeonID)
 {//クリアしたことがあるか
 	return _T("Dungeon:")+dungeonID+_T(":Appeared");
 }
-const int mapUtility::getMapValue(map<tstring,int>& mapObject, tstring& key, int defaultValue)
+const int mapUtility::getMapValue(map<tstring,int>& mapObject, const tstring& key, int defaultValue)
 {
 	map<tstring, int>::iterator itr = mapObject.find(key);
 	if(mapObject.end() == itr)
@@ -250,7 +251,7 @@ const int mapUtility::getMapValue(map<tstring,int>& mapObject, tstring& key, int
 	}
 	return itr->second;
 }
-void mapUtility::setMapValue(map<tstring,int>& mapObject, tstring& key, int setValue)
+void mapUtility::setMapValue(map<tstring,int>& mapObject, const tstring& key, int setValue)
 {
 	mapObject[key] = setValue;
 }
@@ -273,12 +274,12 @@ cSaveStore::~cSaveStore(void)
 }
 
 
-void cSaveStore::Init(IDirect3DDevice9 *pDev, tstring savefile)
+void cSaveStore::Init(cRenderDevice *pDev, tstring savefile)
 {
 
 
 	saveclass_dic_.Reserve(memodata_);
-	saveclass_dic_.Init(SAVEDATADIRCTORY _T("dictionary_")+savefile);
+	saveclass_dic_.Init(g_SaveDataPath(tstring(_T("dictionary_"))+savefile));
 
 	if(!memodata_->empty()) sg_pDungeonSystem->DataBase.loadmemoDic(*memodata_);
 
@@ -384,11 +385,11 @@ int cSaveQuest::enable()
 
 	return flag;
 }
-void cSaveQuest::Init(IDirect3DDevice9 *pDev, tstring savefile)
+void cSaveQuest::Init(cRenderDevice *pDev, tstring savefile)
 {
 	
 	savefile_ = pcSaveClass(new cSaveClass);
-	savefile_->savename() = SAVEDATADIRCTORY + savefile + _T("_save.dat");
+	savefile_->savename() = g_SaveDataPath(savefile + _T("_save.dat"));
 
 
 
@@ -613,28 +614,32 @@ void cSaveConfig::save()
 
 		pMapThickness_->at(0) = sg_pDungeonSystem->EV_mapThickness;
 
+#ifndef __EMSCRIPTEN__
 		*ppadconfig_ = g_GameEnv.m_Input.patInputManager->padconfigI2B;
+#endif
 		saveclass_.save();
 	}
 }
 
-void cSaveConfig::Init(IDirect3DDevice9 *pDev, tstring savefile)
+void cSaveConfig::Init(cRenderDevice *pDev, tstring savefile)
 {
 
 	saveclass_.Reserve(pSoundVolume_);
 	saveclass_.Reserve(ppadconfig_);
 	saveclass_.Reserve(pGhaphicsLight_);
 	saveclass_.Reserve(pMapThickness_);
-	saveclass_.Init(SAVEDATADIRCTORY+savefile);
+	saveclass_.Init(g_SaveDataPath(savefile));
 
+#ifndef __EMSCRIPTEN__
 	if(!ppadconfig_->empty())
 	{
-		g_GameEnv.m_Input.patInputManager->padconfigI2B = *ppadconfig_;
+		 g_GameEnv.m_Input.patInputManager->padconfigI2B = *ppadconfig_;
 	}
 	else
 	{
 		*ppadconfig_ = g_GameEnv.m_Input.patInputManager->padconfigI2B;
 	}
+#endif
 	if(pSoundVolume_->size() < 2)
 	{
 		pSoundVolume_->resize(2);
@@ -828,7 +833,7 @@ cSaveResult::~cSaveResult(void)
 }
 
 
-void cSaveResult::Init(IDirect3DDevice9 *pDev)
+void cSaveResult::Init(cRenderDevice *pDev)
 {
 
 
@@ -848,11 +853,11 @@ cSaveRanking::~cSaveRanking(void)
 	savefile_->save();
 	
 }
-void cSaveRanking::Init(IDirect3DDevice9 *pDev,const tstring DungeonID)
+void cSaveRanking::Init(cRenderDevice *pDev,const tstring DungeonID)
 {
 	
 	savefile_ = pcSaveClass(new cSaveClass);
-	savefile_->savename() = SAVEDATADIRCTORY + DungeonID + _T("_ranking.dat");
+	savefile_->savename() = g_SaveDataPath(DungeonID + _T("_ranking.dat"));
 	savefile_->load();
 
 	load(savefile_);
@@ -1075,10 +1080,10 @@ int DecodeVecC2T(const vector<SByte>& data, pcDroping& tmpl)
 		vector<SByte> tempSByteVector;
 		tempSByteVector.assign(vvdata[0].begin() + presize + DEF_DROP_DATAPACK_UCHAR_NUM,
 								vvdata[0].begin() + presize + DEF_DROP_DATAPACK_UCHAR_NUM+sizeof(int));
-		cDataConverter::BackDecodeVecC2T((int)tmpl->placeX,tempSByteVector);
+		cDataConverter::BackDecodeVecC2T(tmpl->placeX,tempSByteVector);
 		tempSByteVector.assign(vvdata[0].begin() + presize + DEF_DROP_DATAPACK_UCHAR_NUM+sizeof(int),
 								vvdata[0].begin() + presize + DEF_DROP_DATAPACK_UCHAR_NUM+sizeof(int)*2);
-		cDataConverter::BackDecodeVecC2T((int)tmpl->placeY,tempSByteVector);
+		cDataConverter::BackDecodeVecC2T(tmpl->placeY,tempSByteVector);
 	}
 
 	//内包アイテムあり

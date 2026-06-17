@@ -33,7 +33,7 @@ cListWindowAdv::~cListWindowAdv(void)
 }
 
 
-void cListWindowAdv::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cListWindowAdv::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	
 	InitBasic(pDev,letterXnum,letterYnum);
@@ -237,7 +237,7 @@ void cListWindowAdv::SetCursolTolast()
 	cursolIndex = ContentNumFrmPgIndex[pageIndex] - 1;
 }
 
-int cListWindowAdv::Draw(IDirect3DDevice9 *pDev)
+int cListWindowAdv::Draw(cRenderDevice *pDev)
 {
 	WindowDraw(pDev);
 	TextDraw(pDev);
@@ -260,7 +260,7 @@ int cListWindowAdv::Draw(IDirect3DDevice9 *pDev)
 }
 
 
-int cListWindowAdv::process(IDirect3DDevice9 *pDev)
+int cListWindowAdv::process(cRenderDevice *pDev)
 {
 
 	if(subWindowMode)
@@ -366,7 +366,7 @@ int cListWindowAdv::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cListWindowAdv::subWindowProcess(IDirect3DDevice9 *pDev)
+int cListWindowAdv::subWindowProcess(cRenderDevice *pDev)
 {
 	if(subWindowMode)
 	{
@@ -445,7 +445,7 @@ int cListWindowAdv::subWindowProcess(IDirect3DDevice9 *pDev)
 	}
 	return false;
 }
-int cListWindowAdv::RerenderDraw(IDirect3DDevice9 *pDev)
+int cListWindowAdv::RerenderDraw(cRenderDevice *pDev)
 {
 	cListWindow::RerenderDraw(pDev);
 
@@ -462,7 +462,7 @@ int cListWindowAdv::RerenderDraw(IDirect3DDevice9 *pDev)
 }
 
 /*
-int cListWindowAdv::TextDraw(IDirect3DDevice9 *pDev)
+int cListWindowAdv::TextDraw(cRenderDevice *pDev)
 {
 	
 
@@ -493,7 +493,7 @@ int cListWindowAdv::TextDraw(IDirect3DDevice9 *pDev)
 */
 
 /*
-int cListWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cListWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left();
 	int t = Top();
@@ -544,7 +544,7 @@ int cListWindow::TextDrawSub(IDirect3DDevice9 *pDev)
 */
 
   
-int cListWindowAdv::sortDrops(IDirect3DDevice9 *pDev)
+int cListWindowAdv::sortDrops(cRenderDevice *pDev)
 {
 	int i;
 	if(pvpDropFrmPgIndex_forSort[pageIndex] == NULL) return false;
@@ -561,7 +561,7 @@ int cListWindowAdv::sortDrops(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cListWindowAdv::togetherDrops(IDirect3DDevice9 *pDev)
+int cListWindowAdv::togetherDrops(cRenderDevice *pDev)
 {
 	
 	if(pvpDropFrmPgIndex_forSort[pageIndex] == NULL) return false;
@@ -592,7 +592,7 @@ int cListWindowAdv::togetherDrops(IDirect3DDevice9 *pDev)
 }
 
 
-StyleString cListWindowAdv::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cListWindowAdv::shortExplanationString(cRenderDevice *pDev)
 {
 	pcDroping pdrop = nowcontents();
 	if(pdrop == NULL)
@@ -695,7 +695,7 @@ int cListWindowAdv::EventCarsolmove()
 //--------------------------------------------------
 //•¡”‘I‘ð
 /*
-int cListWindowAdv::processofMultiSet(IDirect3DDevice9 *pDev)
+int cListWindowAdv::processofMultiSet(cRenderDevice *pDev)
 {
 
 	if(MultiSelect && g_pPlayerInput()->diagon().justOn)
@@ -719,7 +719,7 @@ int cListWindowAdv::processofMultiSet(IDirect3DDevice9 *pDev)
 }
 */
 
-int cListWindowAdv::MultiSetDraw(IDirect3DDevice9 *pDev)
+int cListWindowAdv::MultiSetDraw(cRenderDevice *pDev)
 {
 
 	cListWindow::MultiSetDraw(pDev);
@@ -794,7 +794,7 @@ int cListWindowAdv::MultiSetDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 /*
-int cListWindowAdv::FireofMultiSet(IDirect3DDevice9 *pDev)
+int cListWindowAdv::FireofMultiSet(cRenderDevice *pDev)
 {
 
 	//insertMultiSet();

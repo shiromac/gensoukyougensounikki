@@ -51,7 +51,7 @@ int cMessageDroping::RerenderText(SpriteText & sprite,int MaxLetterLength)
 	return true;
 }
 //ƒƒjƒ…[‚Å‘I‘ğ‚ÉÅ‰‚ÉŒÄ‚Î‚ê‚é
-int cMessageDroping::Action(IDirect3DDevice9 *pDev)
+int cMessageDroping::Action(cRenderDevice *pDev)
 {
 
 	return true;

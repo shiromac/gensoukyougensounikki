@@ -46,7 +46,7 @@ protected:
 	pcMemoString pmemo_;
 
 public:
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		*targetStr = *pmemo_;
 	return true;
@@ -72,7 +72,7 @@ public:
 	//StyleString caption;
 
 public:
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		return true;
 	};
@@ -105,12 +105,12 @@ cStringWindow::~cStringWindow(void)
 	commandList.clear();
 }
 
-void cStringWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cStringWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	InitBasic(pDev,letterXnum,letterYnum);
 
 }
-void cStringWindow::Init(IDirect3DDevice9 *pDev)
+void cStringWindow::Init(cRenderDevice *pDev)
 {
 
 
@@ -299,7 +299,7 @@ void cStringWindow::Init(IDirect3DDevice9 *pDev)
 }
 
 
-StyleString cStringWindow::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cStringWindow::shortExplanationString(cRenderDevice *pDev)
 {
 	if(modeCover_)
 	{
@@ -339,7 +339,7 @@ StyleString cStringWindow::shortExplanationString(IDirect3DDevice9 *pDev)
 }
 
 
-int cStringWindow::Draw(IDirect3DDevice9 *pDev)
+int cStringWindow::Draw(cRenderDevice *pDev)
 {
 	//pSetselectW_->Draw(pDev);
 	pStrW_->Draw(pDev);
@@ -354,7 +354,7 @@ int cStringWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cStringWindow::process(IDirect3DDevice9 *pDev)
+int cStringWindow::process(cRenderDevice *pDev)
 {
 
 	if(modeCover_)
@@ -539,7 +539,7 @@ int cStringWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cStringWindow::CursorDraw(IDirect3DDevice9 *pDev)
+int cStringWindow::CursorDraw(cRenderDevice *pDev)
 {
 	m_DO.setTexture(m_pTexture_Cursor, CURSORSIZE, CURSORSIZE);
 	int l = Left();
@@ -572,7 +572,7 @@ int cStringWindow::CursorDraw(IDirect3DDevice9 *pDev)
 }
 
 /*
-int cStringWindow::pageDraw(IDirect3DDevice9 *pDev)
+int cStringWindow::pageDraw(cRenderDevice *pDev)
 {
 	if(pageIndexMax != 0)
 	{
@@ -641,11 +641,11 @@ int cStringWindow::pageDraw(IDirect3DDevice9 *pDev)
 }
 */
 
-int cStringWindow::RerenderDraw(IDirect3DDevice9 *pDev)
+int cStringWindow::RerenderDraw(cRenderDevice *pDev)
 {
 	int i,k;
 	TCHAR t[MAXBUFFSIZE];
-	D3DXVECTOR2 vec;
+	cRenderVector2 vec;
 		
 
 	m_SpriteText.CleatText();
@@ -875,7 +875,7 @@ void cStringWindow::CoverErase(cMemoString & memostr)//åÛï‚è¡Ç∑
 }
 
 
-int cStringWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cStringWindow::TextDraw(cRenderDevice *pDev)
 {
 	int i;
 

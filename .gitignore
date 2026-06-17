@@ -2,6 +2,7 @@
 Debug/
 Release/
 Release_Archive/
+web-build/
 luaDebug/
 luaDebug_Archive/
 *.obj

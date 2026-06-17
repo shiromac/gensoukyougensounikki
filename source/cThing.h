@@ -31,9 +31,9 @@ DEF_class_cThing_ID(0)
 
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
-	virtual void Draw(IDirect3DDevice9 *pDev);
-	virtual void Process(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
+	virtual void Draw(cRenderDevice *pDev);
+	virtual void Process(cRenderDevice *pDev);
 	virtual int 乗る();
 	virtual void CutIn(タイミング timing, cValiableField& valiable);
 	virtual int 効果(pcCharacter pchara, int power, int mustFlag = 0);
@@ -97,7 +97,7 @@ DEF_class_cThing_ID(1)
 
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
 
-	virtual void Draw(IDirect3DDevice9 *pDev);
+	virtual void Draw(cRenderDevice *pDev);
 	virtual int GetIcon(cDrawingObject& DO);
 };
 
@@ -119,7 +119,7 @@ DEF_class_cThing_ID(2)
 
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
 
-	virtual void Draw(IDirect3DDevice9 *pDev);
+	virtual void Draw(cRenderDevice *pDev);
 	virtual int GetIcon(cDrawingObject& DO);
 };
 

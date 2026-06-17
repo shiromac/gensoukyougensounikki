@@ -20,7 +20,7 @@ public:
 
 	//ã‚ª‚Á‚½ƒŒƒxƒ‹”‚ğ•Ô‚·
 	virtual int addEXP(int e){return 0;};
-	virtual void OptionDraw(IDirect3DDevice9 *pDev){};
+	virtual void OptionDraw(cRenderDevice *pDev){};
 
 
 	virtual int LvUP(){return 0;};

@@ -40,35 +40,35 @@ public:
 	virtual void addErrorMassage(tstring em){errormassage_.push_back(em);};
 	
 	virtual std::vector<tstring>& errormassage(){return errormassage_;};
-	virtual int outputerrormassage(tstring& filename);
+	virtual int outputerrormassage(const tstring& filename);
 
 protected:
 	//**拡張内部インターフェイス
 
 	//初期デコード
 	virtual int decode(void);
-	virtual int decode_roop( std::vector<tstring>& codes, std::vector<pcScriptRLayer>& vlayer, tstring& codename, unsigned int flag);
+	virtual int decode_roop( std::vector<tstring>& codes, std::vector<pcScriptRLayer>& vlayer, const tstring& codename, unsigned int flag);
 	//scriptname_からscriptdir_の計算
 	virtual void makedirpass(tstring& filename);
 
 
-	virtual void addError(pcScriptRLayer layer, tstring& em);
-	virtual void addError(pcScriptRLayer layer, tstring& errorfile, int line, tstring& errorcode, tstring& em);
+	virtual void addError(pcScriptRLayer layer, const tstring& em);
+	virtual void addError(pcScriptRLayer layer, const tstring& errorfile, int line, const tstring& errorcode, const tstring& em);
 protected:
 	//**拡張内部インターフェイス内関数
 	virtual int decode_newAndDownLayer(std::vector<pcScriptRLayer>& vlayer, tstring& name);
 	virtual int decode_UpLayer(std::vector<pcScriptRLayer>& vlayer);
-	virtual int decode_FileOpen(std::vector<pcScriptRLayer>& vlayer, tstring& name, unsigned int flag);
+	virtual int decode_FileOpen(std::vector<pcScriptRLayer>& vlayer, const tstring& name, unsigned int flag);
 	virtual int decode_newDefineMacro(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, tstring& name, int &line);
 	virtual int decode_Macro(std::vector<pcScriptRLayer>& vlayer, tstring& name, unsigned int flag);
 	
-	virtual int decode_Comment(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, tstring& name, int &line);
+	virtual int decode_Comment(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, const tstring& name, int &line);
 
 	virtual int decode_Reference(std::vector<pcScriptRLayer>& vlayer, tstring& name);
 
 	virtual int decode_Matrix(std::vector<pcScriptRLayer>& vlayer, tstring& sepcode);
 
-	virtual int decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename);
+	virtual int decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, const tstring& filepass, const tstring& filename);
 
 protected:
 	//基本メンバ

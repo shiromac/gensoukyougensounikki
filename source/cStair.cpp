@@ -96,7 +96,7 @@ int cStair::乗る()
 }
 
 /*
-int cStair::昇降する(IDirect3DDevice9 *pDev)
+int cStair::昇降する(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->フロア更新要請();
 	return true;

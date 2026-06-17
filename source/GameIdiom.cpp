@@ -26,11 +26,10 @@ int GameIdiom::高飛び(pcCharacter pchara, pcLandform fromplace)
 		c4DVector(fromplace->place.x,fromplace->place.y,0,0));
 
 
-	sg_pDungeonSystem->ワープ要請(pchara,
-		sg_pDungeonSystem->存在安全地形(FindUtility::部屋外優先_各部屋等確率_ランダム地形検索_非配置安全(fromplace),pchara));
+	pcLandform toplace = sg_pDungeonSystem->存在安全地形(FindUtility::部屋外優先_各部屋等確率_ランダム地形検索_非配置安全(fromplace),pchara);
+	if(toplace == NULLLAND) return false;
 
-
-	return true;
+	return sg_pDungeonSystem->ワープ要請(pchara,toplace);
 }
 int GameIdiom::高飛び(pcDroping pdrop, pcLandform fromplace)
 {

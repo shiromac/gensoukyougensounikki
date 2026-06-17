@@ -106,9 +106,9 @@ enum ATTACKATTRI
 
 //new関数定義
 #define DEF_FUNC_new_cCharacterClass(z, n, data) \
-	pcCharacter def_GetInstanceOf##data##_ID_##n##()\
+	pcCharacter def_GetInstanceOf##data##_ID_##n()\
 {\
-	return pcCharacter(new data##_ID_##n##);\
+	return pcCharacter(new data##_ID_##n);\
 };
 
 
@@ -187,8 +187,8 @@ public:
 
 	virtual inline int size(){return DEFAULTCHARACTERSIZE;};
 	
-	virtual void Init(IDirect3DDevice9 *pDev, pcCharacter self);
-	virtual void InitSub(IDirect3DDevice9 *pDev){};
+	virtual void Init(cRenderDevice *pDev, pcCharacter self);
+	virtual void InitSub(cRenderDevice *pDev){};
 
 	virtual void InitDungeonStart();
 	virtual void FinalizeDungeonEnd();
@@ -196,14 +196,14 @@ public:
 	virtual void settingInit();
 	virtual void naturalSpawnInit();
 
-	virtual void Draw(IDirect3DDevice9 *pDev);
-	virtual void DrawBody(IDirect3DDevice9 *pDev);
-	virtual void DrawShadow(IDirect3DDevice9 *pDev);
+	virtual void Draw(cRenderDevice *pDev);
+	virtual void DrawBody(cRenderDevice *pDev);
+	virtual void DrawShadow(cRenderDevice *pDev);
 	virtual unsigned int ShadowColor();
 	virtual bool edgedrawswitch(){return 0;};
 
-	virtual void OptionDraw(IDirect3DDevice9 *pDev);
-	IDirect3DTexture9 *p_Texoption;
+	virtual void OptionDraw(cRenderDevice *pDev);
+	cRenderTexture*p_Texoption;
 	int anime_option_step;
 
 
@@ -219,9 +219,9 @@ public:
 	void setStopStamp(bool stopStamp){anime_stopStamp = stopStamp;};
 
 
-	virtual void EmotionDraw(IDirect3DDevice9 *pDev);
+	virtual void EmotionDraw(cRenderDevice *pDev);
 
-	virtual void Process(IDirect3DDevice9 *pDev);
+	virtual void Process(cRenderDevice *pDev);
 
 	//コンディション特殊能力
 	virtual void conditionprocess(){};
@@ -266,17 +266,17 @@ public:
 
 
 
-	IDirect3DTexture9 *p_Texshadow;
+	cRenderTexture*p_Texshadow;
 
 	set<int> emotion;//感情
 	SafePointerObject<set<int>> visibleemotion;//表示感情
 	int anime_emotion_step;
-	IDirect3DTexture9 *p_Texemotion;
+	cRenderTexture*p_Texemotion;
 	virtual inline int GetDrawHeadtall_dotY(){return 34;};
 
 
 
-	virtual void GetTex_dot(IDirect3DDevice9 *pDev);
+	virtual void GetTex_dot(cRenderDevice *pDev);
 	//テクスチャのデフォルトサイズ
 protected:
 	int GetTex_Size_dotX_;

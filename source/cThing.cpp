@@ -8,7 +8,7 @@ void cThing_ID_0::DataBeginOptimize(int difficulty)
 
 	discover();//èÌÇ…å©Ç¶ÇÈ
 }
-void cThing_ID_0::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cThing_ID_0::Init(cRenderDevice *pDev,pcDroping self)
 {
 	cDroping::Init(pDev, self);
 
@@ -71,7 +71,7 @@ void cThing_ID_0::Init(IDirect3DDevice9 *pDev,pcDroping self)
 		
 	}
 }
-void cThing_ID_0::Draw(IDirect3DDevice9 *pDev)
+void cThing_ID_0::Draw(cRenderDevice *pDev)
 {
 	if(!pri_onland_DrawFlag) return;
 
@@ -136,7 +136,7 @@ void cThing_ID_0::Draw(IDirect3DDevice9 *pDev)
 	}
 
 }
-void cThing_ID_0::Process(IDirect3DDevice9 *pDev)
+void cThing_ID_0::Process(cRenderDevice *pDev)
 {
 	int i;
 	
@@ -404,7 +404,7 @@ int cThing_ID_1::GetmenuCaption(vector<tstring> &CaptionList)
 	return true;
 }
 
-void cThing_ID_1::Draw(IDirect3DDevice9 *pDev)
+void cThing_ID_1::Draw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	GetIcon(DO);
@@ -508,7 +508,7 @@ int cThing_ID_2::GetmenuCaption(vector<tstring> &CaptionList)
 	return true;
 }
 
-void cThing_ID_2::Draw(IDirect3DDevice9 *pDev)
+void cThing_ID_2::Draw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	GetIcon(DO);

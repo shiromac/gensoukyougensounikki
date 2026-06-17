@@ -13,7 +13,7 @@ caSoundPlay::~caSoundPlay()
 }
 
 
-int caSoundPlay::process(IDirect3DDevice9 *pDev)
+int caSoundPlay::process(cRenderDevice *pDev)
 {
 	if(play_ID == -1)
 	{

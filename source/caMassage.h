@@ -18,7 +18,7 @@ public:
 	virtual ~caMassage(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 

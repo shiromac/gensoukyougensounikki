@@ -23,14 +23,14 @@ public:
 	virtual ~caAttack(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	virtual int Init(pcAnimation me);
 
 	virtual bool isOnScreen();
 
 	tstring effectfilename;
-	IDirect3DTexture9 *p_Tex;
+	cRenderTexture*p_Tex;
 	int vi;
 	int SE_playID;
 	int SE_playcount;
@@ -61,13 +61,13 @@ public:
 	virtual ~caDefense(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 
 	tstring effectfilename;
-	IDirect3DTexture9 *p_Tex;
+	cRenderTexture*p_Tex;
 	int vi;
 	int SE_playID;
 	int SE_playcount;

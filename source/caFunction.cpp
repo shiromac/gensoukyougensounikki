@@ -18,7 +18,7 @@ int caFunction::Init()
 	return true;
 }
 
-int caFunction::process(IDirect3DDevice9 *pDev)
+int caFunction::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -65,7 +65,7 @@ int caPAnimeAdd::Init()
 	return true;
 }
 
-int caPAnimeAdd::process(IDirect3DDevice9 *pDev)
+int caPAnimeAdd::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -188,7 +188,7 @@ int caLuaFunction::Init()
 	return true;
 }
 
-int caLuaFunction::process(IDirect3DDevice9 *pDev)
+int caLuaFunction::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う

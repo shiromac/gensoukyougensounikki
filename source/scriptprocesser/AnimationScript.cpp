@@ -10,7 +10,7 @@
 #include "cScriptRLayer.h"
 #include "LuaBindModuleLoading.h"
 	
-#include <d3dx9math.h>
+#include "../gameMainSystem/cRenderBackend.h"
 #include <math.h>
 
 #include <LuaUtility/LuaEnvironment.h>
@@ -86,39 +86,39 @@ SET_LUABIND_SHARED_PTR(CHIP)
 	return function_name(x,y);\
 }
 
-D3DWRAPED_FUNCTION2(D3DXMatrixRotationX, D3DXMATRIX*, D3DXMATRIX*, FLOAT)
-D3DWRAPED_FUNCTION2(D3DXMatrixRotationY, D3DXMATRIX*, D3DXMATRIX*, FLOAT)
-D3DWRAPED_FUNCTION2(D3DXMatrixRotationZ, D3DXMATRIX*, D3DXMATRIX*, FLOAT)
-D3DWRAPED_FUNCTION3(D3DXVec3TransformCoord, D3DXVECTOR3*, D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXMATRIX*)
-D3DWRAPED_FUNCTION4(D3DXMatrixLookAtLH, D3DXMATRIX*, D3DXMATRIX*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*)
-D3DWRAPED_FUNCTION4(D3DXMatrixLookAtRH, D3DXMATRIX*, D3DXMATRIX*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*)
-D3DWRAPED_FUNCTION4(D3DXMatrixRotationYawPitchRoll, D3DXMATRIX*, D3DXMATRIX*, FLOAT, FLOAT, FLOAT)
-D3DWRAPED_FUNCTION3(D3DXQuaternionRotationAxis, D3DXQUATERNION*, D3DXQUATERNION*, CONST D3DXVECTOR3*, FLOAT)
-D3DWRAPED_FUNCTION2(D3DXMatrixRotationQuaternion, D3DXMATRIX*, D3DXMATRIX*, CONST D3DXQUATERNION*)
-D3DWRAPED_FUNCTION2(D3DXVec3Normalize, D3DXVECTOR3*, D3DXVECTOR3*, CONST D3DXVECTOR3*)
+D3DWRAPED_FUNCTION2(cRenderMatrixRotationX, cRenderMatrix*, cRenderMatrix*, float)
+D3DWRAPED_FUNCTION2(cRenderMatrixRotationY, cRenderMatrix*, cRenderMatrix*, float)
+D3DWRAPED_FUNCTION2(cRenderMatrixRotationZ, cRenderMatrix*, cRenderMatrix*, float)
+D3DWRAPED_FUNCTION3(cRenderVec3TransformCoord, cRenderVector3*, cRenderVector3*, const cRenderVector3*, const cRenderMatrix*)
+D3DWRAPED_FUNCTION4(cRenderMatrixLookAtLH, cRenderMatrix*, cRenderMatrix*, const cRenderVector3*, const cRenderVector3*, const cRenderVector3*)
+D3DWRAPED_FUNCTION4(cRenderMatrixLookAtRH, cRenderMatrix*, cRenderMatrix*, const cRenderVector3*, const cRenderVector3*, const cRenderVector3*)
+D3DWRAPED_FUNCTION4(cRenderMatrixRotationYawPitchRoll, cRenderMatrix*, cRenderMatrix*, float, float, float)
+D3DWRAPED_FUNCTION3(cRenderQuaternionRotationAxis, cRenderQuaternion*, cRenderQuaternion*, const cRenderVector3*, float)
+D3DWRAPED_FUNCTION2(cRenderMatrixRotationQuaternion, cRenderMatrix*, cRenderMatrix*, const cRenderQuaternion*)
+D3DWRAPED_FUNCTION2(cRenderVec3Normalize, cRenderVector3*, cRenderVector3*, const cRenderVector3*)
 
-D3DXVECTOR3 *D3DXVec3Rotate(
-   D3DXVECTOR3 *pOut,
-   CONST D3DXVECTOR3 *pAxis,      // ‰ñ“]Ž²
-   FLOAT Angle,                             // ‰ñ“]Šp“x
-   CONST D3DXVECTOR3 *pV          // ‰ñ“]‚³‚¹‚½‚¢ˆÊ’uƒxƒNƒgƒ‹
+cRenderVector3 *cRenderVec3RotateForLua(
+   cRenderVector3 *pOut,
+   const cRenderVector3 *pAxis,      // ‰ñ“]Ž²
+   float Angle,                             // ‰ñ“]Šp“x
+   const cRenderVector3 *pV          // ‰ñ“]‚³‚¹‚½‚¢ˆÊ’uƒxƒNƒgƒ‹
 )
 {
 	// ‰ñ“]Ž²‚ÆŠp“x‚©‚çƒNƒH[ƒ^ƒjƒIƒ“‚ðì¬
-	D3DXQUATERNION Q, R, Qv, Out;
-	D3DXQuaternionRotationAxis(&Q, pAxis, Angle);
-	D3DXQuaternionConjugate(&R, &Q);
+	cRenderQuaternion Q, R, Qv, Out;
+	cRenderQuaternionRotationAxis(&Q, pAxis, Angle);
+	cRenderQuaternionConjugate(&R, &Q);
 
 	// ƒxƒNƒgƒ‹‰ñ“]
-	D3DXVECTOR3 V;
-	FLOAT fLength = D3DXVec3Length(pV);   // ’·‚³
-	D3DXVec3Normalize(&V, pV);   // ‰ñ“]‚³‚¹‚éƒxƒNƒgƒ‹‚Ì•W€‰»
+	cRenderVector3 V;
+	float fLength = cRenderVec3Length(pV);   // ’·‚³
+	cRenderVec3Normalize(&V, pV);   // ‰ñ“]‚³‚¹‚éƒxƒNƒgƒ‹‚Ì•W€‰»
 	Qv.x = V.x;
 	Qv.y = V.y;
 	Qv.z = V.z;
 	Qv.w = 0.0f;
-	D3DXQuaternionMultiply(&Qv, &R, &Qv);
-	D3DXQuaternionMultiply(&Qv, &Qv, &Q);
+	cRenderQuaternionMultiply(&Qv, &R, &Qv);
+	cRenderQuaternionMultiply(&Qv, &Qv, &Q);
 
 	pOut->x = Qv.x * fLength;
 	pOut->y = Qv.y * fLength;
@@ -126,13 +126,13 @@ D3DXVECTOR3 *D3DXVec3Rotate(
 	
 	return pOut;
 }
-D3DXVECTOR3 *D3DXVec3XYPlaneRotate(
-   D3DXVECTOR3 *pV,          // ‰ñ“]‚³‚¹‚½‚¢ˆÊ’uƒxƒNƒgƒ‹
-   FLOAT Angle                             // ‰ñ“]Šp“x
+cRenderVector3 *cRenderVec3XYPlaneRotateForLua(
+   cRenderVector3 *pV,          // ‰ñ“]‚³‚¹‚½‚¢ˆÊ’uƒxƒNƒgƒ‹
+   float Angle                             // ‰ñ“]Šp“x
 )
 {
-	D3DXVECTOR3 axis(0,0,1);
-	return D3DXVec3Rotate(
+	cRenderVector3 axis(0,0,1);
+	return cRenderVec3RotateForLua(
 	pV,
 	&axis,      // ‰ñ“]Ž²
 	Angle,                             // ‰ñ“]Šp“x
@@ -140,7 +140,7 @@ D3DXVECTOR3 *D3DXVec3XYPlaneRotate(
 		);
 }
 double radianForDegree( 
-   FLOAT degree                             // ‰ñ“]Šp“x
+   float degree                             // ‰ñ“]Šp“x
 )
 {
 	return degree*3.14159265358679/180;
@@ -202,13 +202,13 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
 	[
 		luabind::class_<PositionPerGrid>("PositionPerGrid")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<FLOAT,FLOAT,FLOAT>())
+			.def(luabind::constructor<float,float,float>())
 			.def(luabind::constructor<PositionPerGrid>())
 			.def_readwrite("x", &PositionPerGrid::x)
 			.def_readwrite("y", &PositionPerGrid::y)
 			.def_readwrite("z", &PositionPerGrid::z)
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
 			.def(luabind::self + PositionPerGrid())
 			.def(luabind::self - PositionPerGrid())
 			.def(luabind::self == PositionPerGrid())
@@ -225,43 +225,43 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
 		,
 		luabind::class_<BeltRange>("BeltRange")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<FLOAT,FLOAT>())
+			.def(luabind::constructor<float,float>())
 			.def(luabind::constructor<BeltRange>())
 			.def_readwrite("first", &BeltRange::x)
 			.def_readwrite("last", &BeltRange::y)
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
 			.def(luabind::self + BeltRange())
 			.def(luabind::self - BeltRange())
 			.def(luabind::self == BeltRange())
 		,
 		luabind::class_<PerticleSize>("PerticleSize")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<FLOAT,FLOAT>())
+			.def(luabind::constructor<float,float>())
 			.def(luabind::constructor<PerticleSize>())
 			.def_readwrite("x", &PerticleSize::x)
 			.def_readwrite("y", &PerticleSize::y)
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
 			.def(luabind::self + PerticleSize())
 			.def(luabind::self - PerticleSize())
 			.def(luabind::self == PerticleSize())
 			*/
 		
 
-		luabind::class_<D3DXVECTOR2>("D3DXVECTOR2")
+		luabind::class_<cRenderVector2>("D3DXVECTOR2")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<FLOAT,FLOAT>())
-			.def(luabind::constructor<D3DXVECTOR2>())
-			.def_readwrite("x", &D3DXVECTOR2::x)
-			.def_readwrite("y", &D3DXVECTOR2::y)
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
-			.def(luabind::self + D3DXVECTOR2())
-			.def(luabind::self - D3DXVECTOR2())
-			.def(luabind::self == D3DXVECTOR2())
+			.def(luabind::constructor<float,float>())
+			.def(luabind::constructor<cRenderVector2>())
+			.def_readwrite("x", &cRenderVector2::x)
+			.def_readwrite("y", &cRenderVector2::y)
+			.def(luabind::self * float())
+			.def(luabind::self / float())
+			.def(luabind::self + cRenderVector2())
+			.def(luabind::self - cRenderVector2())
+			.def(luabind::self == cRenderVector2())
 		,
-		SET_LUABIND_VariationValue(D3DXVECTOR2)
+		SET_LUABIND_VariationValue(cRenderVector2)
 		
 		
 	];
@@ -271,13 +271,13 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
 		luabind::class_<TextureRangeRect>("TextureRangeRect")
 			.def(luabind::constructor<>())
 			.def(luabind::constructor<TextureRangeRect&>())
-			.def(luabind::constructor<FLOAT,FLOAT,FLOAT,FLOAT>())
+			.def(luabind::constructor<float,float,float,float>())
 			.def_readwrite("x1", &TextureRangeRect::x)
 			.def_readwrite("y1", &TextureRangeRect::y)
 			.def_readwrite("x2", &TextureRangeRect::z)
 			.def_readwrite("y2", &TextureRangeRect::w)
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
 			.def(luabind::self + TextureRangeRect())
 			.def(luabind::self - TextureRangeRect())
 			.def(luabind::self == TextureRangeRect())
@@ -299,49 +299,49 @@ void LuaBindModule::AnimationScript_Loading(LuaEnvironment& luaEnvironment)
 	luabind::module(luaEnvironment.luaState())
 	[
 		//D3DXƒ‰ƒCƒuƒ‰ƒŠŒn
-		luabind::class_<D3DXMATRIX>("D3DXMATRIX")
+		luabind::class_<cRenderMatrix>("D3DXMATRIX")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<D3DXMATRIX&>())
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
-			.def(luabind::self * D3DXMATRIX())
-			.def(luabind::self + D3DXMATRIX())
-			.def(luabind::self - D3DXMATRIX())
-			.def(luabind::self == D3DXMATRIX())
+			.def(luabind::constructor<cRenderMatrix&>())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
+			.def(luabind::self * cRenderMatrix())
+			.def(luabind::self + cRenderMatrix())
+			.def(luabind::self - cRenderMatrix())
+			.def(luabind::self == cRenderMatrix())
 		,
-		luabind::class_<D3DXQUATERNION>("D3DXQUATERNION")
+		luabind::class_<cRenderQuaternion>("D3DXQUATERNION")
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<D3DXQUATERNION&>())
-			.def(luabind::self * FLOAT())
-			.def(luabind::self / FLOAT())
-			.def(luabind::self * D3DXQUATERNION())
-			.def(luabind::self + D3DXQUATERNION())
-			.def(luabind::self - D3DXQUATERNION())
-			.def(luabind::self == D3DXQUATERNION())
+			.def(luabind::constructor<cRenderQuaternion&>())
+			.def(luabind::self * float())
+			.def(luabind::self / float())
+			.def(luabind::self * cRenderQuaternion())
+			.def(luabind::self + cRenderQuaternion())
+			.def(luabind::self - cRenderQuaternion())
+			.def(luabind::self == cRenderQuaternion())
 		,
-		luabind::def("D3DXMatrixRotationX", (D3DXMATRIX*(*)(D3DXMATRIX*, FLOAT))&D3DXMatrixRotationX_forLua)
+		luabind::def("D3DXMatrixRotationX", (cRenderMatrix*(*)(cRenderMatrix*, float))&cRenderMatrixRotationX_forLua)
 		,
-		luabind::def("D3DXMatrixRotationY", (D3DXMATRIX*(*)(D3DXMATRIX*, FLOAT))&D3DXMatrixRotationY_forLua)
+		luabind::def("D3DXMatrixRotationY", (cRenderMatrix*(*)(cRenderMatrix*, float))&cRenderMatrixRotationY_forLua)
 		,
-		luabind::def("D3DXMatrixRotationZ", (D3DXMATRIX*(*)(D3DXMATRIX*, FLOAT))&D3DXMatrixRotationZ_forLua)
+		luabind::def("D3DXMatrixRotationZ", (cRenderMatrix*(*)(cRenderMatrix*, float))&cRenderMatrixRotationZ_forLua)
 		,
-		luabind::def("D3DXVec3TransformCoord", (D3DXVECTOR3 *(*)(D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXMATRIX*))&D3DXVec3TransformCoord_forLua)
+		luabind::def("D3DXVec3TransformCoord", (cRenderVector3 *(*)(cRenderVector3*, const cRenderVector3*, const cRenderMatrix*))&cRenderVec3TransformCoord_forLua)
 		,
-		luabind::def("D3DXMatrixLookAtLH", (D3DXMATRIX*(*)(D3DXMATRIX*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*))&D3DXMatrixLookAtLH_forLua)
+		luabind::def("D3DXMatrixLookAtLH", (cRenderMatrix*(*)(cRenderMatrix*, const cRenderVector3*, const cRenderVector3*, const cRenderVector3*))&cRenderMatrixLookAtLH_forLua)
 		,
-		luabind::def("D3DXMatrixLookAtRH", (D3DXMATRIX*(*)(D3DXMATRIX*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*, CONST D3DXVECTOR3*))&D3DXMatrixLookAtRH_forLua)
+		luabind::def("D3DXMatrixLookAtRH", (cRenderMatrix*(*)(cRenderMatrix*, const cRenderVector3*, const cRenderVector3*, const cRenderVector3*))&cRenderMatrixLookAtRH_forLua)
 		,
-		luabind::def("D3DXMatrixRotationYawPitchRoll", (D3DXMATRIX*(*)(D3DXMATRIX*, FLOAT, FLOAT, FLOAT))&D3DXMatrixRotationYawPitchRoll_forLua)
+		luabind::def("D3DXMatrixRotationYawPitchRoll", (cRenderMatrix*(*)(cRenderMatrix*, float, float, float))&cRenderMatrixRotationYawPitchRoll_forLua)
 		,
-		luabind::def("D3DXQuaternionRotationAxis", (D3DXQUATERNION*(*)(D3DXQUATERNION*, CONST D3DXVECTOR3*, FLOAT))&D3DXQuaternionRotationAxis_forLua)
+		luabind::def("D3DXQuaternionRotationAxis", (cRenderQuaternion*(*)(cRenderQuaternion*, const cRenderVector3*, float))&cRenderQuaternionRotationAxis_forLua)
 		,
-		luabind::def("D3DXMatrixRotationQuaternion", (D3DXMATRIX*(*)(D3DXMATRIX*, CONST D3DXQUATERNION*))&D3DXMatrixRotationQuaternion_forLua)
+		luabind::def("D3DXMatrixRotationQuaternion", (cRenderMatrix*(*)(cRenderMatrix*, const cRenderQuaternion*))&cRenderMatrixRotationQuaternion_forLua)
 		,
-		luabind::def("D3DXVec3Rotate", &D3DXVec3Rotate)
+		luabind::def("D3DXVec3Rotate", &cRenderVec3RotateForLua)
 		,
-		luabind::def("D3DXVec3Normalize", &D3DXVec3Normalize_forLua)
+		luabind::def("D3DXVec3Normalize", &cRenderVec3Normalize_forLua)
 		,
-		luabind::def("D3DXVec3XYPlaneRotate", &D3DXVec3XYPlaneRotate)
+		luabind::def("D3DXVec3XYPlaneRotate", &cRenderVec3XYPlaneRotateForLua)
 		,
 		luabind::def("radianForDegree", &radianForDegree)
 		//,

@@ -32,7 +32,7 @@ public:
 	virtual int RerenderText(SpriteText & sprite,int MaxLetterLength);
 
 	//ƒƒjƒ…[‚Å‘I‘ğ‚ÉÅ‰‚ÉŒÄ‚Î‚ê‚é
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 	StyleString CaptionStr;
 	StyleString ExplanationStr;

@@ -10,7 +10,7 @@ public:
 	cHomeResultWindow();
 	virtual ~cHomeResultWindow();
 
-	virtual void Init(IDirect3DDevice9 *pDev,
+	virtual void Init(cRenderDevice *pDev,
 						const int levelBefore,
 						const int experienceBefore,
 						const int experienceAddition,
@@ -19,8 +19,8 @@ public:
 						const double yakuAddition
 		);
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 protected:
 	enum State
 	{

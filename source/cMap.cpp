@@ -40,7 +40,7 @@ cMap::~cMap(void)
 	RoomList.clear();
 }
 
-void cMap::Init(IDirect3DDevice9 *pDev)
+void cMap::Init(cRenderDevice *pDev)
 {
 	int x,y;
 
@@ -86,7 +86,7 @@ void cMap::process()
 }
 void cMap::setChipset(const tstring& chipsetID)
 {
-	IDirect3DTexture9* pTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(sg_pDungeonSystem->pDevice_D3D,
+	cRenderTexture* pTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(sg_pDungeonSystem->pDevice_D3D,
 		(sg_pDungeonSystem->DataBase.MapChipFormImportDataMapchipFile(chipsetID)).c_str());
 	if(pTex == NULL)
 	{
@@ -190,7 +190,7 @@ double& cMap::skyDecoAlpha(int x,int y)
 }
 
 //再初期化
-void cMap::Renew(IDirect3DDevice9 *pDev)
+void cMap::Renew(cRenderDevice *pDev)
 {
 
 	//ResetMiniMap();
@@ -200,7 +200,7 @@ void cMap::Renew(IDirect3DDevice9 *pDev)
 }
 
 //地形を描く
-int cMap::Draw(IDirect3DDevice9 *pDev)
+int cMap::Draw(cRenderDevice *pDev)
 {
 	int x,y;
 
@@ -217,7 +217,7 @@ int cMap::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 //地面の飾りを描く
-int cMap::DrawDecoLand(IDirect3DDevice9 *pDev)
+int cMap::DrawDecoLand(cRenderDevice *pDev)
 {
 	int x,y;
 	for(x = floor(visibleForcusX()) - VISIBLEBOXNUM; x < visibleForcusX() + VISIBLEBOXNUM +1;x++)
@@ -232,9 +232,9 @@ int cMap::DrawDecoLand(IDirect3DDevice9 *pDev)
 	return true;
 }
 //地面のグリッドを書く
-int cMap::DrawGridLand(IDirect3DDevice9 *pDev,const double alpha, const double forcus_alpha )
+int cMap::DrawGridLand(cRenderDevice *pDev,const double alpha, const double forcus_alpha )
 {
-	IDirect3DTexture9* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid.png"));
+	cRenderTexture* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid.png"));
 	//グリッド描画
 	cDrawingObject DO,DOback;
 	DO.setTexture(gridTex);
@@ -307,10 +307,10 @@ int cMap::DrawGridLand(IDirect3DDevice9 *pDev,const double alpha, const double f
 	return true;
 }
 //地面のグリッドを書く
-int cMap::DrawGridDrop(IDirect3DDevice9 *pDev,const double alpha)
+int cMap::DrawGridDrop(cRenderDevice *pDev,const double alpha)
 {
-	IDirect3DTexture9* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid4.png"));
-	IDirect3DTexture9* gridTex_trap = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid3.png"));
+	cRenderTexture* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid4.png"));
+	cRenderTexture* gridTex_trap = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid3.png"));
 	//グリッド描画
 	cDrawingObject DO;
 	DO.setTexture(gridTex);
@@ -355,9 +355,9 @@ int cMap::DrawGridDrop(IDirect3DDevice9 *pDev,const double alpha)
 	return true;
 }
 //地面のグリッドを書く
-int cMap::DrawGridChara(IDirect3DDevice9 *pDev,const double alpha)
+int cMap::DrawGridChara(cRenderDevice *pDev,const double alpha)
 {
-	IDirect3DTexture9* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid2.png"));
+	cRenderTexture* gridTex = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\grid2.png"));
 	//グリッド描画
 	cDrawingObject DO;
 	DO.setTexture(gridTex);
@@ -418,7 +418,7 @@ double function_0to1(double d)
 	return d;
 }
 //空の飾りを描く
-int cMap::DrawDecoSky(IDirect3DDevice9 *pDev)
+int cMap::DrawDecoSky(cRenderDevice *pDev)
 {
 	int x,y;
 	const double speed = 0.08;
@@ -509,7 +509,7 @@ int cMap::DrawDecoSky(IDirect3DDevice9 *pDev)
 
 
 //暗闇描く
-int cMap::DrawDark(IDirect3DDevice9 *pDev, pcCharacter hero)
+int cMap::DrawDark(cRenderDevice *pDev, pcCharacter hero)
 {
 
 	m_DO.AddingDraw = cDrawableObject::DRAW_MODE_NORMAL;
@@ -590,7 +590,7 @@ int cMap::DrawDark(IDirect3DDevice9 *pDev, pcCharacter hero)
 	return true;
 }
 
-int cMap::DrawDarkSub(IDirect3DDevice9 *pDev, pcCharacter  hero, pcLandform heroplace, double opaque)
+int cMap::DrawDarkSub(cRenderDevice *pDev, pcCharacter  hero, pcLandform heroplace, double opaque)
 {
 
 
@@ -762,7 +762,7 @@ int cMap::DrawDarkSub(IDirect3DDevice9 *pDev, pcCharacter  hero, pcLandform hero
 	}
 	return true;
 }
-int cMap::DrawDeco(IDirect3DDevice9 *pDev, const int x, const int y, const int decoLayer)
+int cMap::DrawDeco(cRenderDevice *pDev, const int x, const int y, const int decoLayer)
 {
 	dChipTexPos pos = Land(x,y)->getDecorationchip(decoLayer);
 	if(pos == -1) return false;
@@ -929,7 +929,7 @@ c4DVector cMap::realvisibleplace(c4DVector place)
 }
 
 //チップを一マス描く
-int cMap::Drawchip(IDirect3DDevice9 *pDev, const int x, const int y)
+int cMap::Drawchip(cRenderDevice *pDev, const int x, const int y)
 {
 	//if(!isOnDisplay(x,y)) return false;
 
@@ -1002,7 +1002,7 @@ int cMap::Drawchip(IDirect3DDevice9 *pDev, const int x, const int y)
 
 	return true;
 }
-int cMap::DrawchipSub(IDirect3DDevice9 *pDev,cCoordinate lefttop,//描画位置
+int cMap::DrawchipSub(cRenderDevice *pDev,cCoordinate lefttop,//描画位置
 		const int x,const int y,//マップ座標
 		const int baseXi,const int baseYi,//テクスチャ座標基礎
 		const int first_land,const int second_land,//テクスチャ座標基礎
@@ -1140,7 +1140,7 @@ int cMap::DrawchipSub(IDirect3DDevice9 *pDev,cCoordinate lefttop,//描画位置
 }
 
 //ミニマップを描く
-int cMap::DrawMiniMap(IDirect3DDevice9 *pDev)
+int cMap::DrawMiniMap(cRenderDevice *pDev)
 {
 	return Minimap.DrawMiniMap(pDev);
 }

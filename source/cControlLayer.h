@@ -21,10 +21,10 @@ public:
 	virtual ~cControlLayer(void);
 
 	vector<pcGameWindow>	WindowList;
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
-	virtual int Init(IDirect3DDevice9 *pDev);
+	virtual int Init(cRenderDevice *pDev);
 
 	int DrawedAndNotProcessingFlag;
 	int InputFreeFlag;//TRUEのとき他のインターフェイスを動かさない//今のところStringWindow専用
@@ -36,7 +36,7 @@ public:
 	pcGameWindow smollviewWindow;
 protected:
 	StyleString shortExplanationText;
-	virtual int shortExplanationprocess(IDirect3DDevice9 *pDev);
+	virtual int shortExplanationprocess(cRenderDevice *pDev);
 	pcGameWindow shortExplanationWindow;
 
 	int sscounter;

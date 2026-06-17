@@ -96,12 +96,12 @@ protected:
 	void pri_init();
 
 	pcShortCut makeAutoShortCut(pcDroping source);
-	pcShortCut makeAutoShortCutWithVerb(pcDroping source, vector<tstring>& CaptionList, tstring& verb);
+	pcShortCut makeAutoShortCutWithVerb(pcDroping source, const vector<tstring>& CaptionList, const tstring& verb);
 
 	void tryAddShortcutForSource(pcDroping source);
 	void addShortcutToEmpty(pcShortCut shortcut);
 
-	virtual void pri_setShortcutText(pcGameWindow pwindow, pcDroping pdrop, StyleString& Verb, bool autoFunction);
+	virtual void pri_setShortcutText(pcGameWindow pwindow, pcDroping pdrop, const StyleString& Verb, bool autoFunction);
 	
 public:
 	void addShortcut(eShortCuts_index index, pcCommand pcommand, bool autoFunction = false);
@@ -117,7 +117,7 @@ public:
 	void refreshAutomaticShortCut(vector<pcDroping>& itemList);
 
 	
-	void setShortcutTempText(pcDroping pdrop, StyleString& Verb);
+	void setShortcutTempText(pcDroping pdrop, const StyleString& Verb);
 	
 	StyleString ShortExplanation(eShortCuts_index index);
 

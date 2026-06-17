@@ -9,7 +9,6 @@
 
 #include "cScriptRLayer.h"
 	
-#include <d3dx9math.h>
 
 #include <LuaUtility/LuaEnvironment.h>
 #include <LuaUtility/LuaScript.h>

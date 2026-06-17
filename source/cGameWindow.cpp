@@ -32,7 +32,7 @@ cGameWindow::~cGameWindow(void)
 {
 }
 
-void cGameWindow::InitBasic(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cGameWindow::InitBasic(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	letterXlength = letterXnum;
 	letterYlength = letterYnum;
@@ -86,7 +86,7 @@ void cGameWindow::InitBasic(IDirect3DDevice9 *pDev, int letterXnum, int letterYn
 	m_SpriteText.SetReturnFontMargin(merginheight());
 	m_SpriteText.SetColor( D3DCOLOR_ARGB(255,255,255,255) );
 	m_SpriteText.SetRot(0.0);
-	m_SpriteText.SetSize(D3DXVECTOR2(1,1));
+	m_SpriteText.SetSize(cRenderVector2(1,1));
 
 	
 	m_pTexture_Page = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev, PAGETEXPATH);
@@ -99,7 +99,7 @@ void cGameWindow::InitBasic(IDirect3DDevice9 *pDev, int letterXnum, int letterYn
 }
 
 
-int cGameWindow::pageDraw(IDirect3DDevice9 *pDev)
+int cGameWindow::pageDraw(cRenderDevice *pDev)
 {
 	if(pageIndexMaxF() != 0)
 	{
@@ -186,7 +186,7 @@ void cGameWindow::Init(int letterXnum, int letterYnum)
 	Init(sg_pDungeonSystem->pDevice_D3D,letterXnum,letterYnum);
 
 }
-void cGameWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cGameWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	InitBasic(pDev,letterXnum,letterYnum);
 }
@@ -199,7 +199,7 @@ int cGameWindow::ReRendarText()
 	return true;
 }
 
-int cGameWindow::process(IDirect3DDevice9 *pDev)
+int cGameWindow::process(cRenderDevice *pDev)
 {
 
 
@@ -227,7 +227,7 @@ int cGameWindow::process(IDirect3DDevice9 *pDev)
 }
 
 
-int cGameWindow::Draw(IDirect3DDevice9 *pDev)
+int cGameWindow::Draw(cRenderDevice *pDev)
 {
 	
 	WindowDraw(pDev);
@@ -236,7 +236,7 @@ int cGameWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cGameWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cGameWindow::TextDraw(cRenderDevice *pDev)
 {
 	if(preRendar == false)
 	{
@@ -272,7 +272,7 @@ int cGameWindow::TextDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cGameWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cGameWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left();
 	int t = Top();
@@ -309,7 +309,7 @@ int cGameWindow::TextDrawSub(IDirect3DDevice9 *pDev)
 }
 
 
-int cGameWindow::WindowDraw(IDirect3DDevice9 *pDev)
+int cGameWindow::WindowDraw(cRenderDevice *pDev)
 {
 
 	int l = Left();
@@ -355,7 +355,7 @@ int cGameWindow::WindowDraw(IDirect3DDevice9 *pDev)
 	m_DO.Draw(pDev);
 	return true;
 }
-void DrawAddShadowDO(cDrawingObject& DO, IDirect3DDevice9 *pDev)
+void DrawAddShadowDO(cDrawingObject& DO, cRenderDevice *pDev)
 {
 	int i;
 	int drawX = DO.CenterX;
@@ -530,7 +530,7 @@ void DrawAddShadowDO(cDrawingObject& DO, IDirect3DDevice9 *pDev)
 	
 	
 }
-void DrawAddShadowDO_mini(cDrawingObject& DO, IDirect3DDevice9 *pDev)
+void DrawAddShadowDO_mini(cDrawingObject& DO, cRenderDevice *pDev)
 {
 	int i;
 	int drawX = DO.CenterX;

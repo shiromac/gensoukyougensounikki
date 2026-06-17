@@ -109,7 +109,7 @@ void cCharacter::visibleReset()
 	anime_yawing = 0;
 }
 
-void cCharacter::Init(IDirect3DDevice9 *pDev, pcCharacter self)
+void cCharacter::Init(cRenderDevice *pDev, pcCharacter self)
 {
 	visibleaspect = aspect = ASPECT_DOWN;
 
@@ -454,7 +454,7 @@ tstring cCharacter::LVStr()
 {
 	return g_Lang(_T("レベル表現_味方")).conclete_tstr();
 }
-void cCharacter::DrawShadow(IDirect3DDevice9 *pDev)
+void cCharacter::DrawShadow(cRenderDevice *pDev)
 {
 
 	
@@ -484,7 +484,7 @@ unsigned int cCharacter::ShadowColor()
 	return 0xFF000000;
 }
 
-void cCharacter::Draw(IDirect3DDevice9 *pDev)
+void cCharacter::Draw(cRenderDevice *pDev)
 {
 
 	pcCharacter pchara = Condition.anotherSurface();
@@ -520,7 +520,7 @@ void cCharacter::Draw(IDirect3DDevice9 *pDev)
 
 
 }
-void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
+void cCharacter::DrawBody(cRenderDevice *pDev)
 {
 	int texaspect = 0;
 
@@ -621,7 +621,7 @@ void cCharacter::DrawBody(IDirect3DDevice9 *pDev)
 	DO.Draw(pDev);
 }
 
-void cCharacter::OptionDraw(IDirect3DDevice9 *pDev)
+void cCharacter::OptionDraw(cRenderDevice *pDev)
 {
 	DO.setTexture(p_Texoption,TEXSIZE_OPTION_X,TEXSIZE_OPTION_Y);
 	int step = anime_option_step*4/DEFAULTOPTIONSUMSTEP;
@@ -722,7 +722,7 @@ void cCharacter::OptionDraw(IDirect3DDevice9 *pDev)
 	}
 }
 
-void cCharacter::Process(IDirect3DDevice9 *pDev)
+void cCharacter::Process(cRenderDevice *pDev)
 {
 	if(!Condition.行動不能である_visual())
 	{
@@ -774,7 +774,7 @@ void cCharacter::Process(IDirect3DDevice9 *pDev)
 
 }
 
-void cCharacter::GetTex_dot(IDirect3DDevice9 *pDev)
+void cCharacter::GetTex_dot(cRenderDevice *pDev)
 {
 	TCHAR path[128] = _T("");
 	_stprintf(path,_T("chara\\dot\\%sdot.png"),surfaceName().c_str());
@@ -847,7 +847,7 @@ tstring cCharacter::surfaceName(){
 
 */
 
-void cCharacter::EmotionDraw(IDirect3DDevice9 *pDev)
+void cCharacter::EmotionDraw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	DO.m_color.alpha = opaque*255;

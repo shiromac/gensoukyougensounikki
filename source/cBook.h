@@ -35,7 +35,7 @@ public:
 	virtual ~cBook(void);
 
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
 
 
 	//virtual cDiscreteProbability stateBeginDP(int difficulty);
@@ -45,12 +45,12 @@ public:
 
 
 
-	virtual void aspectedAttackDraw(IDirect3DDevice9 *pDev);
+	virtual void aspectedAttackDraw(cRenderDevice *pDev);
 	virtual inline int AttackIconFileSize(){return 256;};
 	virtual inline tstring AttackIconFileName(){return _T("item\\effectdrop.png");};
 	virtual inline int AttackIconFileIndexX(){return 1;};
 	virtual int GetAttackIcon(cDrawingObject& DO);
-	IDirect3DTexture9* m_pTexture_AttackIcon;
+	cRenderTexture* m_pTexture_AttackIcon;
 
 	virtual StyleString QualityCaption();
 	virtual StyleString ExtraHatString();
@@ -122,7 +122,7 @@ public:
 
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 
 	//--------------------------------------------------------
@@ -131,7 +131,7 @@ public:
 
 	
 	
-	//virtual int 読む(IDirect3DDevice9 *pDev);
+	//virtual int 読む(cRenderDevice *pDev);
 	//virtual int 読み要請(pcCharacter pchara);
 
 	//破壊される時true;

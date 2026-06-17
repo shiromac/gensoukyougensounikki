@@ -1193,7 +1193,7 @@ public:
 			(sg_pDungeonSystem->pPlayerChara()->holdItem.size()
 			|| sg_pDungeonSystem->主人公お金所持量() > 0));
 	};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 
 		if(pQuest_ != NULL)
@@ -1292,7 +1292,7 @@ public:
 		}
 		caption = g_Lang(captionName_.c_str(), val);
 	};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		sg_pDungeonSystem->pSaveData->globalFlags[flagName_] = !(sg_pDungeonSystem->pSaveData->globalFlags[flagName_]);
 		sg_pDungeonSystem->メニューリレンダ();
@@ -1326,7 +1326,7 @@ public:
 	};
 	virtual ~cCommandDungeons_erase_erase_erase(void){};
 	pcSaveQuest pQuest_;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		/*
 			ゲームオーバーにも類似の処理があるので注意されたし
@@ -1386,7 +1386,7 @@ public:
 		caption = g_Lang(_T("やっぱりやめる"));
 	};
 	virtual ~cCommandDungeons_erase_erase_cancel(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		sg_pDungeonSystem->メニューを一枚閉じる();
 		sg_pDungeonSystem->メニューを一枚閉じる();
@@ -1409,7 +1409,7 @@ public:
 	};
 	virtual ~cCommandDungeons_erase_erase(void){};
 	pcSaveQuest pQuest_;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -1445,7 +1445,7 @@ public:
 		caption = g_Lang(_T("やっぱりやめる"));
 	};
 	virtual ~cCommandDungeons_erase_cancel(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		sg_pDungeonSystem->メニューを一枚閉じる();
 		return false;
@@ -1467,7 +1467,7 @@ public:
 	};
 	virtual ~cCommandDungeons_erase(void){};
 	pcSaveQuest pQuest_;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -1518,7 +1518,7 @@ public:
 	tstring questSaveFileString_;
 	pcSaveQuest pQuest_;
 	int num_;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		StyleString errormassage;
@@ -1625,7 +1625,7 @@ public:
 	};
 	virtual ~cCommandDungeons_rankingShowResult(void){};
 	cSaveResult result_;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		pcControlLayer pccl;
 		pcResultWindow pcrw;
@@ -1655,7 +1655,7 @@ public:
 	};
 	virtual ~cCommandDungeons_rankingSA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->SARanking;
 
@@ -1709,7 +1709,7 @@ public:
 	};
 	virtual ~cCommandDungeons_freeRankingSA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->FreeStyle_SARanking;
 
@@ -1764,7 +1764,7 @@ public:
 	};
 	virtual ~cCommandDungeons_rankingRTA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->RTARanking;
 
@@ -1824,7 +1824,7 @@ public:
 	};
 	virtual ~cCommandDungeons_freeRankingRTA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->FreeStyle_RTARanking;
 
@@ -1884,7 +1884,7 @@ public:
 	};
 	virtual ~cCommandDungeons_rankingTTA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->TTARanking;
 
@@ -1939,7 +1939,7 @@ public:
 	};
 	virtual ~cCommandDungeons_freeRankingTTA(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		vector<cSaveResult> vranking = sg_pDungeonSystem->DataBase.DungeonRanking(dungeonID)->FreeStyle_TTARanking;
 
@@ -1994,7 +1994,7 @@ public:
 	};
 	virtual ~cCommandDungeons_rankings(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -2037,7 +2037,7 @@ public:
 	};
 	virtual ~cCommandDungeons(void){};
 	tstring dungeonID;
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -2230,7 +2230,7 @@ public:
 	};
 public:
 	virtual ~cCommandSimple(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		*pointer_ = value_;
 		sg_pDungeonSystem->メニューを閉じる();

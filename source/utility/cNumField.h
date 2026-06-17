@@ -3,8 +3,7 @@
 #include "cColor.h"
 #include "4DVector.h"
 
-#include <d3d9.h>
-#include <d3dx9.h>
+#include "../gameMainSystem/cRenderBackend.h"
 
 #include <vector>
 using namespace std;
@@ -16,8 +15,8 @@ public:
 public:
 	virtual ~cNumField(void);
 
-	virtual void Draw(IDirect3DDevice9 *pDev);
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Draw(cRenderDevice *pDev);
+	virtual void Init(cRenderDevice *pDev);
 
 	int distance;
 	c4DVector position;
@@ -52,7 +51,7 @@ public:
 protected:
 	
 protected:
-	IDirect3DTexture9* pTexture_;
+	cRenderTexture* pTexture_;
 	//0123456789-Å~
 
 public:

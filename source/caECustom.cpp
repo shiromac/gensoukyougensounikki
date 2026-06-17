@@ -32,7 +32,7 @@ caECustom::~caECustom(void)
 }
 
 
-int caECustom::preprocess(IDirect3DDevice9 *pDev)
+int caECustom::preprocess(cRenderDevice *pDev)
 {
 
 
@@ -42,7 +42,7 @@ int caECustom::preprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caECustom::process(IDirect3DDevice9 *pDev)
+int caECustom::process(cRenderDevice *pDev)
 {
 
 
@@ -65,7 +65,7 @@ int caECustom::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caECustom::Draw(IDirect3DDevice9 *pDev)
+int caECustom::Draw(cRenderDevice *pDev)
 {
 	chipDraw(pDev);
 

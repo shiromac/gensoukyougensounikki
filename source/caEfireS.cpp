@@ -40,7 +40,7 @@ int caEfire_flame::Init()
 	return true;
 }
 
-int caEfire_flame::preprocess(IDirect3DDevice9 *pDev)
+int caEfire_flame::preprocess(cRenderDevice *pDev)
 {
 	int i,num;
 	caEchip_Basic cacb_model;
@@ -315,7 +315,7 @@ int caEfire_flame::preprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caEfire_flame::process(IDirect3DDevice9 *pDev)
+int caEfire_flame::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed==0)
@@ -335,7 +335,7 @@ int caEfire_flame::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caEfire_flame::Draw(IDirect3DDevice9 *pDev)
+int caEfire_flame::Draw(cRenderDevice *pDev)
 {
 	chipDraw(pDev);
 

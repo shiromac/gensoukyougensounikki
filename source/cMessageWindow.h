@@ -18,17 +18,17 @@ class cMessageWindow :
 public:
 	cMessageWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int NewRoll(IDirect3DDevice9 *pDev);
-	virtual int RenderText(IDirect3DDevice9 *pDev);
-	virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
+	virtual int NewRoll(cRenderDevice *pDev);
+	virtual int RenderText(cRenderDevice *pDev);
+	virtual int TextDrawSub(cRenderDevice *pDev);
 public:
 	deque<psstring> Messagelogs;
 protected:
 
-	IDirect3DTexture9* m_pTexture_Wait;
+	cRenderTexture* m_pTexture_Wait;
 
 	deque<psstring> rollMessages;
 	int rolldiff;
@@ -40,7 +40,7 @@ protected:
 	int forcusTop;
 
 	int Waiting;//‘Ò‚¿ƒtƒ‰ƒO
-	IDirect3DTexture9* pTex_cursol;
+	cRenderTexture* pTex_cursol;
 
 	virtual double massageSpeed();
 public:
@@ -57,10 +57,10 @@ public:
 	virtual ~cMessageWindow(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int addMessage(StyleString Message);
 
-	virtual int textclear(IDirect3DDevice9 *pDev);
+	virtual int textclear(cRenderDevice *pDev);
 };

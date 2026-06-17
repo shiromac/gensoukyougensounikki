@@ -14,7 +14,7 @@ caMove::~caMove()
 }
 
 
-int caMove::process(IDirect3DDevice9 *pDev)
+int caMove::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う

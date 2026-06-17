@@ -63,6 +63,38 @@ The expected release output is:
 ggn.exe
 ```
 
+## Browser/Web build scaffold
+
+The minimal browser port is prepared as an Emscripten/WebAssembly build scaffold. It intentionally reuses the existing C++ sources and does not add gameplay or UI features.
+
+Install and activate Emscripten so `em++` is available on `PATH`, then run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\build-web.ps1
+```
+
+To verify source selection without Emscripten installed:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\build-web.ps1 -GenerateOnly
+```
+
+The script reads `laug_th.vcxproj`, resolves the existing Lua 5.1, luabind 0.9.1, and Boost 1.46.1-style dependency roots, prepends `source\web_compat` for browser-only compatibility headers, excludes the Win32-only input, Wiimote, DirectSound, precompiled-header, and old platform entry sources, and writes response files under `web-build\`. That directory is generated output and is ignored by Git.
+
+For browser runtime assets, the script also converts existing `graphic\` PNG/JPEG/BMP files into simple raw texture files under `web-build\assets\graphic\*.ggntex`, copies lightweight non-image graphic metadata such as `graphicpass.id`, skips the large Windows `graphicpack`, converts `data\` and `Language\` text assets to UTF-16LE where appropriate, copies Lua/binary assets as-is, extracts `sound\data1` and `sound\data2` into `web-build\sound\SE\*.wav` and `web-build\sound\music\*.wav`, adds `/assets`, `/data`, and `/Language` preload arguments for Emscripten, and links `-lidbfs.js` for the minimal `/save/` persistent filesystem bridge. Sound files are served next to the generated page instead of being embedded into `ggn.data`.
+
+Current status: the WebAssembly build succeeds in the recovered archive layout when Emscripten is activated through the local `..\_tools\emsdk` checkout. The generated runtime is:
+
+```text
+web-build\ggn.html
+web-build\ggn.js
+web-build\ggn.wasm
+web-build\ggn.data
+web-build\sound\
+```
+
+The browser build has been smoke-tested in Chrome with the existing keyboard controls. Verified so far: title display, `Z` to start the game, entering the first dungeon, basic movement/input without JavaScript exceptions, readable text rendering, graphic asset loading, and `/save/` IDBFS persistence across refresh. The browser sound path now uses a minimal WebAudio backend behind the existing `cSoundManager` API. The latest headless Chrome check verified that the title BGM intro/loop WAV files and a representative SE WAV are fetched and decoded into AudioBuffers with the AudioContext running.
+
 ## Runtime assets
 
 The public branch does not include the large released sound packs. To run the built debug executable locally, copy these files from a released runtime into this repository:

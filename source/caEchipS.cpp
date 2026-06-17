@@ -76,7 +76,7 @@ void caEchip_Basic::DrowingObjectFunc()
 		End = true;
 	}
 }
-int caEchip_Basic::Draw(IDirect3DDevice9 *pDev)
+int caEchip_Basic::Draw(cRenderDevice *pDev)
 {
 	if(hidingTime <= 0)
 	{
@@ -156,7 +156,7 @@ void caEchip_Num::DrowingObjectFunc()
 		End = true;
 	}
 }
-int caEchip_Num::Draw(IDirect3DDevice9 *pDev)
+int caEchip_Num::Draw(cRenderDevice *pDev)
 {
 	if(hidingTime <= 0)
 	{
@@ -194,7 +194,7 @@ int caEchip_Text::Init()
 
 	return true;
 }
-int caEchip_Text::Draw(IDirect3DDevice9 *pDev)
+int caEchip_Text::Draw(cRenderDevice *pDev)
 {
 
 	if(dropshadow)
@@ -341,7 +341,7 @@ void caEchip_Belt::DrowingObjectFunc()
 		End = true;
 	}
 }
-int caEchip_Belt::Draw(IDirect3DDevice9 *pDev)
+int caEchip_Belt::Draw(cRenderDevice *pDev)
 {
 	if(hidingTime <= 0)
 	{
@@ -453,7 +453,7 @@ void caEchip_Bound::DrowingObjectFunc()
 		End = true;
 	}
 }
-int caEchip_Bound::Draw(IDirect3DDevice9 *pDev)
+int caEchip_Bound::Draw(cRenderDevice *pDev)
 {
 	if(hidingTime <= 0)
 	{

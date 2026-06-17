@@ -452,7 +452,7 @@ pcLandform getLandformStorage(const pLuaString landformName)
 //メッセージ
 
 //virtual int メッセージ(StyleString Message);
-int message(StyleString& Message)
+int message(const StyleString& Message)
 {
 	return sg_pDungeonSystem->メッセージ(Message);
 }
@@ -672,7 +672,7 @@ void setHiddenInterface(bool hidden)
 //検索
 pcCharacter searchOneCharacterOnFloor(int ID)
 {
-	vector<pcCharacter>& searchChara = searchCharactersOnFloor(ID);
+	vector<pcCharacter> searchChara = searchCharactersOnFloor(ID);
 	if(searchChara.empty())
 	{
 		return NULLCHARA;

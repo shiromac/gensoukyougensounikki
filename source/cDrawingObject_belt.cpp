@@ -33,7 +33,7 @@ cDrawingObject_belt::~cDrawingObject_belt(void)
 {
 }
 
-int cDrawingObject_belt::Draw(IDirect3DDevice9 *pDev)
+int cDrawingObject_belt::Draw(cRenderDevice *pDev)
 {
 	int i;
 

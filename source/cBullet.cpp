@@ -43,7 +43,7 @@ StyleString cBullet::識別未識別混合道具名()
 	}
 }
 
-void cBullet::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cBullet::Init(cRenderDevice *pDev,pcDroping self)
 {
 	cItem::Init(pDev,self);
 	m_pTexture_AttackIcon = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev, AttackIconFileName().c_str());
@@ -137,7 +137,7 @@ void cBullet::longExplanationExtraBase(std::vector<StyleString> &explanations)
 	#endif
 }
 
-void cBullet::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cBullet::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -169,7 +169,7 @@ void cBullet::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
 }
 
 
-void cBullet::aspectedAttackDraw(IDirect3DDevice9 *pDev)
+void cBullet::aspectedAttackDraw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	GetAttackIcon(DO);
@@ -357,7 +357,7 @@ int cBullet::GetmenuCaption(vector<tstring> &CaptionList)
 }
 /*
 //コマンドを解決する;
-int cBullet::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cBullet::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("撃つ"))
@@ -387,7 +387,7 @@ int cBullet::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping>
 */
 
 /*
-int cBullet::撃つ(IDirect3DDevice9 *pDev)
+int cBullet::撃つ(cRenderDevice *pDev)
 {
 	int result = 0;
 
@@ -853,7 +853,7 @@ bool cBullet::stategoodRunoutprocess()
 //-----------------------------------------------
 //装備系
 //-----------------------------------------------
-int cBullet::装備(IDirect3DDevice9 *pDev)
+int cBullet::装備(cRenderDevice *pDev)
 {
 	int result = 0;
 
@@ -988,7 +988,7 @@ int cBullet::装備メッセージ定型(pcCharacter pchara)
 }
 
 /*
-int cBullet::はずす(IDirect3DDevice9 *pDev)
+int cBullet::はずす(cRenderDevice *pDev)
 {
 	int result = 0;
 

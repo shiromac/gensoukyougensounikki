@@ -82,19 +82,19 @@ public:
 
 public:
 	//はじめに一度だけ呼ばれるシステム初期化関数
-	virtual int InitSystem(IDirect3DDevice9 *pDev);
+	virtual int InitSystem(cRenderDevice *pDev);
 private:
 	//ダンジョンデータ初期化関数
-	virtual int InitDungeon(IDirect3DDevice9 *pDev);
+	virtual int InitDungeon(cRenderDevice *pDev);
 	//フロアデータ初期化関数
-	virtual int InitFloor(IDirect3DDevice9 *pDev);
-	virtual int StartFloor(IDirect3DDevice9 *pDev);
+	virtual int InitFloor(cRenderDevice *pDev);
+	virtual int StartFloor(cRenderDevice *pDev);
 
 	//ダンジョン終了関数
-	virtual int FinalizeDungeon(IDirect3DDevice9 *pDev);
+	virtual int FinalizeDungeon(cRenderDevice *pDev);
 public:
 	//デバイスリセット
-	virtual int resetedDevice(IDirect3DDevice9 *pDev);
+	virtual int resetedDevice(cRenderDevice *pDev);
 
 	//------------------------------------------------------
 	//環境変数
@@ -113,14 +113,14 @@ public:
 	//クエストセーブデータ
 	pcSaveQuest pSaveQuest;
 
-	IDirect3DDevice9 *pDevice_D3D;//デバイスが通ってないところの救済用（泣）
+	cRenderDevice *pDevice_D3D;//デバイスが通ってないところの救済用（泣）
 private:
 
 	//ランダム関数
 public:
 
-	IDirect3DTexture9* pFrameTexture;
-	IDirect3DTexture9* pArrowsTexture;
+	cRenderTexture* pFrameTexture;
+	cRenderTexture* pArrowsTexture;
 
 
 
@@ -197,15 +197,15 @@ public:
 	//ダンジョンシステム
 	//------------------------------------------------------
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Inputprocess(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Inputprocess(cRenderDevice *pDev);
 	//一ターンに一度実行される
-	virtual int Turnprocess(IDirect3DDevice9 *pDev);
-	virtual int menuCommandprocess(IDirect3DDevice9 *pDev);
-	virtual int minimapViewprocess(IDirect3DDevice9 *pDev);
-	virtual int aspectTurnprocess(IDirect3DDevice9 *pDev);
-	virtual int aspectDiagonprocess(IDirect3DDevice9 *pDev);
-	virtual int shootAndShortCutprocess(IDirect3DDevice9 *pDev);
+	virtual int Turnprocess(cRenderDevice *pDev);
+	virtual int menuCommandprocess(cRenderDevice *pDev);
+	virtual int minimapViewprocess(cRenderDevice *pDev);
+	virtual int aspectTurnprocess(cRenderDevice *pDev);
+	virtual int aspectDiagonprocess(cRenderDevice *pDev);
+	virtual int shootAndShortCutprocess(cRenderDevice *pDev);
 
 	//イベント通知システム
 	bool eventNotification(const pLuaString& eventName, const pLuaString& notificatedObject, const pLuaString& argument);
@@ -278,20 +278,20 @@ public:
 
 
 	//ミニマップを書き直す。
-	virtual int Refreshminimap(IDirect3DDevice9 *pDev);
+	virtual int Refreshminimap(cRenderDevice *pDev);
 	//ミニマップを消して書き直す。
-	virtual int Resetminimap(IDirect3DDevice9 *pDev);
+	virtual int Resetminimap(cRenderDevice *pDev);
 
-	virtual int minimapDrawDelegate(IDirect3DDevice9 *pDev, const cCoordinate& leftTop, const int boxSize, const int alpha);
+	virtual int minimapDrawDelegate(cRenderDevice *pDev, const cCoordinate& leftTop, const int boxSize, const int alpha);
 
 
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
-	virtual int LandDraw(IDirect3DDevice9 *pDev);
-	virtual int MiniMapDraw(IDirect3DDevice9 *pDev);
-	virtual int CharacterDraw(IDirect3DDevice9 *pDev);
-	virtual int DropingDraw(IDirect3DDevice9 *pDev);
-	virtual int FrameDraw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
+	virtual int LandDraw(cRenderDevice *pDev);
+	virtual int MiniMapDraw(cRenderDevice *pDev);
+	virtual int CharacterDraw(cRenderDevice *pDev);
+	virtual int DropingDraw(cRenderDevice *pDev);
+	virtual int FrameDraw(cRenderDevice *pDev);
 	virtual int refreshCharaDropView();
 	virtual int EventDraw();
 	virtual int EventDrawUnderObject();
@@ -302,10 +302,10 @@ public:
 
 
 	//インプットの直前に一度初期化する
-	virtual int resetTurnInformation(IDirect3DDevice9 *pDev);
+	virtual int resetTurnInformation(cRenderDevice *pDev);
 
 	//整理して使われなくなったオブジェクトを消す。
-	virtual int arrangementObject(IDirect3DDevice9 *pDev);
+	virtual int arrangementObject(cRenderDevice *pDev);
 
 
 	virtual int PlayBGM();
@@ -318,7 +318,7 @@ public:
 	//-----------------------------------------------
 	//ゲームシステム関係
 	//-----------------------------------------------
-	virtual int gameTurnprocess(IDirect3DDevice9 *pDev);
+	virtual int gameTurnprocess(cRenderDevice *pDev);
 
 
 	inline int& DashSwitch(){return pFloorInstance_->DashSwitch_;};
@@ -443,7 +443,7 @@ public:
 	virtual pcLandform RandomPlace();
 
 
-	virtual int メッセージ(StyleString& Message);
+	virtual int メッセージ(const StyleString& Message);
 
 	virtual int メッセージ消去();
 
@@ -560,7 +560,7 @@ public:
 //-----------------------------------------------
 //***************************************************
 public:
-	virtual int Dashprocess(IDirect3DDevice9 *pDev);
+	virtual int Dashprocess(cRenderDevice *pDev);
 	virtual int DashRiskCulcurate(int& output, int nextaspect);
 	virtual int DashAspectCulcurate();
 

@@ -33,7 +33,7 @@ public:
 	cCommandStart2(void){caption = g_Lang(_T("‚Í‚¶‚ß‚©‚ç"));};
 	cCommandStart2(tstring s){caption = s;};
 	virtual ~cCommandStart2(void){};
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 	{
 		sg_pDungeonSystem->pSaveQuest =  pcSaveQuest((cSaveQuest*)NULL);
 		g_GameEnv.m_SceneManage->SceneChange(pDev,new csDungeonFirst);
@@ -49,7 +49,7 @@ public:
 	cCommandEnd2(void){caption = g_Lang(_T("‚â‚ß‚é"));};
 	cCommandEnd2(tstring s){caption = s;};
 	virtual ~cCommandEnd2(void){};
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 	{
 		sg_pDungeonSystem->ƒƒjƒ…[‚ð•Â‚¶‚é();
 	};
@@ -69,7 +69,7 @@ csHomeFirst::~csHomeFirst(void)
 }
 
 
-bool csHomeFirst::SceneInitialaze(IDirect3DDevice9 *pDev)
+bool csHomeFirst::SceneInitialaze(cRenderDevice *pDev)
 {
 	//sg_pDungeonSystem->InitSystem(pDev);
 	{
@@ -103,12 +103,12 @@ void csHomeFirst::SceneFinalize()
 	
 }
 
-void csHomeFirst::SceneSystemDraw(IDirect3DDevice9 *pDev)
+void csHomeFirst::SceneSystemDraw(cRenderDevice *pDev)
 {
 
 }
 
-void csHomeFirst::SceneDraw(IDirect3DDevice9 *pDev)
+void csHomeFirst::SceneDraw(cRenderDevice *pDev)
 {
 
 	
@@ -116,7 +116,7 @@ void csHomeFirst::SceneDraw(IDirect3DDevice9 *pDev)
 	sg_pDungeonSystem->Draw(pDev);
 }
 
-void csHomeFirst::SceneProcess(IDirect3DDevice9 *pDev)
+void csHomeFirst::SceneProcess(cRenderDevice *pDev)
 {
 
 

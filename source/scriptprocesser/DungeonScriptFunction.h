@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fileManage_ph.h>
+#include "../gameMainSystem/cRenderBackend.h"
 
 #include <LuaUtility/LuaStringUtility.h>
 #include <StyleString.h>
@@ -33,7 +34,7 @@ typedef boost::shared_ptr<cEventBackground> pcEventBackground;
 
 #include <map>
 
-typedef D3DXVECTOR4 TextureRangeRect;
+typedef cRenderVector4 TextureRangeRect;
 
 class cCoordinate;
 
@@ -221,7 +222,7 @@ pcLandform getLandformStorage(const pLuaString landformName);
 //メッセージ
 
 //virtual int メッセージ(StyleString Message);
-int message(StyleString& Message);
+int message(const StyleString& Message);
 //virtual int メッセージ決定待ち();
 int messageWait();
 int messageWaitAnyKey();
@@ -609,8 +610,8 @@ template<class T>
 class std_vector
 {
 public:
-	typedef typename ::std::vector<T> typename LuaVector;
-	typedef typename ::std::vector<T>::iterator typename LuaVector_iterator;
+	typedef ::std::vector<T> LuaVector;
+	typedef typename ::std::vector<T>::iterator LuaVector_iterator;
 
 	static void assign(LuaVector& vec, int count, const T val){
 		vec.assign(count, val);
@@ -699,12 +700,12 @@ template<class T, class U>
 class std_map
 {
 public:
-	typedef typename ::std::map<T,U> typename LuaMap;
+	typedef ::std::map<T,U> LuaMap;
 
-	typedef typename ::std::map<T,U>::iterator typename LuaMap_iterator;
+	typedef typename ::std::map<T,U>::iterator LuaMap_iterator;
 	
-	typedef typename ::std::pair<T,U> typename LuaMap_pair;
-	typedef typename ::std::pair<LuaMap_iterator,bool> typename pairOf_LuaMap_pair_bool;
+	typedef ::std::pair<T,U> LuaMap_pair;
+	typedef ::std::pair<LuaMap_iterator,bool> pairOf_LuaMap_pair_bool;
 
 
 	static LuaMap_iterator begin(LuaMap& m){
@@ -866,10 +867,10 @@ template<class T>
 class std_set
 {
 public:
-	typedef typename ::std::set<T> typename LuaSet;
-	typedef typename ::std::set<T>::iterator typename LuaSet_iterator;
+	typedef ::std::set<T> LuaSet;
+	typedef typename ::std::set<T>::iterator LuaSet_iterator;
 
-	typedef typename ::std::pair<LuaSet_iterator,bool> typename pairOf_LuaSet_iterator_bool;
+	typedef ::std::pair<LuaSet_iterator,bool> pairOf_LuaSet_iterator_bool;
 
 
 	static LuaSet_iterator begin(LuaSet& s){

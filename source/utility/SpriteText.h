@@ -8,9 +8,7 @@
 //勝手にソースコードを改変することを許可します。
 //======================================================================
 
-#include <windows.h>
-#include <d3dx9.h>
-#include <d3d9.h>
+#include "../gameMainSystem/cRenderBackend.h"
 
 
 #include "StyleString.h"
@@ -29,12 +27,11 @@ public:
 	~SpriteText();
 protected:
 	BYTE m_byAlphaTbl[65];
-	LPDIRECT3DTEXTURE9 m_lpTex;
+	cRenderTexture* m_lpTex;
 	DWORD m_dwWidth, m_dwHeight;
-	HFONT m_hFont, m_hOldFont;
+	cRenderTextContext m_textContext;
 	DWORD m_dwTexSize;
-	HDC m_hdc;
-	D3DXVECTOR2 m_fSize;
+	cRenderVector2 m_fSize;
 	DWORD m_dwX;
 	DWORD m_dwY;
 
@@ -46,33 +43,32 @@ protected:
 
 
 	float m_fRot;
-	MAT2 m_mat;
-	HWND m_hwnd;
-	LONG lWidth;
-	LONG lHeight;
+	cRenderTextTransform m_textTransform;
+	long lWidth;
+	long lHeight;
 	bool m_AntiAlias;	//アンチエイリアスフラグ
 	BYTE m_a;
 	DWORD m_rgb;
 	bool m_Over;	//上書きフラグ
 protected:
-	DWORD GetFontBuffer( long code, GLYPHMETRICS *pgm, LPBYTE *lpData );
+	DWORD GetFontBuffer( long code, cRenderGlyphMetrics *pgm, BYTE **lpData );
 	long GetCharCode( UByte *str );
 	void SetDrawText(TCHAR* tstring);
 	bool IsZenkaku( UByte c );
 	void UpDate();
-	void DrawChar(unsigned int code,D3DLOCKED_RECT &TexRect,TEXTMETRIC &tm);
+	void DrawChar(unsigned int code,cRenderLockedRect &TexRect,const cRenderTextMetrics &tm);
 
 	int GetcharWidth(unsigned int code);
 public:
 	DWORD GetX();
 	DWORD GetY();
-	LPDIRECT3DTEXTURE9 GetTex();
-	bool Init( LPDIRECT3DDEVICE9 lpDev,long num, DWORD w, DWORD h);
+	cRenderTexture* GetTex();
+	bool Init( cRenderDevice* lpDev,long num, DWORD w, DWORD h);
 	void UnInit( void );
 	void BeginText(const TCHAR* face, DWORD size );
 	void EndText( void );
 	void SetColor(DWORD color );
-	void SetSize(D3DXVECTOR2 &vec2Size);
+	void SetSize(const cRenderVector2 &vec2Size);
 	void SetRot(float fRot);
 
 	void SetReturnWidth(DWORD width);

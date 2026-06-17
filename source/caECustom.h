@@ -32,14 +32,14 @@ public:
 	virtual ~caECustom(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	
 protected:
-	virtual int preprocess(IDirect3DDevice9 *pDev);
+	virtual int preprocess(cRenderDevice *pDev);
 	int preprocessed;
 
-	IDirect3DTexture9 *pTex;
+	cRenderTexture*pTex;
 public:
 
 	virtual bool isOnScreen();

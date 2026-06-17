@@ -28,7 +28,7 @@ cDropingFunc::~cDropingFunc(void)
 }
 
 //コマンド実行時処理
-int cDropingFunc::Action(IDirect3DDevice9 *pDev)
+int cDropingFunc::Action(cRenderDevice *pDev)
 {
 
 	//FireできるかItemに聞く
@@ -54,7 +54,7 @@ int cDropingFunc::Action(IDirect3DDevice9 *pDev)
 }
 
 //アイテム使用時処理
-int cDropingFunc::Fire(IDirect3DDevice9 *pDev)
+int cDropingFunc::Fire(cRenderDevice *pDev)
 {
 
 	//コマンドを解決する;
@@ -94,7 +94,7 @@ StyleString cDropingFunc::shortExplanationText()
 
 
 //新規の目的語(オブジェクト)を選択するためのリストを作成する。
-void cDropingFunc::MakeSetObjectMenu(IDirect3DDevice9 *pDev, vector<pcDroping> &Objects, bool MultiObj, StyleString info)
+void cDropingFunc::MakeSetObjectMenu(cRenderDevice *pDev, vector<pcDroping> &Objects, bool MultiObj, StyleString info)
 {
 	int i;
 
@@ -142,7 +142,7 @@ void cDropingFunc::MakeSetObjectMenu(IDirect3DDevice9 *pDev, vector<pcDroping> &
 }
 
 
-void cDropingFunc::MakeSetObjectMenu(IDirect3DDevice9 *pDev, vector<vector<pcDroping>> &Objectslist, bool MultiObj, vector<StyleString> infolist)
+void cDropingFunc::MakeSetObjectMenu(cRenderDevice *pDev, vector<vector<pcDroping>> &Objectslist, bool MultiObj, vector<StyleString> infolist)
 {
 	pcControlLayer pccl;
 	pcListWindowAdv pcladw;
@@ -245,12 +245,12 @@ cShopDroping::~cShopDroping(void)
 {
 
 }
-void cShopDroping::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cShopDroping::Init(cRenderDevice *pDev,pcDroping self)
 {
 	cDroping::Init(pDev,self);
 	pmemo = item_->pmemo;
 }
-int cShopDroping::Action(IDirect3DDevice9 *pDev)
+int cShopDroping::Action(cRenderDevice *pDev)
 {
 
 	vector<tstring>& captions = captions_;

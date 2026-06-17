@@ -21,7 +21,7 @@ public:
 	virtual ~caFunction(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	virtual int Init();
 
 	//virtual bool isOnScreen();
@@ -49,7 +49,7 @@ public:
 	virtual ~caPAnimeAdd(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	virtual int Init();
 
 	//virtual bool isOnScreen();
@@ -94,7 +94,7 @@ public:
 	virtual ~caLuaFunction(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	virtual int Init();
 
 	//virtual bool isOnScreen();

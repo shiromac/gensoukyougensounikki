@@ -100,7 +100,7 @@ _T("\n")+
 _T("\n")
 ;};/* ** */
 
-	//virtual int 見る(IDirect3DDevice9 *pDev);
+	//virtual int 見る(cRenderDevice *pDev);
 	//virtual int 見る要請();
 	virtual inline bool 内容物使用可(){return true;};
 	//出せる

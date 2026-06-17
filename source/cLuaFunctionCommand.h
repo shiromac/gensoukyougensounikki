@@ -34,7 +34,7 @@ public:
 	std::map<tstring, luabind::object> freeValiable;
 public:
 //overloads
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 	virtual StyleString shortExplanationText(){return shortExplanation_;};
 

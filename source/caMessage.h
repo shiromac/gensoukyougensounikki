@@ -22,7 +22,7 @@ public:
 	virtual ~caMessage(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 
 	
 	//î≠âŒÇµÇ‚Ç∑Ç¢Ç©ÅiWeekInvocationÇ≈î≠âŒÇ∑ÇÈÇ©Åj

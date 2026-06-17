@@ -24,19 +24,19 @@ public:
 	~cListWindowAdv(void);
 
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
 public:
 	virtual void SetCursolTolast();
 
 protected:
-	//virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	//virtual int TextDraw(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	
 
-	//virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	//virtual int TextDrawSub(cRenderDevice *pDev);
 
-	virtual int RerenderDraw(IDirect3DDevice9 *pDev);
+	virtual int RerenderDraw(cRenderDevice *pDev);
 
 
 	//SpriteText ListText[LISTWINDOW_MAXINDEX];
@@ -50,7 +50,7 @@ protected:
 public:
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	
 
 	//í«â¡ÉÅÉìÉo
@@ -76,12 +76,12 @@ public:
 	//vector<pcDroping> pDroplist;
 	//vector<pcDroping>*ppDroplist;
 
-	virtual int sortDrops(IDirect3DDevice9 *pDev);
+	virtual int sortDrops(cRenderDevice *pDev);
 	
-	virtual int togetherDrops(IDirect3DDevice9 *pDev);
+	virtual int togetherDrops(cRenderDevice *pDev);
 	
 	
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	virtual StyleString shortExplanationString(cRenderDevice *pDev);
 /*
 public:
 	//--------------------------------------------------
@@ -90,20 +90,20 @@ public:
 	set<pcDroping> pMultiDropSet;
 */
 	/*
-	virtual int processofMultiSet(IDirect3DDevice9 *pDev);
-	virtual int MultiSetDraw(IDirect3DDevice9 *pDev);
+	virtual int processofMultiSet(cRenderDevice *pDev);
+	virtual int MultiSetDraw(cRenderDevice *pDev);
 
 
-	virtual int FireofMultiSet(IDirect3DDevice9 *pDev);
+	virtual int FireofMultiSet(cRenderDevice *pDev);
 	virtual int insertMultiSet();
 	virtual int eraseMultiSet();
 */
-	virtual int MultiSetDraw(IDirect3DDevice9 *pDev);
+	virtual int MultiSetDraw(cRenderDevice *pDev);
 	
 public:
 	pcListWindow psubWindow;
 	map<pcDroping,vector<pcDroping>> vpsubDropmap;
-	virtual int subWindowProcess(IDirect3DDevice9 *pDev);
+	virtual int subWindowProcess(cRenderDevice *pDev);
 	int subWindowMode;
 };
 #include <boost/shared_ptr.hpp>

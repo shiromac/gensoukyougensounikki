@@ -23,9 +23,11 @@
 #define _WIN32_IE 0x0600	// これを IE. の他のバージョン向けに適切な値に変更してください。
 #endif
 
+#ifndef __EMSCRIPTEN__
 #define WIN32_LEAN_AND_MEAN		// Windows ヘッダーから使用されていない部分を除外します。
 // Windows ヘッダー ファイル:
 #include <windows.h>
+#endif
 
 
 
@@ -57,7 +59,9 @@
 #include "gameMainSystem/cInput.h"
 
 //#include "gResourceIndex.h"
+#ifndef __EMSCRIPTEN__
 #include "sound/sound.h"
+#endif
 
 
 #include "cDungeonSystem.h"

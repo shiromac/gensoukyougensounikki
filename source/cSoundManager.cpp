@@ -1,8 +1,13 @@
 #include "stdafx.h"
 
 #include "cSoundManager.h"
-#include "sound/SoundDecodeItemWav.h" // <- Wav形式の読み込みを行う
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
+#ifndef __EMSCRIPTEN__
+#include "sound/SoundDecodeItemWav.h"
 #include "gameMainSystem/filemanage/cAutoSaveClass.h"
+#endif
 
 #define SOUNDFOLDER _EXELOCATION _T("sound\\")
 
@@ -12,6 +17,238 @@
 const int SOUNDGROUP_SE = 0;
 const int SOUNDGROUP_MUSIC = 1;
 static const int SOUND_STREAMBUFFERSIZE	= 8192 * 8; // 8192 * 8はストリームバッファのサイズ。この数字で大丈夫だと思う。
+#ifdef __EMSCRIPTEN__
+namespace
+{
+	std::string BrowserAudioPath(const TCHAR* path)
+	{
+		std::string normalized = ggn_tchar_to_path(path);
+		while(normalized.size() >= 2 && normalized[0] == '.' && normalized[1] == '/')
+		{
+			normalized.erase(0, 2);
+		}
+		return normalized;
+	}
+
+	void BrowserAudioEnsure()
+	{
+		EM_ASM((function() {
+			if (Module.ggnAudio) return;
+
+			var state = {
+				context: null,
+				masterGain: null,
+				seGain: null,
+				bgmGain: null,
+				buffers: {},
+				loading: {},
+				resolvedPaths: {},
+				errors: [],
+				loadCount: 0,
+				playCount: 0,
+				bgmToken: 0,
+				bgmSources: [],
+				bgmPath: ''
+			};
+
+			function normalize(path) {
+				path = (path || '').split(String.fromCharCode(92)).join('/');
+				while (path.indexOf('./') === 0) path = path.substring(2);
+				return path;
+			}
+
+			function context() {
+				if (state.context) return state.context;
+				var Ctor = window.AudioContext || window.webkitAudioContext;
+				if (!Ctor) return null;
+				state.context = new Ctor();
+				state.masterGain = state.context.createGain();
+				state.seGain = state.context.createGain();
+				state.bgmGain = state.context.createGain();
+				state.seGain.gain.value = 1;
+				state.bgmGain.gain.value = 1;
+				state.seGain.connect(state.masterGain);
+				state.bgmGain.connect(state.masterGain);
+				state.masterGain.connect(state.context.destination);
+				return state.context;
+			}
+
+			function resume() {
+				var ctx = context();
+				if (ctx && ctx.state === 'suspended') ctx.resume();
+			}
+
+			['keydown', 'pointerdown', 'mousedown', 'touchstart'].forEach(function(name) {
+				window.addEventListener(name, resume, { once: false, passive: true });
+			});
+
+			function candidatesForPath(path) {
+				if (path.indexOf('/music/') >= 0 && path.slice(-4).toLowerCase() === '.wav') {
+					return [path.slice(0, -4) + '.m4a', path];
+				}
+				return [path];
+			}
+
+			function decodeCandidate(requestedPath, candidates, index) {
+				var ctx = context();
+				if (!ctx || index >= candidates.length) return Promise.resolve(null);
+				var actualPath = candidates[index];
+				return fetch(actualPath)
+					.then(function(response) {
+						if (!response.ok) {
+							if (index + 1 < candidates.length) return decodeCandidate(requestedPath, candidates, index + 1);
+							throw new Error('audio fetch ' + response.status + ': ' + actualPath);
+						}
+						return response.arrayBuffer().then(function(data) {
+							return ctx.decodeAudioData(data);
+						}).then(function(buffer) {
+							state.buffers[requestedPath] = buffer;
+							state.resolvedPaths[requestedPath] = actualPath;
+							state.loading[requestedPath] = null;
+							return buffer;
+						});
+					})
+					.catch(function(error) {
+						if (index + 1 < candidates.length) return decodeCandidate(requestedPath, candidates, index + 1);
+						console.warn('[ggn audio]', error);
+						state.errors.push(String(error));
+						state.loading[requestedPath] = null;
+						return null;
+					});
+			}
+
+			function load(path) {
+				path = normalize(path);
+				if (!path) return Promise.resolve(null);
+				if (state.buffers[path]) return Promise.resolve(state.buffers[path]);
+				if (state.loading[path]) return state.loading[path];
+				if (!context()) return Promise.resolve(null);
+				state.loadCount++;
+				state.loading[path] = decodeCandidate(path, candidatesForPath(path), 0);
+				return state.loading[path];
+			}
+
+			function stopBgm() {
+				state.bgmToken++;
+				state.bgmSources.forEach(function(source) {
+					try { source.stop(0); } catch (e) {}
+				});
+				state.bgmSources = [];
+			}
+
+			function startSource(buffer, gain, loop, when) {
+				var ctx = context();
+				if (!ctx || !buffer) return null;
+				var source = ctx.createBufferSource();
+				source.buffer = buffer;
+				source.loop = !!loop;
+				source.connect(gain);
+				source.start(typeof when === 'number' ? when : 0);
+				state.playCount++;
+				return source;
+			}
+
+			Module.ggnAudio = state;
+			Module.ggnAudioEnsure = function() {
+				return !!context();
+			};
+			Module.ggnAudioLoad = function(path) {
+				return load(path);
+			};
+			Module.ggnAudioSetVolume = function(seVolume, bgmVolume) {
+				context();
+				var se = Math.max(0, Math.min(1, seVolume / 100));
+				var bgm = Math.max(0, Math.min(1, bgmVolume / 100));
+				if (state.seGain) state.seGain.gain.value = se;
+				if (state.bgmGain) state.bgmGain.gain.value = bgm;
+			};
+			Module.ggnAudioPlaySe = function(path) {
+				path = normalize(path);
+				resume();
+				load(path).then(function(buffer) {
+					if (buffer) startSource(buffer, state.seGain, false, null);
+				});
+			};
+			Module.ggnAudioStopBgm = stopBgm;
+			Module.ggnAudioPlayBgm = function(beginPath, repeatPath) {
+				beginPath = normalize(beginPath);
+				repeatPath = normalize(repeatPath);
+				stopBgm();
+				state.bgmPath = beginPath + ';' + repeatPath;
+				var token = state.bgmToken;
+				resume();
+
+				if (beginPath && repeatPath) {
+					Promise.all([load(beginPath), load(repeatPath)]).then(function(buffers) {
+						if (state.bgmToken !== token || !buffers[0] || !buffers[1]) return;
+						var ctx = context();
+						if (!ctx) return;
+						var startAt = ctx.currentTime + 0.05;
+						var introSource = startSource(buffers[0], state.bgmGain, false, startAt);
+						var loopSource = startSource(buffers[1], state.bgmGain, true, startAt + buffers[0].duration);
+						if (introSource) state.bgmSources.push(introSource);
+						if (loopSource) state.bgmSources.push(loopSource);
+					});
+				} else if (beginPath) {
+					load(beginPath).then(function(buffer) {
+						if (state.bgmToken !== token || !buffer) return;
+						var source = startSource(buffer, state.bgmGain, true, 0);
+						if (source) state.bgmSources.push(source);
+					});
+				} else if (repeatPath) {
+					load(repeatPath).then(function(buffer) {
+						if (state.bgmToken !== token || !buffer) return;
+						var source = startSource(buffer, state.bgmGain, true, 0);
+						if (source) state.bgmSources.push(source);
+					});
+				}
+			};
+		})());
+	}
+
+	void BrowserAudioSetVolume(int seVolume, int bgmVolume)
+	{
+		BrowserAudioEnsure();
+		EM_ASM({
+			if (Module.ggnAudioSetVolume) Module.ggnAudioSetVolume($0, $1);
+		}, seVolume, bgmVolume);
+	}
+
+	void BrowserAudioPreloadPath(const TCHAR* path)
+	{
+		std::string normalized = BrowserAudioPath(path);
+		BrowserAudioEnsure();
+		EM_ASM({
+			if (Module.ggnAudioLoad) Module.ggnAudioLoad(UTF8ToString($0));
+		}, normalized.c_str());
+	}
+
+	void BrowserAudioPlaySePath(const TCHAR* path)
+	{
+		std::string normalized = BrowserAudioPath(path);
+		EM_ASM({
+			if (Module.ggnAudioPlaySe) Module.ggnAudioPlaySe(UTF8ToString($0));
+		}, normalized.c_str());
+	}
+
+	void BrowserAudioPlayBgmPaths(const TCHAR* beginPath, const TCHAR* repeatPath)
+	{
+		std::string normalizedBegin = BrowserAudioPath(beginPath);
+		std::string normalizedRepeat = BrowserAudioPath(repeatPath);
+		EM_ASM({
+			if (Module.ggnAudioPlayBgm) Module.ggnAudioPlayBgm(UTF8ToString($0), UTF8ToString($1));
+		}, normalizedBegin.c_str(), normalizedRepeat.c_str());
+	}
+
+	void BrowserAudioStopBgm()
+	{
+		BrowserAudioEnsure();
+		EM_ASM({
+			if (Module.ggnAudioStopBgm) Module.ggnAudioStopBgm();
+		});
+	}
+}
+#endif
 
 cSoundManager::cSoundManager()
 {
@@ -21,11 +258,16 @@ cSoundManager::cSoundManager()
 cSoundManager::~cSoundManager()
 {
 	soundFileMap.clear();
+#ifndef __EMSCRIPTEN__
 	DirectSoundStream::HandleClose();
+#endif
 }
 
-int cSoundManager::Init(HWND hWnd)
+int cSoundManager::Init(cSoundWindowHandle hWnd)
 {
+#ifdef __EMSCRIPTEN__
+	BrowserAudioEnsure();
+#else
 	//m_sound.init(hWnd);
 	//m_sound.insertSoundItem(new SoundDecodeItemWav());
 
@@ -82,6 +324,7 @@ int cSoundManager::Init(HWND hWnd)
 
 	FilePackSE_.LoadPackFile(SOUNDSEPACKNAME, /*pD3DDevice*/ NULL);
 	FilePackBGM_.LoadPackFile(SOUNDBGMPACKNAME, /*pD3DDevice*/ NULL);
+#endif
 	
 		
 	return true;
@@ -90,16 +333,22 @@ int cSoundManager::Init(HWND hWnd)
 int cSoundManager::clearSoundEffect()
 {
 
+#ifndef __EMSCRIPTEN__
 	m_sound.releaseSB();
+	se_exits.clear();
+#endif
 	soundFileMap.clear();
 	Index2File.clear();
-	se_exits.clear();
 	return true;
 }
 
 int cSoundManager::resetVolume(void)
 {
+#ifdef __EMSCRIPTEN__
+	BrowserAudioSetVolume(SEVolume_, BGMVolume_);
+#else
 	if(playingBGM != _T("")) bgm.SetVolume_ByRate(BGMVolume_);
+#endif
 	return true;
 }
 
@@ -139,6 +388,13 @@ int cSoundManager::getSoundEffectFromFile(const TCHAR* name)
 		}
 	}
 */
+#ifdef __EMSCRIPTEN__
+	IndexNum = soundFileMap.size();
+	soundFileMap.insert( pair<tstring, int>(path, IndexNum));
+	Index2File.insert( pair<int, tstring>(IndexNum, path));
+	BrowserAudioPreloadPath(path);
+	return IndexNum;
+#else
 	int Seek = -1;
 	FilePackSE_.GetSoundSeek(path, &Seek);
 	if(Seek != -1)
@@ -159,6 +415,7 @@ int cSoundManager::getSoundEffectFromFile(const TCHAR* name)
 
 	}
 	return IndexNum;
+#endif
 }
 
 int cSoundManager::playSoundEffect(int Index)
@@ -167,17 +424,31 @@ int cSoundManager::playSoundEffect(int Index)
 	{
 		return false;
 	}
+#ifdef __EMSCRIPTEN__
+	if(SEVolume_ != 0)
+	{
+		map<int,tstring>::iterator itr = Index2File.find(Index);
+		if(itr != Index2File.end())
+		{
+			BrowserAudioSetVolume(SEVolume_, BGMVolume_);
+			BrowserAudioPlaySePath(itr->second.c_str());
+		}
+	}
+#else
 	if(SEVolume_ != 0)
 	{
 		//m_sound.play(Index2File[Index],1,0,1);
 		se_exits[Index]->SetVolume_ByRate(SEVolume_);
 		se_exits[Index]->Play();
 	}
+#endif
 	return true;
 }
 
 int cSoundManager::getplayBGMFromFile(const TCHAR* beginName, const TCHAR* repeatName)
 {
+	if(beginName == NULL) beginName = _T("");
+	if(repeatName == NULL) repeatName = _T("");
 	
 	TCHAR path[128] = _T("");
 	TCHAR pathroop[128] = _T("");
@@ -215,6 +486,12 @@ int cSoundManager::getplayBGMFromFile(const TCHAR* beginName, const TCHAR* repea
 
 	*/
 
+#ifdef __EMSCRIPTEN__
+	BrowserAudioSetVolume(SEVolume_, BGMVolume_);
+	BrowserAudioPlayBgmPaths(
+		_tcscmp(beginName, _T("")) != 0 ? path : _T(""),
+		_tcscmp(repeatName, _T("")) != 0 ? pathroop : _T(""));
+#else
 	//if(BGMVolume_ > 0)//省略すると場ぐる
 	{
 		int Seek = -1;
@@ -225,7 +502,7 @@ int cSoundManager::getplayBGMFromFile(const TCHAR* beginName, const TCHAR* repea
 		
 		}
 		Seek = -1;
-		if(repeatName != _T(""))
+		if(_tcscmp(repeatName, _T("")) != 0)
 		{
 			FilePackBGM_.GetSoundSeek(pathroop, &Seek);
 			if(Seek != -1)
@@ -236,6 +513,7 @@ int cSoundManager::getplayBGMFromFile(const TCHAR* beginName, const TCHAR* repea
 		bgm.SetVolume_ByRate(BGMVolume_);
 		bgm.Play();
 	}
+#endif
 	return 0;
 }
 //鳴りきりBGMをBGMを一旦止めてファイル名からロードしてならす。失敗した場合-1を返す。
@@ -249,7 +527,11 @@ int cSoundManager::stopBGM()
 
 	//m_sound.stopLayer(SOUNDGROUP_MUSIC);
 
+#ifdef __EMSCRIPTEN__
+	BrowserAudioStopBgm();
+#else
 	bgm.Stop();
+#endif
 	return 0;
 }
 

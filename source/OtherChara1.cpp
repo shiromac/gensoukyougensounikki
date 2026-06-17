@@ -20,7 +20,7 @@ public:\
 	cCommand##name##(void){caption = deftext;};\
 	cCommand##name##(StyleString s){caption = s;};\
 	virtual ~cCommand##name##(void){};\
-	virtual int Action(IDirect3DDevice9 *pDev);\
+	virtual int Action(cRenderDevice *pDev);\
 
 
 
@@ -31,7 +31,7 @@ class cCommand_Store : public cCommand
 {
 public:
 	virtual ~cCommand_Store(void){};
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 	virtual StyleString shortExplanationText();
 	cCommand_Store(StyleString s, int storeindex, pcMemoString memo, int capacity)
 	:storeindex_(storeindex),memo_(memo),capacity_(capacity){caption = s;};
@@ -85,7 +85,7 @@ DEF_COMMANDCLASS(_StoreCapacityExtend,g_Lang(_T("倉庫の容量を増やす")))
 	virtual StyleString shortExplanationText();
 };
 
-int cCommand_StoreManege::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreManege::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//倉庫のかんり
@@ -161,7 +161,7 @@ void cCommand_Store::resetCaption()
 	caption += setStyle((int)sg_pDungeonSystem->ItemSize(g_pSaveData()->pSaveStore()->storeItem[storeindex_]));
 	caption +=  _T(">");
 }
-int cCommand_Store::Action(IDirect3DDevice9 *pDev)
+int cCommand_Store::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -206,7 +206,7 @@ StyleString cCommand_Store::shortExplanationText()
 	val[_T("Value")] = setStyle(-sg_pDungeonSystem->ItemSize(g_pSaveData()->pSaveStore()->storeItem[storeindex_]) + capacity_);
 	return g_Lang(_T("倉庫Explanation"),val);
 }
-int cCommand_StoreLook::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreLook::Action(cRenderDevice *pDev)
 {
 
 	//----------------------------------
@@ -262,7 +262,7 @@ int cCommand_StoreLook::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCommand_inStore::Action(IDirect3DDevice9 *pDev)
+int cCommand_inStore::Action(cRenderDevice *pDev)
 {
 
 
@@ -324,7 +324,7 @@ int cCommand_inStore::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCommand_inAllStore::Action(IDirect3DDevice9 *pDev)
+int cCommand_inAllStore::Action(cRenderDevice *pDev)
 {
 
 
@@ -357,7 +357,7 @@ int cCommand_inAllStore::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_outStore::Action(IDirect3DDevice9 *pDev)
+int cCommand_outStore::Action(cRenderDevice *pDev)
 {
 
 	//----------------------------------
@@ -416,7 +416,7 @@ int cCommand_outStore::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_StoreMemo::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreMemo::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	//pcSelectWindow pcsw;
@@ -437,7 +437,7 @@ int cCommand_StoreMemo::Action(IDirect3DDevice9 *pDev)
 
 	return false;
 }
-int cCommand_StoreErase::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreErase::Action(cRenderDevice *pDev)
 {
 	if(g_pSaveData()->pSaveStore()->storeItem[storeindex_].size() > 0)
 	{
@@ -452,7 +452,7 @@ int cCommand_StoreErase::Action(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cCommand_StoreMake::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreMake::Action(cRenderDevice *pDev)
 {
 
 	vector<pcDroping> vpdrop;
@@ -486,7 +486,7 @@ static void cCommand_StoreCapacityExtend_fadeBlack() {
 static void cCommand_StoreCapacityExtend_fadeOut() {
 	sg_pDungeonSystem->EventManager().fadeOut(40);
 }
-int cCommand_StoreCapacityExtend::Action(IDirect3DDevice9 *pDev)
+int cCommand_StoreCapacityExtend::Action(cRenderDevice *pDev)
 {
 	if(sg_pDungeonSystem->pSaveData->StoreSpaceExtendCount() >= sg_pDungeonSystem->pSaveData->StoreSpaceExtendCountMax())
 	{//最大
@@ -540,7 +540,7 @@ DEF_COMMANDCLASS(_BankOutAction,g_Lang(_T("もち金を引き出す(アクション)")))
 	unsigned long int money;
 };
 
-int cCommand_BankManege::Action(IDirect3DDevice9 *pDev)
+int cCommand_BankManege::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//貯金の管理
@@ -588,7 +588,7 @@ int cCommand_BankManege::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_BankIn::Action(IDirect3DDevice9 *pDev)
+int cCommand_BankIn::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//もち金を預ける
@@ -621,7 +621,7 @@ int cCommand_BankIn::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_BankInAction::Action(IDirect3DDevice9 *pDev)
+int cCommand_BankInAction::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//もち金を預ける
@@ -641,7 +641,7 @@ int cCommand_BankInAction::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_BankOut::Action(IDirect3DDevice9 *pDev)
+int cCommand_BankOut::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//貯金を引き出す
@@ -674,7 +674,7 @@ int cCommand_BankOut::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_BankOutAction::Action(IDirect3DDevice9 *pDev)
+int cCommand_BankOutAction::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//貯金を引き出す
@@ -745,7 +745,7 @@ DEF_COMMANDCLASS(_yakuChange_PickItem,g_Lang(_T("掘り出し物")))
 DEF_COMMANDCLASS(_yakuChange_KeepItem,g_Lang(_T("キープリスト")))
 	virtual StyleString shortExplanationText();
 };
-int cCommand_Uncurse::Action(IDirect3DDevice9 *pDev)
+int cCommand_Uncurse::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//解呪サービス
@@ -782,7 +782,7 @@ int cCommand_Uncurse::Action(IDirect3DDevice9 *pDev)
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int cCommand_yakuChange::Action(IDirect3DDevice9 *pDev)
+int cCommand_yakuChange::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//厄ポイントの交換
@@ -815,7 +815,7 @@ int cCommand_yakuChange::Action(IDirect3DDevice9 *pDev)
 	pcsw->playsound_decide();
 	return true;
 }
-int cCommand_yakuChange_PickItem::Action(IDirect3DDevice9 *pDev)
+int cCommand_yakuChange_PickItem::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//掘り出し物
@@ -874,7 +874,7 @@ int cCommand_yakuChange_PickItem::Action(IDirect3DDevice9 *pDev)
 	pcgw->enable = true;
 	return true;
 }
-int cCommand_yakuChange_KeepItem::Action(IDirect3DDevice9 *pDev)
+int cCommand_yakuChange_KeepItem::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//キープリスト
@@ -990,7 +990,7 @@ DEF_COMMANDCLASS(_KirisameShop_Sell,g_Lang(_T("売る")))
 	cCommand_KirisameShop_Sell(pcCharacter pchara, StyleString s):self_(pchara){caption = s;};
 	pcCharacter self_;
 };
-int cCommand_KirisameShop::Action(IDirect3DDevice9 *pDev)
+int cCommand_KirisameShop::Action(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;
@@ -1021,7 +1021,7 @@ int cCommand_KirisameShop::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_KirisameShop_Buy::Action(IDirect3DDevice9 *pDev)
+int cCommand_KirisameShop_Buy::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//買う
@@ -1073,7 +1073,7 @@ int cCommand_KirisameShop_Buy::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_KirisameShop_Sell::Action(IDirect3DDevice9 *pDev)
+int cCommand_KirisameShop_Sell::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//売る
@@ -1321,7 +1321,7 @@ DEF_COMMANDCLASS(_NitoriFactory_remodeling_item, g_Lang(_T("装備品を改造する->装
 	}
 	pcDroping item_;
 };
-int cCommand_NitoriFactory::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory::Action(cRenderDevice *pDev)
 {
 	if(cOtherChara_ID_5::isCanUseShop())
 	{
@@ -1362,7 +1362,7 @@ int cCommand_NitoriFactory::Action(IDirect3DDevice9 *pDev)
 	}
 	return true;
 }
-int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_reinforce::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//強化
@@ -1435,7 +1435,7 @@ int cCommand_NitoriFactory_reinforce::Action(IDirect3DDevice9 *pDev)
 	return true;
 
 }
-int cCommand_NitoriFactory_reinforce_item::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_reinforce_item::Action(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->主人公お金増減( - cOtherChara_ID_5::強化資金());
 	sg_pDungeonSystem->メニューを閉じる();
@@ -1446,7 +1446,7 @@ int cCommand_NitoriFactory_reinforce_item::Action(IDirect3DDevice9 *pDev)
 	cOtherChara_ID_5::ShopUsedSave();
 	return true;
 }
-int cCommand_NitoriFactory_combine::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_combine::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//合成
@@ -1500,7 +1500,7 @@ int cCommand_NitoriFactory_combine::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_NitoriFactory_combine_item1::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_combine_item1::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//合成
@@ -1549,7 +1549,7 @@ int cCommand_NitoriFactory_combine_item1::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_combine_item1_item2::Action(cRenderDevice *pDev)
 {
 
 	sg_pDungeonSystem->メニューを閉じる();
@@ -1579,7 +1579,7 @@ int cCommand_NitoriFactory_combine_item1_item2::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_NitoriFactory_remodeling::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_remodeling::Action(cRenderDevice *pDev)
 {
 	//----------------------------------
 	//改造
@@ -1645,7 +1645,7 @@ int cCommand_NitoriFactory_remodeling::Action(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cCommand_NitoriFactory_remodeling_item::Action(IDirect3DDevice9 *pDev)
+int cCommand_NitoriFactory_remodeling_item::Action(cRenderDevice *pDev)
 {
 	if(sg_pDungeonSystem->主人公お金所持量() < cOtherChara_ID_5::改造資金(item_))
 	{
@@ -1752,7 +1752,7 @@ DEF_COMMANDCLASS(_Hizumi_Dungeon, g_Lang(_T("ひずみのダンジョン")))
 		return g_Lang(_T("ひずみのダンジョンshortExplanationText"));
 	};
 };
-int cCommand_Hizumi_Dungeon::Action(IDirect3DDevice9 *pDev)
+int cCommand_Hizumi_Dungeon::Action(cRenderDevice *pDev)
 {
 	vector<tstring> dungeons;
 	dungeons.push_back(_T("red_extra_Dungeon"));

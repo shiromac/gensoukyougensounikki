@@ -12,7 +12,7 @@ cDrawingObject_ring::~cDrawingObject_ring(void)
 {
 }
 
-int cDrawingObject_ring::Draw(IDirect3DDevice9 *pDev)
+int cDrawingObject_ring::Draw(cRenderDevice *pDev)
 {
 
 	return true;

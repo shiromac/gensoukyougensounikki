@@ -280,7 +280,7 @@ void cEvent_BossLazer::minimapDraw(const cCoordinate& leftTop, const int boxSize
 void cEvent_BossLazer::InitSub()
 {
 	
-	IDirect3DTexture9* texture = g_GameEnv.m_GlobalResourse->getTextureFromFile(sg_pDungeonSystem->pDevice_D3D,_T("effect\\basic\\ball_simple.png"));
+	cRenderTexture* texture = g_GameEnv.m_GlobalResourse->getTextureFromFile(sg_pDungeonSystem->pDevice_D3D,_T("effect\\basic\\ball_simple.png"));
 	rodEx_.setTexture(texture);
 	rodEx_.m_color = color_;
 	rodEx_.m_TexRange.setLTRB(0,0,1,1);

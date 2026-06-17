@@ -27,20 +27,20 @@ class cListWindow :
 public:
 	cListWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
 public:
 	virtual void SetCursolTolast();
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
 
 
 
-	//virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	//virtual int TextDrawSub(cRenderDevice *pDev);
 
-	virtual int RerenderDraw(IDirect3DDevice9 *pDev);
+	virtual int RerenderDraw(cRenderDevice *pDev);
 
 
 	//SpriteText ListText[LISTWINDOW_MAXINDEX];
@@ -58,12 +58,12 @@ protected:
 	virtual int cursoletcMarginWidth();
 public:
 	virtual ~cListWindow(void);
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	
 	vector<pcDroping> pDroplist;
 	vector<pcDroping>*ppDroplist;
 
-	virtual int sortDrops(IDirect3DDevice9 *pDev);
+	virtual int sortDrops(cRenderDevice *pDev);
 	
 	virtual pcDroping contents(int page, int index);
 
@@ -75,7 +75,7 @@ public:
 		return min(cursolIndexMax, pDroplist.size() - page*cursolIndexMax);
 	};
 
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	virtual StyleString shortExplanationString(cRenderDevice *pDev);
 
 protected:
 	cNumField numf;//数字描画用
@@ -85,7 +85,7 @@ protected:
 	//マルチセレクト動詞選択肢表示
 	virtual int multiverbsSelect();
 
-	IDirect3DTexture9* m_pTexture_Multiselect;
+	cRenderTexture* m_pTexture_Multiselect;
 public:
 	//--------------------------------------------------
 	//複数選択
@@ -93,11 +93,11 @@ public:
 	vector<pcDroping> pMultiDropSet;
 
 
-	virtual int processofMultiSet(IDirect3DDevice9 *pDev);
-	virtual int MultiSetDraw(IDirect3DDevice9 *pDev);
+	virtual int processofMultiSet(cRenderDevice *pDev);
+	virtual int MultiSetDraw(cRenderDevice *pDev);
 
 
-	virtual int FireofMultiSet(IDirect3DDevice9 *pDev);
+	virtual int FireofMultiSet(cRenderDevice *pDev);
 	virtual int insertMultiSet();
 	virtual int eraseMultiSet();
 
@@ -106,7 +106,7 @@ public:
 
 
 public:
-	int shortCut_process(IDirect3DDevice9 *pDev);
+	int shortCut_process(cRenderDevice *pDev);
 
 
 };

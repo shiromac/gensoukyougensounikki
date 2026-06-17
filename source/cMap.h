@@ -89,7 +89,7 @@ public:
 	virtual void DecorationAll(const tstring& chipsetID);
 	virtual void ReDecoration(const tstring& chipsetID, vector<pcLandform> changeLand);
 
-	IDirect3DTexture9* m_pTexture_Dark;
+	cRenderTexture* m_pTexture_Dark;
 
 	static const int DECORATIONLAYER_NULL = -1;
 	static const int DECORATIONLAYER_LAND1 = 0;
@@ -112,9 +112,9 @@ protected:
 	pcLandform EdgeLand;
 
 
-	IDirect3DTexture9* m_pTexture_Mapchip;
-	IDirect3DTexture9* m_pTexture_Decochip;
-	//IDirect3DTexture9* m_pTexture_miniMapchip;
+	cRenderTexture* m_pTexture_Mapchip;
+	cRenderTexture* m_pTexture_Decochip;
+	//cRenderTexture* m_pTexture_miniMapchip;
 	//飾り関連データ
 	vector<pcMapChipObject> DecorationObject;	
 	vector<int> DecorationNum_;
@@ -132,12 +132,12 @@ public:
 
 
 	//初期化
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev);
 
 	virtual void process();
 
 	//再初期化
-	virtual void Renew(IDirect3DDevice9 *pDev);
+	virtual void Renew(cRenderDevice *pDev);
 
 	//部屋リスト
 	vector<pcRoom> RoomList;
@@ -163,27 +163,27 @@ public:
 	double ForcusY();
 
 	//描く
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	//描く
-	virtual int DrawDecoLand(IDirect3DDevice9 *pDev);
+	virtual int DrawDecoLand(cRenderDevice *pDev);
 	//描く
-	virtual int DrawGridLand(IDirect3DDevice9 *pDev,const double alpha, const double forcus_alpha);
-	virtual int DrawGridDrop(IDirect3DDevice9 *pDev,const double alpha);
-	virtual int DrawGridChara(IDirect3DDevice9 *pDev,const double alpha);
+	virtual int DrawGridLand(cRenderDevice *pDev,const double alpha, const double forcus_alpha);
+	virtual int DrawGridDrop(cRenderDevice *pDev,const double alpha);
+	virtual int DrawGridChara(cRenderDevice *pDev,const double alpha);
 	//描く
-	virtual int DrawDecoSky(IDirect3DDevice9 *pDev);
+	virtual int DrawDecoSky(cRenderDevice *pDev);
 
 	//暗闇描く
-	virtual int DrawDark(IDirect3DDevice9 *pDev, pcCharacter  hero);
+	virtual int DrawDark(cRenderDevice *pDev, pcCharacter  hero);
 	//暗闇描く補助関数
-	virtual int DrawDarkSub(IDirect3DDevice9 *pDev, pcCharacter  hero, pcLandform heroplace, double opaque);
+	virtual int DrawDarkSub(cRenderDevice *pDev, pcCharacter  hero, pcLandform heroplace, double opaque);
 
 
 	//--------------------------------------------
 	//ミニマップ系
 	//--------------------------------------------
 	//ミニマップを描く
-	virtual int DrawMiniMap(IDirect3DDevice9 *pDev);
+	virtual int DrawMiniMap(cRenderDevice *pDev);
 	
 	//ミニマップを一度消して書き直すフラグをたてる。
 	virtual int ResetMiniMap();
@@ -222,14 +222,14 @@ public:
 
 protected:
 	//チップを書く
-	virtual int Drawchip(IDirect3DDevice9 *pDev, const int x,const int y);
-	virtual int DrawchipSub(IDirect3DDevice9 *pDev,cCoordinate lefttop,
+	virtual int Drawchip(cRenderDevice *pDev, const int x,const int y);
+	virtual int DrawchipSub(cRenderDevice *pDev,cCoordinate lefttop,
 		const int x,const int y,
 		const int baseXi,const int baseYi,
 		const int first_land,const int second_land,
 		const double versep,const double horsep);
 	cDrawingObject m_DO;
-	virtual int DrawDeco(IDirect3DDevice9 *pDev, const int x, const int y, const int decoLayer);
+	virtual int DrawDeco(cRenderDevice *pDev, const int x, const int y, const int decoLayer);
 
 public:
 

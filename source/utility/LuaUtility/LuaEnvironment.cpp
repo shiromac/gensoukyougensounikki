@@ -90,7 +90,11 @@ int lua_error_handler(lua_State* L, const tstring& path)
 	if(errString) err = errString;
 	else return false;
 
+	#ifdef __EMSCRIPTEN__
+	std::basic_ofstream<char> ofs(ggn_tchar_to_path(_LOGFOLDER + path).c_str(), flag);
+#else
 	std::basic_ofstream<char> ofs((_LOGFOLDER + path).c_str(), flag);
+#endif
 	
 
     msg << "ERROR: " << err << "\n\nBacktrace:\n";

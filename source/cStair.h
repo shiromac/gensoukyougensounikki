@@ -49,7 +49,7 @@ public:
 	
 	virtual bool ‘åØ(){return true;};
 
-	//virtual int ¸~‚·‚é(IDirect3DDevice9 *pDev);
+	//virtual int ¸~‚·‚é(cRenderDevice *pDev);
 
 	virtual inline tstring IconFileName(){return _T("item\\ŠK’iƒZƒbƒg.png");};
 	virtual inline int IconFileIndexX(){return aspect;};

@@ -13,8 +13,6 @@
 #include <vector>
 using namespace std;
 
-#include <d3d9.h>
-#include <d3dx9.h>
 
 //基本的に唯一に作られる（グローバル）。
 class cEnvironment
@@ -24,7 +22,7 @@ public:
 public:
 	virtual ~cEnvironment(void);
 
-	virtual void init(LPDIRECT3DDEVICE9 pDev);
+	virtual void init(cRenderDevice* pDev);
 
 	//シーンごとのリソース
 	//cResourseManage*	m_Resourse;
@@ -49,12 +47,12 @@ public:
 
 
 	//めんどいので直接参照しないように
-	vector<IDirect3DTexture9*> pmTextureVforGlobalIndex;
+	vector<cRenderTexture*> pmTextureVforGlobalIndex;
 	
 
 	bool AppEnd;//終了フラグ
 
-	bool ResetDevice(LPDIRECT3DDEVICE9 pDev);//デバイスのリセット
+	bool ResetDevice(cRenderDevice* pDev);//デバイスのリセット
 
 	CFilePackLoad& FilePackLoad(){return FilePackLoad_;};
 protected:
@@ -67,22 +65,22 @@ extern cEnvironment g_GameEnv;//ゲーム環境
 
 /*
 //これを使ってテクスチャの参照をする。
-inline IDirect3DTexture9* g_pTexture(int indexOrName)
+inline cRenderTexture* g_pTexture(int indexOrName)
 {
 	return g_GameEnv.pmTextureVforGlobalIndex[indexOrName];
 }
-inline IDirect3DTexture9** g_ppTexture(int indexOrName)
+inline cRenderTexture** g_ppTexture(int indexOrName)
 {
 	return &(g_GameEnv.pmTextureVforGlobalIndex[indexOrName]);
 }
 
 //これを使ってテクスチャを読み込む
-inline IDirect3DTexture9* loadGlobalTexture(IDirect3DDevice9* pDevice, TCHAR* filename,int indexOrName)
+inline cRenderTexture* loadGlobalTexture(cRenderDevice* pDevice, TCHAR* filename,int indexOrName)
 {
 	return *g_ppTexture(indexOrName) = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDevice, filename);
 }
 
-inline IDirect3DTexture9* loadTexture(IDirect3DDevice9* pDevice, TCHAR* filename,int indexOrName)
+inline cRenderTexture* loadTexture(cRenderDevice* pDevice, TCHAR* filename,int indexOrName)
 {
 	return *g_ppTexture(indexOrName) = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDevice, filename);
 }

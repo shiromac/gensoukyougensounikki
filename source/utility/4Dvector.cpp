@@ -240,7 +240,7 @@ double degree(const c4DVector v1,const c4DVector v2)
 }
 
 
-c4DVector exproduct(c4DVector& v1, c4DVector& v2,const dimension_No first_d,const dimension_No second_d,const dimension_No third_d)
+c4DVector exproduct(c4DVector v1, c4DVector v2,const dimension_No first_d,const dimension_No second_d,const dimension_No third_d)
 {
 	c4DVector result_v;
 	*result_v(first_d) = (*v1(second_d))*(*v2(third_d)) - (*v1(third_d))*(*v2(second_d));
@@ -248,7 +248,7 @@ c4DVector exproduct(c4DVector& v1, c4DVector& v2,const dimension_No first_d,cons
 	*result_v(third_d) = (*v1(first_d))*(*v2(second_d)) - (*v1(second_d))*(*v2(first_d));
 	return result_v;
 }
-c4DVector exproduct( c4DVector& v1, c4DVector& v2)
+c4DVector exproduct( c4DVector v1, c4DVector v2)
 {
 	c4DVector result_v;
 	result_v.x = v1.y*v2.z - v1.z*v2.y;

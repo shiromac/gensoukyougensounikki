@@ -21,7 +21,7 @@ cDrawingObject_Rod::~cDrawingObject_Rod(void)
 
 
 
-int cDrawingObject_Rod::Draw(IDirect3DDevice9 *pDev)
+int cDrawingObject_Rod::Draw(cRenderDevice *pDev)
 {
 
 	/*
@@ -211,7 +211,7 @@ int cDrawingObject_Rod::Draw(IDirect3DDevice9 *pDev)
 
 
 	//基礎しかサポートし無い高速ドロー
-int cDrawingObject_Rod::EasyDraw(IDirect3DDevice9 *pDev)
+int cDrawingObject_Rod::EasyDraw(cRenderDevice *pDev)
 {
 	return Draw(pDev);
 }

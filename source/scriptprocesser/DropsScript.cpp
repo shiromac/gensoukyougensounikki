@@ -285,7 +285,7 @@ int Drop_StringAddStyle(pcScriptRLayer player, StyleString & sstr, std::map<tstr
 	tstring::iterator itrchar;
 
 	unsigned long color, flag;
-	D3DXVECTOR2 size;
+	cRenderVector2 size;
 	size.x = 1;
 	size.y = 1;
 	color = 0xFFFFFFFF;

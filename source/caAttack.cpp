@@ -30,7 +30,7 @@ caAttack::~caAttack()
 }
 
 
-int caAttack::process(IDirect3DDevice9 *pDev)
+int caAttack::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -98,7 +98,7 @@ int caAttack::Init(pcAnimation me)
 	placeY_ = pAttacker->placeY;
 	return true;
 }
-int caAttack::Draw(IDirect3DDevice9 *pDev)
+int caAttack::Draw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;
@@ -188,7 +188,7 @@ caDefense::~caDefense()
 }
 
 
-int caDefense::process(IDirect3DDevice9 *pDev)
+int caDefense::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -220,7 +220,7 @@ int caDefense::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caDefense::Draw(IDirect3DDevice9 *pDev)
+int caDefense::Draw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;

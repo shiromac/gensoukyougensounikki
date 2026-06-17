@@ -27,15 +27,15 @@ public:
 	virtual StyleString longExplanation();
 
 
-	virtual void DrawIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 	virtual int RerenderText(SpriteText & sprite,int MaxLetterLength);
 	virtual int Getsmollview(pcGameWindow& smollview);
 	
 	//メニューで選択時に最初に呼ばれる
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 	virtual bool 内包落ち物対象可();
 	virtual int 内包落ち物サイズ();
@@ -68,15 +68,15 @@ public:
 	virtual StyleString longExplanation();
 
 
-	virtual void DrawIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 	virtual int RerenderText(SpriteText & sprite,int MaxLetterLength);
 	virtual int Getsmollview(pcGameWindow& smollview);
 	
 	//メニューで選択時に最初に呼ばれる
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 	virtual bool 内包落ち物対象可();
 	virtual int 内包落ち物サイズ();

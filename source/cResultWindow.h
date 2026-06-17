@@ -18,10 +18,10 @@ class cResultWindow :
 public:
 	cResultWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcSaveResult pResult);
-	virtual void Init(IDirect3DDevice9 *pDev,cSaveResult& Result);
+	virtual void Init(cRenderDevice *pDev,pcSaveResult pResult);
+	virtual void Init(cRenderDevice *pDev,cSaveResult& Result);
 protected:
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
 
 protected:
@@ -33,7 +33,7 @@ protected:
 public:
 	virtual ~cResultWindow(void);
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 };
 
 #include <boost/shared_ptr.hpp>

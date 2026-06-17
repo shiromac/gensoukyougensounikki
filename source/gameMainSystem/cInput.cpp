@@ -1,25 +1,215 @@
 
 #include "../stdafx.h"
+#ifndef __EMSCRIPTEN__
 #include "Wiicon/CWiimoteManager.h"
 #include "Wiicon/CWiimote.h"
+#endif
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+
+namespace
+{
+	void BrowserInstallInputHandlers()
+	{
+		EM_ASM((function() {
+			if (typeof window === 'undefined') return;
+			if (Module['ggnInputInstalled']) return;
+			Module['ggnInputInstalled'] = true;
+			Module['ggnKeys'] = Module['ggnKeys'] || {};
+			Module['ggnShouldBlockKey'] = function(keyCode) {
+				switch (keyCode | 0) {
+				case 13: case 16: case 32:
+				case 37: case 38: case 39: case 40:
+				case 65: case 67: case 68: case 73:
+				case 74: case 75: case 76: case 83:
+				case 86: case 88: case 90:
+					return true;
+				default:
+					return false;
+				}
+			};
+
+			function setKey(keyCode, pressed) {
+				Module['ggnKeys'][keyCode | 0] = pressed ? 1 : 0;
+			}
+
+			window.addEventListener('keydown', function(e) {
+				setKey(e.keyCode | 0, true);
+				if (Module['ggnShouldBlockKey'](e.keyCode | 0)) e.preventDefault();
+			}, false);
+			window.addEventListener('keyup', function(e) {
+				setKey(e.keyCode | 0, false);
+				if (Module['ggnShouldBlockKey'](e.keyCode | 0)) e.preventDefault();
+			}, false);
+			window.addEventListener('blur', function() {
+				Module['ggnKeys'] = {};
+			}, false);
+			window.addEventListener('contextmenu', function(e) {
+				e.preventDefault();
+			}, false);
+
+			function installMobileViewport() {
+				if (!document.querySelector('meta[name="viewport"]')) {
+					var viewport = document.createElement('meta');
+					viewport.name = 'viewport';
+					viewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover';
+					document.head.appendChild(viewport);
+				}
+			}
+
+			function installMobileStyles() {
+				if (document.getElementById('ggn-mobile-style')) return;
+				var style = document.createElement('style');
+				style.id = 'ggn-mobile-style';
+				style.textContent = [
+					'html, body { margin: 0; background: #050505; overscroll-behavior: none; }',
+					'body.ggn-mobile-ready { overflow: hidden; touch-action: none; }',
+					'#emscripten_logo, #controls, #output { display: none !important; }',
+					'div.emscripten_border { border: 0 !important; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; background: #000; }',
+					'canvas.emscripten { width: min(100vw, calc(100vh * 1.333333)); width: min(100vw, calc(100dvh * 1.333333)); height: min(100vh, calc(100vw * 0.75)); height: min(100dvh, calc(100vw * 0.75)); image-rendering: pixelated; image-rendering: crisp-edges; }',
+					'#ggn-touch-controls { display: none; position: fixed; inset: auto 0 0 0; height: min(42vh, 260px); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
+					'#ggn-touch-controls .ggn-pad { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); gap: 8px; pointer-events: none; }',
+					'#ggn-touch-controls .ggn-left { left: max(12px, env(safe-area-inset-left)); }',
+					'#ggn-touch-controls .ggn-right { right: max(12px, env(safe-area-inset-right)); }',
+					'#ggn-touch-controls button { pointer-events: auto; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 13px/1 Arial, sans-serif; padding: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
+					'#ggn-touch-controls button.ggn-wide { font-size: 11px; }',
+					'#ggn-touch-controls button.ggn-active { background: rgba(255,255,255,.86); color: #000; }',
+					'#ggn-btn-up { grid-column: 2; grid-row: 1; } #ggn-btn-left { grid-column: 1; grid-row: 2; } #ggn-btn-right { grid-column: 3; grid-row: 2; } #ggn-btn-down { grid-column: 2; grid-row: 3; }',
+					'#ggn-btn-diag { grid-column: 1; grid-row: 1; } #ggn-btn-turn { grid-column: 2; grid-row: 1; } #ggn-btn-map { grid-column: 3; grid-row: 1; }',
+					'#ggn-btn-dash { grid-column: 1; grid-row: 2; } #ggn-btn-attack { grid-column: 2; grid-row: 2; } #ggn-btn-menu { grid-column: 3; grid-row: 2; }',
+					'#ggn-btn-smartdash { grid-column: 1; grid-row: 3; } #ggn-btn-shot { grid-column: 2; grid-row: 3; }',
+					'@media (pointer: coarse), (max-width: 900px) { #ggn-touch-controls { display: block; } }',
+					'@media (max-width: 560px) { #ggn-touch-controls .ggn-pad { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); gap: 7px; } #ggn-touch-controls button { width: 48px; height: 48px; font-size: 12px; } }'
+				].join(String.fromCharCode(10));
+				document.head.appendChild(style);
+				document.body.classList.add('ggn-mobile-ready');
+			}
+
+			function installTouchControls() {
+				if (document.getElementById('ggn-touch-controls')) return;
+				var controls = document.createElement('div');
+				controls.id = 'ggn-touch-controls';
+				var left = document.createElement('div');
+				left.className = 'ggn-pad ggn-left';
+				var right = document.createElement('div');
+				right.className = 'ggn-pad ggn-right';
+				controls.appendChild(left);
+				controls.appendChild(right);
+				document.body.appendChild(controls);
+
+				var specs = [
+					{ parent: left, id: 'ggn-btn-up', key: 38, label: '^', name: 'Up' },
+					{ parent: left, id: 'ggn-btn-left', key: 37, label: '<', name: 'Left' },
+					{ parent: left, id: 'ggn-btn-right', key: 39, label: '>', name: 'Right' },
+					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
+					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Diag', name: 'Diagonal', wide: true },
+					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'Turn', name: 'Turn', wide: true },
+					{ parent: right, id: 'ggn-btn-map', key: 32, label: 'Map', name: 'Map', wide: true },
+					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'Dash', name: 'Dash', wide: true },
+					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: 'Attack' },
+					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'Menu', name: 'Menu', wide: true },
+					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'SD', name: 'Smart dash' },
+					{ parent: right, id: 'ggn-btn-shot', key: 83, label: 'Shot', name: 'Shot', wide: true }
+				];
+
+				function releaseButton(button, key) {
+					setKey(key, false);
+					button.classList.remove('ggn-active');
+				}
+
+				specs.forEach(function(spec) {
+					var button = document.createElement('button');
+					button.type = 'button';
+					button.id = spec.id;
+					button.textContent = spec.label;
+					button.setAttribute('aria-label', spec.name);
+					if (spec.wide) button.className = 'ggn-wide';
+					button.addEventListener('pointerdown', function(e) {
+						e.preventDefault();
+						try { button.setPointerCapture(e.pointerId); } catch (ignore) {}
+						setKey(spec.key, true);
+						button.classList.add('ggn-active');
+					}, { passive: false });
+					button.addEventListener('pointerup', function(e) {
+						e.preventDefault();
+						releaseButton(button, spec.key);
+					}, { passive: false });
+					button.addEventListener('pointercancel', function(e) {
+						e.preventDefault();
+						releaseButton(button, spec.key);
+					}, { passive: false });
+					button.addEventListener('lostpointercapture', function() {
+						releaseButton(button, spec.key);
+					}, false);
+					spec.parent.appendChild(button);
+				});
+
+				window.addEventListener('visibilitychange', function() {
+					if (document.hidden) Module['ggnKeys'] = {};
+				}, false);
+			}
+
+			installMobileViewport();
+			installMobileStyles();
+			installTouchControls();
+		})());
+	}
+	int BrowserKeyDown(int keyCode)
+	{
+		return EM_ASM_INT({
+			var keys = Module['ggnKeys'];
+			return keys && keys[$0 | 0] ? 1 : 0;
+		}, keyCode);
+	}
+
+	void BrowserReadInputState(cInputState& state)
+	{
+		state = cInputState();
+		state.attack = BrowserKeyDown(90);
+		state.dash = BrowserKeyDown(88);
+		state.turn = BrowserKeyDown(67);
+		state.menu = BrowserKeyDown(86) | BrowserKeyDown(65) | BrowserKeyDown(13);
+		state.diagon = BrowserKeyDown(16);
+		state.shot = BrowserKeyDown(83);
+		state.miniMap = BrowserKeyDown(32);
+		state.smartdash = BrowserKeyDown(68);
+		state.ue = BrowserKeyDown(38) | BrowserKeyDown(73);
+		state.shita = BrowserKeyDown(40) | BrowserKeyDown(75);
+		state.hidari = BrowserKeyDown(37) | BrowserKeyDown(74);
+		state.migi = BrowserKeyDown(39) | BrowserKeyDown(76);
+	}
+}
+#endif
 
 
 cInput::cInput(void)
 {
-
+#ifdef __EMSCRIPTEN__
+	patInputManager = new CPatInput();
+#else
+	patInputManager = NULL;
+	WiiconInputManager = NULL;
+#endif
 }
 
 cInput::~cInput(void)
 {
+#ifdef __EMSCRIPTEN__
+	delete patInputManager;
+	patInputManager = NULL;
+#else
 	RELEASE(WiiconInputManager);
 	RELEASE(patInputManager);
+#endif
 }
 
 //毎回呼ばれて情報更新
 int cInput::UpdateInput()
 {
+#ifndef __EMSCRIPTEN__
 	patInputManager->UpdateState();
 	WiiconInputManager->UpdateInput();
+#endif
 
 	setPlayerInput();
 	return 0;
@@ -29,18 +219,26 @@ int cInput::UpdateInput()
 //リフレッシュ
 void cInput::ClearInput()
 {
-
-
+#ifndef __EMSCRIPTEN__
 	WiiconInputManager->ClearInput();
 
 	patInputManager->ClearState();
-
+#else
+	platformInputState_ = cInputState();
+	applyPlayerInput(platformInputState_);
+#endif
 }
 
 //初期化。始めに一度だけ呼ばれる。
 int cInput::InitInput(HWND WindowHandle)
 {
-
+#ifdef __EMSCRIPTEN__
+	NumOfWiicon = 0;
+	EnableOfPat = 0;
+	platformInputState_ = cInputState();
+	BrowserInstallInputHandlers();
+	return true;
+#else
 	NumOfWiicon = InitInput_WiiconDevice(WindowHandle);
 
 	EnableOfPat = InitInput_PatAndKey(WindowHandle);
@@ -49,8 +247,10 @@ int cInput::InitInput(HWND WindowHandle)
 
 
 	return true;
+#endif
 }
 
+#ifndef __EMSCRIPTEN__
 int cInput::InitInput_PatAndKey(HWND WindowHandle)
 {
 	_TCHAR Temp[64] = _T("");
@@ -85,129 +285,118 @@ int cInput::InitInput_WiiconDevice(HWND WindowHandle)
 #endif
 }
 
-int cInput::setPlayerInput()
+#endif
+
+void cInput::readPlatformInput(cInputState& state)
 {
-	int flag;
-	
-	
-	//攻撃
-	flag = patInputManager->GetState(0)->Button[0]
+#ifdef __EMSCRIPTEN__
+	BrowserReadInputState(platformInputState_);
+	state = platformInputState_;
+#else
+	state.attack = patInputManager->GetState(0)->Button[0]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Two.on : 0);
-	PlayerInput.setattack().process(flag);
 
-
-	//振り返り
-	flag = patInputManager->GetState(0)->Button[2]
+	state.turn = patInputManager->GetState(0)->Button[2]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->One.on : 0);
-	PlayerInput.setturn().process(flag);
 
-	
-	//メニュー
-	flag = patInputManager->GetState(0)->Button[3]
+	state.menu = patInputManager->GetState(0)->Button[3]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->A.on : 0);
-	PlayerInput.setmenu().process(flag);
 
-	//ミニマップ
-	flag = patInputManager->GetState(0)->Button[6]
+	state.miniMap = patInputManager->GetState(0)->Button[6]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Minus.on : 0);
-	PlayerInput.setminiMap().process(flag);
 
-
-	//斜め
-	flag = patInputManager->GetState(0)->Button[4]
+	state.diagon = patInputManager->GetState(0)->Button[4]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->B.on : 0);
-	PlayerInput.setdiagon().process(flag);
 
-
-
-
-	//矢飛ばし
-	flag = patInputManager->GetState(0)->Button[5]
+	state.shot = patInputManager->GetState(0)->Button[5]
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Plus.on : 0);
-	PlayerInput.setshot().process(flag);
 
-
-
-	//ue()
-	flag = patInputManager->GetState(0)->Up
+	state.ue = patInputManager->GetState(0)->Up
 		| patInputManager->GetState(0)->Up2
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Right.on : 0);
 
-	PlayerInput.setue().process(flag);
-
-
-	//shita()
-	flag = patInputManager->GetState(0)->Down
+	state.shita = patInputManager->GetState(0)->Down
 		| patInputManager->GetState(0)->Down2
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Left.on : 0);
 
-	PlayerInput.setshita().process(flag);
-
-
-	//hidari()
-	flag = patInputManager->GetState(0)->Left
+	state.hidari = patInputManager->GetState(0)->Left
 		| patInputManager->GetState(0)->Left2
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Up.on : 0);
 
-	PlayerInput.sethidari().process(flag);
-
-
-	//migi()
-	flag = patInputManager->GetState(0)->Right
+	state.migi = patInputManager->GetState(0)->Right
 		| patInputManager->GetState(0)->Right2
 		|((WiiconInputManager->wiicon[0])?
 		(WiiconInputManager->wiicon[0])->Down.on : 0);
 
-	PlayerInput.setmigi().process(flag);
+	state.dash = patInputManager->GetState(0)->Button[1];
+	state.smartdash = patInputManager->GetState(0)->Button[7];
+#endif
+}
 
+int cInput::applyPlayerInput(const cInputState& state)
+{
+	PlayerInput.setattack().process(state.attack);
+	PlayerInput.setturn().process(state.turn);
+	PlayerInput.setmenu().process(state.menu);
+	PlayerInput.setminiMap().process(state.miniMap);
+	PlayerInput.setdiagon().process(state.diagon);
+	PlayerInput.setshot().process(state.shot);
 
-	//X
+	PlayerInput.setue().process(state.ue);
+	PlayerInput.setshita().process(state.shita);
+	PlayerInput.sethidari().process(state.hidari);
+	PlayerInput.setmigi().process(state.migi);
+
 	PlayerInput.X = PlayerInput.migi().on - PlayerInput.hidari().on;
-
-
-	//Y
 	PlayerInput.Y = PlayerInput.shita().on - PlayerInput.ue().on;
 
-	//斜め縛り
 	if(PlayerInput.diagon().on)
 	{
 		if(abs(PlayerInput.X)+abs(PlayerInput.Y) != 2)
-		{//斜めじゃない
+		{
 			PlayerInput.X = 0;
 			PlayerInput.Y = 0;
 		}
 	}
 
-
-
-	//ダッシュ//仮
-	/*
-	flag = (PlayerInput.migi().on ||
-		PlayerInput.hidari().on ||
-		PlayerInput.ue().on ||
-		PlayerInput.shita().on ) &&
-		PlayerInput.cancel().justOn;
-		*/
-	flag = patInputManager->GetState(0)->Button[1];
-	PlayerInput.setdash().process(flag);
-
-	flag = patInputManager->GetState(0)->Button[7];
-	PlayerInput.setsmartdash().process(flag);
+	PlayerInput.setdash().process(state.dash);
+	PlayerInput.setsmartdash().process(state.smartdash);
 
 	return true;
 }
 
+int cInput::setPlayerInput()
+{
+	cInputState state;
+	readPlatformInput(state);
+	return applyPlayerInput(state);
+}
+
+int cInput::setInputState(const cInputState& state)
+{
+#ifdef __EMSCRIPTEN__
+	platformInputState_ = state;
+	return applyPlayerInput(platformInputState_);
+#else
+	return applyPlayerInput(state);
+#endif
+}
+
 int cInput::getrawPadInput(int player, int buttom)
 {
+#ifdef __EMSCRIPTEN__
+	return 0;
+#else
 	if(MAX_PLAYERS <= player || MAX_BUTTONS <= buttom) return 0;
 	return patInputManager->getrawPadInput(player,buttom);
+#endif
 }

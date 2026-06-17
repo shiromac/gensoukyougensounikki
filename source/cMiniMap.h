@@ -14,11 +14,11 @@ public:
 
 
 
-	IDirect3DTexture9* m_pTexture_miniMapchip;
-	IDirect3DTexture9* m_pTexture_miniMapchip_land;
+	cRenderTexture* m_pTexture_miniMapchip;
+	cRenderTexture* m_pTexture_miniMapchip_land;
 
 
-	void Init(IDirect3DDevice9 *pDev);
+	void Init(cRenderDevice *pDev);
 
 	//地形データ参照
 	inline pcLandform Land(const int x,const int y);
@@ -26,7 +26,7 @@ public:
 
 
 	//ミニマップを描く
-	virtual int DrawMiniMap(IDirect3DDevice9 *pDev);
+	virtual int DrawMiniMap(cRenderDevice *pDev);
 	
 
 	
@@ -54,24 +54,24 @@ protected:
 protected:
 
 	//補助関数
-	virtual int MiniMapDrawSub(IDirect3DDevice9 *pDev,int x,int y,int ui,int vi);
+	virtual int MiniMapDrawSub(cRenderDevice *pDev,int x,int y,int ui,int vi);
 	
 
 	//ミニマップを描きなおす
-	virtual int ReDrawMiniMap(IDirect3DDevice9 *pDev);
+	virtual int ReDrawMiniMap(cRenderDevice *pDev);
 	
 	virtual cCoordinate miniMapLeftTop();
 	virtual int miniMapObjectAlpha();
 	
 	
-	virtual int DrawMiniMap_Land(IDirect3DDevice9 *pDev);
-	virtual int DrawMiniMap_Land_Sub(IDirect3DDevice9 *pDev,cCoordinate lefttop,
+	virtual int DrawMiniMap_Land(cRenderDevice *pDev);
+	virtual int DrawMiniMap_Land_Sub(cRenderDevice *pDev,cCoordinate lefttop,
 		const int x,const int y,
 		const int baseXi, const int baseYi,
 		const int first_land, const int second_land,
 		const double versep, const double horsep,
 		int aspect = 1);
-	virtual int DrawMiniMap_Object(IDirect3DDevice9 *pDev);
+	virtual int DrawMiniMap_Object(cRenderDevice *pDev);
 
 
 	//描いたかどうか

@@ -94,7 +94,7 @@ public:
 	virtual bool init(pcCharacter pself);
 
 	//説明
-	virtual void MakeExplainWindow(IDirect3DDevice9 *pDev);
+	virtual void MakeExplainWindow(cRenderDevice *pDev);
 	virtual void explain(pcListWindow& pclw);
 	virtual void CutIn(タイミング timing, cValiableField& valiable);
 
@@ -117,7 +117,7 @@ public:
 	//エモーションアニメを更新する
 	virtual bool refresh_emotion_anime();
 
-	virtual bool Draw(IDirect3DDevice9 *pDev);
+	virtual bool Draw(cRenderDevice *pDev);
 	
 	SharedValiable_likeInt<int> anotherSurfaceID;
 	int anotherSurfaceIDchange;
@@ -944,7 +944,7 @@ protected:
 	//int sasoi_turn_count;
 	//int sasoi_turn_count_visible_;
 	//double sasoi_visual_counter;
-	//virtual bool Draw_sasoi(IDirect3DDevice9 *pDev);
+	//virtual bool Draw_sasoi(cRenderDevice *pDev);
 	//virtual int sasoi_refresh();
 	//wpcCharacter sasoi_subject_;
 
@@ -996,7 +996,7 @@ protected:
 		//ターンをセットする
 		virtual bool turn_on(int turn);
 	public:
-		virtual bool Draw_sasoi(IDirect3DDevice9 *pDev);
+		virtual bool Draw_sasoi(cRenderDevice *pDev);
 
 		virtual bool 死の誘い追加(int turn, pcCharacter sasoi_subject);
 

@@ -29,7 +29,7 @@ cMassageWindow::~cMassageWindow(void)
 }
 
 
-void cMassageWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cMassageWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	Width = letterXnum * FONTSIZE + EDGEWIDTH*2;
 	Height = letterYnum * FONTSIZE + EDGEWIDTH*2;
@@ -80,7 +80,7 @@ int cMassageWindow::addMassage(StyleString massage)
 	return true;
 }
 
-int cMassageWindow::process(IDirect3DDevice9 *pDev)
+int cMassageWindow::process(cRenderDevice *pDev)
 {
 
 	if(m_SpriteText.GetY() - forcusTop > (lineNum)*FONTSIZE)
@@ -108,7 +108,7 @@ int cMassageWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cMassageWindow::Draw(IDirect3DDevice9 *pDev)
+int cMassageWindow::Draw(cRenderDevice *pDev)
 {
 	if(!VisibleCount) return false;
 
@@ -135,7 +135,7 @@ int cMassageWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cMassageWindow::RenderText(IDirect3DDevice9 *pDev)
+int cMassageWindow::RenderText(cRenderDevice *pDev)
 {
 
 
@@ -178,7 +178,7 @@ int cMassageWindow::RenderText(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cMassageWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cMassageWindow::TextDraw(cRenderDevice *pDev)
 {
 	
 
@@ -194,7 +194,7 @@ int cMassageWindow::TextDraw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cMassageWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cMassageWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left();
 	int t = Top();
@@ -242,7 +242,7 @@ int cMassageWindow::TextDrawSub(IDirect3DDevice9 *pDev)
 }
 
 
-int cMassageWindow::NewRoll(IDirect3DDevice9 *pDev)
+int cMassageWindow::NewRoll(cRenderDevice *pDev)
 {
 
 	m_SpriteText.CleatText();
@@ -269,7 +269,7 @@ int cMassageWindow::NewRoll(IDirect3DDevice9 *pDev)
 }
 
 
-int cMassageWindow::textclear(IDirect3DDevice9 *pDev)
+int cMassageWindow::textclear(cRenderDevice *pDev)
 {
 	m_SpriteText.CleatText();
 	m_SpriteText.SetCursolPos(0,0);

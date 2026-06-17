@@ -22,7 +22,7 @@ public:
 
 	virtual bool Ç∑ÇÍà·Ç¢ãñâ¬(pcCharacter pchara);
 
-	virtual void OptionDraw(IDirect3DDevice9 *pDev){};
+	virtual void OptionDraw(cRenderDevice *pDev){};
 
 	virtual int HaveEXP(){return ExpTable(LV);};
 	
@@ -36,7 +36,7 @@ public:
 #define CCHARACTER_cOtherChara_Event_BASE_ID_NUM 9000
 //newä÷êîíËã`
 #define DEF_FUNC_new_cOtherChara_Event_Class(z, n, data) \
-	pcCharacter def_GetInstanceOf##data##_ID_##n##()\
+	pcCharacter def_GetInstanceOf##data##_ID_##n()\
 {\
 	return pcCharacter(new data(n + CCHARACTER_cOtherChara_Event_BASE_ID_NUM));\
 };

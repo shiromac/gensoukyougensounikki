@@ -789,7 +789,7 @@ int caESpell_ID_1::Init()
 {
 	return true;
 }
-int caESpell_ID_1::preprocess(IDirect3DDevice9 *pDev)
+int caESpell_ID_1::preprocess(cRenderDevice *pDev)
 {
 
 	fireflys.resize(num_);
@@ -812,7 +812,7 @@ int caESpell_ID_1::preprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caESpell_ID_1::process(IDirect3DDevice9 *pDev)
+int caESpell_ID_1::process(cRenderDevice *pDev)
 {
 	if(preprocessed==0)
 	{//èââÒ
@@ -876,7 +876,7 @@ int caESpell_ID_1::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caESpell_ID_1::Draw(IDirect3DDevice9 *pDev)
+int caESpell_ID_1::Draw(cRenderDevice *pDev)
 {
 	int i;
 	int size = fireflys.size();

@@ -245,7 +245,7 @@ cDiscreteProbability cEquipment::qualityBeginDP(int difficulty)
 }
 */
 
-void cEquipment::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cEquipment::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -677,7 +677,7 @@ StyleString cEquipment::GetmenuExplain(tstring &Caption)
 
 /*
 //コマンドを解決する;
-int cEquipment::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cEquipment::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("装備"))
@@ -716,7 +716,7 @@ int cEquipment::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDropi
 }
 */
 /*
-int cEquipment::装備選択(IDirect3DDevice9 *pDev)
+int cEquipment::装備選択(cRenderDevice *pDev)
 {
 	vector<tstring> captions;
 
@@ -755,7 +755,7 @@ int cEquipment::装備選択(IDirect3DDevice9 *pDev)
 }
 
 
-int cEquipment::装備(IDirect3DDevice9 *pDev, int part)
+int cEquipment::装備(cRenderDevice *pDev, int part)
 {
 	int result = 0;
 
@@ -1002,7 +1002,7 @@ int cEquipment::装備メッセージ定型(pcCharacter pchara, int part)
 }
 
 /*
-int cEquipment::はずす(IDirect3DDevice9 *pDev)
+int cEquipment::はずす(cRenderDevice *pDev)
 {
 	int result = 0;
 

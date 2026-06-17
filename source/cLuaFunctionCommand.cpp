@@ -40,7 +40,7 @@ cLuaFunctionCommand::~cLuaFunctionCommand(void)
 	//menuをだしたまま終了するとfunction_のhandleで二重開放が起こる
 }
 
-int cLuaFunctionCommand::Action(IDirect3DDevice9 *pDev)
+int cLuaFunctionCommand::Action(cRenderDevice *pDev)
 {
 	if(::luabind::type(function_) == LUA_TFUNCTION);
 	{

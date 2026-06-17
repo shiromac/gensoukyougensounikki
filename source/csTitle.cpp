@@ -37,7 +37,7 @@ public:
 	cCommandAbc(void){caption = _T("");};
 	cCommandAbc(tstring s){caption = s;};
 	virtual ~cCommandAbc(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		pcControlLayer pccl;
 		//pcSelectWindow pcsw;
@@ -72,7 +72,7 @@ public:
 	cCommandStart(void){caption = g_Lang(_T("はじめる"));};
 	cCommandStart(tstring s){caption = s;};
 	virtual ~cCommandStart(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		g_GameEnv.m_SceneManage->SceneChange(pDev,new csHomeFirst);
 		return true;
@@ -86,7 +86,7 @@ public:
 	cCommandContinue(void){caption = g_Lang(_T("つづきから"));};
 	cCommandContinue(tstring s){caption = s;};
 	virtual ~cCommandContinue(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -112,7 +112,7 @@ public:
 	cCommandEnd(void){caption = g_Lang(_T("おわる"));};
 	cCommandEnd(tstring s){caption = s;};
 	virtual ~cCommandEnd(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		g_GameEnv.AppEnd = true;
 		return true;
@@ -127,7 +127,7 @@ public:
 	cCommandPadConfig(void){caption = g_Lang(_T("パッドコンフィグ"));};
 	cCommandPadConfig(tstring s){caption = s;};
 	virtual ~cCommandPadConfig(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -153,7 +153,7 @@ public:
 	cCommandBGMVolConfig(void){caption = g_Lang(_T("BGM音量コンフィグ"));};
 	cCommandBGMVolConfig(tstring s){caption = s;};
 	virtual ~cCommandBGMVolConfig(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -185,7 +185,7 @@ public:
 	cCommandSEVolConfig(void){caption = g_Lang(_T("SE音量コンフィグ"));};
 	cCommandSEVolConfig(tstring s){caption = s;};
 	virtual ~cCommandSEVolConfig(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -219,7 +219,7 @@ public:
 	cCommandSignsConfig(void){caption = g_Lang(_T("プレイヤーサイン変更"));};
 	cCommandSignsConfig(tstring s){caption = s;};
 	virtual ~cCommandSignsConfig(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -256,7 +256,7 @@ public:
 	cCommandCharEdged(void){caption = g_Lang(_T("文字描画の精細さ"));};
 	cCommandCharEdged(tstring s){caption = s;};
 	virtual ~cCommandCharEdged(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -290,7 +290,7 @@ public:
 	cCommandConfig(void){caption = g_Lang(_T("コンフィグ"));};
 	cCommandConfig(tstring s){caption = s;};
 	virtual ~cCommandConfig(void){};
-	virtual int Action(IDirect3DDevice9 *pDev)
+	virtual int Action(cRenderDevice *pDev)
 	{
 		
 		pcControlLayer pccl;
@@ -333,9 +333,9 @@ csTitle::~csTitle(void)
 }
 
 
-bool csTitle::SceneInitialaze(IDirect3DDevice9 *pDev)
+bool csTitle::SceneInitialaze(cRenderDevice *pDev)
 {
-	IDirect3DTexture9* pTexture;
+	cRenderTexture* pTexture;
 	//pTexture = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("effect\\magiccircle.png"));
 	pTexture = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\title.png"));
 
@@ -374,12 +374,12 @@ void csTitle::SceneFinalize()
 
 }
 
-void csTitle::SceneSystemDraw(IDirect3DDevice9 *pDev)
+void csTitle::SceneSystemDraw(cRenderDevice *pDev)
 {
 
 }
 
-void csTitle::SceneDraw(IDirect3DDevice9 *pDev)
+void csTitle::SceneDraw(cRenderDevice *pDev)
 {
 
 
@@ -448,7 +448,7 @@ void csTitle::SceneDraw(IDirect3DDevice9 *pDev)
 	
 }
 
-void csTitle::SceneProcess(IDirect3DDevice9 *pDev)
+void csTitle::SceneProcess(cRenderDevice *pDev)
 {
 
 

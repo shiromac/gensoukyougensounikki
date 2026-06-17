@@ -32,17 +32,17 @@ public:
 
 
 	//メニューの処理を行う。
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 
 	//新規の目的語(オブジェクト)を選択するためのリストを作成する。
-	virtual void MakeSetObjectMenu(IDirect3DDevice9 *pDev, vector<pcDroping> &Objects, bool MultiObj, StyleString info);
-	virtual void MakeSetObjectMenu(IDirect3DDevice9 *pDev, vector<vector<pcDroping>> &Objectslist, bool MultiObj, vector<StyleString> infolist);
+	virtual void MakeSetObjectMenu(cRenderDevice *pDev, vector<pcDroping> &Objects, bool MultiObj, StyleString info);
+	virtual void MakeSetObjectMenu(cRenderDevice *pDev, vector<vector<pcDroping>> &Objectslist, bool MultiObj, vector<StyleString> infolist);
 
 
 
 	//実際の処理を行う。
-	virtual int Fire(IDirect3DDevice9 *pDev);
+	virtual int Fire(cRenderDevice *pDev);
 
 
 	//最新のオブジェクトを返す
@@ -83,13 +83,13 @@ public:
 	pcCharacter sellchara_;
 	vector<tstring> captions_;
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
 
-	virtual void DrawIcon(IDirect3DDevice9 *pDev,int x,int y){
+	virtual void DrawIcon(cRenderDevice *pDev,int x,int y){
 		item_->m_color = m_color;
 		item_->DrawIcon(pDev,x,y);};
-	virtual void DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y){item_->m_color = m_color;item_->DrawStateIcon(pDev,x,y);};
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y){item_->m_color = m_color;item_->DrawStateIconSub(pDev,x,y);};
+	virtual void DrawStateIcon(cRenderDevice *pDev,int x,int y){item_->m_color = m_color;item_->DrawStateIcon(pDev,x,y);};
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y){item_->m_color = m_color;item_->DrawStateIconSub(pDev,x,y);};
 
 	//virtual int RerenderText(SpriteText & sprite,int MaxLetterLength);
 
@@ -106,7 +106,7 @@ public:
 	virtual int ID(){return item_->ID();};
 
 	//メニューで選択時に最初に呼ばれる
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 	virtual StyleString ExtraHatString();
 

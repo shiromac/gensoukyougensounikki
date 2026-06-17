@@ -29,14 +29,14 @@
 
 #define DEF_GetCharaFunc_insert(z, n, data) \
 GetCharaFunc.insert(pair<int, pcCharacter (*)() >\
-(CCHARACTER_##data##_BASE_ID_NUM + ##n##,\
-		def_GetInstanceOf##data##_ID_##n##));
+(CCHARACTER_##data##_BASE_ID_NUM + n,\
+		def_GetInstanceOf##data##_ID_##n));
 
 
 #define DEF_GetDropFunc_insert(z, n, data) \
 GetDropFunc.insert(pair<int, pcDroping (*)() >\
-(CDROPING_##data##_BASE_ID_NUM + ##n##,\
-		def_GetInstanceOf##data##_ID_##n##));
+(CDROPING_##data##_BASE_ID_NUM + n,\
+		def_GetInstanceOf##data##_ID_##n));
 
 
 
@@ -85,7 +85,7 @@ cDatabaseOfGame::~cDatabaseOfGame(void)
 
 }
 
-int cDatabaseOfGame::Init(IDirect3DDevice9 *pDev)
+int cDatabaseOfGame::Init(cRenderDevice *pDev)
 {
 	//Å‰‚É
 	InitImportData();
@@ -1071,7 +1071,7 @@ pcScriptRLayer cDatabaseOfGame::DropImportData(int ID)
 	if(DropImportDataPool.end() == itr) return NULLOFcScriptRLayer;
 	return itr->second;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, const tstring& dataname)
 {
 	pcScriptRLayer psr;
 	psr = DropImportData(ID);
@@ -1080,7 +1080,7 @@ pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, tstring& dataname)
 	if(psr == NULL) return NULLOFcScriptRLayer;
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr;
 	psr = DropImportData(ID,dataname);
@@ -1089,13 +1089,13 @@ pcScriptRLayer cDatabaseOfGame::DropImportData(int ID, tstring& dataname, tstrin
 	if(psr == NULL) return NULLOFcScriptRLayer;
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportData(tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::DropImportData(const tstring& dataname)
 {
 	pcScriptRLayer psr = DropImportDataParentLayer_;
 	psr = psr->pmember(dataname);
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportData(tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::DropImportData(const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr = DropImportDataParentLayer_;
 	psr = psr->pmember(dataname);
@@ -1105,42 +1105,42 @@ pcScriptRLayer cDatabaseOfGame::DropImportData(tstring& dataname, tstring& datan
 }
 
 
-double cDatabaseOfGame::DropImportData_Value(int ID, tstring& dataname, double defaultval, int index)
+double cDatabaseOfGame::DropImportData_Value(int ID, const tstring& dataname, double defaultval, int index)
 {
 	return def_decode_value(DropImportData(ID, dataname), defaultval, index);
 }
-double cDatabaseOfGame::DropImportData_Value(int ID, tstring& dataname, tstring& dataname2, double defaultval, int index)
+double cDatabaseOfGame::DropImportData_Value(int ID, const tstring& dataname, const tstring& dataname2, double defaultval, int index)
 {
 	return def_decode_value(DropImportData(ID, dataname, dataname2), defaultval, index);
 }
-double cDatabaseOfGame::DropImportData_Value(tstring& dataname, double defaultval, int index)
+double cDatabaseOfGame::DropImportData_Value(const tstring& dataname, double defaultval, int index)
 {
 	return def_decode_value(DropImportData(dataname), defaultval, index);
 }
-double cDatabaseOfGame::DropImportData_Value(tstring& dataname, tstring& dataname2, double defaultval, int index)
+double cDatabaseOfGame::DropImportData_Value(const tstring& dataname, const tstring& dataname2, double defaultval, int index)
 {
 	return def_decode_value(DropImportData(dataname,dataname2), defaultval, index);
 }
 
 
-int cDatabaseOfGame::DropImportData_ValueSize(int ID, tstring& dataname)
+int cDatabaseOfGame::DropImportData_ValueSize(int ID, const tstring& dataname)
 {
 	return def_decode_value_size(DropImportData(ID, dataname));
 }
-int cDatabaseOfGame::DropImportData_ValueSize(int ID, tstring& dataname, tstring& dataname2)
+int cDatabaseOfGame::DropImportData_ValueSize(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	return def_decode_value_size(DropImportData(ID, dataname, dataname2));
 }
-int cDatabaseOfGame::DropImportData_ValueSize(tstring& dataname)
+int cDatabaseOfGame::DropImportData_ValueSize(const tstring& dataname)
 {
 	return def_decode_value_size(DropImportData(dataname));
 }
-int cDatabaseOfGame::DropImportData_ValueSize(tstring& dataname, tstring& dataname2)
+int cDatabaseOfGame::DropImportData_ValueSize(const tstring& dataname, const tstring& dataname2)
 {
 	return def_decode_value_size(DropImportData(dataname, dataname2));
 }
 
-void cDatabaseOfGame::DropImportData_MapIntToInt(int ID, tstring& dataname, map<int,int>& mapii)
+void cDatabaseOfGame::DropImportData_MapIntToInt(int ID, const tstring& dataname, map<int,int>& mapii)
 {
 	mapii.clear();
 	pcScriptRLayer datalayer = DropImportData(ID, dataname);
@@ -1210,7 +1210,7 @@ pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID)
 	if(DropImportLanguagePool.end() == itr) return NULLOFcScriptRLayer;
 	return itr->second;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, const tstring& dataname)
 {
 	pcScriptRLayer psr;
 	psr = DropImportLanguage(ID);
@@ -1219,7 +1219,7 @@ pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, tstring& dataname)
 	if(psr == NULL) return NULLOFcScriptRLayer;
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr;
 	psr = DropImportLanguage(ID,dataname);
@@ -1228,13 +1228,13 @@ pcScriptRLayer cDatabaseOfGame::DropImportLanguage(int ID, tstring& dataname, ts
 	if(psr == NULL) return NULLOFcScriptRLayer;
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportLanguage(tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::DropImportLanguage(const tstring& dataname)
 {
 	pcScriptRLayer psr = DropImportLanguageParentLayer_;
 	psr = psr->pmember(dataname);
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::DropImportLanguage(tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::DropImportLanguage(const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr = DropImportLanguageParentLayer_;
 	psr = psr->pmember(dataname);
@@ -1706,7 +1706,7 @@ pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID)
 	if(CharaImportDataPool.end() == itr) return NULLOFcScriptRLayer;
 	return itr->second;
 }
-pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, const tstring& dataname)
 {
 	pcScriptRLayer psr;
 	psr = CharaImportData(ID);
@@ -1716,7 +1716,7 @@ pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, tstring& dataname)
 	return psr;
 }
 
-pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr;
 	psr = CharaImportData(ID,dataname);
@@ -1726,13 +1726,13 @@ pcScriptRLayer cDatabaseOfGame::CharaImportData(int ID, tstring& dataname, tstri
 	return psr;
 }
 
-pcScriptRLayer cDatabaseOfGame::CharaImportData(tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::CharaImportData(const tstring& dataname)
 {
 	pcScriptRLayer psr = CharaImportDataParentLayer_;
 	psr = psr->pmember(dataname);
 	return psr;
 }
-pcScriptRLayer cDatabaseOfGame::CharaImportData(tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::CharaImportData(const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr = CharaImportData(dataname);
 	if(psr == NULL) return psr;
@@ -1748,7 +1748,7 @@ pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID)
 	if(CharaImportLanguagePool.end() == itr) return NULLOFcScriptRLayer;
 	return itr->second;
 }
-pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, tstring& dataname)
+pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, const tstring& dataname)
 {
 	pcScriptRLayer psr;
 	psr = CharaImportLanguage(ID);
@@ -1758,7 +1758,7 @@ pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, tstring& dataname)
 	return psr;
 }
 
-pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, tstring& dataname, tstring& dataname2)
+pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	pcScriptRLayer psr;
 	psr = CharaImportLanguage(ID,dataname);
@@ -1768,33 +1768,33 @@ pcScriptRLayer cDatabaseOfGame::CharaImportLanguage(int ID, tstring& dataname, t
 	return psr;
 }
 
-double cDatabaseOfGame::CharaImportData_Value(int ID, tstring& dataname, double defaultval, int index)
+double cDatabaseOfGame::CharaImportData_Value(int ID, const tstring& dataname, double defaultval, int index)
 {
 	return def_decode_value(CharaImportData(ID, dataname), defaultval, index);
 }
-double cDatabaseOfGame::CharaImportData_Value(int ID, tstring& dataname, tstring& dataname2, double defaultval, int index)
+double cDatabaseOfGame::CharaImportData_Value(int ID, const tstring& dataname, const tstring& dataname2, double defaultval, int index)
 {
 	return def_decode_value(CharaImportData(ID, dataname, dataname2), defaultval, index);
 }
-double cDatabaseOfGame::CharaImportData_Value(tstring& dataname, double defaultval, int index)
+double cDatabaseOfGame::CharaImportData_Value(const tstring& dataname, double defaultval, int index)
 {
 	return def_decode_value(CharaImportData(dataname), defaultval, index);
 }
-double cDatabaseOfGame::CharaImportData_Value(tstring& dataname, tstring& dataname2, double defaultval, int index)
+double cDatabaseOfGame::CharaImportData_Value(const tstring& dataname, const tstring& dataname2, double defaultval, int index)
 {
 	return def_decode_value(CharaImportData(dataname, dataname2), defaultval, index);
 }
 
-int cDatabaseOfGame::CharaImportData_ValueSize(int ID, tstring& dataname)
+int cDatabaseOfGame::CharaImportData_ValueSize(int ID, const tstring& dataname)
 {
 	return def_decode_value_size(CharaImportData(ID, dataname));
 }
-int cDatabaseOfGame::CharaImportData_ValueSize(int ID, tstring& dataname, tstring& dataname2)
+int cDatabaseOfGame::CharaImportData_ValueSize(int ID, const tstring& dataname, const tstring& dataname2)
 {
 	return def_decode_value_size(CharaImportData(ID, dataname, dataname2));
 }
 
-void cDatabaseOfGame::CharaImportData_MapIntToInt(int ID, tstring& dataname, map<int,int>& mapii)
+void cDatabaseOfGame::CharaImportData_MapIntToInt(int ID, const tstring& dataname, map<int,int>& mapii)
 {
 	mapii.clear();
 	pcScriptRLayer datalayer = CharaImportData(ID, dataname);
@@ -1837,18 +1837,18 @@ if(pcrl != NULL)\
 	DropUnknownNamePool.insert(pair<int, vector<tstring>>(\
 	CDROPING_c##classtype##_BASE_ID_NUM ,pcrl->script()));\
 }\
-if(DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size() < ##classtypeBIG##_NUM)\
+if(DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size() < classtypeBIG##_NUM)\
 {\
-	int shortsize = ##classtypeBIG##_NUM - DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size();\
+	int shortsize = classtypeBIG##_NUM - DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].size();\
 	for(i=0;i<shortsize;i++)\
 	{\
 		DropUnknownNamePool[CDROPING_c##classtype##_BASE_ID_NUM].push_back(_T("UnknownNameOf") _T(#classtype)+setStyle(i).conclete_tstr());\
 	}\
 }
 /*
-for(i=0; i < ArraySizeOf(##classtype##_UnknownNamePool) ; i++)\
+for(i=0; i < ArraySizeOf(classtype##_UnknownNamePool) ; i++)\
 {\
-	vstr.push_back( ##classtype##_UnknownNamePool[i] );\
+	vstr.push_back( classtype##_UnknownNamePool[i] );\
 }\
 DropUnknownNamePool.insert(pair<int, vector<tstring>>(\
 	CDROPING_##classtype##_BASE_ID_NUM , vstr ));\

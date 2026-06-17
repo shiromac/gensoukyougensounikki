@@ -71,9 +71,9 @@ typedef boost::shared_ptr<vector<pcDroping>> pvdroping;
 
 //new関数定義
 #define DEF_FUNC_new_cDropingClass(z, n, data) \
-	pcDroping def_GetInstanceOf##data##_ID_##n##()\
+	pcDroping def_GetInstanceOf##data##_ID_##n()\
 {\
-	pcDroping pdrop = pcDroping(new data##_ID_##n##);\
+	pcDroping pdrop = pcDroping(new data##_ID_##n);\
 	return pdrop;\
 };
 
@@ -128,7 +128,7 @@ public:
 public:
 	virtual ~cDroping(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
 
 	virtual void settingInit();
 protected:
@@ -153,10 +153,10 @@ public:
 	virtual void Release(){};
 
 
-	virtual void Draw(IDirect3DDevice9 *pDev);
-	virtual void DrawIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIcon(IDirect3DDevice9 *pDev,int x,int y);
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y){};
+	virtual void Draw(cRenderDevice *pDev);
+	virtual void DrawIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIcon(cRenderDevice *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y){};
 
 	virtual const cColor extraMaterialColor();
 	virtual void setExtraMaterialColor(int alpha, int red, int green, int blue);
@@ -165,7 +165,7 @@ public:
 	//特殊ドロー系
 
 	//方向つき攻撃ドロー（主に矢と魔法）
-	virtual void aspectedAttackDraw(IDirect3DDevice9 *pDev){Draw(pDev);};
+	virtual void aspectedAttackDraw(cRenderDevice *pDev){Draw(pDev);};
 
 
 
@@ -450,7 +450,7 @@ public:
 	//メニュー関係
 public:
 	//メニューで選択時に最初に呼ばれる
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 
 	//Fireできるときtrue;
@@ -462,18 +462,18 @@ public:
 	//virtual void GetmenuFuncObjectsList(vector<vector<pcDroping>> &ObjectListlist, vector<StyleString>& listExplain, bool &MultiObj, int objectsize, tstring verb){return;};
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 
 	//***********************************************************
 	//--------------------------------------------------------
 	//コマンド群
 	//--------------------------------------------------------
-	//virtual int 説明(IDirect3DDevice9 *pDev);
-	//virtual int 置く(IDirect3DDevice9 *pDev);
-	//virtual int 拾う(IDirect3DDevice9 *pDev);
-	//virtual int 投げる(IDirect3DDevice9 *pDev);
-	//virtual int 交換(IDirect3DDevice9 *pDev);
+	//virtual int 説明(cRenderDevice *pDev);
+	//virtual int 置く(cRenderDevice *pDev);
+	//virtual int 拾う(cRenderDevice *pDev);
+	//virtual int 投げる(cRenderDevice *pDev);
+	//virtual int 交換(cRenderDevice *pDev);
 
 
 	//自動プロセス群
@@ -520,7 +520,7 @@ public:
 
 
 	//メニューをセットする;
-	virtual int SetMenu(IDirect3DDevice9 *pDev);
+	virtual int SetMenu(cRenderDevice *pDev);
 
 
 
@@ -534,8 +534,8 @@ protected:
 	virtual inline int IconForIconFileIndexX(){return IconFileIndexX();};
 	virtual inline int IconForIconFileIndexY(){return IconFileIndexY();};
 
-	IDirect3DTexture9* m_pTexture_Icon;
-	IDirect3DTexture9* m_pTexture_StateIcon;
+	cRenderTexture* m_pTexture_Icon;
+	cRenderTexture* m_pTexture_StateIcon;
 public:
 
 	//-----------------------------------
@@ -610,7 +610,7 @@ public:
 	virtual StyleString shortExplanation(){return _T("");};
 	virtual StyleString longExplanation(){return _T("");};
 
-	virtual void DrawIcon(IDirect3DDevice9 *pDev,int x,int y){};
+	virtual void DrawIcon(cRenderDevice *pDev,int x,int y){};
 private:
 	tstring name_;
 };

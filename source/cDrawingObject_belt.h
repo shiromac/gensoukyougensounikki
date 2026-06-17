@@ -1,7 +1,5 @@
 #pragma once
 #include "cDrawingObject.h"
-#include <d3d9.h>
-
 #include "utility/cCurveTrack.h"
 
 class cDrawingObject_belt :
@@ -34,5 +32,5 @@ public:
 
 
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 };

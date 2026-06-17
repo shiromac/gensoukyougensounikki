@@ -17,7 +17,7 @@ class cSelectWindow :
 public:
 	cSelectWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
 public:
 	virtual void SetCursolTolast();
@@ -28,20 +28,20 @@ public:
 	int decisionEnable;//決定ボタンが働くかどうか
 	int shortCutState;
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int CursorDraw(IDirect3DDevice9 *pDev);
-	//virtual int pageDraw(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
+	virtual int CursorDraw(cRenderDevice *pDev);
+	//virtual int pageDraw(cRenderDevice *pDev);
 
-	virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	virtual int TextDrawSub(cRenderDevice *pDev);
 
-	virtual int RerenderDraw(IDirect3DDevice9 *pDev);
+	virtual int RerenderDraw(cRenderDevice *pDev);
 
-	virtual int ShortCutDraw(IDirect3DDevice9 *pDev);
+	virtual int ShortCutDraw(cRenderDevice *pDev);
 
 	//SpriteText m_pageText;
 	//int m_pageAnimeCount;
 	
-	//IDirect3DTexture9* m_pTexture_Page;
+	//cRenderTexture* m_pTexture_Page;
 
 	int cursolIndexMax;
 	int cursolIndex;
@@ -58,7 +58,7 @@ protected:
 
 	int shortCutSelect_X;
 	int shortCutSelect_Y;
-	virtual int shortCut_process(IDirect3DDevice9 *pDev);
+	virtual int shortCut_process(cRenderDevice *pDev);
 
 	tstring selectMemoryKey_;
 	virtual void memorizeSelect();
@@ -69,13 +69,13 @@ public:
 	vector<pcCommand> commandList;
 	virtual void addCommand(pcCommand pcommand){commandList.push_back(pcommand);};
 	virtual int commandSize(){return commandList.size();};
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	virtual StyleString shortExplanationString(cRenderDevice *pDev);
 
 	virtual pcCommand pforcusedcommand();
-	virtual void setSelectMemoryKey(tstring& tstr);//選択欄を保存するためのキーをセットする（保存する設定をオン）
+	virtual void setSelectMemoryKey(const tstring& tstr);//選択欄を保存するためのキーをセットする（保存する設定をオン）
 };
 
 #include <boost/shared_ptr.hpp>

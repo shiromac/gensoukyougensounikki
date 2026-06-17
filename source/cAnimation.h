@@ -24,8 +24,8 @@ public:
 	virtual ~cAnimation(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev){return true;};
-	virtual int Draw(IDirect3DDevice9 *pDev){return true;};
+	virtual int process(cRenderDevice *pDev){return true;};
+	virtual int Draw(cRenderDevice *pDev){return true;};
 	virtual int Init(pcAnimation me){wme_ = wpcAnimation(me);return true;};
 
 	//Žg—p‚·‚é‚©”÷–­
@@ -59,7 +59,7 @@ public:
 	
 	int wait;
 
-	virtual int process(IDirect3DDevice9 *pDev){
+	virtual int process(cRenderDevice *pDev){
 		if(wait-- <= 0) {
 			End = true;
 		}
@@ -103,8 +103,8 @@ public:
 public:
 	virtual ~cAnimationChipManager(void);
 
-	virtual int chipprocess(IDirect3DDevice9 *pDev);
-	virtual int chipDraw(IDirect3DDevice9 *pDev);
+	virtual int chipprocess(cRenderDevice *pDev);
+	virtual int chipDraw(cRenderDevice *pDev);
 
 	bool chipEmpty();
 
@@ -139,8 +139,8 @@ public:
 	virtual ~cAnimationChipManager_chip(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	//virtual int Draw(IDirect3DDevice9 *pDev) = 0;
+	virtual int process(cRenderDevice *pDev);
+	//virtual int Draw(cRenderDevice *pDev) = 0;
 
 	virtual int Init(pcAnimation me);
 

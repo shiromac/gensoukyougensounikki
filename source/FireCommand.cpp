@@ -15,7 +15,7 @@
 
 #include "utility/debug.h"
 
-int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList, pcDroping pdrop)
+int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList, pcDroping pdrop)
 {
 	
 	//共通
@@ -507,7 +507,7 @@ void GetmenuFuncObjectsList(pcDroping subject, vector<vector<pcDroping>> &Object
 
 //---------------------------------------------
 //共通
-int 説明(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 説明(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcControlLayer pccl;
 	pcGameWindow pcgw;
@@ -530,7 +530,7 @@ int 説明(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	return true;
 }
 
-int 置く(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 置く(cRenderDevice *pDev, pcDroping pdrop)
 {
 
 	if(sg_pDungeonSystem->足元設置要請(sg_pDungeonSystem->pPlayerChara(), pdrop))
@@ -552,7 +552,7 @@ int 置く(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	return false;
 }
 
-int 拾う(IDirect3DDevice9 *pDev)
+int 拾う(cRenderDevice *pDev)
 {
 	pcDroping pdrop = sg_pDungeonSystem->pPlayerChara()->足元();
 	if(pdrop == NULL) return false;
@@ -602,7 +602,7 @@ int 拾う(IDirect3DDevice9 *pDev)
 	return false;
 }
 
-int 投げる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 投げる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	sg_pDungeonSystem->メニューを閉じる();
 	sg_pDungeonSystem->AnimationManager().
@@ -624,7 +624,7 @@ int 投げる(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	return false;
 }
 
-int 交換(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 交換(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcDroping pdrop2 = sg_pDungeonSystem->pPlayerChara()->足元();
 	if(sg_pDungeonSystem->足元交換要請(sg_pDungeonSystem->pPlayerChara(), pdrop))
@@ -651,7 +651,7 @@ int 交換(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 	return false;
 }
-int メモ(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int メモ(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcControlLayer pccl;
 	//pcSelectWindow pcsw;
@@ -670,7 +670,7 @@ int メモ(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	
 	return false;
 }
-int 名前(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 名前(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcControlLayer pccl;
 	//pcSelectWindow pcsw;
@@ -701,7 +701,7 @@ int 名前(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 
 //準共通
-int 装備(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 装備(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcBullet pcBul = boost::dynamic_pointer_cast<cBullet>(pdrop);
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
@@ -734,7 +734,7 @@ int 装備(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	
 	return false;
 }
-int はずす(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int はずす(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcBullet pcBul = boost::dynamic_pointer_cast<cBullet>(pdrop);
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
@@ -764,7 +764,7 @@ int はずす(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 //---------------------------------------------
 //book
-int 読む(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 読む(cRenderDevice *pDev, pcDroping pdrop)
 {
 	int result = true;
 	pcBook pcbk = boost::dynamic_pointer_cast<cBook>(pdrop);
@@ -868,7 +868,7 @@ int 読み要請(pcCharacter pchara, pcDroping pdrop)
 
 //---------------------------------------------
 //Box
-int 入れる(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pbox)
+int 入れる(cRenderDevice *pDev, pcDroping pdrop, pcDroping pbox)
 {
 	int result = true;
 	pcBox pcbx = boost::dynamic_pointer_cast<cBox>(pbox);
@@ -1022,7 +1022,7 @@ int 入れ要請(pcDroping pdrop, pcDroping pbox)
 	sg_pDungeonSystem->メニューを閉じる();
 	return false;
 }
-int 倉庫に入れる(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pstore)
+int 倉庫に入れる(cRenderDevice *pDev, pcDroping pdrop, pcDroping pstore)
 {
 	int result = true;
 	pcStoreDroping psd = boost::dynamic_pointer_cast<cStoreDroping>(pstore);
@@ -1052,7 +1052,7 @@ int 倉庫に入れる(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pstore)
 
 	return result;
 }
-int 倉庫にまとめて入れる(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist, pcDroping pstore)
+int 倉庫にまとめて入れる(cRenderDevice *pDev, vector<pcDroping>& pdroplist, pcDroping pstore)
 {
 	int i;
 	for(i=0;i<pdroplist.size();i++)
@@ -1063,7 +1063,7 @@ int 倉庫にまとめて入れる(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist, p
 	return true;
 }
 
-int 見る(IDirect3DDevice9 *pDev, pcDroping pbox)
+int 見る(cRenderDevice *pDev, pcDroping pbox)
 {
 	pcBox pcbx = boost::dynamic_pointer_cast<cBox>(pbox);
 	if(pcbx == NULL)
@@ -1171,7 +1171,7 @@ int 見る要請(pcDroping pbox)
 	return result;
 }
 
-int のぞく(IDirect3DDevice9 *pDev, pcDroping pbox)
+int のぞく(cRenderDevice *pDev, pcDroping pbox)
 {
 	pcBox pcbx = boost::dynamic_pointer_cast<cBox>(pbox);
 	if(pcbx == NULL)
@@ -1290,7 +1290,7 @@ int のぞく要請(pcDroping pbox)
 	return result;
 }
 
-int 開ける(IDirect3DDevice9 *pDev, pcDroping pbox)
+int 開ける(cRenderDevice *pDev, pcDroping pbox)
 {
 	pcBox pcbx = boost::dynamic_pointer_cast<cBox>(pbox);
 	if(pcbx == NULL)
@@ -1364,7 +1364,7 @@ int 開け要請(pcDroping pbox)
 	return result;
 }
 
-int 倉庫から出す(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pstore)
+int 倉庫から出す(cRenderDevice *pDev, pcDroping pdrop, pcDroping pstore)
 {
 	int result = true;
 	pcStoreDroping psd = boost::dynamic_pointer_cast<cStoreDroping>(pstore);
@@ -1424,7 +1424,7 @@ int 倉庫から出す(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pstore)
 
 	return result;
 }
-int 倉庫からまとめて出す(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist, pcDroping pstore)
+int 倉庫からまとめて出す(cRenderDevice *pDev, vector<pcDroping>& pdroplist, pcDroping pstore)
 {
 	int i;
 	for(i=0;i<pdroplist.size();i++)
@@ -1435,7 +1435,7 @@ int 倉庫からまとめて出す(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist, p
 	return true;
 }
 
-int 出す(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pbox)
+int 出す(cRenderDevice *pDev, pcDroping pdrop, pcDroping pbox)
 {
 	int result = true;
 
@@ -1460,7 +1460,7 @@ int 出す(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pbox)
 }
 
 //まとめて
-int まとめて出す(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
+int まとめて出す(cRenderDevice *pDev, vector<pcDroping>& pdroplist)
 {
 
 	int i;
@@ -1536,7 +1536,7 @@ int 出し要請(pcDroping pdrop, pcCharacter receiver, pcDroping pbox)
 	}
 	return false;
 }
-int 入れ替え(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pdrop2, pcDroping pbox)
+int 入れ替え(cRenderDevice *pDev, pcDroping pdrop, pcDroping pdrop2, pcDroping pbox)
 {
 	pcBox pcbx = boost::dynamic_pointer_cast<cBox>(pbox);
 	if(pcbx == NULL)
@@ -1638,7 +1638,7 @@ int 入れ替え要請(pcDroping pdrop, pcDroping pdrop2, pcDroping pbox)
 
 //---------------------------------------------
 //Bullet
-int Bullet装備(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Bullet装備(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcBullet pcBul = boost::dynamic_pointer_cast<cBullet>(pdrop);
 	if(pcBul == NULL)
@@ -1712,7 +1712,7 @@ int Bullet装備要請(pcCharacter pchara, pcDroping pdrop)
 
 	return result;
 }
-int Bulletはずす(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Bulletはずす(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcBullet pcBul = boost::dynamic_pointer_cast<cBullet>(pdrop);
 	if(pcBul == NULL)
@@ -1781,7 +1781,7 @@ int Bullet装備はずし要請(pcCharacter pchara, pcDroping pdrop)
 	return result;
 }
 
-int 撃つ(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 撃つ(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcBullet pcBul = boost::dynamic_pointer_cast<cBullet>(pdrop);
 	if(pcBul == NULL)
@@ -1865,7 +1865,7 @@ int 撃ち要請(pcCharacter pchara, pcDroping pdrop)
 
 //---------------------------------------------
 //Drink
-int 飲む(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 飲む(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcDrink pcDrk = boost::dynamic_pointer_cast<cDrink>(pdrop);
 	if(pcDrk == NULL)
@@ -1988,7 +1988,7 @@ int 飲み要請(pcCharacter pchara, pcDroping pdrop)
 
 	return result;
 }
-int 汲む(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 汲む(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcDrink pcDrk = boost::dynamic_pointer_cast<cDrink>(pdrop);
 	if(pcDrk == NULL)
@@ -2064,7 +2064,7 @@ int 汲み要請(pcCharacter pchara, pcDroping pdrop)
 	return result;
 }
 
-int カクテル(IDirect3DDevice9 *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
+int カクテル(cRenderDevice *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
 {
 	pcDrink pcDrk = boost::dynamic_pointer_cast<cDrink>(pdrop);
 	if(pcDrk == NULL)
@@ -2151,7 +2151,7 @@ int カクテル要請(pcCharacter pchara ,vector<pcDroping> &ObjectList, pcDroping pd
 
 //---------------------------------------------
 //Equipment
-int Equipment装備(IDirect3DDevice9 *pDev, int part, pcDroping pdrop)
+int Equipment装備(cRenderDevice *pDev, int part, pcDroping pdrop)
 {
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
 	if(pcEqu == NULL)
@@ -2196,7 +2196,7 @@ int Equipment装備(IDirect3DDevice9 *pDev, int part, pcDroping pdrop)
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int Equipment装備選択(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Equipment装備選択(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
 	if(pcEqu == NULL)
@@ -2290,7 +2290,7 @@ int Equipment装備要請(pcCharacter pchara, int part, pcDroping pdrop)
 	return result;
 }
 
-int Equipmentはずす(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Equipmentはずす(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
 	if(pcEqu == NULL)
@@ -2360,7 +2360,7 @@ int Equipment装備はずし要請(pcCharacter pchara, pcDroping pdrop)
 	return result;
 
 }
-int 能力(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 能力(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcEquipment pcEqu = boost::dynamic_pointer_cast<cEquipment>(pdrop);
 	if(pcEqu == NULL)
@@ -2415,7 +2415,7 @@ int 能力(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 //---------------------------------------------
 //Food
-int 食べる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 食べる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcFood pcfd = boost::dynamic_pointer_cast<cFood>(pdrop);
 	if(pcfd == NULL)
@@ -2486,7 +2486,7 @@ int 食べ要請(pcCharacter pchara, pcDroping pdrop)
 
 //---------------------------------------------
 //Spell
-int Spell装備(IDirect3DDevice9 *pDev, int part, pcDroping pdrop)
+int Spell装備(cRenderDevice *pDev, int part, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2523,7 +2523,7 @@ int Spell装備(IDirect3DDevice9 *pDev, int part, pcDroping pdrop)
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int Spell装備選択(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Spell装備選択(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2606,7 +2606,7 @@ int Spell装備要請(pcCharacter pchara, int part, pcDroping pdrop)
 	return result;
 }
 
-int Spellはずす(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int Spellはずす(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2676,7 +2676,7 @@ int Spell装備はずし要請(pcCharacter pchara, pcDroping pdrop)
 }
 
 
-int 破壊(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 破壊(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2746,7 +2746,7 @@ int 破壊要請(pcCharacter pchara, pcDroping pdrop)
 }
 
 
-int 宣言(IDirect3DDevice9 *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
+int 宣言(cRenderDevice *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2856,7 +2856,7 @@ int 宣言強制要請(pcCharacter pchara , pcDroping pdrop)
 	return 宣言要請(pchara,ObjectList,pdrop);
 }
 
-int スキル(IDirect3DDevice9 *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
+int スキル(cRenderDevice *pDev ,vector<pcDroping> &ObjectList, pcDroping pdrop)
 {
 	pcSpell pcSpl = boost::dynamic_pointer_cast<cSpell>(pdrop);
 	if(pcSpl == NULL)
@@ -2913,7 +2913,7 @@ int スキル要請(pcCharacter pchara ,vector<pcDroping> &ObjectList, pcDroping pdro
 
 //---------------------------------------------
 //trap
-int 踏む(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 踏む(cRenderDevice *pDev, pcDroping pdrop)
 {
 	return 踏み要請(pdrop);
 }
@@ -2936,24 +2936,24 @@ int 踏み要請(pcDroping pdrop)
 
 //---------------------------------------------
 //stair
-int 上る(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 上る(cRenderDevice *pDev, pcDroping pdrop)
 {
 	sg_pDungeonSystem->AnimationManager().
 				Anime_PlaySE(_T("step.wav"),sg_pDungeonSystem->pPlayerChara()->足元地形()->place);
 	return 昇降要請();
 }
-int 下りる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 下りる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	sg_pDungeonSystem->AnimationManager().
 				Anime_PlaySE(_T("step.wav"),sg_pDungeonSystem->pPlayerChara()->足元地形()->place);
 	return 昇降要請();
 }
-int やめる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int やめる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int 一旦中断する(IDirect3DDevice9 *pDev)
+int 一旦中断する(cRenderDevice *pDev)
 {
 	sg_pDungeonSystem->GameEndSavetyPrepareing();
 	sg_pDungeonSystem->メニューを閉じる();
@@ -2970,7 +2970,7 @@ int 昇降要請()
 
 //---------------------------------------------
 //Shop
-int キープする(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int キープする(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
 	if(psd == NULL)
@@ -3005,7 +3005,7 @@ int キープする(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int キープをやめる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int キープをやめる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
 	if(psd == NULL)
@@ -3032,7 +3032,7 @@ int キープをやめる(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	sg_pDungeonSystem->メニューを閉じる();
 	return true;
 }
-int ポイント交換(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int ポイント交換(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
 	if(psd == NULL)
@@ -3083,7 +3083,7 @@ int ポイント交換(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 	return true;
 }
-int 買う(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 買う(cRenderDevice *pDev, pcDroping pdrop)
 {
 	//現在霧雨魔法店専用
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
@@ -3121,7 +3121,7 @@ int 買う(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 	return true;
 }
-int 売る(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 売る(cRenderDevice *pDev, pcDroping pdrop)
 {
 	//現在霧雨魔法店専用
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
@@ -3154,7 +3154,7 @@ int 売る(IDirect3DDevice9 *pDev, pcDroping pdrop)
 	return true;
 }
 
-int 店買う(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 店買う(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
 	if(psd == NULL)
@@ -3181,7 +3181,7 @@ int 店買う(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 	return true;
 }
-int 店売る(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int 店売る(cRenderDevice *pDev, pcDroping pdrop)
 {
 	pcShopDroping psd = boost::dynamic_pointer_cast<cShopDroping>(pdrop);
 	if(psd == NULL)
@@ -3207,7 +3207,7 @@ int 店売る(IDirect3DDevice9 *pDev, pcDroping pdrop)
 
 	return true;
 }
-int まとめて買う(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
+int まとめて買う(cRenderDevice *pDev, vector<pcDroping>& pdroplist)
 {
 
 	int i;
@@ -3220,7 +3220,7 @@ int まとめて買う(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
 }
 
 
-int まとめて売る(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
+int まとめて売る(cRenderDevice *pDev, vector<pcDroping>& pdroplist)
 {
 
 	int i;
@@ -3232,7 +3232,7 @@ int まとめて売る(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
 	return true;
 }
 
-int まとめて店買う(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
+int まとめて店買う(cRenderDevice *pDev, vector<pcDroping>& pdroplist)
 {
 
 	int i;
@@ -3245,7 +3245,7 @@ int まとめて店買う(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
 }
 
 
-int まとめて店売る(IDirect3DDevice9 *pDev, vector<pcDroping>& pdroplist)
+int まとめて店売る(cRenderDevice *pDev, vector<pcDroping>& pdroplist)
 {
 
 	int i;

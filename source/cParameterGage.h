@@ -23,9 +23,9 @@ public:
 protected:
 	cDrawingObject DO;
 public:
-	virtual void Draw(IDirect3DDevice9 *pDev);
+	virtual void Draw(cRenderDevice *pDev);
 
-	virtual void ShadowDraw(IDirect3DDevice9 *pDev, int x, int y, int alpha);
+	virtual void ShadowDraw(cRenderDevice *pDev, int x, int y, int alpha);
 
 	int drawmode;
 	int edge_width;

@@ -37,7 +37,7 @@ public:
 	virtual ~caWarp(void){};
 
 
-	virtual int process(IDirect3DDevice9 *pDev){
+	virtual int process(cRenderDevice *pDev){
 		if(!_initited) {
 			if(sg_pDungeonSystem->ワープ地形移動可(_chara,_toLand)) {
 				sg_pDungeonSystem->方向転換要請_主人公専用(_chara,_aspect);
@@ -55,7 +55,7 @@ public:
 
 		return false;
 	};
-	virtual int Draw(IDirect3DDevice9 *pDev){
+	virtual int Draw(cRenderDevice *pDev){
 		return _chara_anime->Draw(pDev);
 	}
 	virtual bool isOnScreen(){return _chara_anime->isOnScreen();};

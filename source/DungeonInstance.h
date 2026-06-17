@@ -43,14 +43,6 @@ class cDungeon;
 #include <boost/weak_ptr.hpp>
 typedef boost::shared_ptr<cDungeon> pcDungeon;
 typedef boost::weak_ptr<cDungeon> wpcDungeon;
-#include <d3d9.h>
-#include <d3dx9.h>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-
-#include <d3d9.h>
-#include <d3dx9.h>
 
 //ダンジョン中保存されるデータ類
 class cDungeonInstance

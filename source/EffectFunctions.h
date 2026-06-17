@@ -1,8 +1,9 @@
 #pragma once
+#include "gameMainSystem/cRenderBackend.h"
 
 
 
-typedef D3DXVECTOR4 TextureRangeRect;
+typedef cRenderVector4 TextureRangeRect;
 //-------------------------------------------------
 //汎用エフェクト
 //-------------------------------------------------
@@ -32,8 +33,8 @@ namespace EffectFunctions
 	void 特殊能力発揮エフェクト(const double placeX,const double placeY,const double placeZ);
 
 	void ボスエフェクト集中(const double placeX,const double placeY,const double placeZ);
-	void ボスエフェクトため(const double placeX,const double placeY, cColor& imagecolor1, cColor& imagecolor2);
-	void ボスエフェクト発散(const double placeX,const double placeY, cColor& imagecolor1, cColor& imagecolor2);
+	void ボスエフェクトため(const double placeX,const double placeY, cColor imagecolor1, cColor imagecolor2);
+	void ボスエフェクト発散(const double placeX,const double placeY, cColor imagecolor1, cColor imagecolor2);
 
 	void ボスエフェクト撃破(const double placeX,const double placeY,const double placeZ);
 

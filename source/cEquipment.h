@@ -82,7 +82,7 @@ public:
 	virtual inline int IconFileIndexX();
 	virtual inline int IconFileIndexY();
 
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 	virtual int GetmenuCaption(vector<tstring> &CaptionList);
 
@@ -93,7 +93,7 @@ public:
 	virtual StyleString GetmenuExplain(tstring &Caption);
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 public:
 	//被箱入れ
@@ -157,9 +157,9 @@ public:
 	//--------------------------------------------------------
 	//コマンド群
 public:
-	//virtual int 装備(IDirect3DDevice9 *pDev, int part);
-	//virtual int 装備選択(IDirect3DDevice9 *pDev);
-	//virtual int はずす(IDirect3DDevice9 *pDev);
+	//virtual int 装備(cRenderDevice *pDev, int part);
+	//virtual int 装備選択(cRenderDevice *pDev);
+	//virtual int はずす(cRenderDevice *pDev);
 	//virtual int 装備要請(pcCharacter pchara, int part);
 	//virtual int 装備はずし要請(pcCharacter pchara);
 

@@ -27,7 +27,7 @@ cControlLayer::~cControlLayer(void)
 	WindowList.clear();
 }
 
-int cControlLayer::Init(IDirect3DDevice9 *pDev)
+int cControlLayer::Init(cRenderDevice *pDev)
 {
 	shortExplanationWindow = pcGameWindow(new cGameWindow);
 	shortExplanationWindow->Init(pDev,28,4);
@@ -38,7 +38,7 @@ int cControlLayer::Init(IDirect3DDevice9 *pDev)
 }
 
 
-int cControlLayer::process(IDirect3DDevice9 *pDev)
+int cControlLayer::process(cRenderDevice *pDev)
 {
 	int i;
 
@@ -65,7 +65,7 @@ int cControlLayer::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cControlLayer::shortExplanationprocess(IDirect3DDevice9 *pDev)
+int cControlLayer::shortExplanationprocess(cRenderDevice *pDev)
 {
 	StyleString sestr;
 	int i;
@@ -89,7 +89,7 @@ int cControlLayer::shortExplanationprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cControlLayer::Draw(IDirect3DDevice9 *pDev)
+int cControlLayer::Draw(cRenderDevice *pDev)
 {
 	int i;
 

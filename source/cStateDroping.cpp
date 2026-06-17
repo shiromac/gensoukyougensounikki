@@ -52,7 +52,7 @@ int cStateDroping::RerenderText(SpriteText & sprite,int MaxLetterLength)
 	return true;
 }
 //ƒƒjƒ…[‚Å‘I‘ğ‚ÉÅ‰‚ÉŒÄ‚Î‚ê‚é
-int cStateDroping::Action(IDirect3DDevice9 *pDev)
+int cStateDroping::Action(cRenderDevice *pDev)
 {
 
 	return true;

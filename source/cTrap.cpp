@@ -36,7 +36,7 @@ StyleString cTrap::FullName()
 
 	if(FullN.length() > ITEM_CAPTION_MAX_LENGTH)
 	{
-		D3DXVECTOR2 size(ITEM_CAPTION_MAX_LENGTH/FullN.length(),1);
+		cRenderVector2 size(ITEM_CAPTION_MAX_LENGTH/FullN.length(),1);
 		FullN.setSameSize(size);
 	}
 
@@ -215,7 +215,7 @@ int cTrap::GetmenuCaption(vector<tstring> &CaptionList)
 
 /*
 //コマンドを解決する;
-int cTrap::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cTrap::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("踏む"))
@@ -232,7 +232,7 @@ int cTrap::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &
 }
 
 
-int cTrap::踏む(IDirect3DDevice9 *pDev)
+int cTrap::踏む(cRenderDevice *pDev)
 {
 	return 踏み要請();
 }
@@ -566,7 +566,7 @@ void cTrap::踏みエフェクト()
 	chip->setTexture(_T("effect\\basic\\ring_out.png"));
 	chip->scaleX.addCascade(0,	1,	life);
 	chip->scaleY.addCascade(0,	0.75,life);
-	chip->setPerticleSize(D3DXVECTOR2(512,512));
+	chip->setPerticleSize(cRenderVector2(512,512));
 	chip->color.addCascade(cColor(0,255,255,255),cColor(255,255,255,255),cColor(0,255,255,255),life);
 	sg_pDungeonSystem->AnimationManager().AddAnime(boost::static_pointer_cast<cAnimation>(chip));
 

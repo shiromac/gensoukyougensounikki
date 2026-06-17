@@ -16,7 +16,7 @@ tstring LANGUAGE_IMPORTDATADIR()
 }
 
 
-void g_InitSystemData(tstring & file)
+void g_InitSystemData(const tstring & file)
 {
 	g_systemSR.setscriptname(file);
 	g_systemSR.load();
@@ -87,6 +87,12 @@ int g_Langメッセージ(const TCHAR* name, std::map<tstring, StyleString > & valiab
 	StyleString output;
 	g_Lang(name,output,valiable);
 	return sg_pDungeonSystem->メッセージ(output);
+}
+
+int g_Langメッセージ(const TCHAR* name, const std::map<tstring, StyleString > & valiable)
+{
+	std::map<tstring, StyleString > valiableCopy = valiable;
+	return g_Langメッセージ(name, valiableCopy);
 }
 
 

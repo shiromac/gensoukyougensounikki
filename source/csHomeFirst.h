@@ -10,12 +10,12 @@ public:
 	virtual ~csHomeFirst(void);
 
 		
-	virtual bool SceneInitialaze(IDirect3DDevice9 *pDev);
+	virtual bool SceneInitialaze(cRenderDevice *pDev);
 	virtual void SceneFinalize();
 
-	virtual void SceneSystemDraw(IDirect3DDevice9 *pDev);
-	virtual void SceneDraw(IDirect3DDevice9 *pDev);
-	virtual void SceneProcess(IDirect3DDevice9 *pDev);
+	virtual void SceneSystemDraw(cRenderDevice *pDev);
+	virtual void SceneDraw(cRenderDevice *pDev);
+	virtual void SceneProcess(cRenderDevice *pDev);
 
 
 };

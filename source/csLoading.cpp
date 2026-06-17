@@ -21,16 +21,24 @@
 
 using namespace std;
 
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
 #include <process.h>
+#endif
 
 
 
-unsigned __stdcall LoadingThread(void * pDev_void);
+#ifndef __EMSCRIPTEN__
+#define GGN_LOADING_THREAD_CALL __stdcall
+#else
+#define GGN_LOADING_THREAD_CALL
+#endif
 
-unsigned __stdcall LoadingThread(void * pDev_void)
+unsigned GGN_LOADING_THREAD_CALL LoadingThread(void * pDev_void);
+
+unsigned GGN_LOADING_THREAD_CALL LoadingThread(void * pDev_void)
 {
-	IDirect3DDevice9 *pDev = static_cast<IDirect3DDevice9 *>(pDev_void);
+	cRenderDevice *pDev = static_cast<cRenderDevice *>(pDev_void);
 	
 	
 	if(sg_pDungeonSystem == NULL)
@@ -51,8 +59,10 @@ unsigned __stdcall LoadingThread(void * pDev_void)
 		//sg_pDungeonSystem->InitDungeon(pDev);
 
 		int error = 0;
-		cScriptReader SR(GRAPHICFOLDER _T("graphicpass.id"));
-#ifdef _UNRELEASE
+		cScriptReader SR(g_GraphicAssetPath(_T("graphicpass.id")));
+#ifdef __EMSCRIPTEN__
+		error |= SR.load();
+#elif defined(_UNRELEASE)
 		error |= SR.loadAndpacked();
 #else
 		error |= SR.loadpacked();
@@ -88,8 +98,10 @@ unsigned __stdcall LoadingThread(void * pDev_void)
 	return 0;
 }
 
+#ifndef __EMSCRIPTEN__
 unsigned g_thID;
 HANDLE g_hTh;
+#endif
 
 
 csLoading::csLoading(void)
@@ -103,7 +115,7 @@ csLoading::~csLoading(void)
 }
 
 
-bool csLoading::SceneInitialaze(IDirect3DDevice9 *pDev)
+bool csLoading::SceneInitialaze(cRenderDevice *pDev)
 {
 	/*
 	g_hTh = (HANDLE)_beginthreadex(NULL, 0, LoadingThread, pDev, 0, &g_thID);
@@ -121,7 +133,7 @@ bool csLoading::SceneInitialaze(IDirect3DDevice9 *pDev)
 	g_GameEnv.m_Screen->setRenderTarget(pDev, SCREEN_BACKGROUND);
 
 
-	IDirect3DTexture9* pTexture;
+	cRenderTexture* pTexture;
 	//pTexture = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("effect\\magiccircle.png"));
 	pTexture = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev,_T("interface\\title.png"));
 
@@ -156,19 +168,20 @@ bool csLoading::SceneInitialaze(IDirect3DDevice9 *pDev)
 
 void csLoading::SceneFinalize()
 {
-
+#ifndef __EMSCRIPTEN__
 	if(g_hTh != NULL)
 	{
 		CloseHandle(g_hTh);
 	}
+#endif
 }
 
-void csLoading::SceneSystemDraw(IDirect3DDevice9 *pDev)
+void csLoading::SceneSystemDraw(cRenderDevice *pDev)
 {
 
 }
 static int s_drawed = 0;
-void csLoading::SceneDraw(IDirect3DDevice9 *pDev)
+void csLoading::SceneDraw(cRenderDevice *pDev)
 {
 	sg_wall.Draw(pDev);
 
@@ -178,13 +191,17 @@ void csLoading::SceneDraw(IDirect3DDevice9 *pDev)
 	s_drawed += 1;
 }
 
-void csLoading::SceneProcess(IDirect3DDevice9 *pDev)
+void csLoading::SceneProcess(cRenderDevice *pDev)
 {
 	sg_wall3.Rotation += 2;
 
+#ifndef __EMSCRIPTEN__
 	DWORD dwExCode;
 	GetExitCodeThread(g_hTh, &dwExCode);
 	if(dwExCode != STILL_ACTIVE && s_drawed > 3)
+#else
+	if(s_drawed > 3)
+#endif
 	{//èIóπÇµÇΩ
 		
 		LoadingThread(pDev);

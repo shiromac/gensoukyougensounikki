@@ -70,7 +70,7 @@ int cFood::GetmenuCaption(vector<tstring> &CaptionList)
 
 /*
 //コマンドを解決する;
-int cFood::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cFood::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("食べる"))
@@ -89,7 +89,7 @@ int cFood::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &
 }
 
 
-int cFood::食べる(IDirect3DDevice9 *pDev)
+int cFood::食べる(cRenderDevice *pDev)
 {
 	int result = 0;
 

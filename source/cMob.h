@@ -19,7 +19,7 @@ public:
 public:
 	virtual ~cMob(void);
 
-	virtual void InitSub(IDirect3DDevice9 *pDev);//子クラスで使うかも
+	virtual void InitSub(cRenderDevice *pDev);//子クラスで使うかも
 
 	virtual void settingInit();
 	virtual void naturalSpawnInit();

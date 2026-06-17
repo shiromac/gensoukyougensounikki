@@ -22,20 +22,20 @@ public:
 	cCocktailWindow(void);
 
 	//cCocktailWindowÇÕècâ°ÇÃéwíËÇ™ïsâ¬î\
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
-	virtual void Init(IDirect3DDevice9 *pDev, pcDroping pbox);
-	virtual void Init(IDirect3DDevice9 *pDev, vector<pcDroping> materialList, vector<int> materials, bool unappreciatedCooktailable);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, pcDroping pbox);
+	virtual void Init(cRenderDevice *pDev, vector<pcDroping> materialList, vector<int> materials, bool unappreciatedCooktailable);
 
 	virtual int ReRendarText();
 	
 	void setDelegate(cCocktailWindowDelegateBase* delegateObject){delegateObject_ = pcCocktailWindowDelegateBase(delegateObject);};
 
 protected:
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
-	virtual int CursorDraw(IDirect3DDevice9 *pDev);
-	//virtual int pageDraw(IDirect3DDevice9 *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
+	virtual int CursorDraw(cRenderDevice *pDev);
+	//virtual int pageDraw(cRenderDevice *pDev);
 
-	virtual int RerenderDraw(IDirect3DDevice9 *pDev);
+	virtual int RerenderDraw(cRenderDevice *pDev);
 
 	vector<pcDroping> materialList_;
 	pcDroping pbox_;
@@ -45,7 +45,7 @@ protected:
 
 	bool unappreciatedCooktailable_;
 
-	IDirect3DTexture9* m_pTexture_Multiselect;
+	cRenderTexture* m_pTexture_Multiselect;
 
 
 	int cursolIndexXMax;
@@ -54,7 +54,7 @@ protected:
 	int cursolIndexY;
 
 
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	virtual StyleString shortExplanationString(cRenderDevice *pDev);
 	pcGameWindow pMaterialW_;
 	pcGameWindow pFromCaptionW_;
 	pcGameWindow pToCaptionW_;
@@ -67,8 +67,8 @@ public:
 	virtual ~cCocktailWindow(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int pageIndexMaxF(){return pageIndexMax;};
 };

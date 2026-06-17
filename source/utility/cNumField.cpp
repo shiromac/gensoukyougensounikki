@@ -18,7 +18,7 @@ cNumField::~cNumField(void)
 
 }
 
-void cNumField::Init(IDirect3DDevice9 *pDev)
+void cNumField::Init(cRenderDevice *pDev)
 {
 	pTexture_ = g_GameEnv.m_GlobalResourse->getTextureFromFile(
 					pDev,_T("interface\\num.png"));
@@ -62,7 +62,7 @@ void cNumField::GetFigure(vector<int>& figures)
 
 }
 
-void cNumField::Draw(IDirect3DDevice9 *pDev)
+void cNumField::Draw(cRenderDevice *pDev)
 {
 
 	int i;

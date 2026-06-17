@@ -241,7 +241,7 @@ double cSpell::効果時腕輪ダメージ()
 	return sg_pDungeonSystem->DataBase.DropImportData_Value(
 		ID(),(tstring)_T("効果時腕輪ダメージ"),0.0);
 }
-void cSpell::DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y)
+void cSpell::DrawStateIconSub(cRenderDevice *pDev,int x,int y)
 {
 	cDrawingObject DO;
 
@@ -542,7 +542,7 @@ StyleString cSpell::GetmenuExplain(tstring &Caption)
 
 /*
 //コマンドを解決する;
-int cSpell::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cSpell::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("宣言"))
@@ -576,7 +576,7 @@ int cSpell::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> 
 */
 
 /*
-int cSpell::宣言(IDirect3DDevice9 *pDev ,vector<pcDroping> &ObjectList)
+int cSpell::宣言(cRenderDevice *pDev ,vector<pcDroping> &ObjectList)
 {
 	int result = 0;
 
@@ -746,7 +746,7 @@ int cSpell::衝突時_メッセージ(pcCharacter pchara)
 
 /*
 
-int cSpell::装備選択(IDirect3DDevice9 *pDev)
+int cSpell::装備選択(cRenderDevice *pDev)
 {
 	vector<tstring> captions;
 
@@ -787,7 +787,7 @@ int cSpell::装備選択(IDirect3DDevice9 *pDev)
 }
 
 
-int cSpell::装備(IDirect3DDevice9 *pDev, int part)
+int cSpell::装備(cRenderDevice *pDev, int part)
 {
 	int result = 0;
 
@@ -987,7 +987,7 @@ int cSpell::unequip()
 
 
 /*
-int cSpell::はずす(IDirect3DDevice9 *pDev)
+int cSpell::はずす(cRenderDevice *pDev)
 {
 	int result = 0;
 

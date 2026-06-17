@@ -49,7 +49,7 @@ public:
 	virtual void longExplanationExtraBase(std::vector<StyleString> &explanations);
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 	//---------------------------------
 	//識別
@@ -68,7 +68,7 @@ public:
 
 	//--------------------------------------------------------
 	//コマンド群
-	//virtual int 飲む(IDirect3DDevice9 *pDev);
+	//virtual int 飲む(cRenderDevice *pDev);
 	//virtual int 飲み要請(pcCharacter pchara);
 
 	//破壊される時true;

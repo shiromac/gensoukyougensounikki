@@ -29,7 +29,7 @@ cAnimationChipManager_chip::~cAnimationChipManager_chip()
 {
 }
 
-int cAnimationChipManager_chip::process(IDirect3DDevice9 *pDev)
+int cAnimationChipManager_chip::process(cRenderDevice *pDev)
 {
 	if(hidingTime <= 0)
 	{
@@ -86,7 +86,7 @@ cAnimationChipManager::cAnimationChipManager()
 cAnimationChipManager::~cAnimationChipManager()
 {
 }
-int cAnimationChipManager::chipprocess(IDirect3DDevice9 *pDev)
+int cAnimationChipManager::chipprocess(cRenderDevice *pDev)
 {
 	list<pcAnimationChipManager_chip>::iterator itr = chiplist.begin();
 
@@ -106,7 +106,7 @@ int cAnimationChipManager::chipprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cAnimationChipManager::chipDraw(IDirect3DDevice9 *pDev)
+int cAnimationChipManager::chipDraw(cRenderDevice *pDev)
 {
 	list<pcAnimationChipManager_chip>::iterator itr = chiplist.begin();
 

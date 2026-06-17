@@ -87,8 +87,8 @@ double degree(const c4DVector v1,const c4DVector v2);
 //(角度) = degree(v1,v2)
 //と書く。
 
-c4DVector exproduct( c4DVector& v1, c4DVector& v2,const dimension_No first_d,const dimension_No second_d,const dimension_No third_d);//(_d:次元 要素DIM_X:x,DIM_Y:y,DIM_Z:z,DIM_T:t)
-c4DVector exproduct( c4DVector& v1, c4DVector& v2);
+c4DVector exproduct( c4DVector v1, c4DVector v2,const dimension_No first_d,const dimension_No second_d,const dimension_No third_d);//(_d:次元 要素DIM_X:x,DIM_Y:y,DIM_Z:z,DIM_T:t)
+c4DVector exproduct( c4DVector v1, c4DVector v2);
 //xyz空間上でベクトルv1とベクトルv2の外積をとる。
 //例えばxyz空間上でベクトルv1とベクトルv2の外積を得たいときは
 //(外積) = exproduct(v1,v2)

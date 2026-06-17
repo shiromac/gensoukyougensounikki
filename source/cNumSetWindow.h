@@ -18,7 +18,7 @@ class cNumSetWindow :
 public:
 	cNumSetWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev,
+	virtual void Init(cRenderDevice *pDev,
 		unsigned long int *valuepointer,
 		unsigned long int min,
 		unsigned long int max,
@@ -26,10 +26,10 @@ public:
 
 public:
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
-	virtual int pageDraw(IDirect3DDevice9 *pDev);
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
+	virtual int pageDraw(cRenderDevice *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
 
 	static const int MAXKETA_BINARY = 32;
 	int getMaxketa();
@@ -53,8 +53,8 @@ protected:
 public:
 	virtual ~cNumSetWindow(void);
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 };
 
 #include <boost/shared_ptr.hpp>

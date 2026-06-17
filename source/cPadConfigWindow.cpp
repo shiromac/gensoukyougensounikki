@@ -1,4 +1,4 @@
-Ôªø#include "stdafx.h"
+#include "stdafx.h"
 
 #include "cPadConfigWindow.h"
 
@@ -19,14 +19,14 @@ cPadConfigWindow::~cPadConfigWindow(void)
 {
 
 }
-void cPadConfigWindow::Init(IDirect3DDevice9 *pDev)
+void cPadConfigWindow::Init(cRenderDevice *pDev)
 {
 	int letterXnum = 20;
 	int letterYnum = 10;
 
 	setCommand();
 
-	settextW_.Text() = g_Lang(_T("„Éú„Çø„É≥Ë®≠ÂÆöË™¨Êòé"));
+	settextW_.Text() = g_Lang(_T("É{É^Éìê›íËê‡ñæ"));
 	settextW_.Init(pDev,12,4);
 	settextW_.CenterX = (SCREEN_X/2);
 	settextW_.CenterY = (SCREEN_Y/2)-100;
@@ -42,10 +42,10 @@ void cPadConfigWindow::setCommand()
 	commandList.clear();
 	for(i=0;i<8;i++)
 	{
-		caption = g_Lang(_T("„Éú„Çø„É≥"));
+		caption = g_Lang(_T("É{É^Éì"));
 		caption.addstring(g_GameEnv.m_Input.patInputManager->padconfigI2B[i] + 1);
 		
-		sstr = _T("„Éú„Çø„É≥");
+		sstr = _T("É{É^Éì");
 		sstr.addstring(i + 1);
 		sstr.addstring(_T("Caption"));
 		
@@ -53,27 +53,27 @@ void cPadConfigWindow::setCommand()
 
 	}
 
-	commandList.push_back(pcCommand(new cCommandNull(g_Lang(_T("ÂàùÊúüÂåñ")))));
-	commandList.push_back(pcCommand(new cCommandNull(g_Lang(_T("„Éë„ÉÉ„Éâ„Ç≥„É≥„Éï„Ç£„Ç∞ÁµÇ‰∫Ü")))));
+	commandList.push_back(pcCommand(new cCommandNull(g_Lang(_T("èâä˙âª")))));
+	commandList.push_back(pcCommand(new cCommandNull(g_Lang(_T("ÉpÉbÉhÉRÉìÉtÉBÉOèIóπ")))));
 
 	ReRendarText();
 }
 
-void cPadConfigWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cPadConfigWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	Init(pDev);
 }
-StyleString cPadConfigWindow::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cPadConfigWindow::shortExplanationString(cRenderDevice *pDev)
 {
 	if(cursolIndex >= 8) return _T("");
 	StyleString sstr;
-	sstr = _T("„Éú„Çø„É≥");
+	sstr = _T("É{É^Éì");
 	sstr.addstring(cursolIndex + 1);
 	sstr.addstring(_T("Explanation"));
 	return g_Lang(sstr.c_str());
 }
 
-int cPadConfigWindow::Draw(IDirect3DDevice9 *pDev)
+int cPadConfigWindow::Draw(cRenderDevice *pDev)
 {
 	cSelectWindow::Draw(pDev);
 
@@ -85,7 +85,7 @@ int cPadConfigWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cPadConfigWindow::process(IDirect3DDevice9 *pDev)
+int cPadConfigWindow::process(cRenderDevice *pDev)
 {
 	int i;
 
@@ -205,7 +205,7 @@ cParamaterConfigWindow::~cParamaterConfigWindow(void)
 {
 
 }
-void cParamaterConfigWindow::Init(IDirect3DDevice9 *pDev, int *valuepointer, int min, int max)
+void cParamaterConfigWindow::Init(cRenderDevice *pDev, int *valuepointer, int min, int max)
 {
 	int letterXnum = 20;
 	int letterYnum = 3;
@@ -219,18 +219,18 @@ void cParamaterConfigWindow::Init(IDirect3DDevice9 *pDev, int *valuepointer, int
 	cGameWindow::Init(pDev,letterXnum,letterYnum);
 }
 
-void cParamaterConfigWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cParamaterConfigWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	//Init(pDev);
 }
 
-int cParamaterConfigWindow::Draw(IDirect3DDevice9 *pDev)
+int cParamaterConfigWindow::Draw(cRenderDevice *pDev)
 {
 	cGameWindow::Draw(pDev);
 
 	return true;
 }
-int cParamaterConfigWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cParamaterConfigWindow::TextDraw(cRenderDevice *pDev)
 {
 	if(preRendar == false)
 	{
@@ -259,14 +259,14 @@ int cParamaterConfigWindow::TextDraw(IDirect3DDevice9 *pDev)
 
 
 		TCHAR t[MAXBUFFSIZE];
-		//„Éö„Éº„Ç∏„Ç§„É≥„Éá„ÉÉ„ÇØ„Çπ
+		//ÉyÅ[ÉWÉCÉìÉfÉbÉNÉX
 		m_pageText.CleatText();
 		m_pageText.SetWeight(GWFONTWEIGHT);
 		m_pageText.BeginText( g_fontstyle().c_str(), EDGEWIDTH);
 		m_pageText.SetAntiAlias(1);
 		m_pageText.SetCursolPos(0,0);
 		m_pageText.SetColor( D3DCOLOR_ARGB(255,255,255,255) );
-		m_pageText.SetReturnWidth(1024);//Ëá™Âãïreturn„Åó„Å™„ÅÑ
+		m_pageText.SetReturnWidth(1024);//é©ìÆreturnÇµÇ»Ç¢
 		_stprintf(t ,_T("%d_/_%d"),pageIndex+1,pageIndexMaxF());
 		m_pageText.DrawText(t);
 
@@ -277,7 +277,7 @@ int cParamaterConfigWindow::TextDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cParamaterConfigWindow::pageDraw(IDirect3DDevice9 *pDev)
+int cParamaterConfigWindow::pageDraw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;
@@ -292,7 +292,7 @@ int cParamaterConfigWindow::pageDraw(IDirect3DDevice9 *pDev)
 	int drawY = CenterY - PAGETEXSIZE/4;
 
 
-	//Âè≥Áü¢Âç∞ÊèèÁîª
+	//âEñÓàÛï`âÊ
 	DO.setLTRB(drawX-dif,drawY,drawX+PAGETEXSIZE/2-dif,drawY+PAGETEXSIZE/2);
 
 	DO.Draw(pDev);
@@ -306,7 +306,7 @@ int cParamaterConfigWindow::pageDraw(IDirect3DDevice9 *pDev)
 	drawY = CenterY - PAGETEXSIZE/4;
 
 
-	//Â∑¶Áü¢Âç∞ÊèèÁîª
+	//ç∂ñÓàÛï`âÊ
 	DO.setLTRB(drawX-dif,drawY,drawX+PAGETEXSIZE/2-dif,drawY+PAGETEXSIZE/2);
 
 	DO.Draw(pDev);
@@ -328,7 +328,7 @@ int cParamaterConfigWindow::pageDraw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cParamaterConfigWindow::process(IDirect3DDevice9 *pDev)
+int cParamaterConfigWindow::process(cRenderDevice *pDev)
 {
 	int i;
 
@@ -343,7 +343,7 @@ int cParamaterConfigWindow::process(IDirect3DDevice9 *pDev)
 		preRendar = false;
 	}
 
-	if(*output_ < min_) *output_ = min_;//Ê≥®ÊÑè
+	if(*output_ < min_) *output_ = min_;//íçà”
 	if(*output_ > max_) *output_ = max_;
 
 	if( g_pPlayerInput()->migi().justOn || (g_pPlayerInput()->migi().on && g_pPlayerInput()->migi().onCount > 15 && !(g_pPlayerInput()->migi().onCount%5))

@@ -5,13 +5,9 @@
 
 namespace
 {
-void SetPointSampler(IDirect3DDevice9* pDev, DWORD sampler)
+void SetPointSampler(cRenderDevice* pDev, DWORD sampler)
 {
-	pDev->SetSamplerState(sampler, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	pDev->SetSamplerState(sampler, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-	pDev->SetSamplerState(sampler, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-	pDev->SetSamplerState(sampler, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-	pDev->SetSamplerState(sampler, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+	cRenderSetPointSampler(pDev, sampler);
 }
 }
 
@@ -45,32 +41,28 @@ bool cDrawableObject::culculateRealTexRange()
 
 	return true;
 }
-void cDrawableObject::setTexture(IDirect3DTexture9* pTexture,int TexSizeX, int TexSizeY)
+void cDrawableObject::setTexture(cRenderTexture* pTexture,int TexSizeX, int TexSizeY)
 {
 	m_pTexture = pTexture;
 	m_TexSizeX = TexSizeX;
 	m_TexSizeY = TexSizeY;
 }
-void cDrawableObject::setTexture(IDirect3DTexture9* pTexture)
+void cDrawableObject::setTexture(cRenderTexture* pTexture)
 {
 	m_pTexture = pTexture;
 	if(pTexture == NULL) return;
 
-	D3DSURFACE_DESC sDesc;
+	cRenderGetTextureSize(pTexture, m_TexSizeX, m_TexSizeY);
 
-	pTexture->GetLevelDesc(0, &sDesc);
-
-	m_TexSizeX = sDesc.Width;
-	m_TexSizeY = sDesc.Height;
 }
 
-int cDrawableObject::SetRenderMode(IDirect3DDevice9 *pDev)
+int cDrawableObject::SetRenderMode(cRenderDevice *pDev)
 {
 
 	// 頂点ＦＶＦを設定
-	pDev->SetFVF( VERTEX2D_COLORED::FVF );
+	cRenderSetColoredVertexFormat(pDev);
 
-	pDev->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+	cRenderSetTextureCoordIndex(pDev, 0, 0);
 	SetPointSampler(pDev, 0);
 
 
@@ -78,32 +70,17 @@ int cDrawableObject::SetRenderMode(IDirect3DDevice9 *pDev)
 	if(colorblendmode == COLOR_BLEND_MULTIPLE)
 	{
 		// 頂点色を乗算する
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+		cRenderSetTextureColorMode(pDev, 0, C_RENDER_TEXTURE_COLOR_MODULATE);
 	}
 	else if(colorblendmode == COLOR_BLEND_ADDITION)
 	{
 		// 頂点色を加算する
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_ADD );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+		cRenderSetTextureColorMode(pDev, 0, C_RENDER_TEXTURE_COLOR_ADD);
 	}
 	else if(colorblendmode == COLOR_BLEND_FILL)
 	{
 		// 頂点色で塗りつぶす
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG2 );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-		pDev->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+		cRenderSetTextureColorMode(pDev, 0, C_RENDER_TEXTURE_COLOR_FILL);
 	}
 	/*
 	pDev->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
@@ -112,32 +89,28 @@ int cDrawableObject::SetRenderMode(IDirect3DDevice9 *pDev)
 	*/
 	if(AddingDraw == DRAW_MODE_ADDITION)
 	{//加算
-		pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-		pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		pDev->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		cRenderSetBlendFactors(pDev, C_RENDER_BLEND_FACTORS_ADDITION);
+		cRenderSetBlendOperation(pDev, C_RENDER_BLEND_OPERATION_ADD);
 	}
 	else if(AddingDraw == DRAW_MODE_NORMAL)
 	{//通常
-		pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		pDev->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		cRenderSetBlendFactors(pDev, C_RENDER_BLEND_FACTORS_NORMAL);
+		cRenderSetBlendOperation(pDev, C_RENDER_BLEND_OPERATION_ADD);
 	}
 	else if(AddingDraw == DRAW_MODE_SUBSTRACTION)
 	{//減算だが、可能か？
-		pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-		pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		pDev->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
+		cRenderSetBlendFactors(pDev, C_RENDER_BLEND_FACTORS_ADDITION);
+		cRenderSetBlendOperation(pDev, C_RENDER_BLEND_OPERATION_REVERSE_SUBTRACT);
 	}
 	else//
 	{//
-		pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		pDev->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		cRenderSetBlendFactors(pDev, C_RENDER_BLEND_FACTORS_NORMAL);
+		cRenderSetBlendOperation(pDev, C_RENDER_BLEND_OPERATION_ADD);
 	}
 
 
 	//アルファ合成を可に
-	pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	cRenderSetAlphaBlendEnabled(pDev, true);
 
 	return true;
 }
@@ -170,7 +143,7 @@ cDrawingObject::~cDrawingObject(void)
 
 
 
-int cDrawingObject::Draw(IDirect3DDevice9 *pDev)
+int cDrawingObject::Draw(cRenderDevice *pDev)
 {
 	int i;
 
@@ -234,13 +207,13 @@ int cDrawingObject::Draw(IDirect3DDevice9 *pDev)
 		culculateRealTexRange();
 		
 		//テクスチャあり
-		pDev->SetTexture(0, m_pTexture);
+		cRenderSetTexture(pDev, 0, m_pTexture);
 	}
 	else
 	{
 		m_RealTexRange.setLTRB(0,0,0,0);
 		//テクスチャない
-		pDev->SetTexture(0, NULL);
+		cRenderSetTexture(pDev, 0, NULL);
 	}
 
 	unsigned long color[4];
@@ -271,14 +244,14 @@ int cDrawingObject::Draw(IDirect3DDevice9 *pDev)
 	SetRenderMode(pDev);
 
 
-	pDev->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData, sizeof(VERTEX2D_COLORED) );
+	cRenderDrawColoredTriangleStrip(pDev, 2, VxData);
 
 	return true;
 }
 
 
 	//基礎しかサポートし無い高速ドロー
-int cDrawingObject::EasyDraw(IDirect3DDevice9 *pDev)
+int cDrawingObject::EasyDraw(cRenderDevice *pDev)
 {
 	int i;
 
@@ -293,7 +266,7 @@ int cDrawingObject::EasyDraw(IDirect3DDevice9 *pDev)
 
 	m_RealTexRange.setLTRB(0,0,0,0);
 	//テクスチャない
-	pDev->SetTexture(0, NULL);
+	cRenderSetTexture(pDev, 0, NULL);
 	
 
 	VERTEX2D_COLORED VxData[] = {
@@ -306,32 +279,25 @@ int cDrawingObject::EasyDraw(IDirect3DDevice9 *pDev)
 
 
 	// 頂点ＦＶＦを設定
-	pDev->SetFVF( VERTEX2D_COLORED::FVF );
+	cRenderSetColoredVertexFormat(pDev);
 
-	pDev->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 0 );
+	cRenderSetTextureCoordIndex(pDev, 0, 0);
 	SetPointSampler(pDev, 0);
 
 
 	
 	// 頂点色を乗算する
-	pDev->SetTextureStageState( 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE );
-	pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE );
-	pDev->SetTextureStageState( 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE );
-
-	pDev->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
-	pDev->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-	pDev->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+	cRenderSetTextureColorMode(pDev, 0, C_RENDER_TEXTURE_COLOR_MODULATE);
 	
 
 
-	pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	cRenderSetBlendFactors(pDev, C_RENDER_BLEND_FACTORS_NORMAL);
 
 
 	//アルファ合成を可に
-	pDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	cRenderSetAlphaBlendEnabled(pDev, true);
 
-	pDev->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP, 2, VxData, sizeof(VERTEX2D_COLORED) );
+	cRenderDrawColoredTriangleStrip(pDev, 2, VxData);
 
 	return true;
 }

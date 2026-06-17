@@ -175,7 +175,7 @@ int cMob::calcuratePal(int pal, int Class)
 	*/
 }
 
-void cMob::InitSub(IDirect3DDevice9 *pDev)
+void cMob::InitSub(cRenderDevice *pDev)
 {
 	cCharacter::InitSub(pDev);
 

@@ -17,13 +17,13 @@ public:
 public:
 	virtual ~cGameScreenInterface(void);
 
-	virtual int Init(IDirect3DDevice9 *pDev, pcCharacter phero);
+	virtual int Init(cRenderDevice *pDev, pcCharacter phero);
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 	
-	virtual int Draw(IDirect3DDevice9 *pDev);
-	virtual int RefreshDraw(IDirect3DDevice9 *pDev);
-	virtual int Resetdisp(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
+	virtual int RefreshDraw(cRenderDevice *pDev);
+	virtual int Resetdisp(cRenderDevice *pDev);
 public:	
 	//é¿ç€ÇÃíl
 	pcCharacter hero;
@@ -42,7 +42,7 @@ public:
 	SharedValiable_likeInt<int> dispFloorLevel;
 
 protected:
-	virtual int isHeroPchange(IDirect3DDevice9 *pDev);
+	virtual int isHeroPchange(cRenderDevice *pDev);
 	//àÍéûãLâØ
 	pcCharacter heroCopy;
 	cMoney moneyCopy;

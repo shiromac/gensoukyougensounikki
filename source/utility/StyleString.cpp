@@ -17,7 +17,7 @@ StyleString::StyleString(const tstring & str, unsigned long color, float sizeX, 
 	conclete_tstr_.append(str);
 	sector.push_back(length);
 	colors.push_back(color);
-	D3DXVECTOR2 v(sizeX,sizeY); 
+	cRenderVector2 v(sizeX,sizeY);
 	sizes.push_back(v);
 	flags.push_back(flag);
 }
@@ -106,7 +106,7 @@ void StyleString::addstring(const tstring& str, unsigned long color, float sizeX
 	conclete_tstr_.append(str);
 	sector.push_back(length);
 	colors.push_back(color);
-	D3DXVECTOR2 v(sizeX,sizeY); 
+	cRenderVector2 v(sizeX,sizeY);
 	sizes.push_back(v);
 	flags.push_back(flag);
 }
@@ -258,7 +258,7 @@ vector<expandedString> StyleString::exportString()
 
 		estrv.push_back(str);
 
-		length += sector[i];	
+		length += sector[i];
 	}
 
     return estrv;
@@ -366,7 +366,7 @@ void StyleString::setSameColor(unsigned long color)
 	}
 }
 //同サイズで一致させる
-void StyleString::setSameSize(D3DXVECTOR2 size)
+void StyleString::setSameSize(cRenderVector2 size)
 {
 	int i;
 	for(i=0;i<sizes.size();i++)
@@ -380,7 +380,7 @@ void StyleString::setSameSize(double sizeX, double sizeY)
 	int i;
 	for(i=0;i<sizes.size();i++)
 	{
-		sizes[i] = D3DXVECTOR2(sizeX, sizeY);
+		sizes[i] = cRenderVector2(sizeX, sizeY);
 	}
 }
 //同フラグで一致させる
@@ -481,7 +481,7 @@ void split(const tstring& str, const TCHAR* delim, vector<int>& output, const ts
 
 		output.push_back(res);
 	}
-	
+
 }
 
 void split(const vector<tstring>& vstr, const TCHAR* delim, vector<vector<int>>& output, const tstring& decodename)
@@ -514,7 +514,7 @@ void split_hex(const tstring& str, const TCHAR* delim, vector<int>& output, cons
 
 		output.push_back(res);
 	}
-	
+
 }
 
 void split_hex(const vector<tstring>& vstr, const TCHAR* delim, vector<vector<int>>& output, const tstring& decodename)
@@ -547,7 +547,7 @@ void split(const tstring& str, const TCHAR* delim, vector<double>& output, const
 		res = tstrtod(vstr[i], decodename, i);
 		output.push_back(res);
 	}
-	
+
 }
 
 void split(const vector<tstring>& vstr, const TCHAR* delim, vector<vector<double>>& output, const tstring& decodename)
@@ -569,7 +569,7 @@ int tstrtoh(const tstring& str,const tstring& decodename, const int line)
 	TCHAR* e;
 	res = _tcstol(str.c_str(),&e,16);
 	OnAssert(decodename.c_str(), line, (str.length() != 0) ,_T(" 空欄が設定されています。<error> Blank space"));
-	OnAssert(decodename.c_str(), line, (_tcslen(e) == 0) || ( !(res == 0) || (str == _T("0")) || (str == _T("00")))  
+	OnAssert(decodename.c_str(), line, (_tcslen(e) == 0) || ( !(res == 0) || (str == _T("0")) || (str == _T("00")))
 		,_T(" 解釈不能な数値 が設定されています。空欄や余分な文字が入っていないかチェックしてください。<error> cannot understand and check extra space or letters: "), str.c_str() );
 
 	return res;
@@ -580,7 +580,7 @@ int tstrtoi(const tstring& str,const tstring& decodename, const int line)
 	TCHAR* e;
 	res = _tcstol(str.c_str(),&e,10);
 	OnAssert(decodename.c_str(), line, (str.length() != 0) ,_T(" 空欄が設定されています。<error> Blank space"));
-	OnAssert(decodename.c_str(), line, (_tcslen(e) == 0) || ( !(res == 0) || (str == _T("0")) || (str == _T("00")))  
+	OnAssert(decodename.c_str(), line, (_tcslen(e) == 0) || ( !(res == 0) || (str == _T("0")) || (str == _T("00")))
 		,_T(" 解釈不能な数値 が設定されています。空欄や余分な文字が入っていないかチェックしてください。<error> cannot understand and check extra space or letters: "), str.c_str() );
 
 	return res;

@@ -23,7 +23,7 @@ public:
 	virtual void allCancel();
 
 
-	virtual void process(IDirect3DDevice9 *pDev);
+	virtual void process(cRenderDevice *pDev);
 	
 	virtual int AllRelease();
 

@@ -29,7 +29,7 @@ public:
 	virtual inline StyleString ShortNameSub(){return _T("gameobject");};
 	virtual inline tstring usefulName(){return _T("gameobject");};
 
-	IDirect3DTexture9* m_pTexture;
+	cRenderTexture* m_pTexture;
 
 	SafePointerObject<c4DVector> visibleplace;
 	int placeX;
@@ -48,14 +48,14 @@ public:
 
 	virtual int ID(){return -1;};
 
-	virtual void Init(IDirect3DDevice9 *pDev){};
-	virtual void Draw(IDirect3DDevice9 *pDev){};
-	virtual void Process(IDirect3DDevice9 *pDev){};
+	virtual void Init(cRenderDevice *pDev){};
+	virtual void Draw(cRenderDevice *pDev){};
+	virtual void Process(cRenderDevice *pDev){};
 
 	//-----------------------------------------
 	//特殊ドロー系
 
 	//方向つき攻撃ドロー（主に矢と魔法）
-	virtual void aspectedAttackDraw(IDirect3DDevice9 *pDev){Draw(pDev);};
+	virtual void aspectedAttackDraw(cRenderDevice *pDev){Draw(pDev);};
 
 };

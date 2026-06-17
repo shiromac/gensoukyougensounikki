@@ -1,10 +1,13 @@
 #pragma once
 
-#include "sound/sound.h"
 #include "TexSeBgmFilepack/CFilePack.h"
+#include "gameMainSystem/filemanage/cScriptRLayer.h"
+
+#ifndef __EMSCRIPTEN__
+#include "sound/sound.h"
 #include "TexSeBgmFilepack/DirectSound.h"
 #include "TexSeBgmFilepack/DirectSoundStream.h"
-#include "gameMainSystem/filemanage/cScriptRLayer.h"
+#endif
 
 #include <vector>
 #include "gameMainSystem/filemanage/tstring_ph.h"
@@ -13,8 +16,13 @@
 #include <map>
 using namespace std;
 
+#ifndef __EMSCRIPTEN__
 #include <boost/shared_ptr.hpp>
 typedef boost::shared_ptr<DirectSound> pDirectSound;
+typedef HWND cSoundWindowHandle;
+#else
+typedef void* cSoundWindowHandle;
+#endif
 
 class cSoundManager
 {
@@ -24,7 +32,7 @@ public:
 	virtual ~cSoundManager(void);
 
 	//初期化
-	int Init(HWND hWnd);
+	int Init(cSoundWindowHandle hWnd);
 
 	//サウンドをファイル名からロードしてナンバーを返す。失敗した場合-1を返す。
 	int getSoundEffectFromFile(const TCHAR* name);
@@ -57,7 +65,9 @@ protected:
 	int SEVolume_;
 	int BGMVolume_;
 
+#ifndef __EMSCRIPTEN__
 	Sound m_sound;
+#endif
 
 	map<tstring,int> soundFileMap;
 	map<int,tstring> Index2File;
@@ -70,7 +80,9 @@ protected:
 	CFilePackLoad FilePackSE_;
 	CFilePackLoad FilePackBGM_;
 
+#ifndef __EMSCRIPTEN__
 	DirectSoundStream bgm;
 	map<int,pDirectSound> se_exits;
+#endif
 };
 void getPass(const pcScriptRLayer layer, const tstring dir, vector<tstring>& passes);

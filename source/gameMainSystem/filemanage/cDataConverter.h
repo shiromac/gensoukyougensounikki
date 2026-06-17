@@ -277,7 +277,7 @@ namespace cDataConverter
 	{
 		unsigned int ui,msize = map_tmpl.size();
 		std::vector<std::vector<SByte>> vvc;
-		std::map<T1,T2>::const_iterator itr = map_tmpl.begin();
+		typename std::map<T1,T2>::const_iterator itr = map_tmpl.begin();
 		vvc.resize(msize*2);
 		if(msize)
 		{
@@ -323,7 +323,7 @@ namespace cDataConverter
 	{
 		unsigned int ui,msize = map_tmpl.size();
 		std::vector<std::vector<SByte>> vvc;
-		std::map<T1,std::vector<T2>>::const_iterator itr = map_tmpl.begin();
+		typename std::map<T1,std::vector<T2>>::const_iterator itr = map_tmpl.begin();
 		vvc.resize(msize*2);
 		if(msize)
 		{

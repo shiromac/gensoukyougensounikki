@@ -7,10 +7,10 @@
 
 
 int cAnimationManager::EasyAnime_Attackcharacter(pcCharacter pchara,
-									tstring &effectFileName,
+									const tstring &effectFileName,
 									int vi,
 									double speed,
-									tstring &seFileName)
+									const tstring &seFileName)
 {
 	pcaAttack caat = pcaAttack(new caAttack);
 
@@ -33,10 +33,10 @@ int cAnimationManager::EasyAnime_Attackcharacter(pcCharacter pchara,
 }
 
 int cAnimationManager::EasyAnime_Defensecharacter(pcCharacter pchara,
-									tstring &effectFileName,
+									const tstring &effectFileName,
 									int vi,
 									double speed,
-									tstring &seFileName)
+									const tstring &seFileName)
 {
 	pcaDefense cadf = pcaDefense(new caDefense);
 

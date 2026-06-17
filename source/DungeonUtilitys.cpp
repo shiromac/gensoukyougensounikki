@@ -77,7 +77,7 @@ pcLandform cDungeonSystem::RandomPlace()
 	*/
 }
 
-int cDungeonSystem::メッセージ(StyleString& Message)
+int cDungeonSystem::メッセージ(const StyleString& Message)
 {
 	return AnimationManager().Anime_Message(Message);
 }
@@ -295,19 +295,43 @@ bool cDungeonSystem::落ち物配置安全(pcLandform target)
 
 pcLandform cDungeonSystem::存在安全地形(pcLandform target,pcCharacter pchara)
 {
+	if(pchara == NULL) return NULLLAND;
+
 	int i;
 	pcLandform land;
-	for(i=0;i<25;i++)
+	if(target != NULLLAND)
 	{
-		land = alternativeLand(target,i);
-		if((land->pOnChar == NULL) && (land->through(pchara->水上歩行(),pchara->壁中歩行(),pchara->空中歩行())))
+		for(i=0;i<25;i++)
 		{
-			return land;
+			land = alternativeLand(target,i);
+			if((land->pOnChar == NULL || land->pOnChar == pchara) && (land->through(pchara->水上歩行(),pchara->壁中歩行(),pchara->空中歩行())))
+			{
+				return land;
+			}
 		}
 	}
 
-	OnAssert(_T(__FILE__),__LINE__,false,_T("存在安全地形で存在できない地形が検出"));
-	return target;
+	vector<pcLandform> landlist;
+	int x,y;
+	for(x=0;x<MAPWIDTH;x++)
+	{
+		for(y=0;y<MAPHEIGHT;y++)
+		{
+			land = Map().Land(x,y);
+			if((land->pOnChar == NULL || land->pOnChar == pchara) && (land->through(pchara->水上歩行(),pchara->壁中歩行(),pchara->空中歩行())))
+			{
+				landlist.push_back(land);
+			}
+		}
+	}
+
+	if(!landlist.empty())
+	{
+		int landindex = landlist.size()*random();
+		return landlist[landindex];
+	}
+
+	return NULLLAND;
 }
 pcLandform cDungeonSystem::存在安全地形(pcLandform target,pcDroping pdrop)
 {

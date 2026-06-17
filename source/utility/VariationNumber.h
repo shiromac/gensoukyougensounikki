@@ -20,14 +20,14 @@ namespace VariationValue_Enum{
 template <class T> class VariationValue
 {
 
+public:
+	class VariationValue_Cascade;
+	class VariationValue_Cascade_Const;
 protected:
-	
-	template <class T> class VariationValue_Cascade;
-	template <class T> class VariationValue_Cascade_Const;
 
 	VariationValue_Enum::OutRangeMode mode_;
 	double sumLength_;
-	std::map<double, boost::shared_ptr<VariationValue_Cascade<T>>> lengthSep_;
+	std::map<double, boost::shared_ptr<VariationValue_Cascade>> lengthSep_;
 	T defaultOutput;
 public:
 	VariationValue():mode_(VariationValue_Enum::Mode_Cramp),sumLength_(0)
@@ -48,7 +48,7 @@ public:
 	virtual T operator()(double argument)
 	{
 		if(lengthSep_.empty()) return defaultOutput;//空
-		std::map<double, boost::shared_ptr<VariationValue_Cascade<T>>>::iterator itr,tempitr;
+		typename std::map<double, boost::shared_ptr<VariationValue_Cascade>>::iterator itr,tempitr;
 	 
 		double chip_argument = -1.0;
 		if(mode_ == VariationValue_Enum::Mode_Cramp)
@@ -107,16 +107,16 @@ public:
 	virtual T value(double argument){return (*this)(argument);};
 	virtual double sumLength() const {return sumLength_;};
 	void setOutRangeMode(VariationValue_Enum::OutRangeMode mode){mode_ = mode;};
-	virtual void addCascade(boost::shared_ptr<VariationValue_Cascade<T>> pchip)
+	virtual void addCascade(boost::shared_ptr<VariationValue_Cascade> pchip)
 	{
 		//Sum増加
 		sumLength_ += pchip->Length();
-		lengthSep_.insert(map<double, boost::shared_ptr<VariationValue_Cascade<T>>>::value_type(sumLength_,pchip));
+		lengthSep_.insert(typename std::map<double, boost::shared_ptr<VariationValue_Cascade>>::value_type(sumLength_,pchip));
 	};
 
 
 	//VariationValue構成クラス
-	template <class T> class VariationValue_Cascade
+	class VariationValue_Cascade
 	{
 	public:
 		VariationValue_Cascade(){};
@@ -128,8 +128,8 @@ public:
 	};
 
 	//Const
-	template <class T> class VariationValue_Cascade_Const 
-		: public VariationValue_Cascade<T>
+	class VariationValue_Cascade_Const 
+		: public VariationValue_Cascade
 	{
 	public:
 		VariationValue_Cascade_Const(const T& value, double length):
@@ -148,8 +148,8 @@ public:
 	};
 
 	//Linear
-	template <class T> class VariationValue_Cascade_Linear
-		: public VariationValue_Cascade<T>
+	class VariationValue_Cascade_Linear
+		: public VariationValue_Cascade
 	{
 	public:
 		VariationValue_Cascade_Linear(const T& first_value, const T& last_value, double length):
@@ -170,8 +170,8 @@ public:
 	};
 
 	//2B-spline
-	template <class T> class VariationValue_Cascade_2Bspline
-		: public VariationValue_Cascade<T>
+	class VariationValue_Cascade_2Bspline
+		: public VariationValue_Cascade
 	{
 	public:
 		VariationValue_Cascade_2Bspline(const T& first_value,
@@ -198,8 +198,8 @@ public:
 		double length_;
 	};
 	//Bezier
-	template <class T> class VariationValue_Cascade_Bezier
-		: public VariationValue_Cascade<T>
+	class VariationValue_Cascade_Bezier
+		: public VariationValue_Cascade
 	{
 	public:
 		VariationValue_Cascade_Bezier(const T& first_value,
@@ -243,19 +243,19 @@ public:
 	//省略形
 	void addCascade(const T& value, double length)//定数
 	{
-		addCascade(boost::shared_ptr<VariationValue_Cascade_Const<T>>(new VariationValue_Cascade_Const<T>(value, length)) );
+		addCascade(boost::shared_ptr<VariationValue_Cascade_Const>(new VariationValue_Cascade_Const(value, length)) );
 	};
 	void addCascade(const T& first_value, const T& last_value, double length)//線形
 	{
-		addCascade(boost::shared_ptr<VariationValue_Cascade_Linear<T>>(new VariationValue_Cascade_Linear<T>(first_value, last_value, length)) );
+		addCascade(boost::shared_ptr<VariationValue_Cascade_Linear>(new VariationValue_Cascade_Linear(first_value, last_value, length)) );
 	};
 	void addCascade(const T& first_value, const T& second_value, const T& last_value, double length)//2Bスプライン
 	{
-		addCascade(boost::shared_ptr<VariationValue_Cascade_2Bspline<T>>(new VariationValue_Cascade_2Bspline<T>(first_value, second_value, last_value, length)) );
+		addCascade(boost::shared_ptr<VariationValue_Cascade_2Bspline>(new VariationValue_Cascade_2Bspline(first_value, second_value, last_value, length)) );
 	};
 	void addCascade(const T& first_value, const T& second_value, const T& third_value, const T& last_value, double length)//ベジェ
 	{
-		addCascade(boost::shared_ptr<VariationValue_Cascade_Bezier<T>>(new VariationValue_Cascade_Bezier<T>(first_value, second_value, third_value, last_value, length)) );
+		addCascade(boost::shared_ptr<VariationValue_Cascade_Bezier>(new VariationValue_Cascade_Bezier(first_value, second_value, third_value, last_value, length)) );
 	};
 
 };

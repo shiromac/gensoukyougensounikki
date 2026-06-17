@@ -14,21 +14,19 @@
 //=============================================================================
 // INCLUDE
 //=============================================================================
-#include <d3d9.h>
-#include <d3dx9.h>
-
 #include "Main.h"
+#include "cRenderBackend.h"
 
 
 //=============================================================================
 // PROTOTYPE
 //=============================================================================
-bool SceneInitialize( IDirect3DDevice9 *pDev );
+bool SceneInitialize( cRenderDevice *pDev );
 void SceneFinalize( void );
-eBootMode SceneCheck( D3DCAPS9 *pCaps );
-bool SceneRender( IDirect3DDevice9 *pDev, float fFrameTime );
-bool SceneReset( IDirect3DDevice9 *pDev );
-bool SceneRestore( IDirect3DDevice9 *pDev );
+eBootMode SceneCheck( cRenderCaps *pCaps );
+bool SceneRender( cRenderDevice *pDev, float fFrameTime );
+bool SceneReset( cRenderDevice *pDev );
+bool SceneRestore( cRenderDevice *pDev );
 
 
 #endif // ___SCENE_H___

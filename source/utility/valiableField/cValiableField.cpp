@@ -1,5 +1,7 @@
 #include "cValiableField.h"
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
+#endif
 
 using namespace std;
 

@@ -30,7 +30,7 @@
 	@return		終了コード
 */
 //=============================================================================
-eBootMode SceneCheck( D3DCAPS9 *pCaps )
+eBootMode SceneCheck( cRenderCaps *pCaps )
 {
 	return BOOT_MODE_HARDWARE;
 }
@@ -46,7 +46,7 @@ eBootMode SceneCheck( D3DCAPS9 *pCaps )
 	@retval			false : 失敗
 */
 //=============================================================================
-bool SceneInitialize( IDirect3DDevice9 *pDev )
+bool SceneInitialize( cRenderDevice *pDev )
 {
 	
 	//リソースの確保の準備
@@ -100,7 +100,7 @@ void SceneFinalize( void )
 	@retval			false : 失敗
 */
 //=============================================================================
-bool SceneReset( IDirect3DDevice9 *pDev )
+bool SceneReset( cRenderDevice *pDev )
 {
 	g_GameEnv.ResetDevice(pDev);
 	return true;
@@ -117,7 +117,7 @@ bool SceneReset( IDirect3DDevice9 *pDev )
 	@retval			false : 失敗
 */
 //=============================================================================
-bool SceneRestore( IDirect3DDevice9 *pDev )
+bool SceneRestore( cRenderDevice *pDev )
 {
 	
 	g_GameEnv.m_Screen->initScreen(pDev);
@@ -147,22 +147,22 @@ bool SceneRestore( IDirect3DDevice9 *pDev )
 	@retval			false : 失敗
 */
 //=============================================================================
-bool SceneRender( IDirect3DDevice9 *pDev, float fFrameTime )
+bool SceneRender( cRenderDevice *pDev, float fFrameTime )
 {
 
 	//------------------------------------------------------
 	// 画面クリア
 	//------------------------------------------------------
-	pDev->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(128,128,192), 0, 0 );
+	cRenderClearTarget(pDev, cRenderColorRGB(128,128,192));
 
 	
 	//カリングしない
-	pDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	cRenderSetCullNone(pDev);
 
 	//------------------------------------------------------
 	// シーン描画開始
 	//------------------------------------------------------
-	if SUCCEEDED( pDev->BeginScene() )
+	if( cRenderBeginScene(pDev) )
 	{
 		cColor c;
 
@@ -207,7 +207,7 @@ bool SceneRender( IDirect3DDevice9 *pDev, float fFrameTime )
 
 
 
-		pDev->EndScene();
+		cRenderEndScene(pDev);
 	}
 
 	

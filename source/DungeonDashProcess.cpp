@@ -161,7 +161,7 @@ int setSDashWeight(const int x, const int y, const int goal_x, const int goal_y,
 }
 
 //ƒ_ƒbƒVƒ…‚µ‚Ä‚¢‚éŽžtrue‚ð•Ô‚·
-int cDungeonSystem::Dashprocess(IDirect3DDevice9 *pDev)
+int cDungeonSystem::Dashprocess(cRenderDevice *pDev)
 {
 	int i;
 

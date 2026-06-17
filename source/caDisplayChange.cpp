@@ -12,7 +12,7 @@ caDisplayChange::~caDisplayChange()
 }
 
 
-int caDisplayChange::process(IDirect3DDevice9 *pDev)
+int caDisplayChange::process(cRenderDevice *pDev)
 {
 
 	if(targetInt)

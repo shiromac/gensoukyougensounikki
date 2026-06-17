@@ -15,10 +15,13 @@
 
 
 #include <stdio.h>
+#include <string.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
 #include <windows.h>
-#include <d3d9.h>
-#include <d3dx9.h>
 #include <mmsystem.h>
+#endif
 
 
 
@@ -27,6 +30,7 @@
 //=============================================================================
 // LIBRARY
 //=============================================================================
+#ifndef __EMSCRIPTEN__
 #pragma comment ( lib, "winmm.lib" )
 #pragma comment ( lib, "d3d9.lib" )
 #ifdef _DEBUG
@@ -34,12 +38,17 @@
 #else
 	#pragma comment ( lib, "d3dx9.lib" )
 #endif
+#endif
 
 
 //=============================================================================
 // DEFINE
 //=============================================================================
+#ifdef __EMSCRIPTEN__
+#define ERR_BOX(MSG)		((void)0)
+#else
 #define ERR_BOX(MSG)		::MessageBox( App.hWindow, MSG, _T("ERROR"), MB_OK|MB_ICONERROR )
+#endif
 
 
 //=============================================================================
@@ -48,13 +57,15 @@
 struct APPLICATION
 {
 	HWND					hWindow;			///< ウィンドウハンドル
+#ifndef __EMSCRIPTEN__
 	WNDCLASS				WndClass;			///< ウィンドウクラス
 	MSG						Msg;				///< メッセージ
+#endif
 	eBootMode				BootMode;			///< デバイス起動モード
-	IDirect3D9				*pDirect3D;			///< Direct3Dオブジェクト
-	IDirect3DDevice9		*pDevice;			///< Direct3Dデバイス
-	D3DDISPLAYMODE			DisplayMode;		///< ディスプレイモード
-	D3DPRESENT_PARAMETERS	PresentParameter;	///< プレゼンテーションパラメーター
+	cRenderInterface			*pDirect3D;			///< Direct3Dオブジェクト
+	cRenderDevice			*pDevice;			///< Direct3Dデバイス
+	cRenderDisplayMode		DisplayMode;		///< ディスプレイモード
+	cRenderPresentParameters	PresentParameter;	///< プレゼンテーションパラメーター
 
 	unsigned long			OldTime;			///< 前のフレームの時間
 	unsigned long			NowTime;			///< 今のフレームの時間
@@ -68,9 +79,11 @@ struct APPLICATION
 
 	BOOL					IsActive;			///< アクティブか否かのフラグ
 
+#ifndef __EMSCRIPTEN__
 	_TCHAR					CurrentDir[512];	///< カレントディレクトリ
 
 	HANDLE					hMutex;				///< ミューテックス
+#endif
 };
 
 
@@ -83,15 +96,29 @@ static APPLICATION App;
 //=============================================================================
 // PROTOTYPE
 //=============================================================================
+#ifndef __EMSCRIPTEN__
 static LRESULT CALLBACK WinProc( HWND hWnd, UINT msg, UINT wParam, LONG lParam );
 static bool WindowCreate( HINSTANCE hInst );
+#endif
 static bool Direct3DInitialize( void );
 static void Direct3DFinalize( void );
 static bool Direct3DScreenRefresh( void );
 
+static bool GameInitialize( void );
+static void GameFinalize( void );
+static void GameSetupFrameTimer( void );
+static bool GameFrame( void );
+
+#ifndef __EMSCRIPTEN__
 static BOOL InitMutex( void );
 static BOOL ExitMutex( void );
-
+#else
+static void BrowserPrepareSaveFs( void );
+static int BrowserIsSaveFsReady( void );
+static bool BrowserInitializeGame( void );
+static void BrowserShutdownGame( void );
+static void BrowserMainLoop( void );
+#endif
 //=============================================================================
 /**	ウィンドウズメイン関数<BR>
 	一般的なコンソールアプリでのmain()関数のWindows版です。
@@ -104,6 +131,7 @@ static BOOL ExitMutex( void );
 	@return		終了コード
 */
 //=============================================================================
+#ifndef __EMSCRIPTEN__
 int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmd, int show )
 {
 	#ifdef _DEBUG
@@ -144,43 +172,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmd, int show )
 	//---------------------------------------------------
 	if ( !Direct3DInitialize() ) goto EXIT;
 
-	//---------------------------------------------------
-	// 環境クラス初期化
-	//---------------------------------------------------
-	g_GameEnv.init(App.pDevice);
-
-	//---------------------------------------------------
-	// スクリーンクラス初期化
-	//---------------------------------------------------
-	g_GameEnv.m_Screen->initScreen(App.pDevice);
-
-	//---------------------------------------------------
-	// インプットクラス初期化
-	//---------------------------------------------------
-	g_GameEnv.m_Input.InitInput(App.hWindow);
-
-	//---------------------------------------------------
-	// サウンドクラス初期化
-	//---------------------------------------------------
-	g_GameEnv.m_SoundManager.Init(App.hWindow);
-
-	//---------------------------------------------------
-	// ユーザー初期化処理
-	//---------------------------------------------------
-	if ( !SceneInitialize( App.pDevice ) ) goto EXIT;
-
-	/*
-	//---------------------------------------------------
-	// フレーム時間初期化
-	//---------------------------------------------------
-	*/
-	App.NowTime = ::timeGetTime();
-	App.FPSCount = 0;
-	App.OldTime = ::timeGetTime();
-
-	App.timeCr.OnFrameSkip(true);
-	App.timeCr.SetFPS(60);
-	App.timeCr.SetmaxSkip(3);
+	if ( !GameInitialize() ) goto EXIT;
+	GameSetupFrameTimer();
 	
 	//---------------------------------------------------
 	// メインループ
@@ -206,123 +199,15 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmd, int show )
 			/*
 			if ( !App.IsActive )
 			{
-				::Sleep( 100 );
+				cPlatformSleepMilliseconds(100);
 			}
 			else
 			*/
 			{
 				
-				static const float FrameTimeLimit = 1.0f / (float)MINIMUM_FPS;
-
-				//-----------------------------------
-				// フレーム時間取得
-				//-----------------------------------
-
-				App.NowTime = ::timeGetTime();
-				
-				//App.SaveTime += (App.OldTime + 1000/MINIMUM_FPS) - App.NowTime;//理想-現実=余り時間
-				
-				App.fFrameTime = ((float)(App.NowTime - App.OldTime)) * 0.001f;
-				App.OldTime = App.NowTime;
-				/*
-				//-----------------------------------
-				// 一定値以上なら描画を飛ばす
-				//-----------------------------------
-				//if ( App.fFrameTime <= FrameTimeLimit )
-				//{
-				if (App.SaveTime >= 0)//貯金あり
+				if ( !GameFrame() )
 				{
-					//-----------------------------------
-					// 画面更新
-					//-----------------------------------
-					if ( Direct3DScreenRefresh() )
-					{
-						// シーンの描画
-						SceneRender( App.pDevice, App.fFrameTime );
-						App.DrawFPSCount++;
-					}
-					else
-					{
-						// 糸冬
-						::PostMessage( App.hWindow, WM_CLOSE, 0, 0 );
-					}
-				}
-				*/
-				App.timeCr.TimeRegular();       //フレーム制御
-
-				//-----------------------------------
-				// インプット更新
-				//-----------------------------------
-				g_GameEnv.m_Input.UpdateInput();
-
-
-				g_GameEnv.m_SceneManage->SceneCheck(App.pDevice);
-				//ここでシーン本実行
-				g_GameEnv.m_SceneManage->m_NowScene->SceneProcess(App.pDevice);
-
-
-
-				if(App.timeCr.GetDrawFlag())   //描画命令
-				{
-					//-----------------------------------
-					// 画面更新
-					//-----------------------------------
-					if ( Direct3DScreenRefresh() )
-					{
-						// シーンの描画
-						SceneRender( App.pDevice, App.fFrameTime );
-						
-					}
-					else
-					{
-						// 糸冬
-						::PostMessage( App.hWindow, WM_CLOSE, 0, 0 );
-					}
-					
-					if(g_GameEnv.AppEnd)::PostMessage( App.hWindow, WM_CLOSE, 0, 0 );
-					 
-				}
-				/*
-				//-----------------------------------
-				// ダミーでもいいからちと眠らす
-				//-----------------------------------
-				//if (App.SaveTime > 1000/MINIMUM_FPS)//貯金ありすぎ
-				{
-					unsigned long tempNowTime = ::timeGetTime();
-					unsigned long tempOldTime = ::timeGetTime();
-					for(;App.SaveTime > 1000/MINIMUM_FPS;)
-					{
-						::Sleep( 1 );
-						App.SaveTime -= (tempNowTime = ::timeGetTime()) - (tempOldTime);
-						tempOldTime = ::timeGetTime();
-					}
-				}
-
-				*/
-				//-----------------------------------
-				// FPS加算
-				//-----------------------------------
-				App.FPSCount++;
-				
-				//-----------------------------------
-				// FPS算出用時間判定
-				//-----------------------------------
-				App.FPSFrame += App.fFrameTime;
-				if ( App.FPSFrame >= 1.0f )
-				{
-#ifdef _UNRELEASE
-
-					_TCHAR Temp[64] = _T("");
-					//_stprintf( Temp, _T("%s [%ld/%ld/S]"), APPLICATION_NAME, App.DrawFPSCount, App.FPSCount);
-					wsprintf( Temp, _T("%s [%ld/%ld/S]"), APPLICATION_NAME, App.timeCr.GetFrameRate(), App.FPSCount);
-					
-					::SetWindowText( App.hWindow, Temp );
-#endif
-					
-					// データクリア
-					App.FPSFrame = 0.0f;
-					App.FPSCount = 0;
-					//App.DrawFPSCount = 0;
+					::PostMessage( App.hWindow, WM_CLOSE, 0, 0 );
 				}
 			}
 		}
@@ -332,7 +217,7 @@ EXIT:
 	//---------------------------------------------------
 	// ユーザーデータ開放
 	//---------------------------------------------------
-	SceneFinalize();
+	GameFinalize();
 
 	//---------------------------------------------------
 	// Direct3Dの開放
@@ -350,7 +235,182 @@ EXIT:
 	//---------------------------------------------------
 	return (int)App.Msg.wParam;
 }
+#else
+static bool BrowserGameStarted = false;
+static bool BrowserDirect3DStarted = false;
+static bool BrowserGameInitialized = false;
 
+static void BrowserPrepareSaveFs( void )
+{
+	EM_ASM({
+		if (typeof FS === 'undefined' || typeof IDBFS === 'undefined') {
+			Module['ggnSaveReady'] = 1;
+			return;
+		}
+
+		try {
+			FS.mkdir('/save');
+		} catch (e) {
+		}
+
+		try {
+			if (!Module['ggnSaveMounted']) {
+				FS.mount(IDBFS, {}, '/save');
+				Module['ggnSaveMounted'] = 1;
+			}
+		} catch (e) {
+			if (typeof console !== 'undefined') console.error('save mount failed', e);
+			Module['ggnSaveReady'] = 1;
+			return;
+		}
+
+		Module['ggnSaveReady'] = 0;
+		FS.syncfs(true, function(err) {
+			if (err && typeof console !== 'undefined') console.error('save load failed', err);
+			Module['ggnSaveReady'] = 1;
+		});
+	});
+}
+
+static int BrowserIsSaveFsReady( void )
+{
+	return EM_ASM_INT({
+		return Module['ggnSaveReady'] ? 1 : 0;
+	});
+}
+
+static bool BrowserInitializeGame( void )
+{
+	if ( !Direct3DInitialize() ) return false;
+	BrowserDirect3DStarted = true;
+
+	if ( !GameInitialize() )
+	{
+		Direct3DFinalize();
+		BrowserDirect3DStarted = false;
+		return false;
+	}
+	BrowserGameInitialized = true;
+	GameSetupFrameTimer();
+	return true;
+}
+
+static void BrowserShutdownGame( void )
+{
+	if ( BrowserGameInitialized )
+	{
+		GameFinalize();
+		BrowserGameInitialized = false;
+	}
+	if ( BrowserDirect3DStarted )
+	{
+		Direct3DFinalize();
+		BrowserDirect3DStarted = false;
+	}
+}
+
+static void BrowserMainLoop( void )
+{
+	if ( !BrowserGameStarted )
+	{
+		if ( !BrowserIsSaveFsReady() ) return;
+		if ( !BrowserInitializeGame() )
+		{
+			BrowserShutdownGame();
+			emscripten_cancel_main_loop();
+			return;
+		}
+		BrowserGameStarted = true;
+	}
+
+	if ( !GameFrame() )
+	{
+		BrowserShutdownGame();
+		emscripten_cancel_main_loop();
+	}
+}
+
+int main( int argc, char** argv )
+{
+	(void)argc;
+	(void)argv;
+
+	memset( &App, 0x00, sizeof(APPLICATION) );
+
+	BrowserPrepareSaveFs();
+	emscripten_set_main_loop( BrowserMainLoop, 0, 1 );
+	return 0;
+}
+#endif
+
+static bool GameInitialize( void )
+{
+	g_GameEnv.init(App.pDevice);
+	g_GameEnv.m_Screen->initScreen(App.pDevice);
+	g_GameEnv.m_Input.InitInput(App.hWindow);
+	g_GameEnv.m_SoundManager.Init(App.hWindow);
+
+	return SceneInitialize( App.pDevice );
+}
+
+static void GameFinalize( void )
+{
+	SceneFinalize();
+}
+
+static void GameSetupFrameTimer( void )
+{
+	App.NowTime = cPlatformGetMilliseconds();
+	App.FPSCount = 0;
+	App.OldTime = cPlatformGetMilliseconds();
+
+	App.timeCr.OnFrameSkip(true);
+	App.timeCr.SetFPS(60);
+	App.timeCr.SetmaxSkip(3);
+}
+
+static bool GameFrame( void )
+{
+	App.NowTime = cPlatformGetMilliseconds();
+	App.fFrameTime = ((float)(App.NowTime - App.OldTime)) * 0.001f;
+	App.OldTime = App.NowTime;
+
+	App.timeCr.TimeRegular();
+
+	g_GameEnv.m_Input.UpdateInput();
+	g_GameEnv.m_SceneManage->SceneCheck(App.pDevice);
+	g_GameEnv.m_SceneManage->m_NowScene->SceneProcess(App.pDevice);
+
+	if(App.timeCr.GetDrawFlag())
+	{
+		if ( Direct3DScreenRefresh() )
+		{
+			SceneRender( App.pDevice, App.fFrameTime );
+		}
+		else
+		{
+			return false;
+		}
+
+		if(g_GameEnv.AppEnd) return false;
+	}
+
+	App.FPSCount++;
+	App.FPSFrame += App.fFrameTime;
+	if ( App.FPSFrame >= 1.0f )
+	{
+#if defined(_UNRELEASE) && !defined(__EMSCRIPTEN__)
+		_TCHAR Temp[64] = _T("");
+		wsprintf( Temp, _T("%s [%ld/%ld/S]"), APPLICATION_NAME, App.timeCr.GetFrameRate(), App.FPSCount);
+		::SetWindowText( App.hWindow, Temp );
+#endif
+		App.FPSFrame = 0.0f;
+		App.FPSCount = 0;
+	}
+
+	return true;
+}
+#ifndef __EMSCRIPTEN__
 BOOL InitMutex()
 {
 	App.hMutex = ::CreateMutex(NULL, FALSE, APPLICATION_NAME);
@@ -423,7 +483,7 @@ LRESULT CALLBACK WinProc( HWND hWnd, UINT msg, UINT wParam, LONG lParam )
 	//-------------------------------------------------
 	case WM_CREATE:
 		{
-			::timeBeginPeriod( 1 );
+			cPlatformBeginTimerPeriod(1);
 		}
 		return 0;
 	//-------------------------------------------------
@@ -431,7 +491,7 @@ LRESULT CALLBACK WinProc( HWND hWnd, UINT msg, UINT wParam, LONG lParam )
 	//-------------------------------------------------
 	case WM_CLOSE:
 		{
-			::timeEndPeriod( 1 );
+			cPlatformEndTimerPeriod(1);
 			::SendMessage( hWnd, WM_DESTROY, 0, 0 );
 		}
 		return 0;
@@ -505,6 +565,8 @@ bool WindowCreate( HINSTANCE hInst )
 	return true;
 }
 
+#endif
+
 
 //=============================================================================
 /**	Direct3D初期化<BR>
@@ -517,7 +579,7 @@ bool WindowCreate( HINSTANCE hInst )
 bool Direct3DInitialize( void )
 {
 	bool Fullscreen = false;
-#ifdef _UNRELEASE
+#if defined(_UNRELEASE) || defined(__EMSCRIPTEN__)
 #else
 	if( MessageBox( App.hWindow, _T("FullScreen\nフルスクリーンで起動しますか？"), _T("FullScreen"), MB_YESNO | MB_DEFBUTTON2 | MB_ICONQUESTION) == IDYES )
 	{
@@ -525,12 +587,12 @@ bool Direct3DInitialize( void )
 	}
 #endif
 
-	HRESULT hr;
+	cRenderResult hr;
 
 	//---------------------------------------------------
 	// Direct3D オブジェクトを作成
 	//---------------------------------------------------
-	App.pDirect3D = Direct3DCreate9( D3D_SDK_VERSION );
+	App.pDirect3D = cRenderCreateInterface();
 	if ( App.pDirect3D == NULL )
 	{
 		ERR_BOX( _T("Direct3Dの作成に失敗しました") );
@@ -540,8 +602,8 @@ bool Direct3DInitialize( void )
 	//---------------------------------------------------
 	// 現在の画面モードを取得
 	//---------------------------------------------------
-	hr = App.pDirect3D->GetAdapterDisplayMode( D3DADAPTER_DEFAULT, &App.DisplayMode );
-	if FAILED( hr )
+	hr = cRenderGetAdapterDisplayMode(App.pDirect3D, &App.DisplayMode);
+	if( cRenderFailed(hr) )
 	{
 		ERR_BOX( _T("画面モードの取得に失敗しました") );
 		return false;
@@ -550,9 +612,9 @@ bool Direct3DInitialize( void )
 	//---------------------------------------------------
 	// 性能チェック
 	//---------------------------------------------------
-	D3DCAPS9 Caps;
-	hr = App.pDirect3D->GetDeviceCaps( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &Caps );
-	if FAILED( hr )
+	cRenderCaps Caps;
+	hr = cRenderGetDeviceCaps(App.pDirect3D, &Caps);
+	if( cRenderFailed(hr) )
 	{
 		ERR_BOX( _T("デバイスの性能が取得できませんでした") );
 		return false;
@@ -561,28 +623,7 @@ bool Direct3DInitialize( void )
 	//---------------------------------------------------
 	// Direct3D 初期化パラメータの設定
 	//---------------------------------------------------
-	ZeroMemory( &App.PresentParameter, sizeof(D3DPRESENT_PARAMETERS) );
-
-	// 画面情報
-	App.PresentParameter.BackBufferCount			= 1;
-	//App.PresentParameter.Flags						= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-	App.PresentParameter.Flags						= 0;
-	App.PresentParameter.SwapEffect					= D3DSWAPEFFECT_DISCARD;
-	App.PresentParameter.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
-	App.PresentParameter.PresentationInterval		= D3DPRESENT_INTERVAL_IMMEDIATE;
-	App.PresentParameter.MultiSampleType			= D3DMULTISAMPLE_NONE;
-	App.PresentParameter.MultiSampleQuality			= D3DMULTISAMPLE_NONE;
-
-	// ウインドウ : 現在の画面モードを使用
-	App.PresentParameter.hDeviceWindow				= App.hWindow;
-	App.PresentParameter.Windowed					= !Fullscreen;
-	App.PresentParameter.BackBufferWidth			= SCREEN_X;
-	App.PresentParameter.BackBufferHeight			= SCREEN_Y;
-	App.PresentParameter.BackBufferFormat			= App.DisplayMode.Format;
-
-	// Ｚバッファの自動作成
-	App.PresentParameter.EnableAutoDepthStencil		= FALSE;
-	App.PresentParameter.AutoDepthStencilFormat		= D3DFMT_D16;
+	cRenderInitializePresentParameters(&App.PresentParameter, App.hWindow, Fullscreen, App.DisplayMode, SCREEN_X, SCREEN_Y);
 
 	//---------------------------------------------------
 	// 性能に応じて処理を行う
@@ -597,7 +638,7 @@ bool Direct3DInitialize( void )
 	//------------------------------------------------------- Refデバイスの生成
 	case BOOT_MODE_REF:
 		// REFERENCE RASTERIZE
-		if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+		if( !cRenderCreateReferenceSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 		{
 			ERR_BOX( _T("Direct3Dデバイスの生成に失敗しました") );
 			return false;
@@ -606,10 +647,10 @@ bool Direct3DInitialize( void )
 	//------------------------------------------------------- SoftwareTnLデバイスの生成
 	case BOOT_MODE_SOFTWARE:
 		// SOFTWARE HAL
-		if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+		if( !cRenderCreateHalSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 		{
 			// REFERENCE RASTERIZE
-			if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+			if( !cRenderCreateReferenceSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 			{
 				ERR_BOX( _T("Direct3Dデバイスの生成に失敗しました") );
 				return false;
@@ -619,13 +660,13 @@ bool Direct3DInitialize( void )
 	//------------------------------------------------------- HardwareTnLデバイスの生成
 	case BOOT_MODE_HARDWARE:
 		// HARDWARE T&L
-		if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, App.hWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+		if( !cRenderCreateHalHardwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 		{
 			// SOFTWARE HAL
-			if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+			if( !cRenderCreateHalSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 			{
 				// REFERENCE RASTERIZE
-				if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+				if( !cRenderCreateReferenceSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 				{
 					ERR_BOX( _T("Direct3Dデバイスの生成に失敗しました") );
 					return false;
@@ -636,13 +677,13 @@ bool Direct3DInitialize( void )
 	//------------------------------------------------------- SoftwareTnL and HardwareTnLデバイスの生成
 	case BOOT_MODE_MIXED:
 		// MIXED T&L
-		if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, App.hWindow, D3DCREATE_MIXED_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+		if( !cRenderCreateHalMixedDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 		{
 			// SOFTWARE HAL
-			if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+			if( !cRenderCreateHalSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 			{
 				// REFERENCE RASTERIZE
-				if FAILED( App.pDirect3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, App.hWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &App.PresentParameter, &App.pDevice ) )
+				if( !cRenderCreateReferenceSoftwareDevice(App.pDirect3D, App.hWindow, &App.PresentParameter, &App.pDevice) )
 				{
 					ERR_BOX( _T("Direct3Dデバイスの生成に失敗しました") );
 					return false;
@@ -655,7 +696,7 @@ bool Direct3DInitialize( void )
 	//---------------------------------------------------
 	// シーンクリア
 	//---------------------------------------------------
-	App.pDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(128,128,192), 0, 0 );
+	cRenderClearTarget(App.pDevice, cRenderColorRGB(128,128,192));
 
 	return true;
 }
@@ -672,15 +713,13 @@ void Direct3DFinalize( void )
 	// デバイス開放
 	if ( App.pDevice != NULL )
 	{
-		App.pDevice->Release();
-		App.pDevice = NULL;
+		cRenderRelease(App.pDevice);
 	}
 
 	// オブジェクト開放
 	if ( App.pDirect3D != NULL )
 	{
-		App.pDirect3D->Release();
-		App.pDirect3D = NULL;
+		cRenderRelease(App.pDirect3D);
 	}
 }
 
@@ -693,69 +732,49 @@ void Direct3DFinalize( void )
 //=============================================================================
 bool Direct3DScreenRefresh( void )
 {
-	switch ( App.pDevice->Present( NULL, NULL, NULL, NULL ) )
+	cRenderResult presentResult = cRenderPresent(App.pDevice);
+
+	if(cRenderIsDriverInternalError(presentResult))
 	{
-	//---------------------------- これ出たらもうダメポ
-	case D3DERR_DRIVERINTERNALERROR:
+		return false;
+	}
+
+	if(cRenderIsDeviceLost(presentResult))
+	{
+#ifndef __EMSCRIPTEN__
+		while ( ::PeekMessage( &App.Msg, 0, 0, 0, PM_NOREMOVE ) )
 		{
-			return false;
+			if(!(GetMessage( &App.Msg, 0, 0, 0 ))) return false;
+			::TranslateMessage( &App.Msg );
+			::DispatchMessage( &App.Msg );
 		}
-		break;
+#endif
 
-	//---------------------------- デバイス消失状態
-	case D3DERR_DEVICELOST:
+		cRenderResult deviceState = cRenderTestCooperativeLevel(App.pDevice);
+		if(cRenderIsDeviceLost(deviceState))
 		{
-			// １秒まっとけ
-			//::Sleep( 1000 );
-			while ( ::PeekMessage( &App.Msg, 0, 0, 0, PM_NOREMOVE ) )
-			{
-				if(!(GetMessage( &App.Msg, 0, 0, 0 ))) return false;
-				::TranslateMessage( &App.Msg );
-				::DispatchMessage( &App.Msg );
-			}
-			// デバイス状態チェック
-			switch ( App.pDevice->TestCooperativeLevel() )
-			{
-			//---------------- デバイス消失
-			case D3DERR_DEVICELOST:
-				{
-					::Sleep( 100 );
-				}
-				break;
-
-			//---------------- デバイスリセットＯＫ
-			case D3DERR_DEVICENOTRESET:
-				{
-					
-					// シーンリセット
-					if ( !SceneReset( App.pDevice ) )
-					{
-						// こけたら終わる
-						return false;
-					}
-
-					// デバイスのリセット
-					HRESULT hr = App.pDevice->Reset( &App.PresentParameter );
-					if(hr == D3DERR_DEVICELOST)
-					{
-						return false;
-					}
-					if FAILED( hr )
-					{
-						// こけたら終わる
-						return false;
-					}
-
-					// シーン復旧
-					SceneRestore( App.pDevice );
-					
-				}
-				break;
-			}
+			cPlatformSleepMilliseconds(100);
 		}
-		break;
+		else if(cRenderIsDeviceNotReset(deviceState))
+		{
+			if ( !SceneReset( App.pDevice ) )
+			{
+				return false;
+			}
+
+			cRenderResult resetResult = cRenderResetDevice(App.pDevice, &App.PresentParameter);
+			if(cRenderIsDeviceLost(resetResult))
+			{
+				return false;
+			}
+			if(cRenderFailed(resetResult))
+			{
+				return false;
+			}
+
+			SceneRestore( App.pDevice );
+		}
 	}
 
 	return true;
 }
-

@@ -39,7 +39,7 @@ cMiniMap::~cMiniMap(void)
 
 }
 
-void cMiniMap::Init(IDirect3DDevice9 *pDev)
+void cMiniMap::Init(cRenderDevice *pDev)
 {
 	
 
@@ -65,7 +65,7 @@ pcLandform cMiniMap::Land(const cCoordinate& cood)
 }
 
 
-int cMiniMap::DrawMiniMap(IDirect3DDevice9 *pDev)
+int cMiniMap::DrawMiniMap(cRenderDevice *pDev)
 {
 	int i;
 
@@ -233,7 +233,7 @@ int cMiniMap::DrawMiniMap(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cMiniMap::ReDrawMiniMap(IDirect3DDevice9 *pDev)
+int cMiniMap::ReDrawMiniMap(cRenderDevice *pDev)
 {
 
 	cColor c;
@@ -254,7 +254,7 @@ int cMiniMap::ReDrawMiniMap(IDirect3DDevice9 *pDev)
 }
 
 
-int cMiniMap::DrawMiniMap_Land(IDirect3DDevice9 *pDev)
+int cMiniMap::DrawMiniMap_Land(cRenderDevice *pDev)
 {
 	//ターゲットをレイヤに
 	g_GameEnv.m_Screen->setRenderTarget(pDev,SCREEN_LAYER);
@@ -662,7 +662,7 @@ int cMiniMap::DrawMiniMap_Land(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cMiniMap::DrawMiniMap_Land_Sub(IDirect3DDevice9 *pDev,cCoordinate lefttop,
+int cMiniMap::DrawMiniMap_Land_Sub(cRenderDevice *pDev,cCoordinate lefttop,
 		const int x,const int y,//マップ座標
 		const int baseXi,const int baseYi,//テクスチャ座標基礎
 		const int first_land,const int second_land,//テクスチャ座標基礎
@@ -815,7 +815,7 @@ int cMiniMap::DrawMiniMap_Land_Sub(IDirect3DDevice9 *pDev,cCoordinate lefttop,
 	return true;
 }
 
-int cMiniMap::DrawMiniMap_Object(IDirect3DDevice9 *pDev)
+int cMiniMap::DrawMiniMap_Object(cRenderDevice *pDev)
 {
 	pcLandform land;
 	pcDroping pdrop;
@@ -994,7 +994,7 @@ int cMiniMap::miniMapObjectAlpha()
 }
 
 
-int cMiniMap::MiniMapDrawSub(IDirect3DDevice9 *pDev,int x,int y,int ui,int vi)
+int cMiniMap::MiniMapDrawSub(cRenderDevice *pDev,int x,int y,int ui,int vi)
 {
 	int boxsize = MINIMAPSIZE;//枡の大きさ
 	cCoordinate lefttop = miniMapLeftTop();//左上

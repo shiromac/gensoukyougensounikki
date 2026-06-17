@@ -17,7 +17,7 @@ cParameterGage::~cParameterGage(void)
 
 }
 
-void cParameterGage::Draw(IDirect3DDevice9 *pDev)
+void cParameterGage::Draw(cRenderDevice *pDev)
 {
 
 
@@ -69,7 +69,7 @@ void cParameterGage::Draw(IDirect3DDevice9 *pDev)
 
 
 
-void cParameterGage::ShadowDraw(IDirect3DDevice9 *pDev, int x, int y, int alpha)
+void cParameterGage::ShadowDraw(cRenderDevice *pDev, int x, int y, int alpha)
 {
 
 		DO.setTexture(NULL,0,0);

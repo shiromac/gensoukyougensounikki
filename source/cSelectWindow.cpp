@@ -34,7 +34,7 @@ cSelectWindow::~cSelectWindow(void)
 	commandList.clear();
 }
 
-void cSelectWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cSelectWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 
 	
@@ -85,13 +85,13 @@ void cSelectWindow::SetCursolTolast()
 	cursolIndex = commandList.size() - pageIndex*cursolIndexMax - 1;
 }
 
-StyleString cSelectWindow::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cSelectWindow::shortExplanationString(cRenderDevice *pDev)
 {
 	return commandList[pageIndex*cursolIndexMax + cursolIndex]->shortExplanationText();
 }
 
 
-int cSelectWindow::Draw(IDirect3DDevice9 *pDev)
+int cSelectWindow::Draw(cRenderDevice *pDev)
 {
 	
 	WindowDraw(pDev);
@@ -103,7 +103,7 @@ int cSelectWindow::Draw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cSelectWindow::process(IDirect3DDevice9 *pDev)
+int cSelectWindow::process(cRenderDevice *pDev)
 {
 
 	if(shortCut_process(pDev)) return true;
@@ -164,7 +164,7 @@ int cSelectWindow::process(IDirect3DDevice9 *pDev)
 
 
 //true‚ð•Ô‚·‚Æprocess‚ðƒpƒX‚·‚é
-int cSelectWindow::shortCut_process(IDirect3DDevice9 *pDev)
+int cSelectWindow::shortCut_process(cRenderDevice *pDev)
 {
 	if(shortCutState == 0)
 	{
@@ -310,7 +310,7 @@ pcCommand cSelectWindow::pforcusedcommand()
 	}
 }
 
-void cSelectWindow::setSelectMemoryKey(tstring& tstr)
+void cSelectWindow::setSelectMemoryKey(const tstring& tstr)
 {
 	if(tstr == _T(""))
 	{
@@ -323,7 +323,7 @@ void cSelectWindow::setSelectMemoryKey(tstring& tstr)
 	}
 }
 
-int cSelectWindow::CursorDraw(IDirect3DDevice9 *pDev)
+int cSelectWindow::CursorDraw(cRenderDevice *pDev)
 {
 	if(enable && cursolEnable)
 	{
@@ -347,7 +347,7 @@ int cSelectWindow::CursorDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 /*
-int cSelectWindow::pageDraw(IDirect3DDevice9 *pDev)
+int cSelectWindow::pageDraw(cRenderDevice *pDev)
 {
 	if(pageIndexMaxF() != 0)
 	{
@@ -427,11 +427,11 @@ int cSelectWindow::pageDraw(IDirect3DDevice9 *pDev)
 	return true;
 }*/
 
-int cSelectWindow::RerenderDraw(IDirect3DDevice9 *pDev)
+int cSelectWindow::RerenderDraw(cRenderDevice *pDev)
 {
 	int i;
 	TCHAR t[MAXBUFFSIZE];
-	D3DXVECTOR2 vec;
+	cRenderVector2 vec;
 		
 
 	m_SpriteText.CleatText();
@@ -484,7 +484,7 @@ int cSelectWindow::RerenderDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cSelectWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cSelectWindow::TextDraw(cRenderDevice *pDev)
 {
 	int i;
 
@@ -502,7 +502,7 @@ int cSelectWindow::TextDraw(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cSelectWindow::ShortCutDraw(IDirect3DDevice9 *pDev)
+int cSelectWindow::ShortCutDraw(cRenderDevice *pDev)
 {
 	if(shortCutState)
 	{
@@ -530,7 +530,7 @@ int cSelectWindow::cursoletcMarginWidth()
 	return CURSORSIZE * enable;
 }
 
-int cSelectWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cSelectWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left()+cursoletcMarginWidth();
 	int t = Top();

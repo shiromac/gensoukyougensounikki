@@ -21,7 +21,7 @@ public:
 
 	StyleString caption;
 
-	virtual int Action(IDirect3DDevice9 *pDev){return true;}// = 0;//luabind‚Ì‚½‚ß‚É‹ï‘Ì‰»
+	virtual int Action(cRenderDevice *pDev){return true;}// = 0;//luabind‚Ì‚½‚ß‚É‹ï‘Ì‰»
 
 	virtual StyleString shortExplanationText(){return _T("");};
 
@@ -42,7 +42,7 @@ public:
 public:
 	virtual ~cCommandNull(void){};
 
-	virtual int Action(IDirect3DDevice9 *pDev){
+	virtual int Action(cRenderDevice *pDev){
 	return true;};
 
 };
@@ -56,7 +56,7 @@ public:
 public:
 	virtual ~cCommandCancel(void){};
 
-	virtual int Action(IDirect3DDevice9 *pDev);
+	virtual int Action(cRenderDevice *pDev);
 
 };
 

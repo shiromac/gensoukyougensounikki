@@ -101,7 +101,11 @@ int cScriptReader::loadpacked(void)
 	int error = 0;
 	if(error |= pcfm_->loadEncryptFile(scriptdir_ + _T("Packed_") + scriptfilename_, data))
 	{
+#ifdef __EMSCRIPTEN__
+		return load();
+#else
 		return error;
+#endif
 	}
 
 	cDataConverter::VecC2VecVecC(data,vvdata);
@@ -173,7 +177,7 @@ int cScriptReader::decode(void)
 	return decode_roop(codes_, vlayer, scriptname_, 0);
 }
 
-int cScriptReader::decode_roop(vector<tstring>& codes, vector<pcScriptRLayer>& vlayer, tstring& codename, unsigned int flag)
+int cScriptReader::decode_roop(vector<tstring>& codes, vector<pcScriptRLayer>& vlayer, const tstring& codename, unsigned int flag)
 {
 	vector<tstring>::iterator itrstr = codes.begin();
 	tstring::iterator itrchar;
@@ -509,11 +513,11 @@ int cScriptReader::decode_roop(vector<tstring>& codes, vector<pcScriptRLayer>& v
 	return SUCCESS;
 }
 
-void cScriptReader::addError(pcScriptRLayer layer, tstring& em)
+void cScriptReader::addError(pcScriptRLayer layer, const tstring& em)
 {
 	layer->messageOutputTo()->push_back(em+_T("\n"));
 }
-void cScriptReader::addError(pcScriptRLayer layer, tstring& errorfile, int line, tstring& errorcode, tstring& em)
+void cScriptReader::addError(pcScriptRLayer layer, const tstring& errorfile, int line, const tstring& errorcode, const tstring& em)
 {
 	tstring str;
 	TCHAR c[256];
@@ -571,7 +575,7 @@ int cScriptReader::decode_UpLayer(std::vector<pcScriptRLayer>& vlayer)
 	return SUCCESS;
 }
 
-int cScriptReader::outputerrormassage(tstring& filename)
+int cScriptReader::outputerrormassage(const tstring& filename)
 {
 	if(errormassage().empty()) return SUCCESS;
 	oftstream ofs((_LOGFOLDER + filename).c_str());
@@ -594,7 +598,7 @@ int cScriptReader::outputerrormassage(tstring& filename)
 	return SUCCESS;
 }
 
-int cScriptReader::decode_FileOpen(std::vector<pcScriptRLayer>& vlayer, tstring& name, unsigned int flag)
+int cScriptReader::decode_FileOpen(std::vector<pcScriptRLayer>& vlayer, const tstring& name, unsigned int flag)
 {
 
 	pcScriptReader pcsrFO = pcScriptReader(new cScriptReader(name));
@@ -605,7 +609,7 @@ int cScriptReader::decode_FileOpen(std::vector<pcScriptRLayer>& vlayer, tstring&
 
 }
 
-int cScriptReader::decode_Comment(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, tstring& name, int &line)
+int cScriptReader::decode_Comment(std::vector<pcScriptRLayer>& vlayer, std::vector<tstring>& codes, std::vector<tstring>::iterator& itrstr, const tstring& name, int &line)
 {
 
 	itrstr++;
@@ -730,7 +734,7 @@ int cScriptReader::decode_Matrix(std::vector<pcScriptRLayer>& vlayer, tstring& s
 	return SUCCESS;//コメントアウト終了コードが見つからない
 }
 
-int cScriptReader::decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, tstring& filepass, tstring& filename)
+int cScriptReader::decode_LuaScript(std::vector<pcScriptRLayer>& vlayer, const tstring& filepass, const tstring& filename)
 {
 	pLuaScript pluas = pLuaScript(new LuaScript);
 #ifdef _UNRELEASE

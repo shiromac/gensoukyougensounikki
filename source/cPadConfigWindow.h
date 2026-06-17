@@ -18,12 +18,12 @@ class cPadConfigWindow :
 public:
 	cPadConfigWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev);
+	virtual void Init(cRenderDevice *pDev);
 
 protected:
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 	
-	StyleString shortExplanationString(IDirect3DDevice9 *pDev);
+	StyleString shortExplanationString(cRenderDevice *pDev);
 
 
 protected:
@@ -37,8 +37,8 @@ protected:
 public:
 	virtual ~cPadConfigWindow(void);
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 };
 
 #include <boost/shared_ptr.hpp>
@@ -50,16 +50,16 @@ class cParamaterConfigWindow :
 public:
 	cParamaterConfigWindow(void);
 
-	virtual void Init(IDirect3DDevice9 *pDev, int *valuepointer, int min, int max);
+	virtual void Init(cRenderDevice *pDev, int *valuepointer, int min, int max);
 
 	typedef void(*CallBackFunction)(void);
 	CallBackFunction DidDismissWindow;
 	CallBackFunction DidChangeValue;
 protected:
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
-	virtual int pageDraw(IDirect3DDevice9 *pDev);
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
+	virtual int pageDraw(cRenderDevice *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
 	
 
 protected:
@@ -72,8 +72,8 @@ protected:
 public:
 	virtual ~cParamaterConfigWindow(void);
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 };
 
 #include <boost/shared_ptr.hpp>

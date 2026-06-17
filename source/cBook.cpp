@@ -23,7 +23,7 @@ cBook::~cBook(void)
 {
 }
 
-void cBook::Init(IDirect3DDevice9 *pDev,pcDroping self)
+void cBook::Init(cRenderDevice *pDev,pcDroping self)
 {
 	cItem::Init(pDev,self);
 	m_pTexture_AttackIcon = g_GameEnv.m_GlobalResourse->getTextureFromFile(pDev, AttackIconFileName().c_str());
@@ -72,7 +72,7 @@ cDiscreteProbability cBook::qualityBeginDP(int difficulty)
 }
 */
 
-void cBook::aspectedAttackDraw(IDirect3DDevice9 *pDev)
+void cBook::aspectedAttackDraw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	GetAttackIcon(DO);
@@ -308,7 +308,7 @@ int cBook::ˆÙíó‘Ô‰ğœ()
 }
 /*
 //ƒRƒ}ƒ“ƒh‚ğ‰ğŒˆ‚·‚é;
-int cBook::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cBook::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("“Ç‚Ş"))
@@ -328,7 +328,7 @@ int cBook::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &
 }
 */
 /*
-int cBook::“Ç‚Ş(IDirect3DDevice9 *pDev)
+int cBook::“Ç‚Ş(cRenderDevice *pDev)
 {
 	int result = 0;
 

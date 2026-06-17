@@ -2,6 +2,7 @@
 
 #include "../utility/cRectObj.h"
 #include "../utility/cColor.h"
+#include "cRenderBackend.h"
 
 #define LAYERNUM_MAX (2)
 
@@ -13,33 +14,33 @@ public:
 public:
 	virtual ~cScreen(void);
 
-	void initScreen(IDirect3DDevice9* pDevice);
+	void initScreen(cRenderDevice* pDevice);
 
 	//描画！
-	void Draw(IDirect3DDevice9* pDevice);
-	void Clear(IDirect3DDevice9* pDevice, cColor& c);
+	void Draw(cRenderDevice* pDevice);
+	void Clear(cRenderDevice* pDevice, cColor& c);
 
-	void DebugDraw(IDirect3DDevice9* pDevice);
+	void DebugDraw(cRenderDevice* pDevice);
 	
 	//	レンダーターゲットをせってい。
-	void setRenderTarget(IDirect3DDevice9* pDevice, int screen_ID);
+	void setRenderTarget(cRenderDevice* pDevice, int screen_ID);
 
 	//	アルファブレンディングモードをせってい。
-	void setAlphaMode(IDirect3DDevice9* pDevice, int screen_ID);
+	void setAlphaMode(cRenderDevice* pDevice, int screen_ID);
 
 private:
-	IDirect3DSurface9*		m_pBackBufferSurface;//元の画面のサーフェイス
+	cRenderSurface*		m_pBackBufferSurface;//元の画面のサーフェイス
 
 public:
 	static const int TEXTURESIZE = 1024;//テクスチャのサイズ
 
-	IDirect3DTexture9*		m_pOffScreenTexture;
-	IDirect3DSurface9*		m_pOffScreenSurface;//オフスクリーンのサーフェイス
+	cRenderTexture*		m_pOffScreenTexture;
+	cRenderSurface*		m_pOffScreenSurface;//オフスクリーンのサーフェイス
 	boolean					m_OffScreenEnable;//オフスクリーンを使用するかどうかフラグ
 
 
-	IDirect3DTexture9*		m_pLayerTexture;
-	IDirect3DSurface9*		m_pLayerSurface;//レイヤーのサーフェイス
+	cRenderTexture*		m_pLayerTexture;
+	cRenderSurface*		m_pLayerSurface;//レイヤーのサーフェイス
 	boolean					m_LayerEnable;//使用するフラグ
 	boolean					m_LayerClear;//毎回クリアするフラグ
 
@@ -48,8 +49,8 @@ public:
 
 
 private:
-	IDirect3DTexture9*		m_pMiniTexture[2];
-	IDirect3DSurface9*		m_pMiniSurface[2];//レイヤーのサーフェイス
+	cRenderTexture*		m_pMiniTexture[2];
+	cRenderSurface*		m_pMiniSurface[2];//レイヤーのサーフェイス
 public:
 	boolean					m_MiniEnable;//使用するフラグ
 	int						m_MiniMode;

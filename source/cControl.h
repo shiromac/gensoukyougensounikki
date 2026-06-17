@@ -1,8 +1,7 @@
 #pragma once
 #include "utility\cRectObj.h"
 
-#include <d3d9.h>
-#include <d3dx9.h>
+#include "gameMainSystem/cRenderBackend.h"
 
 class cControl :
 	public cRectObj
@@ -12,6 +11,6 @@ public:
 public:
 	virtual ~cControl(void);
 
-	virtual int process(IDirect3DDevice9 *pDev){return true;};
+	virtual int process(cRenderDevice *pDev){return true;};
 
 };

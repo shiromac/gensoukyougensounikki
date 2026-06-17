@@ -3,7 +3,9 @@
 #include "debug.h"
 
 #include <assert.h>
+#ifndef __EMSCRIPTEN__
 #include <windows.h>
+#endif
 
 #include <tstring_ph.h>
 
@@ -24,7 +26,9 @@ void OnAssert(const TCHAR*  fileName, int lineNumber, bool exception, const TCHA
  		str += c;
 		str += _T(" : ");
 		if(msg != NULL)str += msg;
+#ifndef __EMSCRIPTEN__
 		MessageBox(NULL,str.c_str(),_T("åxçê"),MB_OK);
+#endif
 		//assert(!(str.c_str()));
 	}
 	#endif

@@ -54,7 +54,7 @@ cGameScreenInterface::~cGameScreenInterface(void)
 {
 }
 
-int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
+int cGameScreenInterface::Init(cRenderDevice *pDev,pcCharacter phero)
 {
 	text.Init(pDev,1,TEXSIZEWIDTH,TEXSIZEHEIGHT);
 	
@@ -82,13 +82,13 @@ int cGameScreenInterface::Init(IDirect3DDevice9 *pDev,pcCharacter phero)
 	return true;
 }
 
-int cGameScreenInterface::process(IDirect3DDevice9 *pDev)
+int cGameScreenInterface::process(cRenderDevice *pDev)
 {
 
 	return true;
 }
 
-int cGameScreenInterface::RefreshDraw(IDirect3DDevice9 *pDev)
+int cGameScreenInterface::RefreshDraw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	
@@ -179,7 +179,7 @@ int cGameScreenInterface::RefreshDraw(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int cGameScreenInterface::Resetdisp(IDirect3DDevice9 *pDev)
+int cGameScreenInterface::Resetdisp(cRenderDevice *pDev)
 {
 	if(!hero) return false;
 	(disphero_HP = hero->HP);
@@ -194,7 +194,7 @@ int cGameScreenInterface::Resetdisp(IDirect3DDevice9 *pDev)
 	return true;
 }
 	
-int cGameScreenInterface::isHeroPchange(IDirect3DDevice9 *pDev)
+int cGameScreenInterface::isHeroPchange(cRenderDevice *pDev)
 {
 	int flag = false;
 	flag |= (heroCopy->HP != disphero_HP);
@@ -271,7 +271,7 @@ int cGameScreenInterface::menuPosBottom(int level)
 	return SCREEN_Y;
 }
 
-int cGameScreenInterface::Draw(IDirect3DDevice9 *pDev)
+int cGameScreenInterface::Draw(cRenderDevice *pDev)
 {
 	cDrawingObject DO;
 	

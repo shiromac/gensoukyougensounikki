@@ -117,7 +117,7 @@ StyleString cDrink::ExtraHatString()
 
 /*
 //ƒRƒ}ƒ“ƒh‚ð‰ðŒˆ‚·‚é;
-int cDrink::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cDrink::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("ˆù‚Þ"))
@@ -136,7 +136,7 @@ int cDrink::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> 
 }
 
 
-int cDrink::ˆù‚Þ(IDirect3DDevice9 *pDev)
+int cDrink::ˆù‚Þ(cRenderDevice *pDev)
 {
 	int result = 0;
 

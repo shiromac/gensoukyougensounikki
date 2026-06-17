@@ -314,7 +314,7 @@ bool cCondition::go_bad(ˆÙíó‘Ô type)
 }
 
 //à–¾
-void cCondition::MakeExplainWindow(IDirect3DDevice9 *pDev)
+void cCondition::MakeExplainWindow(cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcListWindow pclw;
@@ -624,7 +624,7 @@ bool cCondition::process()
 	return true;
 }
 
-bool cCondition::Draw(IDirect3DDevice9 *pDev)
+bool cCondition::Draw(cRenderDevice *pDev)
 {
 	if(€‚Ì—U‚¢ó‘Ô() && €‚Ì—U‚¢Chip.sasoi_turn_count_visible())
 	{
@@ -2689,7 +2689,7 @@ bool cCondition::€‚Ì—U‚¢cConditionChip::process()
 
 	return true;
 }
-bool cCondition::€‚Ì—U‚¢cConditionChip::Draw_sasoi(IDirect3DDevice9 *pDev)
+bool cCondition::€‚Ì—U‚¢cConditionChip::Draw_sasoi(cRenderDevice *pDev)
 {
 	cNumField nf;
 	nf.Init(pDev);

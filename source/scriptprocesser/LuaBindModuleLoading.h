@@ -1,6 +1,7 @@
 #pragma once
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
+#include <LuaUtility/LuaEnvironment.h>
 //#include <luabind/return_reference_to_policy.hpp>
 #include "..\cEquipment.h"
 #include "DungeonScriptFunction.h"
@@ -48,17 +49,20 @@ template<typename T> void vector_Loading(LuaEnvironment& luaEnvironment, const c
 	string templateNameIteratorStr(templateNameStr);
 	templateNameIteratorStr += "_iterator";
 
+	typedef typename forLua::std_vector<T>::LuaVector LuaVector;
+	typedef typename forLua::std_vector<T>::LuaVector_iterator LuaVector_iterator;
+
 	//string templateRefStr("ref_");
 	//templateRefStr += templateName;
 
 	luabind::module(luaEnvironment.luaState())
 	[
 	
-		luabind::class_<forLua::std_vector<T>::LuaVector>(templateNameStr.c_str())
+		luabind::class_<LuaVector>(templateNameStr.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_vector<T>::LuaVector>())
-			.def(luabind::constructor<forLua::std_vector<T>::LuaVector::size_type>())
-			.def(luabind::constructor<forLua::std_vector<T>::LuaVector::size_type, T>())
+			.def(luabind::constructor<LuaVector>())
+			.def(luabind::constructor<typename LuaVector::size_type>())
+			.def(luabind::constructor<typename LuaVector::size_type, T>())
 			.def("assign", &forLua::std_vector<T>::assign)
 			.def("at", &forLua::std_vector<T>::at)
 			.def("setAt", &forLua::std_vector<T>::setAt)
@@ -86,17 +90,17 @@ template<typename T> void vector_Loading(LuaEnvironment& luaEnvironment, const c
 			.def("resize", &forLua::std_vector<T>::resize2)
 			.def("size", &forLua::std_vector<T>::size)
 			//.def("swap", &forLua::std_vector<T>::swap)
-			.def(luabind::self == forLua::std_vector<T>::LuaVector())
+			.def(luabind::self == LuaVector())
 			,
 
-		luabind::class_<forLua::std_vector<T>::LuaVector_iterator>(templateNameIteratorStr.c_str())
+		luabind::class_<LuaVector_iterator>(templateNameIteratorStr.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_vector<T>::LuaVector_iterator>())
+			.def(luabind::constructor<LuaVector_iterator>())
 			.def("increment", &forLua::std_vector<T>::iterator_increment)
 			.def("decrement", &forLua::std_vector<T>::iterator_decrement)
 			.def("dereference", &forLua::std_vector<T>::iterator_dereference)
 			.def("setDereference", &forLua::std_vector<T>::iterator_setDereference)
-			.def(luabind::self == forLua::std_vector<T>::LuaVector_iterator())
+			.def(luabind::self == LuaVector_iterator())
 	];
 }
 
@@ -124,35 +128,40 @@ template<typename T, typename U> void map_Loading(LuaEnvironment& luaEnvironment
 	LuaMap_name += "_";
 	LuaMap_name += templateName_Value;
 
+	typedef typename forLua::std_map<T,U>::LuaMap_iterator LuaMap_iterator;
+	typedef typename forLua::std_map<T,U>::LuaMap_pair LuaMap_pair;
+	typedef typename forLua::std_map<T,U>::pairOf_LuaMap_pair_bool pairOf_LuaMap_pair_bool;
+	typedef typename forLua::std_map<T,U>::LuaMap LuaMap;
+
 	luabind::module(luaEnvironment.luaState())
 	[
 
-		luabind::class_<forLua::std_map<T,U>::LuaMap_iterator>(LuaMap_iterator_name.c_str())
+		luabind::class_<LuaMap_iterator>(LuaMap_iterator_name.c_str())
 			.def(luabind::constructor<>())
 			.def("increment", &forLua::std_map<T,U>::iterator_increment)
 			.def("decrement", &forLua::std_map<T,U>::iterator_decrement)
 			.def("dereference", &forLua::std_map<T,U>::iterator_dereference)
-			.def(luabind::self == forLua::std_map<T,U>::LuaMap_iterator())
+			.def(luabind::self == LuaMap_iterator())
 			,
-		luabind::class_<forLua::std_map<T,U>::LuaMap_pair>(LuaMap_pair_name.c_str())
+		luabind::class_<LuaMap_pair>(LuaMap_pair_name.c_str())
 			.def(luabind::constructor<>())
 			.def(luabind::constructor<T,U>())
-			.def_readwrite("first", &forLua::std_map<T,U>::LuaMap_pair::first)
-			.def_readwrite("second", &forLua::std_map<T,U>::LuaMap_pair::second)
-			.def(luabind::self == forLua::std_map<T,U>::LuaMap_pair())
+			.def_readwrite("first", &LuaMap_pair::first)
+			.def_readwrite("second", &LuaMap_pair::second)
+			.def(luabind::self == LuaMap_pair())
 			,
 			
-		luabind::class_<forLua::std_map<T,U>::pairOf_LuaMap_pair_bool>(pairOf_LuaMap_pair_bool_name.c_str())
+		luabind::class_<pairOf_LuaMap_pair_bool>(pairOf_LuaMap_pair_bool_name.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_map<T,U>::LuaMap_iterator,bool>())
-			.def_readwrite("first", &forLua::std_map<T,U>::pairOf_LuaMap_pair_bool::first)
-			.def_readwrite("second", &forLua::std_map<T,U>::pairOf_LuaMap_pair_bool::second)
-			.def(luabind::self == forLua::std_map<T,U>::pairOf_LuaMap_pair_bool())
+			.def(luabind::constructor<LuaMap_iterator,bool>())
+			.def_readwrite("first", &pairOf_LuaMap_pair_bool::first)
+			.def_readwrite("second", &pairOf_LuaMap_pair_bool::second)
+			.def(luabind::self == pairOf_LuaMap_pair_bool())
 			,
 			
-		luabind::class_<forLua::std_map<T,U>::LuaMap>(LuaMap_name.c_str())
+		luabind::class_<LuaMap>(LuaMap_name.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_map<T,U>::LuaMap>())
+			.def(luabind::constructor<LuaMap>())
 			.def("begin", &forLua::std_map<T,U>::begin)
 			.def("clear", &forLua::std_map<T,U>::clear)
 			.def("count", &forLua::std_map<T,U>::count)
@@ -168,7 +177,7 @@ template<typename T, typename U> void map_Loading(LuaEnvironment& luaEnvironment
 			.def("lower_bound", &forLua::std_map<T,U>::lower_bound)
 			.def("size", &forLua::std_map<T,U>::size)
 			.def("upper_bound", &forLua::std_map<T,U>::upper_bound)
-			.def(luabind::self == forLua::std_map<T,U>::LuaMap())
+			.def(luabind::self == LuaMap())
 	];
 }
 
@@ -188,29 +197,33 @@ template<typename T> void set_Loading(LuaEnvironment& luaEnvironment, const char
 	string Luaset_name("set_");
 	Luaset_name += templateName_Key;
 
+	typedef typename forLua::std_set<T>::LuaSet_iterator LuaSet_iterator;
+	typedef typename forLua::std_set<T>::pairOf_LuaSet_iterator_bool pairOf_LuaSet_iterator_bool;
+	typedef typename forLua::std_set<T>::LuaSet LuaSet;
+
 	luabind::module(luaEnvironment.luaState())
 	[
 
-		luabind::class_<forLua::std_set<T>::LuaSet_iterator>(Luaset_iterator_name.c_str())
+		luabind::class_<LuaSet_iterator>(Luaset_iterator_name.c_str())
 			.def(luabind::constructor<>())
 			.def("increment", &forLua::std_set<T>::iterator_increment)
 			.def("decrement", &forLua::std_set<T>::iterator_decrement)
 			.def("dereference", &forLua::std_set<T>::iterator_dereference)
 			//.def("setDereference", &forLua::std_set<T>::iterator_setDereference)
-			.def(luabind::self == forLua::std_set<T>::LuaSet_iterator())
+			.def(luabind::self == LuaSet_iterator())
 			,
 
-		luabind::class_<forLua::std_set<T>::pairOf_LuaSet_iterator_bool>(pairOf_Luaset_iterator_bool_name.c_str())
+		luabind::class_<pairOf_LuaSet_iterator_bool>(pairOf_Luaset_iterator_bool_name.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_set<T>::LuaSet_iterator,bool>())
-			.def_readwrite("first", &forLua::std_set<T>::pairOf_LuaSet_iterator_bool::first)
-			.def_readwrite("second", &forLua::std_set<T>::pairOf_LuaSet_iterator_bool::second)
-			.def(luabind::self == forLua::std_set<T>::pairOf_LuaSet_iterator_bool())
+			.def(luabind::constructor<LuaSet_iterator,bool>())
+			.def_readwrite("first", &pairOf_LuaSet_iterator_bool::first)
+			.def_readwrite("second", &pairOf_LuaSet_iterator_bool::second)
+			.def(luabind::self == pairOf_LuaSet_iterator_bool())
 			,
 			
-		luabind::class_<forLua::std_set<T>::LuaSet>(Luaset_name.c_str())
+		luabind::class_<LuaSet>(Luaset_name.c_str())
 			.def(luabind::constructor<>())
-			.def(luabind::constructor<forLua::std_set<T>::LuaSet>())
+			.def(luabind::constructor<LuaSet>())
 			.def("begin", &forLua::std_set<T>::begin)
 			.def("clear", &forLua::std_set<T>::clear)
 			.def("count", &forLua::std_set<T>::count)
@@ -222,7 +235,7 @@ template<typename T> void set_Loading(LuaEnvironment& luaEnvironment, const char
 			.def("insert", &forLua::std_set<T>::insert2)
 			.def("insert", &forLua::std_set<T>::insert3)
 			.def("size", &forLua::std_set<T>::size)
-			.def(luabind::self == forLua::std_set<T>::LuaSet())
+			.def(luabind::self == LuaSet())
 	];
 }
 

@@ -6,7 +6,7 @@
 
 #include <common.h>
 
-void g_InitSystemData(tstring & file);
+void g_InitSystemData(const tstring & file);
 
 const tstring IMPORTDATADIR = _EXELOCATION _T("data/");
 
@@ -23,6 +23,7 @@ void g_Lang(const TCHAR* name, StyleString & output, std::map<tstring, StyleStri
 
 //sg_pDungeonSystem->メッセージを高速に実行する関数
 int g_Langメッセージ(const TCHAR* name, std::map<tstring, StyleString > & valiable);
+int g_Langメッセージ(const TCHAR* name, const std::map<tstring, StyleString > & valiable);
 
 StyleString g_Story(const TCHAR* name);
 StyleString g_Story(const TCHAR* name, std::map<tstring, StyleString > & valiable);

@@ -33,7 +33,7 @@ void cBoss::deleteLuaEnv()
 	}
 }
 
-void cBoss::InitSub(IDirect3DDevice9 *pDev)
+void cBoss::InitSub(cRenderDevice *pDev)
 {
 
 }
@@ -316,7 +316,7 @@ int cBoss::ì¡éÍçUåÇ_ÉAÉjÉÅ(cValiableField& valiable)
 	return false;
 }
 
-void cBoss::DrawShadow(IDirect3DDevice9 *pDev)
+void cBoss::DrawShadow(cRenderDevice *pDev)
 {
 
 	c4DVector chara_place = visibleplace + anime_position;

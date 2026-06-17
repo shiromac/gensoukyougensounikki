@@ -13,7 +13,7 @@ caMassage::~caMassage()
 }
 
 
-int caMassage::process(IDirect3DDevice9 *pDev)
+int caMassage::process(cRenderDevice *pDev)
 {
 
 	sg_pDungeonSystem->Massage.addMassage(massage);

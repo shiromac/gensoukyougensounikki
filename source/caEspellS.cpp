@@ -47,7 +47,7 @@ int caEspell::Init()
 	return true;
 }
 
-int caEspell::preprocess(IDirect3DDevice9 *pDev)
+int caEspell::preprocess(cRenderDevice *pDev)
 {
 
 	SpellName_Echip.dropshadow = true;
@@ -79,7 +79,7 @@ int caEspell::preprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caEspell::process(IDirect3DDevice9 *pDev)
+int caEspell::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed==0)
@@ -137,7 +137,7 @@ int caEspell::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caEspell::Draw(IDirect3DDevice9 *pDev)
+int caEspell::Draw(cRenderDevice *pDev)
 {
 
 	//Žš
@@ -239,7 +239,7 @@ int caBossEspell::Init()
 	return true;
 }
 
-int caBossEspell::preprocess(IDirect3DDevice9 *pDev)
+int caBossEspell::preprocess(cRenderDevice *pDev)
 {
 
 	SpellName_Echip.dropshadow = true;
@@ -280,7 +280,7 @@ int caBossEspell::preprocess(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caBossEspell::process(IDirect3DDevice9 *pDev)
+int caBossEspell::process(cRenderDevice *pDev)
 {
 
 	if(preprocessed==0)
@@ -351,7 +351,7 @@ int caBossEspell::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int caBossEspell::Draw(IDirect3DDevice9 *pDev)
+int caBossEspell::Draw(cRenderDevice *pDev)
 {
 
 	//Žš

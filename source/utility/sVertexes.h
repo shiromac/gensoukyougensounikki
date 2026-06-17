@@ -2,6 +2,11 @@
 #pragma once
 
 #include <functional>
+
+#ifndef C_RENDER_COLOR_DEFINED
+typedef unsigned long cRenderColor;
+#define C_RENDER_COLOR_DEFINED
+#endif
 //=============================================================================
 // STRUCT
 //=============================================================================
@@ -11,32 +16,38 @@ struct VERTEX2D
 	float tu, tv;
 
 	// ’¸“_‚e‚u‚e
+#ifdef D3DFVF_XYZRHW
 	enum { FVF = D3DFVF_XYZRHW | D3DFVF_TEX1 };
+#endif
 };
 
 struct VERTEX2D_COLORED
 {
     float x, y, z, w;
-	D3DCOLOR col;
+	cRenderColor col;
     float tu, tv;
  
     // ’¸“_‚e‚u‚e
+#ifdef D3DFVF_XYZRHW
     enum { FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 };
+#endif
 };
 
 struct VERTEX2D_DOUBLETEX_COLORED
 {
     float x, y, z, w;
-	D3DCOLOR col;
+	cRenderColor col;
     float tu, tv;
 	float tu2, tv2;
     // ’¸“_‚e‚u‚e
+#ifdef D3DFVF_XYZRHW
     enum { FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1 | D3DFVF_TEX2 };
+#endif
 };
 
 
 template<class T>
-struct ptr_less : binary_function<T*,T*,bool> {
+struct ptr_less : std::binary_function<T*,T*,bool> {
   bool operator()(const T* x, const T* y) const {
     return *x < *y;
   }

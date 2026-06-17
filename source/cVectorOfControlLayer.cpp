@@ -20,7 +20,7 @@ pcControlLayer cVectorOfControlLayer::Last()
 	return at(size()-1);
 }
 
-void cVectorOfControlLayer::process(IDirect3DDevice9 *pDev)
+void cVectorOfControlLayer::process(cRenderDevice *pDev)
 {
 	if(!empty())
 	{

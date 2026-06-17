@@ -64,7 +64,7 @@ public:
 	virtual ~cAnimationManager(void);
 
 
-	virtual int Init(IDirect3DDevice9 *pDev);
+	virtual int Init(cRenderDevice *pDev);
 	virtual int clear()
 	{
 		MovePool.clear();
@@ -74,16 +74,16 @@ public:
 		return true;
 	};
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual void process_parallel(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual void process_parallel(cRenderDevice *pDev);
 
-	virtual int MoveAnimeprocess(IDirect3DDevice9 *pDev);
-	virtual int AttackAnimeprocess(IDirect3DDevice9 *pDev);
+	virtual int MoveAnimeprocess(cRenderDevice *pDev);
+	virtual int AttackAnimeprocess(cRenderDevice *pDev);
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
-	virtual void Draw_parallel(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
+	virtual void Draw_parallel(cRenderDevice *pDev);
 
-	virtual int AttackAnimeDraw(IDirect3DDevice9 *pDev);
+	virtual int AttackAnimeDraw(cRenderDevice *pDev);
 
 
 	int AddAnime(pcAnimation pcanime);	
@@ -91,10 +91,10 @@ public:
 	int AddAnime_realtimeCritical(pcAnimation pcanime);
 
 	//強制発動
-	int StrongInvocation(IDirect3DDevice9 *pDev);
+	int StrongInvocation(cRenderDevice *pDev);
 
 	//必要なら発動
-	int WeekInvocation(IDirect3DDevice9 *pDev);
+	int WeekInvocation(cRenderDevice *pDev);
 
 	int Enpty;
 
@@ -104,15 +104,15 @@ public:
 	int AddMove(pcCharacter pchara, pcLandform start, pcLandform end, int aspect = -1);
 
 	int EasyAnime_Attackcharacter(pcCharacter pchara,
-									tstring &effectFileName,
+									const tstring &effectFileName,
 									int vi,
 									double speed,
-									tstring &seFileName);
+									const tstring &seFileName);
 	int EasyAnime_Defensecharacter(pcCharacter pchara,
-									tstring &effectFileName,
+									const tstring &effectFileName,
 									int vi,
 									double speed,
-									tstring &seFileName);
+									const tstring &seFileName);
 
 	int Anime_Damagecharacter(pcCharacter pchara, int damage, double effective);
 	int Anime_Recovercharacter(pcCharacter pchara, int recover);
@@ -169,7 +169,7 @@ protected:
 
 	//攻撃の性質情報を得る
 	void GetNormalAttackAttribute(int Input_ID,
-		tstring &effectFileName, int &vi, double &speed, tstring &seFileName);
+		const tstring &effectFileName, int &vi, double &speed, const tstring &seFileName);
 
 public:
 	//存在するすべてのキャラのリスト

@@ -19,8 +19,8 @@ public:
 	virtual ~caFade(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 	virtual int Init(int OutorIn);
 
 	virtual bool isOnScreen();
@@ -49,8 +49,8 @@ public:
 	virtual ~caFadeGotoDungeon(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 
@@ -82,8 +82,8 @@ public:
 	virtual ~caFadeContinueDungeon(void);
 
 
-	virtual int process(IDirect3DDevice9 *pDev);
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual bool isOnScreen();
 

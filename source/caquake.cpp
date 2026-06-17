@@ -21,7 +21,7 @@ int caQuake::Init()
 	preprocess = 0;
 	return true;
 }
-int caQuake::process(IDirect3DDevice9 *pDev)
+int caQuake::process(cRenderDevice *pDev)
 {
 	if(!preprocess)
 	{
@@ -52,7 +52,7 @@ int caQuake::process(IDirect3DDevice9 *pDev)
 	
 	return true;
 }
-int caQuake::Draw(IDirect3DDevice9 *pDev)
+int caQuake::Draw(cRenderDevice *pDev)
 {
 	return true;
 }

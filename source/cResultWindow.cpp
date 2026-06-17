@@ -20,11 +20,11 @@ cResultWindow::~cResultWindow(void)
 {
 
 }
-void cResultWindow::Init(IDirect3DDevice9 *pDev, pcSaveResult pResult)
+void cResultWindow::Init(cRenderDevice *pDev, pcSaveResult pResult)
 {
 	Init(pDev, *pResult);
 }
-void cResultWindow::Init(IDirect3DDevice9 *pDev, cSaveResult& Result)
+void cResultWindow::Init(cRenderDevice *pDev, cSaveResult& Result)
 {
 	int letterXnum = 24;
 	int letterYnum = 12;
@@ -202,12 +202,12 @@ void cResultWindow::Init(IDirect3DDevice9 *pDev, cSaveResult& Result)
 		m_SpriteText.EndText();
 	}
 }
-void cResultWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cResultWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 	//Init(pDev, pcSaveResult((cSaveResult*)NULL));
 }
 
-int cResultWindow::process(IDirect3DDevice9 *pDev)
+int cResultWindow::process(cRenderDevice *pDev)
 {
 	cGameWindow::process(pDev);
 

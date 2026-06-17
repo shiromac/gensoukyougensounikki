@@ -10,12 +10,12 @@
 #include "cPadConfigWindow.h"
 
 //パッドコンフィグ
-int cCommandConfigPadConfig::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigPadConfig::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigPadConfig(sg_pDungeonSystem->menuControlLayerV(), pDev);
 	return true;
 }
-void MenuPopupConfigPadConfig(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev)
+void MenuPopupConfigPadConfig(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev)
 {	
 	pcControlLayer pccl;
 	pcPadConfigWindow pcpw;
@@ -33,7 +33,7 @@ void MenuPopupConfigPadConfig(cVectorOfControlLayer& vectorOfControlLayer, IDire
 }
 
 //BGM音量コンフィグ
-int cCommandConfigBGMVolConfig::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigBGMVolConfig::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigBGMVolConfig(sg_pDungeonSystem->menuControlLayerV(), pDev, caption);
 	return true;
@@ -42,7 +42,7 @@ void MenuPopupConfigBGMVolConfig_DidChangeValueCallBack()
 {
 	g_GameEnv.m_SoundManager.resetVolume();
 }
-void MenuPopupConfigBGMVolConfig(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev, StyleString& caption)
+void MenuPopupConfigBGMVolConfig(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev, StyleString& caption)
 {
 	pcControlLayer pccl;
 	pcParamaterConfigWindow pcpw;
@@ -67,12 +67,12 @@ StyleString cCommandConfigBGMVolConfig::shortExplanationText()
 	return g_Lang(_T("BGM音量コンフィグExplanation"),val);
 }
 //SE音量コンフィグ
-int cCommandConfigSEVolConfig::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigSEVolConfig::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigSEVolConfig(sg_pDungeonSystem->menuControlLayerV(), pDev, caption);
 	return true;
 }
-void MenuPopupConfigSEVolConfig(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev, StyleString& caption)
+void MenuPopupConfigSEVolConfig(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev, StyleString& caption)
 {
 	pcControlLayer pccl;
 	pcParamaterConfigWindow pcpw;
@@ -96,12 +96,12 @@ StyleString cCommandConfigSEVolConfig::shortExplanationText()
 }
 
 //プレイヤーサイン変更
-int cCommandConfigSignsConfig::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigSignsConfig::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigSignsConfig(sg_pDungeonSystem->menuControlLayerV(), pDev, caption);
 	return true;
 }
-void MenuPopupConfigSignsConfig(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev, StyleString& caption)
+void MenuPopupConfigSignsConfig(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev, StyleString& caption)
 {
 	pcControlLayer pccl;
 	pcStringWindow pcstrw;
@@ -128,12 +128,12 @@ StyleString cCommandConfigSignsConfig::shortExplanationText()
 }
 
 //文字描画の精細さコンフィグ
-int cCommandConfigCharEdged::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigCharEdged::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigCharEdged(sg_pDungeonSystem->menuControlLayerV(), pDev, caption);
 	return true;
 }
-void MenuPopupConfigCharEdged(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev, StyleString& caption)
+void MenuPopupConfigCharEdged(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev, StyleString& caption)
 {
 	pcControlLayer pccl;
 	pcParamaterConfigWindow pcpw;
@@ -157,12 +157,12 @@ StyleString cCommandConfigCharEdged::shortExplanationText()
 }
 
 //文字描画の精細さコンフィグ
-int cCommandConfigMapThickness::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigMapThickness::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigMapThickness(sg_pDungeonSystem->menuControlLayerV(), pDev, caption);
 	return true;
 }
-void MenuPopupConfigMapThickness(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev, StyleString& caption)
+void MenuPopupConfigMapThickness(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev, StyleString& caption)
 {
 	pcControlLayer pccl;
 	pcParamaterConfigWindow pcpw;
@@ -186,12 +186,12 @@ StyleString cCommandConfigMapThickness::shortExplanationText()
 }
 
 //コンフィグ
-int cCommandConfigConfig::Action(IDirect3DDevice9 *pDev)
+int cCommandConfigConfig::Action(cRenderDevice *pDev)
 {
 	MenuPopupConfigConfig(sg_pDungeonSystem->menuControlLayerV(), pDev);
 	return true;
 }
-void MenuPopupConfigConfig(cVectorOfControlLayer& vectorOfControlLayer, IDirect3DDevice9 *pDev)
+void MenuPopupConfigConfig(cVectorOfControlLayer& vectorOfControlLayer, cRenderDevice *pDev)
 {
 	pcControlLayer pccl;
 	pcSelectWindow pcsw;

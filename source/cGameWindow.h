@@ -62,9 +62,9 @@ public:
 	//処理するかどうか
 	int enable;
 
-	virtual void Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void Init(cRenderDevice *pDev, int letterXnum, int letterYnum);
 	virtual void Init(int letterXnum, int letterYnum);
-	virtual void InitBasic(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum);
+	virtual void InitBasic(cRenderDevice *pDev, int letterXnum, int letterYnum);
 
 	inline int merginheight(){return GWFONTOVERMARGIN + GWFONTUNDERMARGIN;};
 
@@ -88,21 +88,21 @@ protected:
 	int soundIndex_move;
 
 
-	IDirect3DTexture9* m_pTexture_Window;
-	IDirect3DTexture9* m_pTexture_Cursor;
+	cRenderTexture* m_pTexture_Window;
+	cRenderTexture* m_pTexture_Cursor;
 
-	virtual int WindowDraw(IDirect3DDevice9 *pDev);
-	virtual int TextDraw(IDirect3DDevice9 *pDev);
+	virtual int WindowDraw(cRenderDevice *pDev);
+	virtual int TextDraw(cRenderDevice *pDev);
 
-	virtual int TextDrawSub(IDirect3DDevice9 *pDev);
+	virtual int TextDrawSub(cRenderDevice *pDev);
 
-	virtual int pageDraw(IDirect3DDevice9 *pDev);
+	virtual int pageDraw(cRenderDevice *pDev);
 
 
 	SpriteText m_pageText;
 	int m_pageAnimeCount;
 	
-	IDirect3DTexture9* m_pTexture_Page;
+	cRenderTexture* m_pTexture_Page;
 
 
 	SpriteText m_SpriteText;
@@ -111,7 +111,7 @@ protected:
 
 protected:
 	//共通ルーチン
-	//void DrawAddShadowDO(cDrawingObject& DO, IDirect3DDevice9 *pDev);
+	//void DrawAddShadowDO(cDrawingObject& DO, cRenderDevice *pDev);
 public:
 
 	//virtual StyleString& Text(){return ((vText.empty())? _T("") : vText[0]);};
@@ -120,17 +120,17 @@ public:
 	std::vector<StyleString> vText;//サイズ１以上を保障
 	virtual int ReRendarText();
 
-	virtual int process(IDirect3DDevice9 *pDev);
+	virtual int process(cRenderDevice *pDev);
 
 
-	virtual StyleString shortExplanationString(IDirect3DDevice9 *pDev){return _T("");};
+	virtual StyleString shortExplanationString(cRenderDevice *pDev){return _T("");};
 
 
 	virtual int pageIndexMaxF(){return vText.size();};
 	int pageIndex;
 
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 
 	virtual void playsound_decide();
@@ -146,5 +146,5 @@ typedef boost::shared_ptr<cGameWindow> pcGameWindow;
 
 
 //共通ルーチン
-void DrawAddShadowDO(cDrawingObject& DO, IDirect3DDevice9 *pDev);
-void DrawAddShadowDO_mini(cDrawingObject& DO, IDirect3DDevice9 *pDev);
+void DrawAddShadowDO(cDrawingObject& DO, cRenderDevice *pDev);
+void DrawAddShadowDO_mini(cDrawingObject& DO, cRenderDevice *pDev);

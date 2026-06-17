@@ -32,7 +32,7 @@ cListWindow::~cListWindow(void)
 }
 
 
-void cListWindow::Init(IDirect3DDevice9 *pDev, int letterXnum, int letterYnum)
+void cListWindow::Init(cRenderDevice *pDev, int letterXnum, int letterYnum)
 {
 
 	
@@ -88,7 +88,7 @@ void cListWindow::SetCursolTolast()
 	cursolIndex = pDroplist.size() - pageIndex*cursolIndexMax - 1;
 }
 
-int cListWindow::Draw(IDirect3DDevice9 *pDev)
+int cListWindow::Draw(cRenderDevice *pDev)
 {
 	cSelectWindow::Draw(pDev);
 	MultiSetDraw(pDev);
@@ -96,7 +96,7 @@ int cListWindow::Draw(IDirect3DDevice9 *pDev)
 }
 
 
-int cListWindow::process(IDirect3DDevice9 *pDev)
+int cListWindow::process(cRenderDevice *pDev)
 {
 	if(shortCut_process(pDev)) return true;
 	if(shortCutState) return true;
@@ -190,7 +190,7 @@ int cListWindow::process(IDirect3DDevice9 *pDev)
 	return true;
 }
 
-int cListWindow::RerenderDraw(IDirect3DDevice9 *pDev)
+int cListWindow::RerenderDraw(cRenderDevice *pDev)
 {
 	/*
 	int i;
@@ -261,7 +261,7 @@ int cListWindow::RerenderDraw(IDirect3DDevice9 *pDev)
 }
 
 
-int cListWindow::TextDraw(IDirect3DDevice9 *pDev)
+int cListWindow::TextDraw(cRenderDevice *pDev)
 {
 	
 
@@ -323,7 +323,7 @@ int cListWindow::cursoletcMarginWidth()
 }
 
 /*
-int cListWindow::TextDrawSub(IDirect3DDevice9 *pDev)
+int cListWindow::TextDrawSub(cRenderDevice *pDev)
 {
 	int l = Left();
 	int t = Top();
@@ -447,7 +447,7 @@ pcDroping cListWindow::pforcusedcontents()
 }
 
 
-int cListWindow::sortDrops(IDirect3DDevice9 *pDev)
+int cListWindow::sortDrops(cRenderDevice *pDev)
 {
 	int i;
 	if(ppDroplist == NULL) return false;
@@ -463,7 +463,7 @@ int cListWindow::sortDrops(IDirect3DDevice9 *pDev)
 
 
 
-StyleString cListWindow::shortExplanationString(IDirect3DDevice9 *pDev)
+StyleString cListWindow::shortExplanationString(cRenderDevice *pDev)
 {
 	pcDroping pdrop = nowcontents();
 	//pcDroping pdrop = pDroplist[pageIndex*cursolIndexMax + cursolIndex];
@@ -501,7 +501,7 @@ int cListWindow::EventCarsolmove()
 //--------------------------------------------------
 //複数選択
 
-int cListWindow::processofMultiSet(IDirect3DDevice9 *pDev)
+int cListWindow::processofMultiSet(cRenderDevice *pDev)
 {
 
 	if(MultiSelect && g_pPlayerInput()->diagon().justOn)
@@ -529,7 +529,7 @@ int cListWindow::processofMultiSet(IDirect3DDevice9 *pDev)
 }
 
 
-int cListWindow::MultiSetDraw(IDirect3DDevice9 *pDev)
+int cListWindow::MultiSetDraw(cRenderDevice *pDev)
 {
 
 	/*
@@ -657,7 +657,7 @@ int cListWindow::findfromMultiDrop(pcDroping pdrop)
 	return 0;
 }
 
-int cListWindow::FireofMultiSet(IDirect3DDevice9 *pDev)
+int cListWindow::FireofMultiSet(cRenderDevice *pDev)
 {
 
 	//insertMultiSet();
@@ -771,7 +771,7 @@ int cListWindow::multiverbsSelect()
 {
 	vector<tstring> captions = multiverbs;
 
-	IDirect3DDevice9 *pDev = sg_pDungeonSystem->pDevice_D3D;
+	cRenderDevice *pDev = sg_pDungeonSystem->pDevice_D3D;
 
 	/*
 	//コマンド挿入
@@ -840,7 +840,7 @@ int cListWindow::multiverbsSelect()
 }
 
 
-int cListWindow::shortCut_process(IDirect3DDevice9 *pDev)
+int cListWindow::shortCut_process(cRenderDevice *pDev)
 {
 	if(shortCutState == 0)
 	{

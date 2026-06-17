@@ -48,10 +48,10 @@ public:
 	//Á‹ˆ—‚Ì€”õ
 	virtual void Release();
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
 
 
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 
 	virtual StyleString QualityCaption();
@@ -100,7 +100,7 @@ public:
 	virtual bool ”„‹p‰Â(){return false;};
 
 	//ƒRƒ}ƒ“ƒh‚ğ‰ğŒˆ‚·‚é;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 
 	//--------------------------------------------------------

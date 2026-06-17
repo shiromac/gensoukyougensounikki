@@ -110,7 +110,7 @@ StyleString cItem::FullName()
 
 	if(FullN.length() > ITEM_CAPTION_MAX_LENGTH)
 	{
-		D3DXVECTOR2 size(ITEM_CAPTION_MAX_LENGTH/FullN.length(),1);
+		cRenderVector2 size(ITEM_CAPTION_MAX_LENGTH/FullN.length(),1);
 		FullN.setSameSize(size);
 	}
 

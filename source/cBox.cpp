@@ -276,7 +276,7 @@ StyleString cBox::GetmenuFuncObjectsList(vector<pcDroping> &ObjectList, bool &Mu
 
 /*
 //コマンドを解決する;
-int cBox::FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList)
+int cBox::FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList)
 {
 
 	if(verb == _T("見る"))
@@ -322,7 +322,7 @@ StyleString cBox::QualityCaption()
 //----------------------------------------------------------
 //入れる
 //----------------------------------------------------------
-int cBox::入れる(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int cBox::入れる(cRenderDevice *pDev, pcDroping pdrop)
 {
 	int result = true;
 
@@ -481,7 +481,7 @@ int cBox::入れるメッセージ定型(pcDroping pdrop)
 //----------------------------------------------------------
 //見る
 //----------------------------------------------------------
-int cBox::見る(IDirect3DDevice9 *pDev)
+int cBox::見る(cRenderDevice *pDev)
 {
 	int result = 0;
 
@@ -690,7 +690,7 @@ int cBox::開けるメッセージ定型()
 //----------------------------------------------------------
 //出す
 //----------------------------------------------------------
-int cBox::出す(IDirect3DDevice9 *pDev, pcDroping pdrop)
+int cBox::出す(cRenderDevice *pDev, pcDroping pdrop)
 {
 	int result = true;
 
@@ -825,7 +825,7 @@ int cBox::出すメッセージ定型(pcDroping pdrop, pcCharacter receiver)
 }
 
 /*
-int cBox::入れ替え(IDirect3DDevice9 *pDev, pcDroping pdrop, pcDroping pdrop2)
+int cBox::入れ替え(cRenderDevice *pDev, pcDroping pdrop, pcDroping pdrop2)
 {
 	int result = true;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "cDrawingObject.h"
-#include <d3d9.h>
+#include "gameMainSystem/cRenderBackend.h"
 
 
 class cDrawingObject_ring :
@@ -18,8 +18,8 @@ public:
 	int Accuracy;
 
 
-	void setTexture(IDirect3DTexture9* pTexture,int TexSizeX, int TexSizeY);
+	void setTexture(cRenderTexture* pTexture,int TexSizeX, int TexSizeY);
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 };

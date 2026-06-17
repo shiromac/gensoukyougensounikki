@@ -340,14 +340,14 @@ void cShortCutsManager::resetShortcutText(eShortCuts_index index)
 	pri_setShortcutText(shortcutWindow_[index], pdrop, setStyle(shortcut_[index]->DisplayVerb()), shortcut_[index]->autoFunction());
 }
 
-void cShortCutsManager::setShortcutTempText(pcDroping pdrop, StyleString& Verb)
+void cShortCutsManager::setShortcutTempText(pcDroping pdrop, const StyleString& Verb)
 {
 	if(!inittedFlag_) pri_init();
 	pri_setShortcutText(shortcutTempWindow_, pdrop, Verb, false);
 	shortcutTempDrop_ = pdrop;
 }
 
-void cShortCutsManager::pri_setShortcutText(pcGameWindow pwindow, pcDroping pdrop, StyleString& Verb, bool autoFunction)
+void cShortCutsManager::pri_setShortcutText(pcGameWindow pwindow, pcDroping pdrop, const StyleString& Verb, bool autoFunction)
 {
 	StyleString str;
 
@@ -493,7 +493,7 @@ cShortCutsManager::pcShortCut cShortCutsManager::makeAutoShortCut(pcDroping sour
 	return shortCut;
 }
 
-cShortCutsManager::pcShortCut cShortCutsManager::makeAutoShortCutWithVerb(pcDroping source, vector<tstring>& CaptionList, tstring& verb)
+cShortCutsManager::pcShortCut cShortCutsManager::makeAutoShortCutWithVerb(pcDroping source, const vector<tstring>& CaptionList, const tstring& verb)
 {
 	if(std::count(CaptionList.begin(), CaptionList.end(), verb))
 	{

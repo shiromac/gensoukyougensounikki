@@ -48,7 +48,7 @@ public:
 	{
 		if(key_.empty()) return;//‹ó
 		double realvalue = value - floor(value/maxSum_)*maxSum_;
-		map<double, T>::iterator itr;
+		typename map<double, T>::iterator itr;
 		itr = key_.lower_bound(realvalue);
 		if(itr != key_.begin()) itr--;
 		getValue_pri(itr->first,realvalue,keytype_[itr->first],output);
@@ -65,10 +65,10 @@ protected:
 
 	virtual void getValue_pri(double keyitr_key, double value, const int keyType, T& output)
 	{
-		map<double, T>::iterator keyitr = key_.find(keyitr_key);
+		typename map<double, T>::iterator keyitr = key_.find(keyitr_key);
 		double before ,band, per;
 		before = keyitr->first;
-		map<double, T>::iterator keyitrAfter;
+		typename map<double, T>::iterator keyitrAfter;
 		if((++keyitr) == key_.end())
 		{//ƒ‰ƒXƒg
 			keyitrAfter = key_.begin();
@@ -110,7 +110,7 @@ public:
 
 	virtual void DrowingObjectFunc();
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	cDrawingObject DO;
 
@@ -150,7 +150,7 @@ public:
 
 	virtual void DrowingObjectFunc();
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	cNumField num_;
 
@@ -168,7 +168,7 @@ public:
 public:
 	virtual ~caEchip_Text(void);
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	virtual int Init();
 
@@ -203,7 +203,7 @@ public:
 
 	virtual void DrowingObjectFunc();
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	cDrawingObject_belt DOb;
 
@@ -241,7 +241,7 @@ public:
 
 	virtual void DrowingObjectFunc();
 
-	virtual int Draw(IDirect3DDevice9 *pDev);
+	virtual int Draw(cRenderDevice *pDev);
 
 	cDrawingObject DO;
 

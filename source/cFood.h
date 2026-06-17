@@ -45,7 +45,7 @@ public:
 
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 
 
 	virtual void AppreciationBeginOptimize(int difficulty){allAppreciate();};
@@ -54,7 +54,7 @@ public:
 	virtual int 修正値最大値(){return 4;};
 	//--------------------------------------------------------
 	//コマンド群
-	//virtual int 食べる(IDirect3DDevice9 *pDev);
+	//virtual int 食べる(cRenderDevice *pDev);
 	//virtual int 食べ要請(pcCharacter pchara);
 
 	//破壊される時true;

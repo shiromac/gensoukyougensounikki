@@ -18,7 +18,7 @@ caFade::~caFade()
 }
 
 
-int caFade::process(IDirect3DDevice9 *pDev)
+int caFade::process(cRenderDevice *pDev)
 {
 	//---------------------------------------
 	//	checkpointに始点（中間点）終点の順にいれてから処理を行う
@@ -104,7 +104,7 @@ int caFade::Init(int OutorIn)
 	}
 	return true;
 }
-int caFade::Draw(IDirect3DDevice9 *pDev)
+int caFade::Draw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;
@@ -161,7 +161,7 @@ caFadeGotoDungeon::~caFadeGotoDungeon()
 {
 }
 
-int caFadeGotoDungeon::process(IDirect3DDevice9 *pDev)
+int caFadeGotoDungeon::process(cRenderDevice *pDev)
 {
 	count += speed;
 
@@ -182,7 +182,7 @@ int caFadeGotoDungeon::process(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int caFadeGotoDungeon::Draw(IDirect3DDevice9 *pDev)
+int caFadeGotoDungeon::Draw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;
@@ -215,7 +215,7 @@ caFadeContinueDungeon::~caFadeContinueDungeon()
 {
 }
 
-int caFadeContinueDungeon::process(IDirect3DDevice9 *pDev)
+int caFadeContinueDungeon::process(cRenderDevice *pDev)
 {
 	count += speed;
 
@@ -236,7 +236,7 @@ int caFadeContinueDungeon::process(IDirect3DDevice9 *pDev)
 
 	return true;
 }
-int caFadeContinueDungeon::Draw(IDirect3DDevice9 *pDev)
+int caFadeContinueDungeon::Draw(cRenderDevice *pDev)
 {
 
 	cDrawingObject DO;

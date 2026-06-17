@@ -38,10 +38,10 @@ public:
 	//消去処理の準備
 	virtual void Release();
 
-	virtual void Init(IDirect3DDevice9 *pDev,pcDroping self);
+	virtual void Init(cRenderDevice *pDev,pcDroping self);
 
 
-	virtual void DrawStateIconSub(IDirect3DDevice9 *pDev,int x,int y);
+	virtual void DrawStateIconSub(cRenderDevice *pDev,int x,int y);
 
 	virtual StyleString 識別未識別混合道具名();
 	//---------------------------------
@@ -67,12 +67,12 @@ public:
 	virtual int 値段補正値();
 
 
-	virtual void aspectedAttackDraw(IDirect3DDevice9 *pDev);
+	virtual void aspectedAttackDraw(cRenderDevice *pDev);
 	virtual inline int AttackIconFileSize(){return 256;};
 	virtual inline tstring AttackIconFileName(){return _T("item\\effectdrop.png");};
 	virtual inline int AttackIconFileIndexX(){return 0;};
 	virtual int GetAttackIcon(cDrawingObject& DO);
-	IDirect3DTexture9* m_pTexture_AttackIcon;
+	cRenderTexture* m_pTexture_AttackIcon;
 
 	virtual StyleString QualityCaption();
 
@@ -136,13 +136,13 @@ public:
 
 
 	//コマンドを解決する;
-	//virtual int FireCommand(IDirect3DDevice9 *pDev, tstring verb, vector<pcDroping> &ObjectList);
+	//virtual int FireCommand(cRenderDevice *pDev, tstring verb, vector<pcDroping> &ObjectList);
 	
 	//--------------------------------------------------------
 	//コマンド群
 public:
-	//virtual int 装備(IDirect3DDevice9 *pDev);
-	//virtual int はずす(IDirect3DDevice9 *pDev);
+	//virtual int 装備(cRenderDevice *pDev);
+	//virtual int はずす(cRenderDevice *pDev);
 	//virtual int 装備要請(pcCharacter pchara);
 	//virtual int 装備はずし要請(pcCharacter pchara);
 
@@ -168,7 +168,7 @@ public:
 
 	
 	
-	//virtual int 撃つ(IDirect3DDevice9 *pDev);
+	//virtual int 撃つ(cRenderDevice *pDev);
 
 	//virtual int 撃ち要請(pcCharacter pchara);
 
