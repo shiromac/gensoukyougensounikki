@@ -218,6 +218,7 @@ function introEndEvent()
     coroutine.yield(false)--drama continue
 	storyEventMessageLoop(_T("introEndEvent1_"),str_map, nil)
 	coroutine.yield(false)--drama continue
+	setMapValue(savable_localFlags(),_T("introEndEventDone"),YES)
     return true--drama end
 end
 
@@ -307,7 +308,8 @@ function dungeonTurnProcess()
 		
 	end
 
-	if (getMapValue(savable_localFlags(),_T("state"),NO) == state_introEndEvent) then
+	if (getMapValue(savable_localFlags(),_T("state"),NO) == state_introEndEvent) and
+		(getMapValue(savable_localFlags(),_T("introEndEventDone"),NO) == YES) then
 
 		vDroping = PlayerCharacter().holdItem
 		size = vDroping: size()

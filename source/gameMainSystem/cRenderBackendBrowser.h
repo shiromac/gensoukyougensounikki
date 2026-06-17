@@ -1322,6 +1322,9 @@ inline bool cRenderWebGLEnsure()
 				this.setTarget(targetId, targetWidth, targetHeight);
 				this.setBlend(!!alphaBlend, blendFactors | 0, blendOperation | 0);
 				this.gl.useProgram(this.program);
+				var source = sourceId ? this.textures[sourceId | 0] : null;
+				var texelBiasU = source ? 0.5 / source.width : 0.0;
+				var texelBiasV = source ? 0.5 / source.height : 0.0;
 
 				var data = new Float32Array(vertexCount * 8);
 				for (var i = 0; i < vertexCount; ++i) {
@@ -1347,8 +1350,8 @@ inline bool cRenderWebGLEnsure()
 					var out = i * 8;
 					data[out] = x;
 					data[out + 1] = y;
-					data[out + 2] = tu;
-					data[out + 3] = tv;
+					data[out + 2] = tu - texelBiasU;
+					data[out + 3] = tv - texelBiasV;
 					data[out + 4] = ((color >>> 16) & 255) / 255;
 					data[out + 5] = ((color >>> 8) & 255) / 255;
 					data[out + 6] = (color & 255) / 255;
@@ -1367,7 +1370,6 @@ inline bool cRenderWebGLEnsure()
 				this.gl.uniform1i(this.uColorMode, colorMode | 0);
 				this.gl.activeTexture(this.gl.TEXTURE0);
 				if (sourceId) {
-					var source = this.textures[sourceId | 0];
 					this.gl.bindTexture(this.gl.TEXTURE_2D, source ? source.texture : null);
 					this.gl.uniform1i(this.uHasTexture, source ? 1 : 0);
 				} else {
