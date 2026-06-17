@@ -539,23 +539,23 @@ function Patch-WebDataLoader([string]$jsPath, [string]$remotePackageBase, [strin
     $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
     $content = [System.IO.File]::ReadAllText($jsPath, $utf8NoBom)
 
-    $baseMarker = "      var REMOTE_PACKAGE_BASE = '$remotePackageBase';"
-    if (-not $content.Contains($baseMarker)) {
+    $basePattern = "var\s+REMOTE_PACKAGE_BASE\s*=\s*['""]$([System.Text.RegularExpressions.Regex]::Escape($remotePackageBase))['""]\s*;"
+    $baseMatch = [System.Text.RegularExpressions.Regex]::Match($content, $basePattern)
+    if (-not $baseMatch.Success) {
         Fail "Could not find data package marker in generated JavaScript."
     }
 
     $chunkJson = ConvertTo-Json @($compressedChunkNames) -Compress
-    $manifest = @"
-$baseMarker
-      Module['dataFileCompressedChunks'] = Module['dataFileCompressedChunks'] || {};
-      Module['dataFileCompressedChunks'][REMOTE_PACKAGE_BASE] = $chunkJson;
-      Module['dataFileCompressedSize'] = Module['dataFileCompressedSize'] || {};
-      Module['dataFileCompressedSize'][REMOTE_PACKAGE_BASE] = $compressedSize;
-"@
-    $content = $content.Replace($baseMarker, $manifest.TrimEnd())
+    $manifest = $baseMatch.Value +
+        "Module[""dataFileCompressedChunks""]=Module[""dataFileCompressedChunks""]||{};" +
+        "Module[""dataFileCompressedChunks""][REMOTE_PACKAGE_BASE]=$chunkJson;" +
+        "Module[""dataFileCompressedSize""]=Module[""dataFileCompressedSize""]||{};" +
+        "Module[""dataFileCompressedSize""][REMOTE_PACKAGE_BASE]=$compressedSize;"
+    $content = $content.Remove($baseMatch.Index, $baseMatch.Length).Insert($baseMatch.Index, $manifest)
 
-    $downloadMarker = "        if (!Module['dataFileDownloads']) Module['dataFileDownloads'] = {};"
-    if (-not $content.Contains($downloadMarker)) {
+    $downloadPattern = "if\s*\(\s*!Module\s*\[\s*['""]dataFileDownloads['""]\s*\]\s*\)\s*Module\s*\[\s*['""]dataFileDownloads['""]\s*\]\s*=\s*\{\s*\}\s*;"
+    $downloadMatch = [System.Text.RegularExpressions.Regex]::Match($content, $downloadPattern)
+    if (-not $downloadMatch.Success) {
         Fail "Could not find data package download hook in generated JavaScript."
     }
 
@@ -600,7 +600,7 @@ $baseMarker
 
 '@
 
-    $content = $content.Replace($downloadMarker, $compressedLoader + $downloadMarker)
+    $content = $content.Remove($downloadMatch.Index, 0).Insert($downloadMatch.Index, $compressedLoader)
     [System.IO.File]::WriteAllText($jsPath, $content, $utf8NoBom)
 }
 
@@ -747,6 +747,7 @@ $includeDirs = @(
 
 $flags = New-Object System.Collections.Generic.List[string]
 $flags.Add("-std=gnu++11")
+$flags.Add("-O3")
 $flags.Add("-fexceptions")
 $flags.Add("-DNDEBUG")
 $flags.Add("-D_ARCHIVE")
@@ -828,6 +829,7 @@ for ($i = 0; $i -lt $cSources.Count; $i++) {
     $source = $cSources[$i]
     $object = $cObjects[$i]
     $cArgs = New-Object System.Collections.Generic.List[string]
+    $cArgs.Add("-O3")
     $cArgs.Add("-DNDEBUG")
     foreach ($includeDir in $includeDirs) {
         $cArgs.Add("-I" + (Resolve-ProjectPath $includeDir))

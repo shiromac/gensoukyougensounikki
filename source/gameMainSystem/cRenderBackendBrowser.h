@@ -179,7 +179,8 @@ struct cRenderDevice
 		: width(800), height(600), logicalWidth(800), logicalHeight(600),
 		  viewportWidth(800), viewportHeight(600), backBufferScaleX(1.0f), backBufferScaleY(1.0f),
 		  renderTarget(NULL), currentTexture(NULL), alphaBlendEnabled(false),
-		  colorMode(0), blendFactors(0), blendOperation(0)
+		  colorMode(0), blendFactors(0), blendOperation(0),
+		  statsFastQuadCount(0), statsTriangleCount(0), statsFastQuadPixels(0), statsTrianglePixels(0)
 	{
 		backBuffer.resize(width, height);
 	}
@@ -201,6 +202,7 @@ struct cRenderDevice
 		viewportHeight = logicalHeight;
 		renderTarget = NULL;
 		currentTexture = NULL;
+		resetStats();
 		return backBuffer.resize(width, height);
 	}
 
@@ -228,22 +230,6 @@ struct cRenderDevice
 			} catch (e) {
 			}
 			if (isFinite(paramScale) && paramScale > 0) return clamp(paramScale);
-			var coarse = false;
-			try {
-				coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-			} catch (e) {
-			}
-			var layoutShortSide = Math.min(window.innerWidth || 800, window.innerHeight || 600);
-			var screenShortSide = layoutShortSide;
-			try {
-				if (window.screen && screen.width > 0 && screen.height > 0) {
-					screenShortSide = Math.min(screen.width, screen.height);
-				}
-			} catch (e) {
-			}
-			var shortSide = Math.min(layoutShortSide, screenShortSide);
-			if (shortSide <= 520) return 0.375;
-			if (coarse || shortSide <= 700) return 0.5;
 			return 1.0;
 		});
 		if(scale < 0.25) scale = 0.25;
@@ -257,6 +243,14 @@ struct cRenderDevice
 	bool isBackBufferTarget(cRenderTexture* target) const
 	{
 		return target == &backBuffer;
+	}
+
+	void resetStats()
+	{
+		statsFastQuadCount = 0;
+		statsTriangleCount = 0;
+		statsFastQuadPixels = 0;
+		statsTrianglePixels = 0;
 	}
 
 	int SetTexture(DWORD stage, cRenderTexture* texture);
@@ -281,6 +275,10 @@ struct cRenderDevice
 	int colorMode;
 	int blendFactors;
 	int blendOperation;
+	int statsFastQuadCount;
+	int statsTriangleCount;
+	double statsFastQuadPixels;
+	double statsTrianglePixels;
 };
 
 struct cRenderVector2
@@ -1226,6 +1224,30 @@ inline unsigned long cRenderBlendColor(cRenderDevice* device, unsigned long dest
 	return cRenderPackColor(outA, outR, outG, outB);
 }
 
+inline unsigned long cRenderBlendColorNormalFast(unsigned long destination, unsigned long source)
+{
+	int srcA = cRenderColorA(source);
+	if(srcA >= 255) return source;
+	if(srcA <= 0) return destination;
+
+	int invA = 255 - srcA;
+	int dstA = cRenderColorA(destination);
+	int outA = srcA + dstA * invA / 255;
+	int outR = (cRenderColorR(source) * srcA + cRenderColorR(destination) * invA) / 255;
+	int outG = (cRenderColorG(source) * srcA + cRenderColorG(destination) * invA) / 255;
+	int outB = (cRenderColorB(source) * srcA + cRenderColorB(destination) * invA) / 255;
+	return ((unsigned long)outA << 24) | ((unsigned long)outR << 16) | ((unsigned long)outG << 8) | (unsigned long)outB;
+}
+
+inline unsigned long cRenderSampleTextureFast(cRenderTexture* texture, float u, float v)
+{
+	int x = (int)floorf(u * (float)texture->width - 0.5f);
+	int y = (int)floorf(v * (float)texture->height - 0.5f);
+	x = cRenderClampInt(x, 0, texture->width - 1);
+	y = cRenderClampInt(y, 0, texture->height - 1);
+	return texture->pixels[y * texture->width + x];
+}
+
 struct cRenderDrawVertex
 {
 	float x;
@@ -1266,6 +1288,8 @@ inline void cRenderDrawSoftwareTriangle(cRenderDevice* device, const cRenderDraw
 	int maxX = cRenderClampInt((int)ceilf(cRenderMax3(sv0.x, sv1.x, sv2.x)), 0, target->width - 1);
 	int minY = cRenderClampInt((int)floorf(cRenderMin3(sv0.y, sv1.y, sv2.y)), 0, target->height - 1);
 	int maxY = cRenderClampInt((int)ceilf(cRenderMax3(sv0.y, sv1.y, sv2.y)), 0, target->height - 1);
+	device->statsTriangleCount++;
+	device->statsTrianglePixels += (double)(maxX - minX + 1) * (double)(maxY - minY + 1);
 
 	for(int y = minY; y <= maxY; ++y)
 	{
@@ -1287,6 +1311,108 @@ inline void cRenderDrawSoftwareTriangle(cRenderDevice* device, const cRenderDraw
 			destination = cRenderBlendColor(device, destination, source);
 		}
 	}
+}
+
+inline void cRenderScaleBackBufferVertex(cRenderDevice* device, cRenderTexture* target, cRenderDrawVertex& vertex)
+{
+	if(device != NULL && device->isBackBufferTarget(target))
+	{
+		vertex.x *= device->backBufferScaleX;
+		vertex.y *= device->backBufferScaleY;
+	}
+}
+
+inline bool cRenderNearlyEqual(float a, float b)
+{
+	return fabsf(a - b) < 0.001f;
+}
+
+inline bool cRenderDrawSoftwareAxisAlignedQuad(cRenderDevice* device, const cRenderDrawVertex& q0, const cRenderDrawVertex& q1, const cRenderDrawVertex& q2, const cRenderDrawVertex& q3)
+{
+	if(device == NULL) return true;
+	cRenderTexture* target = device->targetTexture();
+	if(target == NULL || target->pixels == NULL) return true;
+	if(q0.color != q1.color || q0.color != q2.color || q0.color != q3.color) return false;
+
+	cRenderDrawVertex v0 = q0;
+	cRenderDrawVertex v1 = q1;
+	cRenderDrawVertex v2 = q2;
+	cRenderDrawVertex v3 = q3;
+	cRenderScaleBackBufferVertex(device, target, v0);
+	cRenderScaleBackBufferVertex(device, target, v1);
+	cRenderScaleBackBufferVertex(device, target, v2);
+	cRenderScaleBackBufferVertex(device, target, v3);
+
+	if(!cRenderNearlyEqual(v0.y, v1.y) || !cRenderNearlyEqual(v2.y, v3.y) ||
+		!cRenderNearlyEqual(v0.x, v2.x) || !cRenderNearlyEqual(v1.x, v3.x))
+	{
+		return false;
+	}
+
+	float left = v0.x;
+	float right = v1.x;
+	float top = v0.y;
+	float bottom = v2.y;
+	float width = right - left;
+	float height = bottom - top;
+	if(cRenderNearlyEqual(width, 0.0f) || cRenderNearlyEqual(height, 0.0f)) return true;
+
+	int minX = cRenderClampInt((int)floorf(cRenderMin3(v0.x, v1.x, v2.x)), 0, target->width - 1);
+	int maxX = cRenderClampInt((int)ceilf(cRenderMax3(v1.x, v2.x, v3.x)), 0, target->width - 1);
+	int minY = cRenderClampInt((int)floorf(cRenderMin3(v0.y, v1.y, v2.y)), 0, target->height - 1);
+	int maxY = cRenderClampInt((int)ceilf(cRenderMax3(v1.y, v2.y, v3.y)), 0, target->height - 1);
+	device->statsFastQuadCount++;
+	device->statsFastQuadPixels += (double)(maxX - minX + 1) * (double)(maxY - minY + 1);
+	unsigned long vertexColor = v0.color;
+	cRenderTexture* texture = device->currentTexture;
+	bool canSampleFast = texture != NULL && texture->pixels != NULL && texture->width > 0 && texture->height > 0;
+	bool textureOnly = vertexColor == 0xffffffff && device->colorMode == C_RENDER_TEXTURE_COLOR_MODULATE;
+	bool noBlend = !device->alphaBlendEnabled;
+	bool normalBlend = device->alphaBlendEnabled &&
+		device->blendOperation == C_RENDER_BLEND_OPERATION_ADD &&
+		device->blendFactors == C_RENDER_BLEND_FACTORS_NORMAL;
+
+	for(int y = minY; y <= maxY; ++y)
+	{
+		float ty = (((float)y + 0.5f) - top) / height;
+		if(ty < -0.0001f || ty > 1.0001f) continue;
+		float rowLeftU = v0.tu + (v2.tu - v0.tu) * ty;
+		float rowRightU = v1.tu + (v3.tu - v1.tu) * ty;
+		float rowLeftV = v0.tv + (v2.tv - v0.tv) * ty;
+		float rowRightV = v1.tv + (v3.tv - v1.tv) * ty;
+		unsigned long* destinationRow = target->pixels + y * target->width;
+
+		for(int x = minX; x <= maxX; ++x)
+		{
+			float tx = (((float)x + 0.5f) - left) / width;
+			if(tx < -0.0001f || tx > 1.0001f) continue;
+			float u = rowLeftU + (rowRightU - rowLeftU) * tx;
+			float v = rowLeftV + (rowRightV - rowLeftV) * tx;
+			unsigned long textureColor = canSampleFast ? cRenderSampleTextureFast(texture, u, v) : cRenderSampleTexture(texture, u, v);
+			if(textureOnly)
+			{
+				if(noBlend)
+				{
+					destinationRow[x] = textureColor;
+				}
+				else if(normalBlend)
+				{
+					destinationRow[x] = cRenderBlendColorNormalFast(destinationRow[x], textureColor);
+				}
+				else
+				{
+					destinationRow[x] = cRenderBlendColor(device, destinationRow[x], textureColor);
+				}
+			}
+			else
+			{
+				unsigned long source = cRenderApplyTextureColor(device, textureColor, vertexColor);
+				destinationRow[x] = cRenderBlendColor(device, destinationRow[x], source);
+			}
+		}
+	}
+
+	return true;
 }
 
 inline void cRenderSetViewport(cRenderDevice* device, DWORD width, DWORD height)
@@ -1680,7 +1806,12 @@ inline cRenderResult cRenderPresent(cRenderDevice* device)
 		renderInfo['scaleX'] = +$5;
 		renderInfo['scaleY'] = +$6;
 		renderInfo['presentFps'] = Module['ggnPresentFps'] || 0;
-	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY);
+		renderInfo['fastQuadCount'] = $7 | 0;
+		renderInfo['triangleCount'] = $8 | 0;
+		renderInfo['fastQuadPixels'] = +$9;
+		renderInfo['trianglePixels'] = +$10;
+	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY, device->statsFastQuadCount, device->statsTriangleCount, device->statsFastQuadPixels, device->statsTrianglePixels);
+	device->resetStats();
 #endif
 	return 0;
 }
@@ -1774,6 +1905,14 @@ inline void cRenderSetBlendOperation(cRenderDevice* device, cRenderBlendOperatio
 inline void cRenderDrawTriangleStrip(cRenderDevice* device, UINT primitiveCount, const VERTEX2D* vertices)
 {
 	if(device == NULL || vertices == NULL || primitiveCount == 0) return;
+	if(primitiveCount == 2)
+	{
+		cRenderDrawVertex q0 = { vertices[0].x, vertices[0].y, vertices[0].tu, vertices[0].tv, 0xffffffff };
+		cRenderDrawVertex q1 = { vertices[1].x, vertices[1].y, vertices[1].tu, vertices[1].tv, 0xffffffff };
+		cRenderDrawVertex q2 = { vertices[2].x, vertices[2].y, vertices[2].tu, vertices[2].tv, 0xffffffff };
+		cRenderDrawVertex q3 = { vertices[3].x, vertices[3].y, vertices[3].tu, vertices[3].tv, 0xffffffff };
+		if(cRenderDrawSoftwareAxisAlignedQuad(device, q0, q1, q2, q3)) return;
+	}
 	for(UINT i = 0; i < primitiveCount; ++i)
 	{
 		cRenderDrawVertex v0 = { vertices[i].x, vertices[i].y, vertices[i].tu, vertices[i].tv, 0xffffffff };
@@ -1793,6 +1932,14 @@ inline void cRenderDrawTriangleStrip(cRenderDevice* device, UINT primitiveCount,
 inline void cRenderDrawColoredTriangleStrip(cRenderDevice* device, UINT primitiveCount, const VERTEX2D_COLORED* vertices)
 {
 	if(device == NULL || vertices == NULL || primitiveCount == 0) return;
+	if(primitiveCount == 2)
+	{
+		cRenderDrawVertex q0 = { vertices[0].x, vertices[0].y, vertices[0].tu, vertices[0].tv, vertices[0].col };
+		cRenderDrawVertex q1 = { vertices[1].x, vertices[1].y, vertices[1].tu, vertices[1].tv, vertices[1].col };
+		cRenderDrawVertex q2 = { vertices[2].x, vertices[2].y, vertices[2].tu, vertices[2].tv, vertices[2].col };
+		cRenderDrawVertex q3 = { vertices[3].x, vertices[3].y, vertices[3].tu, vertices[3].tv, vertices[3].col };
+		if(cRenderDrawSoftwareAxisAlignedQuad(device, q0, q1, q2, q3)) return;
+	}
 	for(UINT i = 0; i < primitiveCount; ++i)
 	{
 		cRenderDrawVertex v0 = { vertices[i].x, vertices[i].y, vertices[i].tu, vertices[i].tv, vertices[i].col };
