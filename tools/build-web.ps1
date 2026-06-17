@@ -604,6 +604,27 @@ function Patch-WebDataLoader([string]$jsPath, [string]$remotePackageBase, [strin
     [System.IO.File]::WriteAllText($jsPath, $content, $utf8NoBom)
 }
 
+function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
+    $htmlPath = Join-Path $targetRoot ($outputName + ".html")
+    $jsPath = Join-Path $targetRoot ($outputName + ".js")
+    if (-not (Test-Path -LiteralPath $htmlPath) -or -not (Test-Path -LiteralPath $jsPath)) { return }
+
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    $buildId = (Get-FileHash -LiteralPath $jsPath -Algorithm SHA256).Hash.Substring(0, 12).ToLowerInvariant()
+    $content = [System.IO.File]::ReadAllText($htmlPath, $utf8NoBom)
+    $scriptPattern = "src\s*=\s*(['""]?)$([System.Text.RegularExpressions.Regex]::Escape($outputName)).js(\?v=[^'"">\s]+)?\1"
+    $content = [System.Text.RegularExpressions.Regex]::Replace($content, $scriptPattern, "src=""$outputName.js?v=$buildId""")
+
+    if ($content -notmatch "locateFile\s*\(") {
+        $modulePattern = "Module\s*=\s*\{"
+        $wasmName = "$outputName.wasm"
+        $locateFile = 'Module={locateFile(e,t){return e==="' + $wasmName + '"?t+e+"?v=' + $buildId + '":t+e},'
+        $content = [System.Text.RegularExpressions.Regex]::Replace($content, $modulePattern, $locateFile, 1)
+    }
+
+    [System.IO.File]::WriteAllText($htmlPath, $content, $utf8NoBom)
+}
+
 function Finalize-WebDataPackage([string]$targetRoot, [string]$outputName) {
     $dataFileName = "$outputName.data"
     $dataPath = Join-Path $targetRoot $dataFileName
@@ -846,5 +867,6 @@ for ($i = 0; $i -lt $cSources.Count; $i++) {
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Finalize-WebDataPackage $outPath $OutputName
+Patch-WebHtmlCacheBust $outPath $OutputName
 
 Write-Host "Built: $(Join-Path $outPath ($OutputName + '.html'))"
