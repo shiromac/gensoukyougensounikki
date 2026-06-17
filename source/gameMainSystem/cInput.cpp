@@ -33,6 +33,23 @@ namespace
 				Module['ggnKeys'][keyCode | 0] = pressed ? 1 : 0;
 			}
 
+			function setTouchKey(keyCode, pressed) {
+				var code = keyCode | 0;
+				Module['ggnTouchKeyCounts'] = Module['ggnTouchKeyCounts'] || {};
+				var count = Module['ggnTouchKeyCounts'][code] | 0;
+				count += pressed ? 1 : -1;
+				if (count < 0) count = 0;
+				Module['ggnTouchKeyCounts'][code] = count;
+				setKey(code, count > 0);
+			}
+
+			function clearInputKeys() {
+				Module['ggnKeys'] = {};
+				Module['ggnTouchKeyCounts'] = {};
+				var activeButtons = document.querySelectorAll('#ggn-touch-controls button.ggn-active');
+				for (var i = 0; i < activeButtons.length; ++i) activeButtons[i].classList.remove('ggn-active');
+			}
+
 			window.addEventListener('keydown', function(e) {
 				setKey(e.keyCode | 0, true);
 				if (Module['ggnShouldBlockKey'](e.keyCode | 0)) e.preventDefault();
@@ -42,7 +59,7 @@ namespace
 				if (Module['ggnShouldBlockKey'](e.keyCode | 0)) e.preventDefault();
 			}, false);
 			window.addEventListener('blur', function() {
-				Module['ggnKeys'] = {};
+				clearInputKeys();
 			}, false);
 			window.addEventListener('contextmenu', function(e) {
 				e.preventDefault();
@@ -74,7 +91,9 @@ namespace
 					'#ggn-touch-controls button { pointer-events: auto; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 13px/1 Arial, sans-serif; padding: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
 					'#ggn-touch-controls button.ggn-wide { font-size: 11px; }',
 					'#ggn-touch-controls button.ggn-active { background: rgba(255,255,255,.86); color: #000; }',
-					'#ggn-btn-up { grid-column: 2; grid-row: 1; } #ggn-btn-left { grid-column: 1; grid-row: 2; } #ggn-btn-right { grid-column: 3; grid-row: 2; } #ggn-btn-down { grid-column: 2; grid-row: 3; }',
+					'#ggn-btn-up-left { grid-column: 1; grid-row: 1; } #ggn-btn-up { grid-column: 2; grid-row: 1; } #ggn-btn-up-right { grid-column: 3; grid-row: 1; }',
+					'#ggn-btn-left { grid-column: 1; grid-row: 2; } #ggn-btn-right { grid-column: 3; grid-row: 2; }',
+					'#ggn-btn-down-left { grid-column: 1; grid-row: 3; } #ggn-btn-down { grid-column: 2; grid-row: 3; } #ggn-btn-down-right { grid-column: 3; grid-row: 3; }',
 					'#ggn-btn-diag { grid-column: 1; grid-row: 1; } #ggn-btn-turn { grid-column: 2; grid-row: 1; } #ggn-btn-map { grid-column: 3; grid-row: 1; }',
 					'#ggn-btn-dash { grid-column: 1; grid-row: 2; } #ggn-btn-attack { grid-column: 2; grid-row: 2; } #ggn-btn-menu { grid-column: 3; grid-row: 2; }',
 					'#ggn-btn-smartdash { grid-column: 1; grid-row: 3; } #ggn-btn-shot { grid-column: 2; grid-row: 3; }',
@@ -96,12 +115,15 @@ namespace
 				controls.appendChild(left);
 				controls.appendChild(right);
 				document.body.appendChild(controls);
-
 				var specs = [
+					{ parent: left, id: 'ggn-btn-up-left', keys: [38, 37], label: 'UL', name: 'Up left' },
 					{ parent: left, id: 'ggn-btn-up', key: 38, label: '^', name: 'Up' },
+					{ parent: left, id: 'ggn-btn-up-right', keys: [38, 39], label: 'UR', name: 'Up right' },
 					{ parent: left, id: 'ggn-btn-left', key: 37, label: '<', name: 'Left' },
 					{ parent: left, id: 'ggn-btn-right', key: 39, label: '>', name: 'Right' },
+					{ parent: left, id: 'ggn-btn-down-left', keys: [40, 37], label: 'DL', name: 'Down left' },
 					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
+					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
 					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Diag', name: 'Diagonal', wide: true },
 					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'Turn', name: 'Turn', wide: true },
 					{ parent: right, id: 'ggn-btn-map', key: 32, label: 'Map', name: 'Map', wide: true },
@@ -111,9 +133,22 @@ namespace
 					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'SD', name: 'Smart dash' },
 					{ parent: right, id: 'ggn-btn-shot', key: 83, label: 'Shot', name: 'Shot', wide: true }
 				];
+				function specKeys(spec) {
+					return spec.keys || [spec.key];
+				}
 
-				function releaseButton(button, key) {
-					setKey(key, false);
+				function pressButton(button, spec) {
+					specKeys(spec).forEach(function(key) {
+						setTouchKey(key, true);
+					});
+					button.classList.add('ggn-active');
+				}
+
+				function releaseButton(button, spec) {
+					if (!button.classList.contains('ggn-active')) return;
+					specKeys(spec).forEach(function(key) {
+						setTouchKey(key, false);
+					});
 					button.classList.remove('ggn-active');
 				}
 
@@ -127,25 +162,24 @@ namespace
 					button.addEventListener('pointerdown', function(e) {
 						e.preventDefault();
 						try { button.setPointerCapture(e.pointerId); } catch (ignore) {}
-						setKey(spec.key, true);
-						button.classList.add('ggn-active');
+						pressButton(button, spec);
 					}, { passive: false });
 					button.addEventListener('pointerup', function(e) {
 						e.preventDefault();
-						releaseButton(button, spec.key);
+						releaseButton(button, spec);
 					}, { passive: false });
 					button.addEventListener('pointercancel', function(e) {
 						e.preventDefault();
-						releaseButton(button, spec.key);
+						releaseButton(button, spec);
 					}, { passive: false });
 					button.addEventListener('lostpointercapture', function() {
-						releaseButton(button, spec.key);
+						releaseButton(button, spec);
 					}, false);
 					spec.parent.appendChild(button);
 				});
 
 				window.addEventListener('visibilitychange', function() {
-					if (document.hidden) Module['ggnKeys'] = {};
+					if (document.hidden) clearInputKeys();
 				}, false);
 			}
 
