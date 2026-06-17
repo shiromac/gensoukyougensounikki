@@ -239,6 +239,8 @@ EXIT:
 static bool BrowserGameStarted = false;
 static bool BrowserDirect3DStarted = false;
 static bool BrowserGameInitialized = false;
+static double BrowserNextFrameMillis = 0.0;
+static const double BrowserFrameMillis = 1000.0 / 60.0;
 
 static void BrowserPrepareSaveFs( void )
 {
@@ -291,6 +293,7 @@ static bool BrowserInitializeGame( void )
 		return false;
 	}
 	BrowserGameInitialized = true;
+	BrowserNextFrameMillis = 0.0;
 	GameSetupFrameTimer();
 	return true;
 }
@@ -322,6 +325,12 @@ static void BrowserMainLoop( void )
 		}
 		BrowserGameStarted = true;
 	}
+
+	double now = emscripten_get_now();
+	if ( BrowserNextFrameMillis <= 0.0 ) BrowserNextFrameMillis = now;
+	if ( now + 0.25 < BrowserNextFrameMillis ) return;
+	BrowserNextFrameMillis += BrowserFrameMillis;
+	if ( BrowserNextFrameMillis < now - BrowserFrameMillis ) BrowserNextFrameMillis = now;
 
 	if ( !GameFrame() )
 	{

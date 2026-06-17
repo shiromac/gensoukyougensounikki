@@ -32,6 +32,26 @@ TimeControl::~TimeControl()
 //======================================================
 void TimeControl::TimeRegular()
 {
+#ifdef __EMSCRIPTEN__
+	m_dwFrameCount++;
+	if(m_bInit == 1)
+	{
+		m_dwLastMinitues = cPlatformGetMilliseconds();
+		m_bInit = 0;
+	}
+	m_bDrawFlag = 1;
+
+	DWORD now = cPlatformGetMilliseconds();
+	if(now - m_dwLastMinitues >= 1000)
+	{
+		m_dwLastMinitues = now;
+		m_dwFrameRate = m_dwFrameCount;
+		m_dwFrameCount = 0;
+		m_dwSkipRate = 0;
+		m_dwSkipCount = 0;
+	}
+	return;
+#endif
 	m_dwFrameCount++;
 
 	

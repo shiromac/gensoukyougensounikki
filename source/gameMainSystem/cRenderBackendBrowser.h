@@ -107,12 +107,21 @@ struct cRenderInterface
 
 struct cRenderTexture
 {
-	cRenderTexture() : width(0), height(0), pixels(NULL)
+	cRenderTexture() : width(0), height(0), pixels(NULL), webglTextureId(0), webglIsRenderTarget(false), webglDirty(true)
 	{
 	}
 
 	~cRenderTexture()
 	{
+#ifdef __EMSCRIPTEN__
+		if(webglTextureId != 0)
+		{
+			EM_ASM({
+				var api = Module['ggnWebGLApi'];
+				if (api) api.deleteTexture($0 | 0);
+			}, webglTextureId);
+		}
+#endif
 		delete[] pixels;
 	}
 
@@ -121,10 +130,21 @@ struct cRenderTexture
 		if(newWidth <= 0 || newHeight <= 0) return false;
 		if(width == newWidth && height == newHeight && pixels != NULL) return true;
 
+#ifdef __EMSCRIPTEN__
+		if(webglTextureId != 0)
+		{
+			EM_ASM({
+				var api = Module['ggnWebGLApi'];
+				if (api) api.deleteTexture($0 | 0);
+			}, webglTextureId);
+			webglTextureId = 0;
+		}
+#endif
 		delete[] pixels;
 		pixels = NULL;
 		width = newWidth;
 		height = newHeight;
+		webglDirty = true;
 
 		pixels = new unsigned long[(size_t)width * (size_t)height];
 		if(pixels == NULL) return false;
@@ -135,6 +155,9 @@ struct cRenderTexture
 	int width;
 	int height;
 	unsigned long* pixels;
+	int webglTextureId;
+	bool webglIsRenderTarget;
+	bool webglDirty;
 };
 
 struct cRenderSurface
@@ -180,7 +203,9 @@ struct cRenderDevice
 		  viewportWidth(800), viewportHeight(600), backBufferScaleX(1.0f), backBufferScaleY(1.0f),
 		  renderTarget(NULL), currentTexture(NULL), alphaBlendEnabled(false),
 		  colorMode(0), blendFactors(0), blendOperation(0),
-		  statsFastQuadCount(0), statsTriangleCount(0), statsFastQuadPixels(0), statsTrianglePixels(0)
+		  profileEnabled(false),
+		  statsFastQuadCount(0), statsTriangleCount(0), statsFastQuadPixels(0), statsTrianglePixels(0),
+		  statsClearMillis(0), statsDrawMillis(0)
 	{
 		backBuffer.resize(width, height);
 	}
@@ -198,6 +223,7 @@ struct cRenderDevice
 		if(height > newHeight) height = newHeight;
 		backBufferScaleX = (float)width / (float)logicalWidth;
 		backBufferScaleY = (float)height / (float)logicalHeight;
+		profileEnabled = chooseProfilingEnabled();
 		viewportWidth = logicalWidth;
 		viewportHeight = logicalHeight;
 		renderTarget = NULL;
@@ -240,6 +266,19 @@ struct cRenderDevice
 #endif
 	}
 
+	static bool chooseProfilingEnabled()
+	{
+#ifdef __EMSCRIPTEN__
+		return EM_ASM_INT({
+			if (Module['ggnProfile']) return 1;
+			if (typeof location !== 'undefined' && String(location.search || '').indexOf('profile') >= 0) return 1;
+			return 0;
+		}) != 0;
+#else
+		return false;
+#endif
+	}
+
 	bool isBackBufferTarget(cRenderTexture* target) const
 	{
 		return target == &backBuffer;
@@ -251,6 +290,8 @@ struct cRenderDevice
 		statsTriangleCount = 0;
 		statsFastQuadPixels = 0;
 		statsTrianglePixels = 0;
+		statsClearMillis = 0;
+		statsDrawMillis = 0;
 	}
 
 	int SetTexture(DWORD stage, cRenderTexture* texture);
@@ -275,10 +316,13 @@ struct cRenderDevice
 	int colorMode;
 	int blendFactors;
 	int blendOperation;
+	bool profileEnabled;
 	int statsFastQuadCount;
 	int statsTriangleCount;
 	double statsFastQuadPixels;
 	double statsTrianglePixels;
+	double statsClearMillis;
+	double statsDrawMillis;
 };
 
 struct cRenderVector2
@@ -1061,6 +1105,455 @@ enum cRenderBlendOperation
 	C_RENDER_BLEND_OPERATION_REVERSE_SUBTRACT,
 };
 
+inline int cRenderClampInt(int value, int low, int high);
+
+inline double cRenderNowMillis()
+{
+#ifdef __EMSCRIPTEN__
+	return emscripten_get_now();
+#else
+	return 0;
+#endif
+}
+
+inline bool cRenderWebGLEnsure()
+{
+#ifdef __EMSCRIPTEN__
+	return EM_ASM_INT({
+		if (Module['ggnForceSoftwareRender']) return 0;
+		if (typeof location !== 'undefined' && String(location.search || '').indexOf('software=1') >= 0) return 0;
+		if (Module['ggnWebGLApi']) return Module['ggnWebGLApi'].ok ? 1 : 0;
+
+		var canvas = Module['canvas'] || document.getElementById('canvas');
+		if (!canvas) return 0;
+		var attributes = new Object();
+		attributes.alpha = false;
+		attributes.antialias = false;
+		attributes.preserveDrawingBuffer = false;
+		var gl = canvas.getContext('webgl', attributes) || canvas.getContext('experimental-webgl', attributes);
+		if (!gl) {
+			var failed = new Object();
+			failed.ok = false;
+			Module['ggnWebGLApi'] = failed;
+			return 0;
+		}
+
+		function compileShader(type, source) {
+			var shader = gl.createShader(type);
+			gl.shaderSource(shader, source);
+			gl.compileShader(shader);
+			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+				console.error(gl.getShaderInfoLog(shader));
+				gl.deleteShader(shader);
+				return null;
+			}
+			return shader;
+		}
+
+		var vertexSource =
+			'attribute vec2 a_pos;' +
+			'attribute vec2 a_uv;' +
+			'attribute vec4 a_color;' +
+			'uniform vec2 u_resolution;' +
+			'varying vec2 v_uv;' +
+			'varying vec4 v_color;' +
+			'void main(){' +
+			'vec2 zeroToOne=a_pos/u_resolution;' +
+			'vec2 clip=zeroToOne*2.0-1.0;' +
+			'gl_Position=vec4(clip*vec2(1.0,-1.0),0.0,1.0);' +
+			'v_uv=a_uv;v_color=a_color;' +
+			'}';
+		var fragmentSource =
+			'precision mediump float;' +
+			'varying vec2 v_uv;' +
+			'varying vec4 v_color;' +
+			'uniform sampler2D u_texture;' +
+			'uniform int u_hasTexture;' +
+			'uniform int u_colorMode;' +
+			'void main(){' +
+			'vec4 tex=(u_hasTexture!=0)?texture2D(u_texture,v_uv):vec4(1.0);' +
+			'if(u_colorMode==1){gl_FragColor=vec4(min(tex.rgb+v_color.rgb,vec3(1.0)),tex.a*v_color.a);}' +
+			'else if(u_colorMode==2){gl_FragColor=vec4(v_color.rgb,tex.a*v_color.a);}' +
+			'else{gl_FragColor=tex*v_color;}' +
+			'}';
+		var vertexShader = compileShader(gl.VERTEX_SHADER, vertexSource);
+		var fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+		if (!vertexShader || !fragmentShader) {
+			var failedShader = new Object();
+			failedShader.ok = false;
+			Module['ggnWebGLApi'] = failedShader;
+			return 0;
+		}
+
+		var program = gl.createProgram();
+		gl.attachShader(program, vertexShader);
+		gl.attachShader(program, fragmentShader);
+		gl.linkProgram(program);
+		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+			console.error(gl.getProgramInfoLog(program));
+			var failedProgram = new Object();
+			failedProgram.ok = false;
+			Module['ggnWebGLApi'] = failedProgram;
+			return 0;
+		}
+
+		gl.useProgram(program);
+		gl.disable(gl.DEPTH_TEST);
+		gl.disable(gl.CULL_FACE);
+		gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+
+		var api = new Object();
+		api.ok = true;
+		api.used = false;
+		api.gl = gl;
+		api.program = program;
+		api.buffer = gl.createBuffer();
+		api.textures = new Object();
+		api.nextTextureId = 1;
+		api.aPos = gl.getAttribLocation(program, 'a_pos');
+		api.aUv = gl.getAttribLocation(program, 'a_uv');
+		api.aColor = gl.getAttribLocation(program, 'a_color');
+		api.uResolution = gl.getUniformLocation(program, 'u_resolution');
+		api.uTexture = gl.getUniformLocation(program, 'u_texture');
+		api.uHasTexture = gl.getUniformLocation(program, 'u_hasTexture');
+		api.uColorMode = gl.getUniformLocation(program, 'u_colorMode');
+		api.deleteTexture = function(id) {
+				var object = this.textures[id | 0];
+				if (!object) return;
+				if (object.framebuffer) this.gl.deleteFramebuffer(object.framebuffer);
+				if (object.texture) this.gl.deleteTexture(object.texture);
+				delete this.textures[id | 0];
+			};
+		api.ensureTexture = function(id, width, height, ptr, renderTarget, dirty) {
+				id = id | 0;
+				width = width | 0;
+				height = height | 0;
+				renderTarget = !!renderTarget;
+				var object = id ? this.textures[id] : null;
+				if (!object) {
+					id = this.nextTextureId++;
+					object = new Object();
+					object.texture = this.gl.createTexture();
+					object.framebuffer = null;
+					object.width = 0;
+					object.height = 0;
+					object.renderTarget = renderTarget;
+					object.uploaded = false;
+					this.textures[id] = object;
+				}
+				this.gl.bindTexture(this.gl.TEXTURE_2D, object.texture);
+				this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+				this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+				this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+				this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+
+				var sizeChanged = object.width !== width || object.height !== height || object.renderTarget !== renderTarget;
+				object.width = width;
+				object.height = height;
+				object.renderTarget = renderTarget;
+
+				if (renderTarget) {
+					if (sizeChanged || !object.uploaded) {
+						this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
+						object.uploaded = true;
+					}
+					if (!object.framebuffer) object.framebuffer = this.gl.createFramebuffer();
+					this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, object.framebuffer);
+					this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.COLOR_ATTACHMENT0, this.gl.TEXTURE_2D, object.texture, 0);
+					this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+				} else if (dirty || sizeChanged || !object.uploaded) {
+					var count = width * height;
+					var source = HEAPU32.subarray(ptr >>> 2, (ptr >>> 2) + count);
+					var rgba = new Uint8Array(count * 4);
+					for (var i = 0, j = 0; i < count; ++i, j += 4) {
+						var color = source[i] >>> 0;
+						rgba[j] = (color >>> 16) & 255;
+						rgba[j + 1] = (color >>> 8) & 255;
+						rgba[j + 2] = color & 255;
+						rgba[j + 3] = (color >>> 24) & 255;
+					}
+					this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, rgba);
+					object.uploaded = true;
+				}
+				return id;
+			};
+		api.setTarget = function(targetId, width, height) {
+				var target = targetId ? this.textures[targetId | 0] : null;
+				if (target && target.framebuffer) {
+					this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, target.framebuffer);
+				} else {
+					var canvas = Module['canvas'] || document.getElementById('canvas');
+					if (canvas.width !== width) canvas.width = width;
+					if (canvas.height !== height) canvas.height = height;
+					this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+				}
+				this.gl.viewport(0, 0, width, height);
+			};
+		api.setBlend = function(enabled, factors, operation) {
+				if (!enabled) {
+					this.gl.disable(this.gl.BLEND);
+					return;
+				}
+				this.gl.enable(this.gl.BLEND);
+				this.gl.blendEquation(operation === 1 ? this.gl.FUNC_REVERSE_SUBTRACT : this.gl.FUNC_ADD);
+				if (factors === 0) {
+					this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+				} else if (factors === 2) {
+					this.gl.blendFunc(this.gl.ZERO, this.gl.ONE_MINUS_SRC_COLOR);
+				} else if (factors === 3) {
+					this.gl.blendFunc(this.gl.ONE, this.gl.ONE_MINUS_SRC_ALPHA);
+				} else {
+					this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+				}
+			};
+		api.clear = function(targetId, width, height, color) {
+				this.used = true;
+				this.setTarget(targetId, width, height);
+				this.gl.disable(this.gl.BLEND);
+				this.gl.clearColor(((color >>> 16) & 255) / 255, ((color >>> 8) & 255) / 255, (color & 255) / 255, ((color >>> 24) & 255) / 255);
+				this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+				return 1;
+			};
+		api.drawStrip = function(targetId, targetWidth, targetHeight, sourceId, vertexPtr, primitiveCount, stride, colored, colorMode, alphaBlend, blendFactors, blendOperation, scaleX, scaleY) {
+				this.used = true;
+				var vertexCount = (primitiveCount | 0) + 2;
+				if (vertexCount < 3) return 1;
+				this.setTarget(targetId, targetWidth, targetHeight);
+				this.setBlend(!!alphaBlend, blendFactors | 0, blendOperation | 0);
+				this.gl.useProgram(this.program);
+
+				var data = new Float32Array(vertexCount * 8);
+				for (var i = 0; i < vertexCount; ++i) {
+					var byteOffset = (vertexPtr >>> 0) + i * (stride | 0);
+					var floatOffset = byteOffset >>> 2;
+					var x = HEAPF32[floatOffset];
+					var y = HEAPF32[floatOffset + 1];
+					var tu;
+					var tv;
+					var color = 0xffffffff;
+					if (colored) {
+						color = HEAPU32[(byteOffset + 16) >>> 2] >>> 0;
+						tu = HEAPF32[(byteOffset + 20) >>> 2];
+						tv = HEAPF32[(byteOffset + 24) >>> 2];
+					} else {
+						tu = HEAPF32[(byteOffset + 16) >>> 2];
+						tv = HEAPF32[(byteOffset + 20) >>> 2];
+					}
+					if (!targetId) {
+						x *= scaleX;
+						y *= scaleY;
+					}
+					var out = i * 8;
+					data[out] = x;
+					data[out + 1] = y;
+					data[out + 2] = tu;
+					data[out + 3] = tv;
+					data[out + 4] = ((color >>> 16) & 255) / 255;
+					data[out + 5] = ((color >>> 8) & 255) / 255;
+					data[out + 6] = (color & 255) / 255;
+					data[out + 7] = ((color >>> 24) & 255) / 255;
+				}
+
+				this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+				this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STREAM_DRAW);
+				this.gl.enableVertexAttribArray(this.aPos);
+				this.gl.enableVertexAttribArray(this.aUv);
+				this.gl.enableVertexAttribArray(this.aColor);
+				this.gl.vertexAttribPointer(this.aPos, 2, this.gl.FLOAT, false, 32, 0);
+				this.gl.vertexAttribPointer(this.aUv, 2, this.gl.FLOAT, false, 32, 8);
+				this.gl.vertexAttribPointer(this.aColor, 4, this.gl.FLOAT, false, 32, 16);
+				this.gl.uniform2f(this.uResolution, targetWidth, targetHeight);
+				this.gl.uniform1i(this.uColorMode, colorMode | 0);
+				this.gl.activeTexture(this.gl.TEXTURE0);
+				if (sourceId) {
+					var source = this.textures[sourceId | 0];
+					this.gl.bindTexture(this.gl.TEXTURE_2D, source ? source.texture : null);
+					this.gl.uniform1i(this.uHasTexture, source ? 1 : 0);
+				} else {
+					this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+					this.gl.uniform1i(this.uHasTexture, 0);
+				}
+				this.gl.uniform1i(this.uTexture, 0);
+				this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, vertexCount);
+				return 1;
+			};
+		Module['ggnWebGLApi'] = api;
+		return 1;
+	}) != 0;
+#else
+	return false;
+#endif
+}
+
+inline int cRenderEnsureWebGLTexture(cRenderTexture* texture, bool renderTarget)
+{
+	if(texture == NULL) return 0;
+	if(renderTarget) texture->webglIsRenderTarget = true;
+	if(!cRenderWebGLEnsure()) return 0;
+#ifdef __EMSCRIPTEN__
+	int textureId = EM_ASM_INT({
+		var api = Module['ggnWebGLApi'];
+		if (!api || !api.ok) return 0;
+		return api.ensureTexture($0 | 0, $1 | 0, $2 | 0, $3 >>> 0, $4 | 0, $5 | 0) | 0;
+	}, texture->webglTextureId, texture->width, texture->height, texture->pixels, texture->webglIsRenderTarget ? 1 : 0, texture->webglDirty ? 1 : 0);
+	if(textureId != 0)
+	{
+		texture->webglTextureId = textureId;
+		texture->webglDirty = false;
+	}
+	return textureId;
+#else
+	return 0;
+#endif
+}
+
+inline bool cRenderClearTargetWebGL(cRenderDevice* device, cRenderTexture* target, cRenderColor color)
+{
+	if(device == NULL || target == NULL) return false;
+	if(!cRenderWebGLEnsure()) return false;
+	int targetId = 0;
+	if(!device->isBackBufferTarget(target))
+	{
+		targetId = cRenderEnsureWebGLTexture(target, true);
+		if(targetId == 0) return false;
+	}
+#ifdef __EMSCRIPTEN__
+	return EM_ASM_INT({
+		var api = Module['ggnWebGLApi'];
+		if (!api || !api.ok) return 0;
+		return api.clear($0 | 0, $1 | 0, $2 | 0, $3 >>> 0) | 0;
+	}, targetId, target->width, target->height, color) != 0;
+#else
+	return false;
+#endif
+}
+
+inline void cRenderAccumulateWebGLStats(cRenderDevice* device, UINT primitiveCount, const void* vertices, UINT stride, cRenderTexture* target)
+{
+	if(device == NULL || vertices == NULL || target == NULL) return;
+	if(primitiveCount != 2)
+	{
+		device->statsTriangleCount += (int)primitiveCount;
+		return;
+	}
+
+	const unsigned char* bytes = static_cast<const unsigned char*>(vertices);
+	float minX = 1000000.0f;
+	float minY = 1000000.0f;
+	float maxX = -1000000.0f;
+	float maxY = -1000000.0f;
+	for(int i = 0; i < 4; ++i)
+	{
+		const float* vertex = reinterpret_cast<const float*>(bytes + i * stride);
+		float x = vertex[0];
+		float y = vertex[1];
+		if(device->isBackBufferTarget(target))
+		{
+			x *= device->backBufferScaleX;
+			y *= device->backBufferScaleY;
+		}
+		if(x < minX) minX = x;
+		if(y < minY) minY = y;
+		if(x > maxX) maxX = x;
+		if(y > maxY) maxY = y;
+	}
+	int left = cRenderClampInt((int)floorf(minX), 0, target->width - 1);
+	int right = cRenderClampInt((int)ceilf(maxX), 0, target->width - 1);
+	int top = cRenderClampInt((int)floorf(minY), 0, target->height - 1);
+	int bottom = cRenderClampInt((int)ceilf(maxY), 0, target->height - 1);
+	device->statsFastQuadCount++;
+	device->statsFastQuadPixels += (double)(right - left + 1) * (double)(bottom - top + 1);
+}
+
+inline bool cRenderDrawWebGLTriangleStrip(cRenderDevice* device, UINT primitiveCount, const void* vertices, UINT stride, bool colored)
+{
+	if(device == NULL || vertices == NULL || primitiveCount == 0) return false;
+	if(!cRenderWebGLEnsure()) return false;
+	cRenderTexture* target = device->targetTexture();
+	if(target == NULL) return false;
+
+	int targetId = 0;
+	if(!device->isBackBufferTarget(target))
+	{
+		targetId = cRenderEnsureWebGLTexture(target, true);
+		if(targetId == 0) return false;
+	}
+
+	int sourceId = 0;
+	if(device->currentTexture != NULL)
+	{
+		sourceId = cRenderEnsureWebGLTexture(device->currentTexture, device->currentTexture->webglIsRenderTarget);
+		if(sourceId == 0) return false;
+		if(targetId != 0 && sourceId == targetId) return false;
+	}
+
+#ifdef __EMSCRIPTEN__
+	int drawn = EM_ASM_INT({
+		var api = Module['ggnWebGLApi'];
+		if (!api || !api.ok) return 0;
+		return api.drawStrip($0 | 0, $1 | 0, $2 | 0, $3 | 0, $4 >>> 0, $5 | 0, $6 | 0, $7 | 0, $8 | 0, $9 | 0, $10 | 0, $11 | 0, +$12, +$13) | 0;
+	}, targetId, target->width, target->height, sourceId, vertices, primitiveCount, stride, colored ? 1 : 0, device->colorMode, device->alphaBlendEnabled ? 1 : 0, device->blendFactors, device->blendOperation, device->backBufferScaleX, device->backBufferScaleY);
+	if(drawn != 0)
+	{
+		cRenderAccumulateWebGLStats(device, primitiveCount, vertices, stride, target);
+		return true;
+	}
+#endif
+	return false;
+}
+
+inline bool cRenderPresentWebGL(cRenderDevice* device)
+{
+	if(device == NULL) return false;
+	if(!cRenderWebGLEnsure()) return false;
+#ifdef __EMSCRIPTEN__
+	return EM_ASM_INT({
+		var api = Module['ggnWebGLApi'];
+		if (!api || !api.ok) return 0;
+		var now = performance.now();
+		Module['ggnPresentCount'] = (Module['ggnPresentCount'] || 0) + 1;
+		if (!Module['ggnPresentFpsStart']) {
+			Module['ggnPresentFpsStart'] = now;
+			Module['ggnPresentFpsFrames'] = 0;
+		}
+		Module['ggnPresentFpsFrames'] = (Module['ggnPresentFpsFrames'] || 0) + 1;
+		var elapsed = now - Module['ggnPresentFpsStart'];
+		if (elapsed >= 1000) {
+			Module['ggnPresentFps'] = Module['ggnPresentFpsFrames'] * 1000 / elapsed;
+			Module['ggnPresentFpsStart'] = now;
+			Module['ggnPresentFpsFrames'] = 0;
+		}
+		var renderInfo = Module['ggnRenderInfo'];
+		if (!renderInfo) {
+			renderInfo = {};
+			Module['ggnRenderInfo'] = renderInfo;
+		}
+		renderInfo['width'] = $0 | 0;
+		renderInfo['height'] = $1 | 0;
+		renderInfo['logicalWidth'] = $2 | 0;
+		renderInfo['logicalHeight'] = $3 | 0;
+		renderInfo['scaleX'] = +$4;
+		renderInfo['scaleY'] = +$5;
+		renderInfo['presentFps'] = Module['ggnPresentFps'] || 0;
+		renderInfo['fastQuadCount'] = $6 | 0;
+		renderInfo['triangleCount'] = $7 | 0;
+		renderInfo['fastQuadPixels'] = +$8;
+		renderInfo['trianglePixels'] = +$9;
+		renderInfo['clearMillis'] = +$10;
+		renderInfo['drawMillis'] = +$11;
+		renderInfo['presentCopyMillis'] = 0;
+		renderInfo['presentPutMillis'] = 0;
+		renderInfo['presentMillis'] = 0;
+		renderInfo['profileEnabled'] = ($12 | 0) != 0;
+		renderInfo['webglEnabled'] = true;
+		return 1;
+	}, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY, device->statsFastQuadCount, device->statsTriangleCount, device->statsFastQuadPixels, device->statsTrianglePixels, device->statsClearMillis, device->statsDrawMillis, device->profileEnabled ? 1 : 0) != 0;
+#else
+	return false;
+#endif
+}
+
 inline int cRenderClampInt(int value, int low, int high)
 {
 	if(value < low) return low;
@@ -1248,6 +1741,22 @@ inline unsigned long cRenderSampleTextureFast(cRenderTexture* texture, float u, 
 	return texture->pixels[y * texture->width + x];
 }
 
+inline int cRenderTextureCoordToFixed(float coord, int textureSize)
+{
+	return (int)floorf((coord * (float)textureSize - 0.5f) * 65536.0f);
+}
+
+inline int cRenderTextureStepToFixed(float step, int textureSize)
+{
+	return (int)(step * (float)textureSize * 65536.0f);
+}
+
+inline int cRenderFixedToTexel(int fixedCoord, int textureSize)
+{
+	int texel = fixedCoord >> 16;
+	return cRenderClampInt(texel, 0, textureSize - 1);
+}
+
 struct cRenderDrawVertex
 {
 	float x;
@@ -1371,6 +1880,67 @@ inline bool cRenderDrawSoftwareAxisAlignedQuad(cRenderDevice* device, const cRen
 	bool normalBlend = device->alphaBlendEnabled &&
 		device->blendOperation == C_RENDER_BLEND_OPERATION_ADD &&
 		device->blendFactors == C_RENDER_BLEND_FACTORS_NORMAL;
+
+	if(canSampleFast && textureOnly && (noBlend || normalBlend) && width > 0.0f && height > 0.0f)
+	{
+		int startX = cRenderClampInt((int)ceilf(left - 0.5f), 0, target->width - 1);
+		int endX = cRenderClampInt((int)floorf(right - 0.5f), 0, target->width - 1);
+		int startY = cRenderClampInt((int)ceilf(top - 0.5f), 0, target->height - 1);
+		int endY = cRenderClampInt((int)floorf(bottom - 0.5f), 0, target->height - 1);
+		if(startX > endX || startY > endY) return true;
+
+		float invWidth = 1.0f / width;
+		float invHeight = 1.0f / height;
+		const int textureWidth = texture->width;
+		const int textureHeight = texture->height;
+		const unsigned long* texturePixels = texture->pixels;
+
+		for(int y = startY; y <= endY; ++y)
+		{
+			float ty = (((float)y + 0.5f) - top) * invHeight;
+			float rowLeftU = v0.tu + (v2.tu - v0.tu) * ty;
+			float rowRightU = v1.tu + (v3.tu - v1.tu) * ty;
+			float rowLeftV = v0.tv + (v2.tv - v0.tv) * ty;
+			float rowRightV = v1.tv + (v3.tv - v1.tv) * ty;
+			float tx = (((float)startX + 0.5f) - left) * invWidth;
+			float u = rowLeftU + (rowRightU - rowLeftU) * tx;
+			float v = rowLeftV + (rowRightV - rowLeftV) * tx;
+			float uStep = (rowRightU - rowLeftU) * invWidth;
+			float vStep = (rowRightV - rowLeftV) * invWidth;
+			int fixedU = cRenderTextureCoordToFixed(u, textureWidth);
+			int fixedV = cRenderTextureCoordToFixed(v, textureHeight);
+			int fixedUStep = cRenderTextureStepToFixed(uStep, textureWidth);
+			int fixedVStep = cRenderTextureStepToFixed(vStep, textureHeight);
+			unsigned long* destination = target->pixels + y * target->width + startX;
+
+			if(noBlend)
+			{
+				for(int x = startX; x <= endX; ++x)
+				{
+					int sourceX = cRenderFixedToTexel(fixedU, textureWidth);
+					int sourceY = cRenderFixedToTexel(fixedV, textureHeight);
+					*destination++ = texturePixels[sourceY * textureWidth + sourceX];
+					fixedU += fixedUStep;
+					fixedV += fixedVStep;
+				}
+			}
+			else
+			{
+				for(int x = startX; x <= endX; ++x)
+				{
+					int sourceX = cRenderFixedToTexel(fixedU, textureWidth);
+					int sourceY = cRenderFixedToTexel(fixedV, textureHeight);
+					unsigned long source = texturePixels[sourceY * textureWidth + sourceX];
+					*destination = cRenderBlendColorNormalFast(*destination, source);
+					++destination;
+					fixedU += fixedUStep;
+					fixedV += fixedVStep;
+				}
+			}
+		}
+
+		return true;
+	}
 
 	for(int y = minY; y <= maxY; ++y)
 	{
@@ -1684,7 +2254,13 @@ inline bool cRenderCreateTextureFromMemory(cRenderDevice* device, const BYTE* da
 }
 inline bool cRenderCreateRenderTargetTexture(cRenderDevice* device, int width, int height, cRenderTexture** texture)
 {
-	return cRenderCreateManagedTexture(device, (DWORD)width, (DWORD)height, texture);
+	bool created = cRenderCreateManagedTexture(device, (DWORD)width, (DWORD)height, texture);
+	if(created && texture != NULL && *texture != NULL)
+	{
+		(*texture)->webglIsRenderTarget = true;
+		(*texture)->webglDirty = false;
+	}
+	return created;
 }
 
 inline bool cRenderGetSurfaceFromTexture(cRenderTexture* texture, cRenderSurface** surface)
@@ -1711,6 +2287,7 @@ inline bool cRenderLockTexture(cRenderTexture* texture, cRenderLockedRect& rect)
 
 	if(texture->pixels == NULL) return false;
 
+	texture->webglDirty = true;
 	rect.pBits = texture->pixels;
 	rect.Pitch = texture->width * sizeof(unsigned long);
 	return true;
@@ -1718,7 +2295,7 @@ inline bool cRenderLockTexture(cRenderTexture* texture, cRenderLockedRect& rect)
 
 inline void cRenderUnlockTexture(cRenderTexture* texture)
 {
-	(void)texture;
+	if(texture != NULL) texture->webglDirty = true;
 }
 
 inline void cRenderSetRenderTarget(cRenderDevice* device, DWORD index, cRenderSurface* surface)
@@ -1733,6 +2310,7 @@ inline void cRenderClearTarget(cRenderDevice* device, cRenderColor color)
 	if(device == NULL) return;
 	cRenderTexture* target = device->targetTexture();
 	if(target == NULL || target->pixels == NULL) return;
+	if(cRenderClearTargetWebGL(device, target, color)) return;
 
 	for(int i = 0; i < target->width * target->height; ++i)
 	{
@@ -1744,7 +2322,13 @@ inline cRenderResult cRenderPresent(cRenderDevice* device)
 {
 	if(device == NULL || device->backBuffer.pixels == NULL) return 1;
 #ifdef __EMSCRIPTEN__
+	if(cRenderPresentWebGL(device))
+	{
+		device->resetStats();
+		return 0;
+	}
 	EM_ASM({
+		var presentStart = performance.now();
 		var ptr = $0 >>> 0;
 		var width = $1 | 0;
 		var height = $2 | 0;
@@ -1780,6 +2364,7 @@ inline cRenderResult cRenderPresent(cRenderDevice* device)
 			var color = pixels[i] >>> 0;
 			output32[i] = (color & 0xff000000) | ((color & 0x000000ff) << 16) | (color & 0x0000ff00) | ((color & 0x00ff0000) >>> 16);
 		}
+		var afterCopy = performance.now();
 		context.putImageData(image, 0, 0);
 		var now = performance.now();
 		Module['ggnPresentCount'] = (Module['ggnPresentCount'] || 0) + 1;
@@ -1810,7 +2395,13 @@ inline cRenderResult cRenderPresent(cRenderDevice* device)
 		renderInfo['triangleCount'] = $8 | 0;
 		renderInfo['fastQuadPixels'] = +$9;
 		renderInfo['trianglePixels'] = +$10;
-	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY, device->statsFastQuadCount, device->statsTriangleCount, device->statsFastQuadPixels, device->statsTrianglePixels);
+		renderInfo['clearMillis'] = +$11;
+		renderInfo['drawMillis'] = +$12;
+		renderInfo['presentCopyMillis'] = afterCopy - presentStart;
+		renderInfo['presentPutMillis'] = now - afterCopy;
+		renderInfo['presentMillis'] = now - presentStart;
+		renderInfo['profileEnabled'] = ($13 | 0) != 0;
+	}, device->backBuffer.pixels, device->backBuffer.width, device->backBuffer.height, device->logicalWidth, device->logicalHeight, device->backBufferScaleX, device->backBufferScaleY, device->statsFastQuadCount, device->statsTriangleCount, device->statsFastQuadPixels, device->statsTrianglePixels, device->statsClearMillis, device->statsDrawMillis, device->profileEnabled ? 1 : 0);
 	device->resetStats();
 #endif
 	return 0;
@@ -1905,6 +2496,7 @@ inline void cRenderSetBlendOperation(cRenderDevice* device, cRenderBlendOperatio
 inline void cRenderDrawTriangleStrip(cRenderDevice* device, UINT primitiveCount, const VERTEX2D* vertices)
 {
 	if(device == NULL || vertices == NULL || primitiveCount == 0) return;
+	if(cRenderDrawWebGLTriangleStrip(device, primitiveCount, vertices, sizeof(VERTEX2D), false)) return;
 	if(primitiveCount == 2)
 	{
 		cRenderDrawVertex q0 = { vertices[0].x, vertices[0].y, vertices[0].tu, vertices[0].tv, 0xffffffff };
@@ -1932,6 +2524,7 @@ inline void cRenderDrawTriangleStrip(cRenderDevice* device, UINT primitiveCount,
 inline void cRenderDrawColoredTriangleStrip(cRenderDevice* device, UINT primitiveCount, const VERTEX2D_COLORED* vertices)
 {
 	if(device == NULL || vertices == NULL || primitiveCount == 0) return;
+	if(cRenderDrawWebGLTriangleStrip(device, primitiveCount, vertices, sizeof(VERTEX2D_COLORED), true)) return;
 	if(primitiveCount == 2)
 	{
 		cRenderDrawVertex q0 = { vertices[0].x, vertices[0].y, vertices[0].tu, vertices[0].tv, vertices[0].col };
@@ -2006,7 +2599,9 @@ inline int cRenderDevice::Clear(DWORD count, const void* rects, DWORD flags, cRe
 	(void)stencil;
 	if((flags & D3DCLEAR_TARGET) != 0)
 	{
+		double startMillis = profileEnabled ? cRenderNowMillis() : 0;
 		cRenderClearTarget(this, color);
+		if(profileEnabled) statsClearMillis += cRenderNowMillis() - startMillis;
 	}
 	return 0;
 }
@@ -2014,6 +2609,7 @@ inline int cRenderDevice::Clear(DWORD count, const void* rects, DWORD flags, cRe
 inline int cRenderDevice::DrawPrimitiveUP(DWORD primitiveType, UINT primitiveCount, const void* vertices, UINT stride)
 {
 	if(primitiveType != D3DPT_TRIANGLESTRIP || vertices == NULL) return 0;
+	double startMillis = profileEnabled ? cRenderNowMillis() : 0;
 	if(stride == sizeof(VERTEX2D_COLORED))
 	{
 		cRenderDrawColoredTriangleStrip(this, primitiveCount, (const VERTEX2D_COLORED*)vertices);
@@ -2022,5 +2618,6 @@ inline int cRenderDevice::DrawPrimitiveUP(DWORD primitiveType, UINT primitiveCou
 	{
 		cRenderDrawTriangleStrip(this, primitiveCount, (const VERTEX2D*)vertices);
 	}
+	if(profileEnabled) statsDrawMillis += cRenderNowMillis() - startMillis;
 	return 0;
 }

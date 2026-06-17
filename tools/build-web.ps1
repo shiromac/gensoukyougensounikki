@@ -610,7 +610,19 @@ function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
     if (-not (Test-Path -LiteralPath $htmlPath) -or -not (Test-Path -LiteralPath $jsPath)) { return }
 
     $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
-    $buildId = (Get-FileHash -LiteralPath $jsPath -Algorithm SHA256).Hash.Substring(0, 12).ToLowerInvariant()
+    $hashInput = (Get-FileHash -LiteralPath $jsPath -Algorithm SHA256).Hash
+    $wasmPath = Join-Path $targetRoot ($outputName + ".wasm")
+    if (Test-Path -LiteralPath $wasmPath) {
+        $hashInput += (Get-FileHash -LiteralPath $wasmPath -Algorithm SHA256).Hash
+    }
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $hashBytes = [System.Text.Encoding]::ASCII.GetBytes($hashInput)
+        $buildId = ([System.BitConverter]::ToString($sha256.ComputeHash($hashBytes)).Replace("-", "")).Substring(0, 12).ToLowerInvariant()
+    }
+    finally {
+        $sha256.Dispose()
+    }
     $content = [System.IO.File]::ReadAllText($htmlPath, $utf8NoBom)
     $scriptPattern = "src\s*=\s*(['""]?)$([System.Text.RegularExpressions.Regex]::Escape($outputName)).js(\?v=[^'"">\s]+)?\1"
     $content = [System.Text.RegularExpressions.Regex]::Replace($content, $scriptPattern, "src=""$outputName.js?v=$buildId""")
