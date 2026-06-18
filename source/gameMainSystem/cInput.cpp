@@ -80,17 +80,17 @@ namespace
 				style.id = 'ggn-mobile-style';
 				style.textContent = [
 					'html, body { margin: 0; background: #050505; overscroll-behavior: none; }',
-					'body.ggn-mobile-ready { overflow: hidden; touch-action: none; }',
+					'body.ggn-mobile-ready { overflow: hidden; touch-action: none; --ggn-edge: 8px; --ggn-gap: 4px; --ggn-cell: min(28px, calc((100vw - 66px) / 12)); --ggn-panel-height: calc(var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-cell) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap) + var(--ggn-gap)); --ggn-controls-height: calc(var(--ggn-panel-height) + max(12px, env(safe-area-inset-bottom))); }',
 					'#emscripten_logo, #spinner, #status, #progress, #controls, #output { display: none !important; }',
 					'div.emscripten_border { border: 0 !important; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; background: #000; }',
 					'canvas.emscripten { width: min(100vw, calc(100vh * 1.333333)); width: min(100vw, calc(100dvh * 1.333333)); height: min(100vh, calc(100vw * 0.75)); height: min(100dvh, calc(100vw * 0.75)); image-rendering: pixelated; image-rendering: crisp-edges; }',
-					'#ggn-touch-controls { --ggn-cell: 22px; --ggn-gap: 5px; display: none; position: fixed; inset: auto 0 0 0; height: min(46vh, 300px); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
+					'#ggn-touch-controls { display: none; position: fixed; inset: auto 0 0 0; height: var(--ggn-controls-height); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
 					'#ggn-touch-controls .ggn-pad { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(6, var(--ggn-cell)); grid-template-rows: repeat(10, var(--ggn-cell)); gap: var(--ggn-gap); pointer-events: none; }',
-					'#ggn-touch-controls .ggn-left { left: max(12px, env(safe-area-inset-left)); }',
-					'#ggn-touch-controls .ggn-right { right: max(12px, env(safe-area-inset-right)); }',
-					'#ggn-touch-controls button { pointer-events: auto; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 12px/1 Arial, sans-serif; padding: 0; min-width: 0; min-height: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
-					'#ggn-touch-controls button.ggn-wide { font-size: 12px; }',
-					'#ggn-touch-controls button.ggn-big { font-size: 20px; }',
+					'#ggn-touch-controls .ggn-left { left: max(var(--ggn-edge), env(safe-area-inset-left)); }',
+					'#ggn-touch-controls .ggn-right { right: max(var(--ggn-edge), env(safe-area-inset-right)); }',
+					'#ggn-touch-controls button { pointer-events: auto; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 clamp(12px, 3.4vw, 14px)/1 Arial, sans-serif; padding: 0; min-width: 0; min-height: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
+					'#ggn-touch-controls button.ggn-wide { font-size: clamp(13px, 3.7vw, 15px); }',
+					'#ggn-touch-controls button.ggn-big { font-size: clamp(23px, 6.4vw, 28px); }',
 					'#ggn-touch-controls button.ggn-active { background: rgba(255,255,255,.86); color: #000; }',
 					'#ggn-btn-map { grid-column: 1 / span 6; grid-row: 1 / span 2; }',
 					'#ggn-btn-up-left { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-up { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-up-right { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
@@ -99,8 +99,8 @@ namespace
 					'#ggn-btn-menu { grid-column: 1 / span 6; grid-row: 1 / span 2; } #ggn-btn-smartdash { grid-column: 1 / span 6; grid-row: 8 / span 2; }',
 					'#ggn-btn-turn { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-diag { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-shot { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
 					'#ggn-btn-attack { grid-column: 1 / span 3; grid-row: 5 / span 3; } #ggn-btn-dash { grid-column: 4 / span 3; grid-row: 5 / span 3; }',
-					'@media (pointer: coarse), (max-width: 900px) { #ggn-touch-controls { display: block; } }',
-					'@media (max-width: 560px) { #ggn-touch-controls { --ggn-cell: 19px; --ggn-gap: 5px; height: min(47vh, 286px); } #ggn-touch-controls button { font-size: 11px; } #ggn-touch-controls button.ggn-wide { font-size: 11px; } #ggn-touch-controls button.ggn-big { font-size: 18px; } }'
+					'@media (pointer: coarse), (max-width: 900px) { body.ggn-mobile-ready div.emscripten_border { height: calc(100dvh - var(--ggn-controls-height) - 12px); align-items: flex-end; } #ggn-touch-controls { display: block; } }',
+					'@media (max-width: 340px) { #ggn-touch-controls button.ggn-wide { font-size: 12px; } }'
 				].join(String.fromCharCode(10));
 				document.head.appendChild(style);
 				document.body.classList.add('ggn-mobile-ready');
