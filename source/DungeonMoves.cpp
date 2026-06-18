@@ -7,6 +7,8 @@
 #include "cFloor.h"
 #include "Event1.h"
 #include "GameIdiom.h"
+#include "cSaveStore.h"
+#include "csHomeFirst.h"
 
 int cDungeonSystem::方向転換要請(pcCharacter pchara, int aspect)
 {
@@ -1178,13 +1180,38 @@ void cDungeonSystem::movefloor()
 	}
 	else
 	{
+		if(pSaveQuest->GoodEndFlags)
+		{//一旦中断。次フロア開始状態だけ保存して詰め所へ戻る。
+			pSaveQuest->floor = FloorLevel();
+			pSaveQuest->money = GameScreenInterface.money.value;
+			pSaveQuest->Sumturn = SumTurnCount();
+			pSaveQuest->SumFrame = time_SumFrameCount();
+			pSaveQuest->SumFramerealtime = time_Sumtime()*60;
+			pSaveQuest->SumdefeatNum =  SumEnemyDefeatNum();
+			pSaveQuest->FreeFlags =  FreeFlags();
+			pSaveQuest->localFlags = localFlags();
+			pSaveQuest->privateFlags = privateFlags();
+			pSaveQuest->DropIDtoAppreciated = DataBase.DropIDtoAppreciatedinstance();
+			pSaveQuest->DropIDtoMEMO = DataBase.DropIDtoMEMOinstance();
+			pSaveQuest->Version_ = g_VersionString();
+			pSaveQuest->save();
+			pSaveData->save();
+
+			vector<pcDroping> vdrop = pPlayerChara()->holdItem;
+			for(int i=0;i<vdrop.size();i++)
+			{
+				removedroping(vdrop[i],true);
+			}
+			GameScreenInterface.money.value = 0;
+
+			g_GameEnv.m_SceneManage->SceneChange(pDevice_D3D,new csHomeFirst);
+			メニューを閉じる();
+			return;
+		}
+
 		resetfloor();
-
-
-
 	}
 }
-
 int cDungeonSystem::フロア更新要請()
 {
 	if(!拠点フラグ())
