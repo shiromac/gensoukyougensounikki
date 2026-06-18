@@ -81,7 +81,7 @@ namespace
 				style.textContent = [
 					'html, body { margin: 0; background: #050505; overscroll-behavior: none; }',
 					'body.ggn-mobile-ready { overflow: hidden; touch-action: none; }',
-					'#emscripten_logo, #controls, #output { display: none !important; }',
+					'#emscripten_logo, #spinner, #status, #progress, #controls, #output { display: none !important; }',
 					'div.emscripten_border { border: 0 !important; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; background: #000; }',
 					'canvas.emscripten { width: min(100vw, calc(100vh * 1.333333)); width: min(100vw, calc(100dvh * 1.333333)); height: min(100vh, calc(100vw * 0.75)); height: min(100dvh, calc(100vw * 0.75)); image-rendering: pixelated; image-rendering: crisp-edges; }',
 					'#ggn-touch-controls { --ggn-cell: 22px; --ggn-gap: 5px; display: none; position: fixed; inset: auto 0 0 0; height: min(46vh, 300px); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
@@ -96,7 +96,7 @@ namespace
 					'#ggn-btn-up-left { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-up { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-up-right { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
 					'#ggn-btn-left { grid-column: 1 / span 2; grid-row: 5 / span 2; } #ggn-btn-right { grid-column: 5 / span 2; grid-row: 5 / span 2; }',
 					'#ggn-btn-down-left { grid-column: 1 / span 2; grid-row: 7 / span 2; } #ggn-btn-down { grid-column: 3 / span 2; grid-row: 7 / span 2; } #ggn-btn-down-right { grid-column: 5 / span 2; grid-row: 7 / span 2; }',
-					'#ggn-btn-menu { grid-column: 1 / span 6; grid-row: 1 / span 2; } #ggn-btn-smartdash { grid-column: 1 / span 6; grid-row: 9 / span 2; }',
+					'#ggn-btn-menu { grid-column: 1 / span 6; grid-row: 1 / span 2; } #ggn-btn-smartdash { grid-column: 1 / span 6; grid-row: 8 / span 2; }',
 					'#ggn-btn-turn { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-diag { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-shot { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
 					'#ggn-btn-attack { grid-column: 1 / span 3; grid-row: 5 / span 3; } #ggn-btn-dash { grid-column: 4 / span 3; grid-row: 5 / span 3; }',
 					'@media (pointer: coarse), (max-width: 900px) { #ggn-touch-controls { display: block; } }',
@@ -118,7 +118,7 @@ namespace
 				controls.appendChild(right);
 				document.body.appendChild(controls);
 				var specs = [
-					{ parent: left, id: 'ggn-btn-map', key: 32, label: 'Map', name: 'Map', wide: true },
+					{ parent: left, id: 'ggn-btn-map', key: 32, label: 'マップ', name: 'マップ表示', wide: true },
 					{ parent: left, id: 'ggn-btn-up-left', keys: [38, 37], label: 'UL', name: 'Up left' },
 					{ parent: left, id: 'ggn-btn-up', key: 38, label: '^', name: 'Up' },
 					{ parent: left, id: 'ggn-btn-up-right', keys: [38, 39], label: 'UR', name: 'Up right' },
@@ -127,13 +127,13 @@ namespace
 					{ parent: left, id: 'ggn-btn-down-left', keys: [40, 37], label: 'DL', name: 'Down left' },
 					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
 					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
-					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'Menu', name: 'Menu', wide: true },
-					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'Turn', name: 'Turn', wide: true },
-					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Diag', name: 'Diagonal', wide: true },
-					{ parent: right, id: 'ggn-btn-shot', key: 83, label: 'Shot', name: 'Shot', wide: true },
-					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: 'Attack', big: true },
-					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'X', name: 'Dash', big: true },
-					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'Smart Dash', name: 'Smart dash', wide: true }
+					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'メニュー', name: 'メニュー', wide: true },
+					{ parent: right, id: 'ggn-btn-turn', key: 67, label: '方向', name: '方向転換', wide: true },
+					{ parent: right, id: 'ggn-btn-diag', key: 16, label: '斜め', name: '斜め固定', wide: true },
+					{ parent: right, id: 'ggn-btn-shot', key: 83, label: '弾幕', name: '装備弾幕を撃つ', wide: true },
+					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: '攻撃・素振り', big: true },
+					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'X', name: 'ダッシュ', big: true },
+					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'スマート', name: 'スマートダッシュ', wide: true }
 				];
 				function specKeys(spec) {
 					return spec.keys || [spec.key];
