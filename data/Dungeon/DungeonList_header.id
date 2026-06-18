@@ -1,5 +1,5 @@
 $>DungeonList
-	$:dungeonMacros.id
+	$:DungeonMacros.id
 	$:DungeonMapMacros.id
 	$#>;
 		$:DungeonList.csv
