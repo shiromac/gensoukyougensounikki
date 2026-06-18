@@ -512,8 +512,8 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 {
 	*data = NULL;
 	int baseWidth = cRenderApproxGlyphWidth(context, code);
-	int width = (int)(baseWidth * transform.scaleX);
-	int height = (int)(context.size * transform.scaleY);
+	int width = (int)ceilf((float)baseWidth * transform.scaleX);
+	int height = (int)ceilf((float)context.size * transform.scaleY);
 	if(width <= 0) width = 1;
 	if(height <= 0) height = 1;
 
@@ -536,6 +536,10 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 			var out = $3 >>> 0;
 			var pitch = $4 | 0;
 			var weight = $5 | 0;
+			var baseWidth = $6 | 0;
+			var baseSize = $7 | 0;
+			if (baseWidth <= 0) baseWidth = width;
+			if (baseSize <= 0) baseSize = height;
 			var canvas = Module['ggnGlyphCanvas'];
 			if (!canvas) {
 				canvas = document.createElement('canvas');
@@ -547,10 +551,13 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 			ctx.clearRect(0, 0, width, height);
 			ctx.fillStyle = '#fff';
 			ctx.textBaseline = 'top';
-			ctx.font = (weight >= 700 ? 'bold ' : '') + height + 'px Meiryo, "Yu Gothic", sans-serif';
 			var ch = '?';
 			try { ch = String.fromCodePoint(code); } catch (e) {}
+			ctx.save();
+			ctx.setTransform(width / baseWidth, 0, 0, height / baseSize, 0, 0);
+			ctx.font = (weight >= 700 ? 'bold ' : '') + baseSize + 'px Meiryo, "Yu Gothic", sans-serif';
 			ctx.fillText(ch, 0, 0);
+			ctx.restore();
 			var pixels = ctx.getImageData(0, 0, width, height).data;
 			for (var y = 0; y < height; ++y) {
 				for (var x = 0; x < width; ++x) {
@@ -558,7 +565,7 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 					HEAPU8[out + y * pitch + x] = Math.min(64, Math.round(alpha * 64 / 255));
 				}
 			}
-		}, code, width, height, *data, pitch, context.weight);
+		}, code, width, height, *data, pitch, context.weight, baseWidth, (int)context.size);
 		return size;
 #endif
 		for(int y = 0; y < height; ++y)
@@ -584,6 +591,10 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 		var out = $3 >>> 0;
 		var pitch = $4 | 0;
 		var weight = $5 | 0;
+		var baseWidth = $6 | 0;
+		var baseSize = $7 | 0;
+		if (baseWidth <= 0) baseWidth = width;
+		if (baseSize <= 0) baseSize = height;
 		var canvas = Module['ggnGlyphCanvas'];
 		if (!canvas) {
 			canvas = document.createElement('canvas');
@@ -595,10 +606,13 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 		ctx.clearRect(0, 0, width, height);
 		ctx.fillStyle = '#fff';
 		ctx.textBaseline = 'top';
-		ctx.font = (weight >= 700 ? 'bold ' : '') + height + 'px Meiryo, "Yu Gothic", sans-serif';
 		var ch = '?';
 		try { ch = String.fromCodePoint(code); } catch (e) {}
+		ctx.save();
+		ctx.setTransform(width / baseWidth, 0, 0, height / baseSize, 0, 0);
+		ctx.font = (weight >= 700 ? 'bold ' : '') + baseSize + 'px Meiryo, "Yu Gothic", sans-serif';
 		ctx.fillText(ch, 0, 0);
+		ctx.restore();
 		var pixels = ctx.getImageData(0, 0, width, height).data;
 		for (var y = 0; y < height; ++y) {
 			for (var x = 0; x < width; ++x) {
@@ -606,7 +620,7 @@ inline DWORD cRenderGetGlyphBitmap(cRenderTextContext& context, unsigned int cod
 				if (alpha > 32) HEAPU8[out + y * pitch + (x >> 3)] |= 0x80 >> (x & 7);
 			}
 		}
-	}, code, width, height, *data, pitch, context.weight);
+	}, code, width, height, *data, pitch, context.weight, baseWidth, (int)context.size);
 	return size;
 #endif
 	for(int y = 0; y < height; ++y)
@@ -1350,8 +1364,11 @@ inline bool cRenderWebGLEnsure()
 					var out = i * 8;
 					data[out] = x;
 					data[out + 1] = y;
-					data[out + 2] = tu - texelBiasU;
-					data[out + 3] = tv - texelBiasV;
+					var adjustedU = tu - texelBiasU;
+					var adjustedV = tv - texelBiasV;
+					if (source && source.renderTarget) adjustedV = 1.0 - adjustedV;
+					data[out + 2] = adjustedU;
+					data[out + 3] = adjustedV;
 					data[out + 4] = ((color >>> 16) & 255) / 255;
 					data[out + 5] = ((color >>> 8) & 255) / 255;
 					data[out + 6] = (color & 255) / 255;
