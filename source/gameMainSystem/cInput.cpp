@@ -84,21 +84,23 @@ namespace
 					'#emscripten_logo, #controls, #output { display: none !important; }',
 					'div.emscripten_border { border: 0 !important; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; background: #000; }',
 					'canvas.emscripten { width: min(100vw, calc(100vh * 1.333333)); width: min(100vw, calc(100dvh * 1.333333)); height: min(100vh, calc(100vw * 0.75)); height: min(100dvh, calc(100vw * 0.75)); image-rendering: pixelated; image-rendering: crisp-edges; }',
-					'#ggn-touch-controls { display: none; position: fixed; inset: auto 0 0 0; height: min(42vh, 260px); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
-					'#ggn-touch-controls .ggn-pad { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, 54px); grid-template-rows: repeat(3, 54px); gap: 8px; pointer-events: none; }',
+					'#ggn-touch-controls { --ggn-cell: 22px; --ggn-gap: 5px; display: none; position: fixed; inset: auto 0 0 0; height: min(46vh, 300px); z-index: 20; pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none; }',
+					'#ggn-touch-controls .ggn-pad { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(6, var(--ggn-cell)); grid-template-rows: repeat(10, var(--ggn-cell)); gap: var(--ggn-gap); pointer-events: none; }',
 					'#ggn-touch-controls .ggn-left { left: max(12px, env(safe-area-inset-left)); }',
 					'#ggn-touch-controls .ggn-right { right: max(12px, env(safe-area-inset-right)); }',
-					'#ggn-touch-controls button { pointer-events: auto; width: 54px; height: 54px; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 13px/1 Arial, sans-serif; padding: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
-					'#ggn-touch-controls button.ggn-wide { font-size: 11px; }',
+					'#ggn-touch-controls button { pointer-events: auto; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 12px/1 Arial, sans-serif; padding: 0; min-width: 0; min-height: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
+					'#ggn-touch-controls button.ggn-wide { font-size: 12px; }',
+					'#ggn-touch-controls button.ggn-big { font-size: 20px; }',
 					'#ggn-touch-controls button.ggn-active { background: rgba(255,255,255,.86); color: #000; }',
-					'#ggn-btn-up-left { grid-column: 1; grid-row: 1; } #ggn-btn-up { grid-column: 2; grid-row: 1; } #ggn-btn-up-right { grid-column: 3; grid-row: 1; }',
-					'#ggn-btn-left { grid-column: 1; grid-row: 2; } #ggn-btn-right { grid-column: 3; grid-row: 2; }',
-					'#ggn-btn-down-left { grid-column: 1; grid-row: 3; } #ggn-btn-down { grid-column: 2; grid-row: 3; } #ggn-btn-down-right { grid-column: 3; grid-row: 3; }',
-					'#ggn-btn-diag { grid-column: 1; grid-row: 1; } #ggn-btn-turn { grid-column: 2; grid-row: 1; } #ggn-btn-map { grid-column: 3; grid-row: 1; }',
-					'#ggn-btn-dash { grid-column: 1; grid-row: 2; } #ggn-btn-attack { grid-column: 2; grid-row: 2; } #ggn-btn-menu { grid-column: 3; grid-row: 2; }',
-					'#ggn-btn-smartdash { grid-column: 1; grid-row: 3; } #ggn-btn-shot { grid-column: 2; grid-row: 3; }',
+					'#ggn-btn-map { grid-column: 1 / span 6; grid-row: 1 / span 2; }',
+					'#ggn-btn-up-left { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-up { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-up-right { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
+					'#ggn-btn-left { grid-column: 1 / span 2; grid-row: 5 / span 2; } #ggn-btn-right { grid-column: 5 / span 2; grid-row: 5 / span 2; }',
+					'#ggn-btn-down-left { grid-column: 1 / span 2; grid-row: 7 / span 2; } #ggn-btn-down { grid-column: 3 / span 2; grid-row: 7 / span 2; } #ggn-btn-down-right { grid-column: 5 / span 2; grid-row: 7 / span 2; }',
+					'#ggn-btn-menu { grid-column: 1 / span 6; grid-row: 1 / span 2; } #ggn-btn-smartdash { grid-column: 1 / span 6; grid-row: 9 / span 2; }',
+					'#ggn-btn-turn { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-diag { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-shot { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
+					'#ggn-btn-attack { grid-column: 1 / span 3; grid-row: 5 / span 3; } #ggn-btn-dash { grid-column: 4 / span 3; grid-row: 5 / span 3; }',
 					'@media (pointer: coarse), (max-width: 900px) { #ggn-touch-controls { display: block; } }',
-					'@media (max-width: 560px) { #ggn-touch-controls .ggn-pad { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); gap: 7px; } #ggn-touch-controls button { width: 48px; height: 48px; font-size: 12px; } }'
+					'@media (max-width: 560px) { #ggn-touch-controls { --ggn-cell: 19px; --ggn-gap: 5px; height: min(47vh, 286px); } #ggn-touch-controls button { font-size: 11px; } #ggn-touch-controls button.ggn-wide { font-size: 11px; } #ggn-touch-controls button.ggn-big { font-size: 18px; } }'
 				].join(String.fromCharCode(10));
 				document.head.appendChild(style);
 				document.body.classList.add('ggn-mobile-ready');
@@ -116,6 +118,7 @@ namespace
 				controls.appendChild(right);
 				document.body.appendChild(controls);
 				var specs = [
+					{ parent: left, id: 'ggn-btn-map', key: 32, label: 'Map', name: 'Map', wide: true },
 					{ parent: left, id: 'ggn-btn-up-left', keys: [38, 37], label: 'UL', name: 'Up left' },
 					{ parent: left, id: 'ggn-btn-up', key: 38, label: '^', name: 'Up' },
 					{ parent: left, id: 'ggn-btn-up-right', keys: [38, 39], label: 'UR', name: 'Up right' },
@@ -124,14 +127,13 @@ namespace
 					{ parent: left, id: 'ggn-btn-down-left', keys: [40, 37], label: 'DL', name: 'Down left' },
 					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
 					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
-					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Diag', name: 'Diagonal', wide: true },
-					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'Turn', name: 'Turn', wide: true },
-					{ parent: right, id: 'ggn-btn-map', key: 32, label: 'Map', name: 'Map', wide: true },
-					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'Dash', name: 'Dash', wide: true },
-					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: 'Attack' },
 					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'Menu', name: 'Menu', wide: true },
-					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'SD', name: 'Smart dash' },
-					{ parent: right, id: 'ggn-btn-shot', key: 83, label: 'Shot', name: 'Shot', wide: true }
+					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'Turn', name: 'Turn', wide: true },
+					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Diag', name: 'Diagonal', wide: true },
+					{ parent: right, id: 'ggn-btn-shot', key: 83, label: 'Shot', name: 'Shot', wide: true },
+					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: 'Attack', big: true },
+					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'X', name: 'Dash', big: true },
+					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'Smart Dash', name: 'Smart dash', wide: true }
 				];
 				function specKeys(spec) {
 					return spec.keys || [spec.key];
@@ -158,7 +160,10 @@ namespace
 					button.id = spec.id;
 					button.textContent = spec.label;
 					button.setAttribute('aria-label', spec.name);
-					if (spec.wide) button.className = 'ggn-wide';
+					var classNames = [];
+					if (spec.wide) classNames.push('ggn-wide');
+					if (spec.big) classNames.push('ggn-big');
+					if (classNames.length) button.className = classNames.join(' ');
 					button.addEventListener('pointerdown', function(e) {
 						e.preventDefault();
 						try { button.setPointerCapture(e.pointerId); } catch (ignore) {}
