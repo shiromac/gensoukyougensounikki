@@ -47,7 +47,7 @@ namespace
 				Module['ggnKeys'] = {};
 				Module['ggnTouchKeyCounts'] = {};
 				var activeButtons = document.querySelectorAll('#ggn-touch-controls button.ggn-active');
-				for (var i = 0; i < activeButtons.length; ++i) activeButtons[i].classList.remove('ggn-active');
+				for (var i = 0; i < activeButtons.length; ++i) { activeButtons[i].classList.remove('ggn-active'); activeButtons[i].setAttribute('aria-pressed', 'false'); }
 			}
 
 			window.addEventListener('keydown', function(e) {
@@ -133,17 +133,27 @@ namespace
 					{ parent: right, id: 'ggn-btn-shot', key: 83, label: '弾幕', name: '装備弾幕を撃つ', wide: true },
 					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: '攻撃・素振り', big: true },
 					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'X', name: 'ダッシュ', big: true },
-					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'スマート', name: 'スマートダッシュ', wide: true }
+					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'スマート', name: 'スマートダッシュ', wide: true, toggle: true }
 				];
 				function specKeys(spec) {
 					return spec.keys || [spec.key];
 				}
 
+				function setButtonActive(button, active) {
+					button.classList.toggle('ggn-active', !!active);
+					button.setAttribute('aria-pressed', active ? 'true' : 'false');
+				}
+
 				function pressButton(button, spec) {
+					if (spec.toggle && button.classList.contains('ggn-active')) {
+						releaseButton(button, spec);
+						return;
+					}
+					if (button.classList.contains('ggn-active')) return;
 					specKeys(spec).forEach(function(key) {
 						setTouchKey(key, true);
 					});
-					button.classList.add('ggn-active');
+					setButtonActive(button, true);
 				}
 
 				function releaseButton(button, spec) {
@@ -151,18 +161,19 @@ namespace
 					specKeys(spec).forEach(function(key) {
 						setTouchKey(key, false);
 					});
-					button.classList.remove('ggn-active');
+					setButtonActive(button, false);
 				}
-
 				specs.forEach(function(spec) {
 					var button = document.createElement('button');
 					button.type = 'button';
 					button.id = spec.id;
 					button.textContent = spec.label;
 					button.setAttribute('aria-label', spec.name);
+					button.setAttribute('aria-pressed', 'false');
 					var classNames = [];
 					if (spec.wide) classNames.push('ggn-wide');
 					if (spec.big) classNames.push('ggn-big');
+					if (spec.toggle) classNames.push('ggn-toggle');
 					if (classNames.length) button.className = classNames.join(' ');
 					button.addEventListener('pointerdown', function(e) {
 						e.preventDefault();
@@ -171,14 +182,14 @@ namespace
 					}, { passive: false });
 					button.addEventListener('pointerup', function(e) {
 						e.preventDefault();
-						releaseButton(button, spec);
+						if (!spec.toggle) releaseButton(button, spec);
 					}, { passive: false });
 					button.addEventListener('pointercancel', function(e) {
 						e.preventDefault();
-						releaseButton(button, spec);
+						if (!spec.toggle) releaseButton(button, spec);
 					}, { passive: false });
 					button.addEventListener('lostpointercapture', function() {
-						releaseButton(button, spec);
+						if (!spec.toggle) releaseButton(button, spec);
 					}, false);
 					spec.parent.appendChild(button);
 				});
