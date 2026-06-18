@@ -69,7 +69,7 @@ public:
 class cTitleSelectWindow : public cSelectWindow
 {
 public:
-	virtual void playsound_decide(){}
+	virtual void playsound_decide(){g_GameEnv.m_SoundManager.unlockAudio();}
 };
 
 class cCommandStart : public cCommand

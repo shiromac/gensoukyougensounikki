@@ -58,6 +58,7 @@ public:
 	int getBGMVolume(void){return BGMVolume_;};
 
 	int resetVolume(void);
+	int unlockAudio(void);
 
 	int* pSEVolume(void){return &SEVolume_;};
 	int* pBGMVolume(void){return &BGMVolume_;};

@@ -79,7 +79,7 @@ namespace
 			}
 
 			['keydown', 'pointerdown', 'mousedown', 'touchstart'].forEach(function(name) {
-				window.addEventListener(name, resume, { once: false, passive: true });
+				window.addEventListener(name, resume, { capture: true, once: false, passive: true });
 			});
 
 			function candidatesForPath(path) {
@@ -149,6 +149,7 @@ namespace
 			}
 
 			Module.ggnAudio = state;
+			Module.ggnAudioResume = resume;
 			Module.ggnAudioEnsure = function() {
 				return !!context();
 			};
@@ -204,6 +205,14 @@ namespace
 				}
 			};
 		})());
+	}
+
+	void BrowserAudioResume()
+	{
+		BrowserAudioEnsure();
+		EM_ASM({
+			if (Module.ggnAudioResume) Module.ggnAudioResume();
+		});
 	}
 
 	void BrowserAudioSetVolume(int seVolume, int bgmVolume)
@@ -348,6 +357,14 @@ int cSoundManager::resetVolume(void)
 	BrowserAudioSetVolume(SEVolume_, BGMVolume_);
 #else
 	if(playingBGM != _T("")) bgm.SetVolume_ByRate(BGMVolume_);
+#endif
+	return true;
+}
+
+int cSoundManager::unlockAudio(void)
+{
+#ifdef __EMSCRIPTEN__
+	BrowserAudioResume();
 #endif
 	return true;
 }

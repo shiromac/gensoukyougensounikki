@@ -6,6 +6,28 @@
 
 cScriptReader g_systemSR;
 
+namespace
+{
+	pcScriptRLayer FindLanguageLayer(const TCHAR* name)
+	{
+		pcScriptRLayer root = g_systemSR.pdata()->pmember((tstring)_T("Language"));
+		if(root == NULL) return root;
+
+		pcScriptRLayer layer = root->pmember((tstring)name);
+		if(layer != NULL) return layer;
+
+		tstring fallbackName = name;
+		tstring typo = _T("Explaination");
+		size_t pos = fallbackName.find(typo);
+		if(pos != tstring::npos)
+		{
+			fallbackName.replace(pos, typo.length(), _T("Explanation"));
+			return root->pmember(fallbackName);
+		}
+
+		return NULLOFcScriptRLayer;
+	}
+}
 tstring LANGUAGE_IMPORTDATADIR()
 {
 	tstring str = _EXELOCATION _T("Language/");
@@ -43,13 +65,7 @@ StyleString g_Lang(const TCHAR* name)
 
 void g_Lang(const TCHAR* name, StyleString & output)
 {
-	pcScriptRLayer psrl = g_systemSR.pdata()->pmember((tstring)_T("Language"));
-	if(psrl == NULL)
-	{
-		output = name;
-		return;
-	}
-	psrl = psrl->pmember((tstring)name);
+	pcScriptRLayer psrl = FindLanguageLayer(name);
 	if(psrl == NULL)
 	{
 		output = name;
@@ -59,13 +75,7 @@ void g_Lang(const TCHAR* name, StyleString & output)
 }
 void g_Lang(const TCHAR* name, StyleString & output, std::map<tstring, StyleString > & valiable)
 {
-	pcScriptRLayer psrl = g_systemSR.pdata()->pmember((tstring)_T("Language"));
-	if(psrl == NULL)
-	{
-		output = name;
-		return;
-	}
-	psrl = psrl->pmember((tstring)name);
+	pcScriptRLayer psrl = FindLanguageLayer(name);
 	if(psrl == NULL)
 	{
 		output = name;
