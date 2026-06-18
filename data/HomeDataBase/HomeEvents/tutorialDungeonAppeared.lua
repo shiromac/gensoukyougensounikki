@@ -18,7 +18,6 @@ function tutorialDungeonAppeared()
 	local str_map = map_tstring_StyleString()
 	for i = 1, 6 do
 		    utility_storyMessage(_T("tutorialDungeonBeforeEvent_"..i),str_map)
-		    messageWait()
 	end
 	clearMassage()
 	cameraMove(PlayerCharacter().placeX, PlayerCharacter().placeY, 1.5,0.75, 0.9)

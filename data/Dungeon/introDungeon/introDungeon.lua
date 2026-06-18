@@ -7,6 +7,35 @@ state_introEndEvent = 6
 
 enemyPool = {}
 
+function storyEventMessageLoopNoWait(keyPrefix, StringValiable, intervalFunction)
+    local index = 1
+    while true do
+        local massageKey = keyPrefix .. tostring(index)
+        if not isExistStoryMessage(massageKey) then
+            break
+        end
+        utility_storyMessage(massageKey, StringValiable)
+        if intervalFunction then
+            intervalFunction()
+        end
+        index = index + 1
+    end
+end
+
+function storyEventMessageLoopRangeNoWait(keyPrefix, firstIndex, lastIndex, StringValiable, intervalFunction)
+    local index = firstIndex
+    while index <= lastIndex do
+        local massageKey = keyPrefix .. tostring(index)
+        if not isExistStoryMessage(massageKey) then
+            break
+        end
+        utility_storyMessage(massageKey, StringValiable)
+        if intervalFunction then
+            intervalFunction()
+        end
+        index = index + 1
+    end
+end
 firstPositionX, firstPositionY = 20, 17
 
 function findNearEventLand_valueFunction(fromland, toland, distance, aspect, margin)
@@ -90,7 +119,7 @@ function introSelfIntroEvent()
     effect_Wait(PlayerCharacter().placeX,PlayerCharacter().placeY,60)
     coroutine.yield(false)--drama continue
 	
-    storyEventMessageLoopRange(eventNameKeyPrefix, 1, 1, str_map, nil)	
+    storyEventMessageLoopRangeNoWait(eventNameKeyPrefix, 1, 1, str_map, nil)	
     jumpWithAnime(PlayerCharacter(),ASPECT_RIGHT,1, 0.5, true, 1, false);
     coroutine.yield(false)--drama continue
     jumpWithAnime(PlayerCharacter(),ASPECT_LEFT,1, 0.5, true, 1, false);
@@ -100,7 +129,7 @@ function introSelfIntroEvent()
     coroutine.yield(false)--drama continue        
     moveWithAnime(PlayerCharacter(), ASPECT_LEFT, 2, false, 1, false)
     coroutine.yield(false)--drama continue
-    storyEventMessageLoopRange(eventNameKeyPrefix, 2, 2, str_map, nil)
+    storyEventMessageLoopRangeNoWait(eventNameKeyPrefix, 2, 2, str_map, nil)
     jumpWithAnime(PlayerCharacter(),ASPECT_RIGHT,1, 0.5, true, 1, false);
     coroutine.yield(false)--drama continue
     jumpWithAnime(PlayerCharacter(),ASPECT_LEFT,1, 0.5, true, 1, false);
@@ -112,7 +141,7 @@ function introSelfIntroEvent()
     coroutine.yield(false)--drama continue	
     CharacterTurn(PlayerCharacter(),ASPECT_DOWN)
     
-	storyEventMessageLoopRange(eventNameKeyPrefix, 3, 5, str_map, nil)
+	storyEventMessageLoopRangeNoWait(eventNameKeyPrefix, 3, 5, str_map, nil)
 
 	cameraMove(firstPositionX,firstPositionY,1,1,1)
 
@@ -124,11 +153,11 @@ function introSelfIntroEvent()
 	
     coroutine.yield(false)--drama continue
 
-	storyEventMessageLoopRange(eventNameKeyPrefix, 6, 6, str_map, nil)
+	storyEventMessageLoopRangeNoWait(eventNameKeyPrefix, 6, 6, str_map, nil)
 
 	cameraMoveParallel(PlayerCharacter().placeX,PlayerCharacter().placeY,1,0.25,0.75)
 	
-	storyEventMessageLoopRange(eventNameKeyPrefix, 7, 9, str_map, nil)
+	storyEventMessageLoopRangeNoWait(eventNameKeyPrefix, 7, 9, str_map, nil)
 	
 	return true--drama end
 end
@@ -137,7 +166,7 @@ function introItemUseEvent()
 	clearMassage()
 
 	local str_map = map_tstring_StyleString()	
-	storyEventMessageLoop(_T("introAfterSelf_"), str_map, nil)
+	storyEventMessageLoopNoWait(_T("introAfterSelf_"), str_map, nil)
 	
     coroutine.yield(false)--drama continue
 	cameraMove(20,17,1,1,1)
@@ -147,7 +176,7 @@ function introItemUseEvent()
 	CharacterCureMental(emeny)
 
 	effect_Smoke1(20,17)
-	storyEventMessageLoop(_T("introBattleAlice_"), str_map, nil)
+	storyEventMessageLoopNoWait(_T("introBattleAlice_"), str_map, nil)
 	
     coroutine.yield(false)--drama continue
     
@@ -172,7 +201,7 @@ function introItemUseEvent()
     coroutine.yield(false)--drama continue
 
 	cameraMove(PlayerCharacter().placeX,PlayerCharacter().placeY,1.5,1,1)
-	storyEventMessageLoop(_T("introItemUse_"), str_map, nil)
+	storyEventMessageLoopNoWait(_T("introItemUse_"), str_map, nil)
 
     coroutine.yield(false)--drama continue
     
@@ -186,12 +215,12 @@ function introItemUseEvent()
     coroutine.yield(false)--drama continue
     
     
-	storyEventMessageLoopRange(_T("introItemUse1_"), 1, 1, str_map, nil)
+	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 1, 1, str_map, nil)
 	
     coroutine.yield(false)--drama continue
     
 	cameraMove(PlayerCharacter().placeX,PlayerCharacter().placeY,2,1,1)
-	storyEventMessageLoopRange(_T("introItemUse1_"), 2, 3, str_map, nil)
+	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 2, 3, str_map, nil)
 
     return true--drama end
 
@@ -202,13 +231,13 @@ function introItemUseEvent2()
 	local str_map = map_tstring_StyleString()	
 	--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 	--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	storyEventMessageLoopRange(_T("introItemUse1_"), 4, 4, str_map, nil)
+	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 4, 4, str_map, nil)
 end
 
 function introEndEvent()
 	clearMassage()
 	str_map = map_tstring_StyleString()
-	storyEventMessageLoop(_T("introEndEvent_"),str_map, nil)
+	storyEventMessageLoopNoWait(_T("introEndEvent_"),str_map, nil)
     coroutine.yield(false)--drama continue
     clearMassage()
     effect_Wait(PlayerCharacter().placeX,PlayerCharacter().placeY,30)
@@ -216,7 +245,7 @@ function introEndEvent()
     fadeBlack(20)
     StopBGM()    
     coroutine.yield(false)--drama continue
-	storyEventMessageLoop(_T("introEndEvent1_"),str_map, nil)
+	storyEventMessageLoopNoWait(_T("introEndEvent1_"),str_map, nil)
 	coroutine.yield(false)--drama continue
 	setMapValue(savable_localFlags(),_T("introEndEventDone"),YES)
     return true--drama end
@@ -258,7 +287,7 @@ function dungeonTurnProcess()
 			local str_map = map_tstring_StyleString()
 			--ValueString = setStyle( buttonIndex(buttonIndex_DECIDE), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	        storyEventMessageLoop(_T("introAttackSupport_"), str_map, nil)
+	        storyEventMessageLoopNoWait(_T("introAttackSupport_"), str_map, nil)
 			setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"),0) +1 )
@@ -293,7 +322,7 @@ function dungeonTurnProcess()
 			local str_map = map_tstring_StyleString()
 			--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	        storyEventMessageLoop(_T("introItemSupport_"), str_map, nil)
+	        storyEventMessageLoopNoWait(_T("introItemSupport_"), str_map, nil)
 			setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"),0) +1 )
@@ -326,7 +355,7 @@ function dungeonTurnProcess()
 	if (PlayerCharacter().HP < PlayerCharacter().maxHP * 0.66) then
 		clearMassage()
 		str_map = map_tstring_StyleString()
-	    storyEventMessageLoop(_T("introHPrecover_"), str_map, nil)
+	    storyEventMessageLoopNoWait(_T("introHPrecover_"), str_map, nil)
 		stackFunction(function() CharacterHPRecovery(PlayerCharacter(),100) end)
 	end
 end
