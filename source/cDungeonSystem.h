@@ -400,6 +400,7 @@ public:
 
 	virtual int ƒ_ƒ“ƒWƒ‡ƒ“ˆø‚«ã‚°—v¿();
 	virtual void GameEndSavetyPrepareing();
+	virtual void RequestFloorSuspend();
 
 	virtual void GameBaseEnd();
 	virtual void GameBaseStart();
@@ -416,6 +417,7 @@ protected:
 //-----------------------------------------------
 //***************************************************
 protected:
+	int floorSuspendRequested_;
 	tstring nextDungeon;
 	virtual void resetDungeon(const tstring DungeonID);
 

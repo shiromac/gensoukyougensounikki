@@ -1180,8 +1180,9 @@ void cDungeonSystem::movefloor()
 	}
 	else
 	{
-		if(pSaveQuest->GoodEndFlags)
-		{//ˆê’U’†’fBŸƒtƒƒAŠJnó‘Ô‚¾‚¯•Û‘¶‚µ‚Ä‹l‚ßŠ‚Ö–ß‚éB
+		if(floorSuspendRequested_)
+		{
+			floorSuspendRequested_ = 0;//ˆê’U’†’fBŸƒtƒƒAŠJnó‘Ô‚¾‚¯•Û‘¶‚µ‚Ä‹l‚ßŠ‚Ö–ß‚éB
 			pSaveQuest->floor = FloorLevel();
 			pSaveQuest->money = GameScreenInterface.money.value;
 			pSaveQuest->Sumturn = SumTurnCount();

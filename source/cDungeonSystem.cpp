@@ -67,6 +67,7 @@ cDungeonSystem::cDungeonSystem(void)
 	pFrameTexture = NULL;
 
 	hiddenInterface_ = false;
+	floorSuspendRequested_ = 0;
 
 	//------------------------------------------------------
 	//環境変数初期値
@@ -3077,8 +3078,14 @@ void cDungeonSystem::GameEndSavetyPrepareing()
 	sg_pDungeonSystem->pSaveQuest->GoodEndFlags = 1;
 	sg_pDungeonSystem->pSaveData->GoodEndFlagInBaseTemp = 1;
 }
+void cDungeonSystem::RequestFloorSuspend()
+{
+	floorSuspendRequested_ = 1;
+	GameEndSavetyPrepareing();
+}
 void cDungeonSystem::GameClear()
 {
+	floorSuspendRequested_ = 0;
 	cannotinput() = true;
 	GameOverFlag() = true;
 	GameClearFlag() = GAMECLEAR_CLEARFLAG;
@@ -3097,6 +3104,7 @@ void cDungeonSystem::GameClear()
 }
 void cDungeonSystem::GamePullout()
 {
+	floorSuspendRequested_ = 0;
 	cannotinput() = true;
 	GameOverFlag() = true;
 	GameClearFlag() = GAMECLEAR_PULLOUTFLAG;

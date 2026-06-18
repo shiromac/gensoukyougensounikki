@@ -2955,7 +2955,7 @@ int やめる(cRenderDevice *pDev, pcDroping pdrop)
 }
 int 一旦中断する(cRenderDevice *pDev)
 {
-	sg_pDungeonSystem->GameEndSavetyPrepareing();
+	sg_pDungeonSystem->RequestFloorSuspend();
 	sg_pDungeonSystem->メニューを閉じる();
 	sg_pDungeonSystem->フロア更新要請();
 	return true;

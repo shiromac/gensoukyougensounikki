@@ -360,6 +360,9 @@ cSaveQuest::cSaveQuest(void)
 	ShopDebt = 0.0;
 
 	FirstConditionOfMoney = 0;
+	key = 0;
+	pPlayer = NULLCHARA;
+	pFirstConditionOfPlayer = NULLCHARA;
 }
 
 cSaveQuest::~cSaveQuest(void)
@@ -372,7 +375,7 @@ void cSaveQuest::setUnEnable()
 }
 int cSaveQuest::enable()
 {
-	int flag = (floor != -1);
+	int flag = (floor > 0 && DungeonID != _T("") && pPlayer != NULL);
 	
 #ifdef _UNRELEASE
 
@@ -456,11 +459,17 @@ int cSaveQuest::save()
 int cSaveQuest::load()
 {
 	
-	savefile_->load();
+	int loadError = savefile_->load();
+	if(loadError)
+	{
+		setUnEnable();
+		return loadError;
+	}
+#define RETURN_SAVEQUEST_LOAD_DECODE_ERROR() do { setUnEnable(); return ERROR_FM_LOAD_DECODE_ERROR; } while(0)
 
 	//int
-	if(savefile_->vv_int().size() < 2) return ERROR_FM_LOAD_DECODE_ERROR;
-	if(savefile_->vv_int()[0].size() < 8) return ERROR_FM_LOAD_DECODE_ERROR;
+	if(savefile_->vv_int().size() < 2) RETURN_SAVEQUEST_LOAD_DECODE_ERROR();
+	if(savefile_->vv_int()[0].size() < 8) RETURN_SAVEQUEST_LOAD_DECODE_ERROR();
 	SUBSTITUTION_R2L(floor, savefile_->vv_int()[0][0]);
 	SUBSTITUTION_R2L(money, savefile_->vv_int()[0][1]);
 	SUBSTITUTION_R2L(Sumturn, savefile_->vv_int()[0][2]);
@@ -499,7 +508,7 @@ int cSaveQuest::load()
 	}
 
 	//char
-	if(savefile_->vv_char().size() < 6) return ERROR_FM_LOAD_DECODE_ERROR;
+	if(savefile_->vv_char().size() < 6) RETURN_SAVEQUEST_LOAD_DECODE_ERROR();
 	cDataConverter::BackDecodeVecC2T(DungeonID,savefile_->vv_char()[0]);
 	cDataConverter::BackDecodeVecC2T(randBase,savefile_->vv_char()[1]);
 	BackDecodeVecC2T(pPlayer,savefile_->vv_char()[2]);
@@ -534,10 +543,12 @@ int cSaveQuest::load()
 		cDataConverter::BackDecodeVecC2VecVecC2MTT(privateFlags, savefile_->vv_char()[10]);
 	}
 
+#undef RETURN_SAVEQUEST_LOAD_DECODE_ERROR
 	return SUCCESS;
 }
 StyleString cSaveQuest::shortExplanationText()
 {
+	if(pPlayer == NULL) return _T("");
 	map<tstring,StyleString> val;
 
 	val[_T("Chara")] = pPlayer->FullName();
