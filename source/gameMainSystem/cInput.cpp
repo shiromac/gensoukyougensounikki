@@ -88,9 +88,12 @@ namespace
 					'#ggn-touch-controls .ggn-pad { position: absolute; bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(6, var(--ggn-cell)); grid-template-rows: repeat(10, var(--ggn-cell)); gap: var(--ggn-gap); pointer-events: none; }',
 					'#ggn-touch-controls .ggn-left { left: max(var(--ggn-edge), env(safe-area-inset-left)); }',
 					'#ggn-touch-controls .ggn-right { right: max(var(--ggn-edge), env(safe-area-inset-right)); }',
-					'#ggn-touch-controls button { pointer-events: auto; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 clamp(12px, 3.4vw, 14px)/1 Arial, sans-serif; padding: 0; min-width: 0; min-height: 0; touch-action: none; -webkit-tap-highlight-color: transparent; }',
+					'#ggn-touch-controls button { pointer-events: auto; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; background: rgba(10,10,10,.62); color: #fff; font: 700 clamp(12px, 3.4vw, 14px)/1.05 Arial, sans-serif; padding: 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; touch-action: none; -webkit-tap-highlight-color: transparent; }',
 					'#ggn-touch-controls button.ggn-wide { font-size: clamp(13px, 3.7vw, 15px); }',
-					'#ggn-touch-controls button.ggn-big { font-size: clamp(23px, 6.4vw, 28px); }',
+					'#ggn-touch-controls button.ggn-big { font-size: clamp(19px, 5.6vw, 23px); }',
+					'#ggn-touch-controls button .ggn-caption-key { font-size: .88em; }',
+					'#ggn-touch-controls button.ggn-big .ggn-caption-action { font-size: .9em; }',
+					'#ggn-touch-controls button.ggn-big .ggn-caption-key { font-size: 1.02em; }',
 					'#ggn-touch-controls button.ggn-active { background: rgba(255,255,255,.86); color: #000; }',
 					'#ggn-btn-map { grid-column: 1 / span 6; grid-row: 1 / span 2; }',
 					'#ggn-btn-up-left { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-up { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-up-right { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
@@ -128,11 +131,11 @@ namespace
 					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
 					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
 					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'メニュー', name: 'メニュー', wide: true },
-					{ parent: right, id: 'ggn-btn-turn', key: 67, label: '方向', name: '方向転換', wide: true },
+					{ parent: right, id: 'ggn-btn-turn', key: 67, label: '振向き C', caption: ['振向き', 'C'], name: '振向き・方向転換', wide: true },
 					{ parent: right, id: 'ggn-btn-diag', key: 16, label: '斜め', name: '斜め固定', wide: true },
 					{ parent: right, id: 'ggn-btn-shot', key: 83, label: '弾幕', name: '装備弾幕を撃つ', wide: true },
-					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'Z', name: '攻撃・素振り', big: true },
-					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'X', name: 'ダッシュ', big: true },
+					{ parent: right, id: 'ggn-btn-attack', key: 90, label: '攻撃 Z', caption: ['攻撃', 'Z'], name: '攻撃・素振り', big: true },
+					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'ダッシュ X', caption: ['ダッシュ', 'X'], name: 'ダッシュ', big: true },
 					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'スマート', name: 'スマートダッシュ', wide: true, toggle: true }
 				];
 				function specKeys(spec) {
@@ -167,7 +170,16 @@ namespace
 					var button = document.createElement('button');
 					button.type = 'button';
 					button.id = spec.id;
-					button.textContent = spec.label;
+					if (spec.caption) {
+						spec.caption.forEach(function(line, index) {
+							var span = document.createElement('span');
+							span.textContent = line;
+							span.className = index ? 'ggn-caption-key' : 'ggn-caption-action';
+							button.appendChild(span);
+						});
+					} else {
+						button.textContent = spec.label;
+					}
 					button.setAttribute('aria-label', spec.name);
 					button.setAttribute('aria-pressed', 'false');
 					var classNames = [];
