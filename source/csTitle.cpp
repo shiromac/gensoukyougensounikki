@@ -66,6 +66,12 @@ public:
 };
 
 //‚Í‚¶‚ß‚©‚ç
+class cTitleSelectWindow : public cSelectWindow
+{
+public:
+	virtual void playsound_decide(){}
+};
+
 class cCommandStart : public cCommand
 {
 public:
@@ -465,7 +471,7 @@ void csTitle::SceneProcess(cRenderDevice *pDev)
 			sg_ControlLayerV.push_back(pccl = pcControlLayer(new cControlLayer));
 
 			pccl->Init(pDev);
-			pccl->WindowList.push_back(pcsw = pcSelectWindow(new cSelectWindow));
+			pccl->WindowList.push_back(pcsw = pcSelectWindow(new cTitleSelectWindow));
 
 			pcsw->commandList.push_back(pcCommand(new cCommandStart ));
 			//pcsw->commandList.push_back(pcCommand(new cCommandContinue ));
