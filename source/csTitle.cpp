@@ -476,7 +476,9 @@ void csTitle::SceneProcess(cRenderDevice *pDev)
 			pcsw->commandList.push_back(pcCommand(new cCommandStart ));
 			//pcsw->commandList.push_back(pcCommand(new cCommandContinue ));
 			pcsw->commandList.push_back(pcCommand(new cCommandConfig));
+#ifndef __EMSCRIPTEN__
 			pcsw->commandList.push_back(pcCommand(new cCommandEnd ));
+#endif
 			pcsw->Init(pDev, 5, pcsw->commandList.size());
 			pcsw->setLeft(32);
 			pcsw->setTop(32);
