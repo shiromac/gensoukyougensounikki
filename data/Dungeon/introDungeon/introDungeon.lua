@@ -10,7 +10,7 @@ enemyPool = {}
 function storyEventMessageLoopNoWait(keyPrefix, StringValiable, intervalFunction)
     local index = 1
     while true do
-        local massageKey = keyPrefix .. tostring(index)
+        local massageKey = _T(keyPrefix .. tostring(index))
         if not isExistStoryMessage(massageKey) then
             break
         end
@@ -25,7 +25,7 @@ end
 function storyEventMessageLoopRangeNoWait(keyPrefix, firstIndex, lastIndex, StringValiable, intervalFunction)
     local index = firstIndex
     while index <= lastIndex do
-        local massageKey = keyPrefix .. tostring(index)
+        local massageKey = _T(keyPrefix .. tostring(index))
         if not isExistStoryMessage(massageKey) then
             break
         end
@@ -95,7 +95,7 @@ function introSelfIntroEvent()
     effect_Wait(PlayerCharacter().placeX, PlayerCharacter().placeY,5)
     coroutine.yield(false)--drama continue
 
-    eventNameKeyPrefix = _T("introSelfIntro_");
+    eventNameKeyPrefix = "introSelfIntro_";
 	clearMassage()
 	str_map = map_tstring_StyleString()
 
@@ -166,7 +166,7 @@ function introItemUseEvent()
 	clearMassage()
 
 	local str_map = map_tstring_StyleString()	
-	storyEventMessageLoopNoWait(_T("introAfterSelf_"), str_map, nil)
+	storyEventMessageLoopNoWait("introAfterSelf_", str_map, nil)
 	
     coroutine.yield(false)--drama continue
 	cameraMove(20,17,1,1,1)
@@ -176,7 +176,7 @@ function introItemUseEvent()
 	CharacterCureMental(emeny)
 
 	effect_Smoke1(20,17)
-	storyEventMessageLoopNoWait(_T("introBattleAlice_"), str_map, nil)
+	storyEventMessageLoopNoWait("introBattleAlice_", str_map, nil)
 	
     coroutine.yield(false)--drama continue
     
@@ -201,7 +201,7 @@ function introItemUseEvent()
     coroutine.yield(false)--drama continue
 
 	cameraMove(PlayerCharacter().placeX,PlayerCharacter().placeY,1.5,1,1)
-	storyEventMessageLoopNoWait(_T("introItemUse_"), str_map, nil)
+	storyEventMessageLoopNoWait("introItemUse_", str_map, nil)
 
     coroutine.yield(false)--drama continue
     
@@ -215,12 +215,12 @@ function introItemUseEvent()
     coroutine.yield(false)--drama continue
     
     
-	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 1, 1, str_map, nil)
+	storyEventMessageLoopRangeNoWait("introItemUse1_", 1, 1, str_map, nil)
 	
     coroutine.yield(false)--drama continue
     
 	cameraMove(PlayerCharacter().placeX,PlayerCharacter().placeY,2,1,1)
-	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 2, 3, str_map, nil)
+	storyEventMessageLoopRangeNoWait("introItemUse1_", 2, 3, str_map, nil)
 
     return true--drama end
 
@@ -231,13 +231,13 @@ function introItemUseEvent2()
 	local str_map = map_tstring_StyleString()	
 	--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 	--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	storyEventMessageLoopRangeNoWait(_T("introItemUse1_"), 4, 4, str_map, nil)
+	storyEventMessageLoopRangeNoWait("introItemUse1_", 4, 4, str_map, nil)
 end
 
 function introEndEvent()
 	clearMassage()
 	str_map = map_tstring_StyleString()
-	storyEventMessageLoopNoWait(_T("introEndEvent_"),str_map, nil)
+	storyEventMessageLoopNoWait("introEndEvent_",str_map, nil)
     coroutine.yield(false)--drama continue
     clearMassage()
     effect_Wait(PlayerCharacter().placeX,PlayerCharacter().placeY,30)
@@ -245,7 +245,7 @@ function introEndEvent()
     fadeBlack(20)
     StopBGM()    
     coroutine.yield(false)--drama continue
-	storyEventMessageLoopNoWait(_T("introEndEvent1_"),str_map, nil)
+	storyEventMessageLoopNoWait("introEndEvent1_",str_map, nil)
 	coroutine.yield(false)--drama continue
 	setMapValue(savable_localFlags(),_T("introEndEventDone"),YES)
     return true--drama end
@@ -287,7 +287,7 @@ function dungeonTurnProcess()
 			local str_map = map_tstring_StyleString()
 			--ValueString = setStyle( buttonIndex(buttonIndex_DECIDE), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	        storyEventMessageLoopNoWait(_T("introAttackSupport_"), str_map, nil)
+	        storyEventMessageLoopNoWait("introAttackSupport_", str_map, nil)
 			setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"),0) +1 )
@@ -322,7 +322,7 @@ function dungeonTurnProcess()
 			local str_map = map_tstring_StyleString()
 			--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-	        storyEventMessageLoopNoWait(_T("introItemSupport_"), str_map, nil)
+	        storyEventMessageLoopNoWait("introItemSupport_", str_map, nil)
 			setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"),0) +1 )
@@ -355,7 +355,7 @@ function dungeonTurnProcess()
 	if (PlayerCharacter().HP < PlayerCharacter().maxHP * 0.66) then
 		clearMassage()
 		str_map = map_tstring_StyleString()
-	    storyEventMessageLoopNoWait(_T("introHPrecover_"), str_map, nil)
+	    storyEventMessageLoopNoWait("introHPrecover_", str_map, nil)
 		stackFunction(function() CharacterHPRecovery(PlayerCharacter(),100) end)
 	end
 end
