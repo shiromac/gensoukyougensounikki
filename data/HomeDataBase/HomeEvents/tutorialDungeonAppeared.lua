@@ -1,3 +1,7 @@
+function tutorialMessageLeadWait()
+    effect_Wait(PlayerCharacter().placeX, PlayerCharacter().placeY, 20)
+end
+
 function tutorialDungeonAppeared()
 	keibimeido = nil
 	vec_chara = allCharacterList()
@@ -17,8 +21,10 @@ function tutorialDungeonAppeared()
 					
 	local str_map = map_tstring_StyleString()
 	for i = 1, 6 do
+		    tutorialMessageLeadWait()
 		    utility_storyMessage(_T("tutorialDungeonBeforeEvent_"..i),str_map)
 	end
+	tutorialMessageLeadWait()
 	clearMassage()
 	cameraMove(PlayerCharacter().placeX, PlayerCharacter().placeY, 1.5,0.75, 0.9)
 			
