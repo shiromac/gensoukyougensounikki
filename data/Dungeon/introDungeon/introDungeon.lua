@@ -7,10 +7,6 @@ state_introEndEvent = 6
 
 enemyPool = {}
 
-function tutorialMessageLeadWait()
-    effect_Wait(PlayerCharacter().placeX, PlayerCharacter().placeY, 20)
-end
-
 function storyEventMessageLoopNoWait(keyPrefix, StringValiable, intervalFunction)
     local index = 1
     while true do
@@ -18,7 +14,6 @@ function storyEventMessageLoopNoWait(keyPrefix, StringValiable, intervalFunction
         if not isExistStoryMessage(massageKey) then
             break
         end
-        tutorialMessageLeadWait()
         utility_storyMessage(massageKey, StringValiable)
         if intervalFunction then
             intervalFunction()
@@ -34,7 +29,6 @@ function storyEventMessageLoopRangeNoWait(keyPrefix, firstIndex, lastIndex, Stri
         if not isExistStoryMessage(massageKey) then
             break
         end
-        tutorialMessageLeadWait()
         utility_storyMessage(massageKey, StringValiable)
         if intervalFunction then
             intervalFunction()

@@ -1,9 +1,5 @@
 g_droping_map = {}
 
-function tutorialMessageLeadWait()
-    effect_Wait(PlayerCharacter().placeX, PlayerCharacter().placeY, 20)
-end
-
 function floorInitProcess()
 	--outputDebugString("floorInitProcess_start\n")
 
@@ -13,7 +9,6 @@ function floorInitProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonIntro"),str_map)
 		end
 		
@@ -53,7 +48,6 @@ function dungeonTurnProcess()
 			str_map = map_tstring_StyleString()
 			ValueString = setStyle( buttonIndex(buttonIndex_DASH), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonDush"),str_map)
 		end
 	end
@@ -69,7 +63,6 @@ function dungeonTurnProcess()
 			str_map = map_tstring_StyleString()
 			ValueString = setStyle( buttonIndex(buttonIndex_TURN), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonTurn"),str_map)
 		end
 	end
@@ -82,7 +75,6 @@ function dungeonTurnProcess()
 			str_map = map_tstring_StyleString()
 			ValueString = setStyle( buttonIndex(buttonIndex_DIAGON), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonDiagon"),str_map)
 		end
 	end
@@ -95,7 +87,6 @@ function dungeonTurnProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonOnTrap1"),str_map)
 			utility_storyMessage(_T("tutorialDungeonOnTrap2"),str_map)
 		end
@@ -108,7 +99,6 @@ function dungeonTurnProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonSmartDash1"),str_map)
 			ValueString = setStyle( buttonIndex(buttonIndex_SDASH), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
@@ -123,7 +113,6 @@ function dungeonTurnProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonMessageLog"),str_map)
 		end
 	end
@@ -135,7 +124,6 @@ function dungeonTurnProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonMap1"),str_map)
 			ValueString = setStyle( buttonIndex(buttonIndex_MAP), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
@@ -151,7 +139,6 @@ function dungeonTurnProcess()
 		if storyEventEnable() then
 			clearMassage()
 			str_map = map_tstring_StyleString()
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonStep1"),str_map)
 			utility_storyMessage(_T("tutorialDungeonStep2"),str_map)
 		end
@@ -165,7 +152,6 @@ function dungeonTurnProcess()
 			clearMassage()
 			str_map = map_tstring_StyleString()
 			
-			tutorialMessageLeadWait()
 			utility_storyMessage(_T("tutorialDungeonStair"),str_map)
 		end
 	end
