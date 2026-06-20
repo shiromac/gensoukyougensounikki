@@ -462,7 +462,6 @@ void cScreen::setRenderTarget(cRenderDevice* pDevice, int screen_ID)
 void cScreen::setAlphaMode(cRenderDevice* pDevice, int alpha_mode)
 {
 	cRenderSetAlphaBlendEnabled(pDevice, true);
-	cRenderSetBlendOperation(pDevice, C_RENDER_BLEND_OPERATION_ADD);
 	switch(alpha_mode)
 	{
 	case ALPHA_MODE_ADDITION:

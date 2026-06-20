@@ -58,7 +58,3 @@ graphic/Packed_*.id.cdat
 *.psd
 *.sai
 packages/
-
-# Generated local debug artifacts
-ggn.map
-ggn_window.png
