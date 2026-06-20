@@ -9,6 +9,15 @@ enemyPool = {}
 
 firstPositionX, firstPositionY = 20, 17
 
+function storyGuideMessageNoWait(messageKey, StringValiable)
+    utility_storyMessage(messageKey, StringValiable)
+end
+
+function setStoryGuideButton(StringValiable, targetButton)
+    local ValueString = setStyle(buttonIndex(targetButton), _T("%.0f"), StyleString_DEFAULT_COLOR, 1, 1, 0)
+    StringValiable: insert(pair_tstring_StyleString(_T("Button"), ValueString))
+end
+
 function findNearEventLand_valueFunction(fromland, toland, distance, aspect, margin)
     local targetland = LandformNearby(fromland, aspect, distance)
     local targetdistance = (targetland.place - toland.place):dif()
@@ -129,6 +138,8 @@ function introSelfIntroEvent()
 	cameraMoveParallel(PlayerCharacter().placeX,PlayerCharacter().placeY,1,0.25,0.75)
 	
 	storyEventMessageLoopRange(eventNameKeyPrefix, 7, 9, str_map, nil)
+    setStoryGuideButton(str_map, buttonIndex_DECIDE)
+    storyGuideMessageNoWait(_T("introSelfIntroGuide_1"), str_map)
 	
 	return true--drama end
 end
@@ -192,6 +203,7 @@ function introItemUseEvent()
     
 	cameraMove(PlayerCharacter().placeX,PlayerCharacter().placeY,2,1,1)
 	storyEventMessageLoopRange(_T("introItemUse1_"), 2, 3, str_map, nil)
+    storyGuideMessageNoWait(_T("introItemUse1Guide_1"), str_map)
 
     return true--drama end
 
@@ -200,9 +212,9 @@ end
 function introItemUseEvent2()
 	clearMassage()
 	local str_map = map_tstring_StyleString()	
-	--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
-	--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 	storyEventMessageLoopRange(_T("introItemUse1_"), 4, 4, str_map, nil)
+    setStoryGuideButton(str_map, buttonIndex_MENU)
+    storyGuideMessageNoWait(_T("introItemUse1Guide_2"), str_map)
 end
 
 function introEndEvent()
@@ -256,9 +268,9 @@ function dungeonTurnProcess()
 		if (getMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"),0) >= 8) then
 			clearMassage()
 			local str_map = map_tstring_StyleString()
-			--ValueString = setStyle( buttonIndex(buttonIndex_DECIDE), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
-			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 	        storyEventMessageLoop(_T("introAttackSupport_"), str_map, nil)
+            setStoryGuideButton(str_map, buttonIndex_DECIDE)
+            storyGuideMessageNoWait(_T("introAttackSupportGuide_1"), str_map)
 			setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("attackTutorial_reTutorial"),0) +1 )
@@ -291,9 +303,9 @@ function dungeonTurnProcess()
 		if (getMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"),0) >= 3) then
 			clearMassage()
 			local str_map = map_tstring_StyleString()
-			--ValueString = setStyle( buttonIndex(buttonIndex_MENU), _T("%.0f") ,StyleString_DEFAULT_COLOR,1,1,0)
-			--str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 	        storyEventMessageLoop(_T("introItemSupport_"), str_map, nil)
+            setStoryGuideButton(str_map, buttonIndex_MENU)
+            storyGuideMessageNoWait(_T("introItemSupportGuide_1"), str_map)
 			setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), 0)
 		end
 		setMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"), getMapValue(savable_localFlags(),_T("itemTutorial_reTutorial"),0) +1 )

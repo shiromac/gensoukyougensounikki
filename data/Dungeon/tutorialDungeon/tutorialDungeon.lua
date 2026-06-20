@@ -1,5 +1,9 @@
 g_droping_map = {}
 
+function tutorialGuideMessageNoWait(messageKey, StringValiable)
+	utility_storyMessage(messageKey, StringValiable)
+end
+
 function floorInitProcess()
 	--outputDebugString("floorInitProcess_start\n")
 
@@ -51,6 +55,7 @@ function dungeonTurnProcess()
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 			utility_storyMessage(_T("tutorialDungeonDush"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonDushGuide"), str_map)
 		end
 	end
 
@@ -67,6 +72,7 @@ function dungeonTurnProcess()
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 			utility_storyMessage(_T("tutorialDungeonTurn"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonTurnGuide"), str_map)
 		end
 	end
 	
@@ -80,6 +86,7 @@ function dungeonTurnProcess()
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 			utility_storyMessage(_T("tutorialDungeonDiagon"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonDiagonGuide"), str_map)
 		end
 	end
 	
@@ -113,6 +120,7 @@ function dungeonTurnProcess()
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 			utility_storyMessage(_T("tutorialDungeonSmartDash2"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonSmartDashGuide"), str_map)
 		end
 	end
 	
@@ -142,6 +150,7 @@ function dungeonTurnProcess()
 			str_map: insert(pair_tstring_StyleString(_T("Button"),ValueString))
 			utility_storyMessage(_T("tutorialDungeonMap2"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonMapGuide"), str_map)
 		end
 	end
 	
@@ -158,6 +167,7 @@ function dungeonTurnProcess()
 			
 			utility_storyMessage(_T("tutorialDungeonStep2"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonStepGuide"), str_map)
 		end
 	end
 	
