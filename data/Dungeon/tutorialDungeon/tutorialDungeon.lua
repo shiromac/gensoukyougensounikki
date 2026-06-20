@@ -15,6 +15,7 @@ function floorInitProcess()
 			str_map = map_tstring_StyleString()
 			utility_storyMessage(_T("tutorialDungeonIntro"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonIntroGuide"), str_map)
 		end
 		
 		--Trap
@@ -101,8 +102,7 @@ function dungeonTurnProcess()
 			utility_storyMessage(_T("tutorialDungeonOnTrap1"),str_map)
 			messageWait()
 			
-			utility_storyMessage(_T("tutorialDungeonOnTrap2"),str_map)
-			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonOnTrap2"), str_map)
 		end
 	end
 	
@@ -133,6 +133,7 @@ function dungeonTurnProcess()
 			str_map = map_tstring_StyleString()
 			utility_storyMessage(_T("tutorialDungeonMessageLog"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonMessageLogGuide"), str_map)
 		end
 	end
 	
@@ -181,6 +182,7 @@ function dungeonTurnProcess()
 			
 			utility_storyMessage(_T("tutorialDungeonStair"),str_map)
 			messageWait()
+			tutorialGuideMessageNoWait(_T("tutorialDungeonStairGuide"), str_map)
 		end
 	end
 end
