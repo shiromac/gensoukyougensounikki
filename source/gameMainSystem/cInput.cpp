@@ -132,7 +132,7 @@ namespace
 					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
 					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'ƒƒjƒ…[', name: 'ƒƒjƒ…[', wide: true },
 					{ parent: right, id: 'ggn-btn-turn', key: 67, label: 'UŒü‚« C', caption: ['UŒü‚«', 'C'], name: 'UŒü‚«E•ûŒü“]Š·', wide: true },
-					{ parent: right, id: 'ggn-btn-diag', key: 16, label: 'Î‚ß', name: 'Î‚ßŒÅ’è', wide: true },
+					{ parent: right, id: 'ggn-btn-diag', key: 16, label: '\u659c\u3081', caption: ['\u659c\u3081', '\u4fbf\u5229'], name: 'Î‚ßŒÅ’è', wide: true },
 					{ parent: right, id: 'ggn-btn-shot', key: 83, label: '’e–‹', name: '‘•”õ’e–‹‚ğŒ‚‚Â', wide: true },
 					{ parent: right, id: 'ggn-btn-attack', key: 90, label: 'UŒ‚ Z', caption: ['UŒ‚', 'Z'], name: 'UŒ‚E‘fU‚è', big: true },
 					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'ƒ_ƒbƒVƒ… X', caption: ['ƒ_ƒbƒVƒ…', 'X'], name: 'ƒ_ƒbƒVƒ…', big: true },
