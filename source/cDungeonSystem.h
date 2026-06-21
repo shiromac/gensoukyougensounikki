@@ -401,6 +401,7 @@ public:
 	virtual int ダンジョン引き上げ要請();
 	virtual void GameEndSavetyPrepareing();
 	virtual void RequestFloorSuspend();
+	virtual void SuspendFloorAndReturnHome();
 
 	virtual void GameBaseEnd();
 	virtual void GameBaseStart();
@@ -411,6 +412,7 @@ protected:
 	virtual void GamePullout();
 	virtual void GameOverpreprocess();
 	virtual void GameOverprocess();
+	virtual void SaveFloorSuspendAndReturnHome(int nextFloor);
 //***************************************************
 //-----------------------------------------------
 //ダンジョン選択関係

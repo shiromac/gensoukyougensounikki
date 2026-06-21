@@ -3078,6 +3078,48 @@ void cDungeonSystem::GameEndSavetyPrepareing()
 	sg_pDungeonSystem->pSaveQuest->GoodEndFlags = 1;
 	sg_pDungeonSystem->pSaveData->GoodEndFlagInBaseTemp = 1;
 }
+void cDungeonSystem::SaveFloorSuspendAndReturnHome(int nextFloor)
+{
+	floorSuspendRequested_ = 0;
+	if(pSaveQuest == NULL || pDungeon() == NULL) return;
+
+	GameEndSavetyPrepareing();
+	pSaveQuest->floor = nextFloor;
+	pSaveQuest->money = GameScreenInterface.money.value;
+	pSaveQuest->Sumturn = SumTurnCount();
+	pSaveQuest->SumFrame = time_SumFrameCount();
+	pSaveQuest->SumFramerealtime = time_Sumtime()*60;
+	pSaveQuest->SumdefeatNum =  SumEnemyDefeatNum();
+	pSaveQuest->FreeFlags =  FreeFlags();
+	pSaveQuest->localFlags = localFlags();
+	pSaveQuest->privateFlags = privateFlags();
+	pSaveQuest->DropIDtoAppreciated = DataBase.DropIDtoAppreciatedinstance();
+	pSaveQuest->DropIDtoMEMO = DataBase.DropIDtoMEMOinstance();
+	pSaveQuest->Version_ = g_VersionString();
+	pSaveQuest->save();
+	pSaveData->save();
+
+	vector<pcDroping> vdrop = pPlayerChara()->holdItem;
+	for(int i=0;i<vdrop.size();i++)
+	{
+		removedroping(vdrop[i],true);
+	}
+	GameScreenInterface.money.value = 0;
+
+	g_GameEnv.m_SceneManage->SceneChange(pDevice_D3D,new csHomeFirst);
+	メニューを閉じる();
+}
+void cDungeonSystem::SuspendFloorAndReturnHome()
+{
+	int nextFloor = FloorLevel();
+	if(pDungeon() != NULL && FloorLevel() < pDungeon()->MaxFloor())
+	{
+		time_SumFrameCount() += time_FrameCount();
+		time_Sumtime() += Floortime();
+		nextFloor = FloorLevel() + 1;
+	}
+	SaveFloorSuspendAndReturnHome(nextFloor);
+}
 void cDungeonSystem::RequestFloorSuspend()
 {
 	floorSuspendRequested_ = 1;
