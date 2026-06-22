@@ -18,8 +18,8 @@ assertSourceContains('padding-left: calc(var(--ggn-pad-width) + max(var(--ggn-ed
 assertSourceContains('padding-right: calc(var(--ggn-pad-width) + max(var(--ggn-edge), env(safe-area-inset-right)) + 8px)');
 assertSourceContains('#ggn-touch-controls .ggn-pad { bottom: auto; top: 50%; transform: translateY(-50%); }');
 assertSourceContains('aspect-ratio: 4 / 3');
-assertSourceContains('--ggn-landscape-manual-height: 40px');
-assertSourceContains('body.ggn-mobile-ready #ggn-page-links { top: max(4px, env(safe-area-inset-top)); left: 50%; right: auto; transform: translateX(-50%); }');
+assertSourceContains('body.ggn-mobile-ready #ggn-page-links { top: calc(50% + (var(--ggn-panel-height) / 2) - var(--ggn-cell)); right: max(var(--ggn-edge), env(safe-area-inset-right)); left: auto; width: var(--ggn-pad-width); padding: 0; text-align: center; transform: none; font-size: 10px; line-height: 1.1; }');
+assertSourceContains('body.ggn-mobile-ready #ggn-page-links a { padding: 1px 6px; }');
 
 const GAP = 4;
 const EDGE = 8;
@@ -28,7 +28,6 @@ const MIN_LANDSCAPE_CELL = 18;
 const MAX_CELL = 28;
 const MANUAL_LINK_WIDTH = 96;
 const MANUAL_LINK_HEIGHT = 32;
-const LANDSCAPE_MANUAL_AREA_HEIGHT = 40;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -150,16 +149,16 @@ function landscapeLayout({ width, height, safeLeft = 0, safeRight = 0 }) {
   const contentLeft = leftX + padW + SIDE_GAP;
   const contentRight = rightX - SIDE_GAP;
   const contentWidth = contentRight - contentLeft;
-  const canvasAreaHeight = height - LANDSCAPE_MANUAL_AREA_HEIGHT;
-  const canvasWidth = Math.min(contentWidth, canvasAreaHeight * 4 / 3);
+  const canvasWidth = Math.min(contentWidth, height * 4 / 3);
   const canvasHeight = canvasWidth * 0.75;
+  const rightPad = rect('rightPad', rightX, padY, padW, panel);
   return {
     cell,
     viewport: rect('viewport', 0, 0, width, height),
-    canvas: rect('canvas', contentLeft + (contentWidth - canvasWidth) / 2, LANDSCAPE_MANUAL_AREA_HEIGHT + (canvasAreaHeight - canvasHeight) / 2, canvasWidth, canvasHeight),
-    manualLink: rect('manualLink', (width - MANUAL_LINK_WIDTH) / 2, 4, MANUAL_LINK_WIDTH, MANUAL_LINK_HEIGHT),
+    canvas: rect('canvas', contentLeft + (contentWidth - canvasWidth) / 2, (height - canvasHeight) / 2, canvasWidth, canvasHeight),
+    manualLink: rect('manualLink', rightX + (padW - MANUAL_LINK_WIDTH) / 2, padY + panel - cell, MANUAL_LINK_WIDTH, Math.min(MANUAL_LINK_HEIGHT, cell)),
     leftPad: rect('leftPad', leftX, padY, padW, panel),
-    rightPad: rect('rightPad', rightX, padY, padW, panel),
+    rightPad,
     contentGap: SIDE_GAP,
   };
 }
@@ -170,7 +169,7 @@ function assertLayout(layout, orientation) {
   assertInside(layout.viewport, layout.manualLink);
   assertInside(layout.viewport, layout.leftPad);
   assertInside(layout.viewport, layout.rightPad);
-  assertNoOverlap([layout.leftPad, layout.rightPad, layout.manualLink]);
+  assertNoOverlap([layout.leftPad, layout.rightPad]);
 
   const buttons = buttonRects(layout);
   const leftButtons = buttons.filter((button) => button.x < layout.rightPad.x);
@@ -189,6 +188,7 @@ function assertLayout(layout, orientation) {
   if (orientation === 'landscape') {
     assert.ok(layout.leftPad.right + layout.contentGap <= layout.canvas.x + 0.001, 'left pad overlaps canvas');
     assert.ok(layout.canvas.right + layout.contentGap <= layout.rightPad.x + 0.001, 'right pad overlaps canvas');
+    assertInside(layout.rightPad, layout.manualLink);
     assert.ok(!overlaps(layout.manualLink, layout.canvas), 'manual link overlaps canvas');
     buttons.forEach((button) => {
       assert.ok(!overlaps(layout.manualLink, button), `manual link overlaps ${button.name}`);
