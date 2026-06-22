@@ -604,6 +604,24 @@ function Patch-WebDataLoader([string]$jsPath, [string]$remotePackageBase, [strin
     [System.IO.File]::WriteAllText($jsPath, $content, $utf8NoBom)
 }
 
+function Add-WebManualLink([string]$content) {
+    if ($content -match 'id\s*=\s*["'']ggn-page-links["'']') {
+        return $content
+    }
+
+    $manualStyle = '#ggn-page-links{box-sizing:border-box;width:min(100vw,calc(100vh * 1.333333));margin:6px auto 4px;padding:0 8px;text-align:right;font:700 13px/1.4 Arial,sans-serif;position:relative;z-index:3}#ggn-page-links a{color:#dfe9ff;text-decoration:none;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 8px;background:rgba(0,0,0,.55)}#ggn-page-links a:focus-visible{outline:2px solid #fff;outline-offset:2px}@media (pointer:coarse){#ggn-page-links{font-size:14px;margin-top:4px}#ggn-page-links a{display:inline-block;padding:6px 10px}}'
+    $manualLink = '<div id="ggn-page-links"><a href="../manual/" target="_blank" rel="noopener">&#12510;&#12491;&#12517;&#12450;&#12523;</a></div>'
+
+    if ($content.Contains("</style>")) {
+        $content = $content.Replace("</style>", $manualStyle + "</style>")
+    }
+    if ($content.Contains("<body>")) {
+        $content = $content.Replace("<body>", "<body>" + $manualLink)
+    }
+
+    return $content
+}
+
 function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
     $htmlPath = Join-Path $targetRoot ($outputName + ".html")
     $jsPath = Join-Path $targetRoot ($outputName + ".js")
@@ -633,6 +651,8 @@ function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
         $locateFile = 'Module={locateFile(e,t){return e==="' + $wasmName + '"?t+e+"?v=' + $buildId + '":t+e},'
         $content = [System.Text.RegularExpressions.Regex]::Replace($content, $modulePattern, $locateFile, 1)
     }
+
+    $content = Add-WebManualLink $content
 
     [System.IO.File]::WriteAllText($htmlPath, $content, $utf8NoBom)
 }

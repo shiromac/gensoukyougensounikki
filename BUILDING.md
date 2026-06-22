@@ -79,6 +79,12 @@ To verify source selection without Emscripten installed:
 powershell -ExecutionPolicy Bypass -File .\tools\build-web.ps1 -GenerateOnly
 ```
 
+To run the browser touch-control layout unit test:
+
+```powershell
+node .\tools\test-web-touch-layout.js
+```
+
 The script reads `laug_th.vcxproj`, resolves the existing Lua 5.1, luabind 0.9.1, and Boost 1.46.1-style dependency roots, prepends `source\web_compat` for browser-only compatibility headers, excludes the Win32-only input, Wiimote, DirectSound, precompiled-header, and old platform entry sources, and writes response files under `web-build\`. That directory is generated output and is ignored by Git.
 
 For browser runtime assets, the script also converts existing `graphic\` PNG/JPEG/BMP files into simple raw texture files under `web-build\assets\graphic\*.ggntex`, copies lightweight non-image graphic metadata such as `graphicpass.id`, skips the large Windows `graphicpack`, converts `data\` and `Language\` text assets to UTF-16LE where appropriate, copies Lua/binary assets as-is, extracts `sound\data1` and `sound\data2` into `web-build\sound\SE\*.wav` and `web-build\sound\music\*.wav`, adds `/assets`, `/data`, and `/Language` preload arguments for Emscripten, and links `-lidbfs.js` for the minimal `/save/` persistent filesystem bridge. Sound files are served next to the generated page instead of being embedded into `ggn.data`.

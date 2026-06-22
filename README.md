@@ -27,6 +27,18 @@ When GitHub Pages is enabled for this repository from the `public` branch
 
 Binary release packages may be unpacked to run the game, but the packed runtime assets must not be extracted, redistributed, or reused as standalone BGM/music, sound, image, texture, script, or data materials. Included BGM/music may only be used as part of playing this game.
 
+## Streaming and video posting / 配信・動画投稿
+
+Gameplay streaming, recorded gameplay videos, screenshots, and monetized videos/streams of this game are permitted.
+
+Because this is an unofficial Touhou Project fan work, streamers and video creators must follow the Touhou Project fan content guidelines:
+
+- https://touhou-project.news/guideline/
+
+This permission covers gameplay capture of this game. It does not permit extracting, redistributing, or reusing packed BGM/music, sound effects, graphics, textures, scripts, or data as standalone materials.
+
+本ゲームのゲームプレイ配信、動画投稿、スクリーンショット投稿、およびそれらの収益化は許可します。ただし、本ゲームは東方Projectの二次創作であるため、配信者・動画投稿者は東方Projectの二次創作ガイドラインに従ってください。この許可はゲームプレイの収録・配信を対象とするものであり、同梱されているBGM、効果音、画像、テクスチャ、スクリプト、データ等を素材として抽出・再配布・再利用することを許可するものではありません。
+
 The project also depends on external SDKs/libraries that are not vendored here, including Boost, Lua 5.1, luabind 0.9.1, zlib, DirectX/DirectSound, and Windows platform SDK headers.
 
 ## Build

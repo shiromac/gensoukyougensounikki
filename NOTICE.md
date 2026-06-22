@@ -15,7 +15,8 @@ It is intentionally conservative: items with unclear redistribution permission s
 
 Relevant Touhou Project references:
 
-- Official Touhou Project fan content guidelines: https://touhou-project.news/guidelines_en/
+- Official Touhou Project fan content guidelines: https://touhou-project.news/guideline/
+- Official Touhou Project fan content guidelines (English): https://touhou-project.news/guidelines_en/
 - Team Shanghai Alice / ZUN site referenced by the original manual: http://www16.big.or.jp/~zun/
 
 ## Released package reference
@@ -60,7 +61,9 @@ The original bundled manual and the released readme credited the following creat
 - 霊屋 倭 様 (sound effects; credited by the online manual)
 - Music with Myuu, http://www.ne.jp/asahi/music/myuu/
 
-Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator for distribution as part of this playable game package. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release. BGM/music is not MIT-licensed and must not be extracted, redistributed, reused, or repurposed for any other project, video, stream, soundtrack, asset pack, or other purpose.
+Maintainer note (`2026-06-14`): BGM redistribution permission has been confirmed by the maintainer as granted by the BGM creator for distribution as part of this playable game package. This note is limited to BGM; if any packed audio file also contains sound effects or other third-party material, keep the corresponding attribution and permission records with the release. BGM/music is not MIT-licensed and must not be extracted, redistributed, reused, or repurposed as standalone material for any other project, soundtrack, asset pack, or other purpose.
+
+Gameplay streaming, recorded gameplay videos, screenshots, and monetized videos/streams of this game are permitted, provided that the Touhou Project fan content guidelines are followed. This permission covers gameplay capture of this game; it does not permit extracting, redistributing, or reusing packed BGM/music, sound effects, graphics, textures, scripts, or data as standalone materials.
 
 Maintainer note (`2026-06-14`): this project has a prior commercial release history, and the maintainer states that rights-problematic audio files were not used in the released project. This statement supports distributing the audio packs only as part of the playable game package; it does not grant permission to extract or reuse audio files as standalone sound materials.
 
