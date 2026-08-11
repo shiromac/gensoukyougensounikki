@@ -91,6 +91,10 @@ assert.ok(
   'iOS home-screen launches should opt into app-style display',
 );
 assert.ok(
+  buildScript.includes('name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"'),
+  'mobile viewport sizing should be present in the initial HTML response',
+);
+assert.ok(
   buildScript.includes('「Webアプリとして開く」を有効にし'),
   'unsupported browsers should explain the iOS home-screen fallback',
 );
@@ -126,6 +130,9 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(content.includes('requestFullscreen||root.webkitRequestFullscreen'), `${name} should contain fullscreen entry logic`);
   assert.ok(content.includes('navigationUI:"hide"'), `${name} should request hidden browser navigation`);
   assert.ok(content.includes('apple-mobile-web-app-capable'), `${name} should contain the iOS app-mode metadata`);
+  const viewportTags = content.match(/<meta\s+name=["']?viewport["']?\s+content=["'][^"']+["']>/g) || [];
+  assert.equal(viewportTags.length, 1, `${name} should contain exactly one static viewport tag`);
+  assert.ok(content.indexOf(viewportTags[0]) < content.indexOf('<body>'), `${name} viewport metadata should precede body parsing`);
   assert.ok(content.includes('このブラウザでは全画面表示を利用できません'), `${name} should contain the unsupported-browser guidance`);
   assert.match(content, /id=(?:"ggn-controls-toggle"|ggn-controls-toggle)/, `${name} should contain the touch-control toggle`);
   assert.ok(content.includes('ggn-controls-hidden #ggn-touch-controls'), `${name} should contain hidden-mode styling`);
@@ -429,6 +436,10 @@ function assertLayout(layout, orientation) {
     assertInside(layout.viewport, button);
     assert.ok(button.width >= 40 || orientation === 'portrait', `${button.name} is too narrow for landscape touch`);
     assert.ok(button.height >= 40 || orientation === 'portrait' || button.name === 'step', `${button.name} is too short for landscape touch`);
+    if (orientation === 'portrait' && button.name !== 'step') {
+      assert.ok(button.width >= 48, `${button.name} is too narrow for portrait touch`);
+      assert.ok(button.height >= 48, `${button.name} is too short for portrait touch`);
+    }
   });
 
   if (orientation === 'landscape') {
