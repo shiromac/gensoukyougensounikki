@@ -633,6 +633,11 @@ function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
     if (Test-Path -LiteralPath $wasmPath) {
         $hashInput += (Get-FileHash -LiteralPath $wasmPath -Algorithm SHA256).Hash
     }
+    $dataChunkFiles = @(Get-ChildItem -LiteralPath $targetRoot -File -Filter "$outputName.data.gz*" -ErrorAction SilentlyContinue |
+        Sort-Object Name)
+    foreach ($dataChunk in $dataChunkFiles) {
+        $hashInput += (Get-FileHash -LiteralPath $dataChunk.FullName -Algorithm SHA256).Hash
+    }
     $sha256 = [System.Security.Cryptography.SHA256]::Create()
     try {
         $hashBytes = [System.Text.Encoding]::ASCII.GetBytes($hashInput)
@@ -641,6 +646,17 @@ function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
     finally {
         $sha256.Dispose()
     }
+
+    if ($dataChunkFiles.Count -gt 0) {
+        $jsContent = [System.IO.File]::ReadAllText($jsPath, $utf8NoBom)
+        foreach ($dataChunk in $dataChunkFiles) {
+            $chunkPattern = [System.Text.RegularExpressions.Regex]::Escape($dataChunk.Name) + '(\?v=[^"'']+)?'
+            $chunkVersionedName = $dataChunk.Name + "?v=$buildId"
+            $jsContent = [System.Text.RegularExpressions.Regex]::Replace($jsContent, $chunkPattern, $chunkVersionedName)
+        }
+        [System.IO.File]::WriteAllText($jsPath, $jsContent, $utf8NoBom)
+    }
+
     $content = [System.IO.File]::ReadAllText($htmlPath, $utf8NoBom)
     $scriptPattern = "src\s*=\s*(['""]?)$([System.Text.RegularExpressions.Regex]::Escape($outputName)).js(\?v=[^'"">\s]+)?\1"
     $content = [System.Text.RegularExpressions.Regex]::Replace($content, $scriptPattern, "src=""$outputName.js?v=$buildId""")

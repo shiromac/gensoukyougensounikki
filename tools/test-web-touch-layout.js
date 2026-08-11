@@ -5,6 +5,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'source', 'gameMainSystem', 'cInput.cpp'), 'utf8');
 const saveSource = fs.readFileSync(path.join(root, 'source', 'cSaveStore.cpp'), 'latin1');
+const buildScript = fs.readFileSync(path.join(root, 'tools', 'build-web.ps1'), 'utf8');
 
 function assertSourceContains(fragment) {
   assert.ok(
@@ -34,6 +35,14 @@ assert.ok(
 assert.ok(
   saveSource.includes('padconfigI2B.assign(ppadconfig_->begin(), ppadconfig_->end())'),
   'saved pad configuration should be restored for the web input backend',
+);
+assert.ok(
+  buildScript.includes('$hashInput += (Get-FileHash -LiteralPath $dataChunk.FullName -Algorithm SHA256).Hash'),
+  'web build id should include the compressed data package',
+);
+assert.ok(
+  buildScript.includes('$chunkVersionedName = $dataChunk.Name + "?v=$buildId"'),
+  'compressed data requests should use the same build cache key',
 );
 
 const expectedActionIndices = {
