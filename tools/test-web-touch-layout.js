@@ -94,6 +94,20 @@ assert.ok(
   buildScript.includes('「Webアプリとして開く」を有効にし'),
   'unsupported browsers should explain the iOS home-screen fallback',
 );
+assert.ok(buildScript.includes('id="ggn-controls-toggle"'), 'mobile users should have a touch-control visibility toggle');
+assert.ok(
+  buildScript.includes('html.ggn-controls-hidden #ggn-touch-controls{display:none!important}'),
+  'hidden mode should remove the touch controls from layout',
+);
+assert.ok(
+  buildScript.includes('html.ggn-controls-hidden body.ggn-mobile-ready div.emscripten_border'),
+  'hidden mode should return the full viewport to the game canvas',
+);
+assert.ok(buildScript.includes('ggn-touch-controls-hidden'), 'hidden mode should persist across reloads');
+assert.ok(
+  buildScript.includes('window.dispatchEvent(new Event("blur"))'),
+  'hiding touch controls should release any held input',
+);
 
 const generatedHtml = ['ggn.html', 'index.html'].map((name) => ({
   name,
@@ -105,6 +119,9 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(content.includes('navigationUI:"hide"'), `${name} should request hidden browser navigation`);
   assert.ok(content.includes('apple-mobile-web-app-capable'), `${name} should contain the iOS app-mode metadata`);
   assert.ok(content.includes('このブラウザでは全画面表示を利用できません'), `${name} should contain the unsupported-browser guidance`);
+  assert.match(content, /id=(?:"ggn-controls-toggle"|ggn-controls-toggle)/, `${name} should contain the touch-control toggle`);
+  assert.ok(content.includes('ggn-controls-hidden #ggn-touch-controls'), `${name} should contain hidden-mode styling`);
+  assert.ok(content.includes('ggn-touch-controls-hidden'), `${name} should persist hidden mode`);
   assert.ok(!content.includes('&#25147;&#12377;'), `${name} script labels should not contain undecoded HTML entities`);
 });
 assert.equal(generatedHtml[0].content, generatedHtml[1].content, 'ggn.html and index.html should stay identical');
@@ -115,17 +132,41 @@ const fullscreenScriptMatch = generatedHtml[0].content.match(
 assert.ok(fullscreenScriptMatch, 'the generated fullscreen controller should be executable in isolation');
 const fullscreenEventHandlers = {};
 const fullscreenButtonHandlers = {};
+const controlsButtonHandlers = {};
 const fullscreenButton = {
   textContent: '全画面',
   attributes: {},
   addEventListener(type, handler) { fullscreenButtonHandlers[type] = handler; },
   setAttribute(name, value) { this.attributes[name] = value; },
 };
+const controlsButton = {
+  textContent: '操作非表示',
+  attributes: {},
+  addEventListener(type, handler) { controlsButtonHandlers[type] = handler; },
+  setAttribute(name, value) { this.attributes[name] = value; },
+};
+const fullscreenRootClasses = new Set();
+const fullscreenRoot = {
+  classList: {
+    contains(name) { return fullscreenRootClasses.has(name); },
+    toggle(name, force) {
+      if (force === true) fullscreenRootClasses.add(name);
+      else if (force === false) fullscreenRootClasses.delete(name);
+      else if (fullscreenRootClasses.has(name)) fullscreenRootClasses.delete(name);
+      else fullscreenRootClasses.add(name);
+      return fullscreenRootClasses.has(name);
+    },
+  },
+};
 const fullscreenDocument = {
   fullscreenElement: null,
   webkitFullscreenElement: null,
-  documentElement: {},
-  getElementById(id) { return id === 'ggn-fullscreen-button' ? fullscreenButton : null; },
+  documentElement: fullscreenRoot,
+  getElementById(id) {
+    if (id === 'ggn-fullscreen-button') return fullscreenButton;
+    if (id === 'ggn-controls-toggle') return controlsButton;
+    return null;
+  },
   addEventListener(type, handler) {
     fullscreenEventHandlers[type] = fullscreenEventHandlers[type] || [];
     fullscreenEventHandlers[type].push(handler);
@@ -135,6 +176,16 @@ const dispatchFullscreenEvent = (type) => (fullscreenEventHandlers[type] || []).
 let requestedFullscreenOptions = null;
 let periodicFullscreenSync = null;
 let fullscreenFallbackMessage = null;
+let blurDispatchCount = 0;
+const controlsStorage = new Map();
+const fullscreenWindow = {
+  dispatchEvent(event) { if (event.type === 'blur') blurDispatchCount += 1; },
+};
+function MockEvent(type) { this.type = type; }
+const fullscreenLocalStorage = {
+  getItem(key) { return controlsStorage.has(key) ? controlsStorage.get(key) : null; },
+  setItem(key, value) { controlsStorage.set(key, String(value)); },
+};
 fullscreenDocument.documentElement.requestFullscreen = (options) => {
   requestedFullscreenOptions = options;
   fullscreenDocument.fullscreenElement = fullscreenDocument.documentElement;
@@ -144,11 +195,14 @@ fullscreenDocument.exitFullscreen = () => {
   fullscreenDocument.fullscreenElement = null;
   dispatchFullscreenEvent('fullscreenchange');
 };
-new Function('document', 'alert', 'setTimeout', 'setInterval', fullscreenScriptMatch[1])(
+new Function('document', 'alert', 'setTimeout', 'setInterval', 'window', 'Event', 'localStorage', fullscreenScriptMatch[1])(
   fullscreenDocument,
   (message) => { fullscreenFallbackMessage = message; },
   (callback) => { callback(); return 1; },
   (callback) => { periodicFullscreenSync = callback; return 1; },
+  fullscreenWindow,
+  MockEvent,
+  fullscreenLocalStorage,
 );
 const fullscreenClickEvent = { preventDefault() {}, stopPropagation() {} };
 fullscreenButtonHandlers.click(fullscreenClickEvent);
@@ -165,6 +219,17 @@ fullscreenDocument.fullscreenElement = null;
 periodicFullscreenSync();
 assert.equal(fullscreenButton.textContent, '全画面', 'periodic sync should detect external fullscreen exit');
 assert.equal(fullscreenFallbackMessage, null, 'supported fullscreen flows should not show fallback guidance');
+controlsButtonHandlers.click(fullscreenClickEvent);
+assert.equal(fullscreenRootClasses.has('ggn-controls-hidden'), true, 'hidden mode should add the root state class');
+assert.equal(controlsButton.textContent, '操作表示', 'hidden mode should keep a visible restore control');
+assert.equal(controlsButton.attributes['aria-pressed'], 'true', 'hidden mode should update pressed state');
+assert.equal(controlsStorage.get('ggn-touch-controls-hidden'), '1', 'hidden mode should persist its state');
+assert.equal(blurDispatchCount, 1, 'hidden mode should release active inputs');
+controlsButtonHandlers.click(fullscreenClickEvent);
+assert.equal(fullscreenRootClasses.has('ggn-controls-hidden'), false, 'visible mode should remove the root state class');
+assert.equal(controlsButton.textContent, '操作非表示', 'visible mode should restore the hide label');
+assert.equal(controlsButton.attributes['aria-pressed'], 'false', 'visible mode should clear pressed state');
+assert.equal(controlsStorage.get('ggn-touch-controls-hidden'), '0', 'visible mode should persist its state');
 
 const expectedActionIndices = {
   attack: 0,
