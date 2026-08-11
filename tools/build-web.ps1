@@ -604,19 +604,23 @@ function Patch-WebDataLoader([string]$jsPath, [string]$remotePackageBase, [strin
     [System.IO.File]::WriteAllText($jsPath, $content, $utf8NoBom)
 }
 
-function Add-WebManualLink([string]$content) {
+function Add-WebPageControls([string]$content) {
     if ($content -match 'id\s*=\s*["'']ggn-page-links["'']') {
         return $content
     }
 
-    $manualStyle = '#ggn-page-links{box-sizing:border-box;width:min(100vw,calc(100vh * 1.333333));margin:6px auto 4px;padding:0 8px;text-align:right;font:700 13px/1.4 Arial,sans-serif;position:relative;z-index:3}#ggn-page-links a{color:#dfe9ff;text-decoration:none;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 8px;background:rgba(0,0,0,.55)}#ggn-page-links a:focus-visible{outline:2px solid #fff;outline-offset:2px}@media (pointer:coarse){#ggn-page-links{font-size:14px;margin-top:4px}#ggn-page-links a{display:inline-block;padding:6px 10px}}'
-    $manualLink = '<div id="ggn-page-links"><a href="../manual/" target="_blank" rel="noopener">&#12510;&#12491;&#12517;&#12450;&#12523;</a></div>'
+    $pageControlStyle = '#ggn-page-links{box-sizing:border-box;width:min(100vw,calc(100vh * 1.333333));margin:6px auto 4px;padding:0 8px;text-align:right;font:700 13px/1.4 Arial,sans-serif;position:relative;z-index:30;display:flex;gap:4px;justify-content:flex-end;align-items:center}#ggn-page-links a,#ggn-page-links button{box-sizing:border-box;color:#dfe9ff;text-decoration:none;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 8px;background:rgba(0,0,0,.55);font:inherit;line-height:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}#ggn-page-links a:focus-visible,#ggn-page-links button:focus-visible{outline:2px solid #fff;outline-offset:2px}html:fullscreen,html:-webkit-full-screen{background:#050505}@media (pointer:coarse){#ggn-page-links{font-size:14px;margin-top:4px}#ggn-page-links a,#ggn-page-links button{display:inline-block;padding:6px 10px}}@media (pointer:coarse) and (orientation:landscape),(max-width:900px) and (orientation:landscape){body.ggn-mobile-ready #ggn-page-links a,body.ggn-mobile-ready #ggn-page-links button{padding:1px 6px}}'
+    $pageControls = '<div id="ggn-page-links"><button id="ggn-fullscreen-button" type="button" aria-label="&#20840;&#30011;&#38754;&#34920;&#31034;" aria-pressed="false">&#20840;&#30011;&#38754;</button><a href="../manual/" target="_blank" rel="noopener">&#12510;&#12491;&#12517;&#12450;&#12523;</a></div><script>(function(){var b=document.getElementById("ggn-fullscreen-button"),root=document.documentElement;if(!b)return;function active(){return!!(document.fullscreenElement||document.webkitFullscreenElement)}function sync(){var on=active();b.textContent=on?"戻す":"全画面";b.setAttribute("aria-pressed",on?"true":"false");b.setAttribute("aria-label",on?"全画面を終了":"全画面表示")}function fallback(){alert("このブラウザでは全画面表示を利用できません。iPhone/iPadでは共有メニューから「ホーム画面に追加」→「Webアプリとして開く」を有効にし、追加したアイコンから起動してください。")}function settle(result){if(result&&result.then)result.then(function(){sync();setTimeout(sync,1000)}).catch(function(){sync();fallback()});else setTimeout(sync,0)}b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();try{var fn;if(active()){fn=document.exitFullscreen||document.webkitExitFullscreen;if(!fn){fallback();return}var exitResult=fn.call(document);settle(exitResult)}else{fn=root.requestFullscreen||root.webkitRequestFullscreen;if(!fn){fallback();return}var requestResult=fn.call(root,{navigationUI:"hide"});settle(requestResult)}}catch(ignore){sync();fallback()}},false);document.addEventListener("fullscreenchange",sync,false);document.addEventListener("webkitfullscreenchange",sync,false);setInterval(sync,1000);sync()})();</script>'
+    $mobileAppMeta = '<meta name="theme-color" content="#050505"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">'
 
     if ($content.Contains("</style>")) {
-        $content = $content.Replace("</style>", $manualStyle + "</style>")
+        $content = $content.Replace("</style>", $pageControlStyle + "</style>")
+    }
+    if ($content.Contains("</head>")) {
+        $content = $content.Replace("</head>", $mobileAppMeta + "</head>")
     }
     if ($content.Contains("<body>")) {
-        $content = $content.Replace("<body>", "<body>" + $manualLink)
+        $content = $content.Replace("<body>", "<body>" + $pageControls)
     }
 
     return $content
@@ -668,7 +672,7 @@ function Patch-WebHtmlCacheBust([string]$targetRoot, [string]$outputName) {
         $content = [System.Text.RegularExpressions.Regex]::Replace($content, $modulePattern, $locateFile, 1)
     }
 
-    $content = Add-WebManualLink $content
+    $content = Add-WebPageControls $content
 
     [System.IO.File]::WriteAllText($htmlPath, $content, $utf8NoBom)
 }

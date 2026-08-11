@@ -73,6 +73,98 @@ assert.ok(
   buildScript.includes('$chunkVersionedName = $dataChunk.Name + "?v=$buildId"'),
   'compressed data requests should use the same build cache key',
 );
+assert.ok(buildScript.includes('id="ggn-fullscreen-button"'), 'the web page should expose a fullscreen toggle');
+assert.ok(
+  buildScript.includes('root.requestFullscreen||root.webkitRequestFullscreen'),
+  'the fullscreen toggle should support standard and WebKit entry APIs',
+);
+assert.ok(
+  buildScript.includes('document.exitFullscreen||document.webkitExitFullscreen'),
+  'the fullscreen toggle should support standard and WebKit exit APIs',
+);
+assert.ok(buildScript.includes('navigationUI:"hide"'), 'fullscreen should request hidden browser navigation');
+assert.ok(buildScript.includes('fullscreenchange'), 'the toggle label should follow browser fullscreen state');
+assert.ok(buildScript.includes('setTimeout(sync,1000)'), 'the toggle should resync after browser-initiated fullscreen changes');
+assert.ok(buildScript.includes('setInterval(sync,1000)'), 'embedded browsers should periodically resync fullscreen state');
+assert.ok(
+  buildScript.includes('name="apple-mobile-web-app-capable" content="yes"'),
+  'iOS home-screen launches should opt into app-style display',
+);
+assert.ok(
+  buildScript.includes('「Webアプリとして開く」を有効にし'),
+  'unsupported browsers should explain the iOS home-screen fallback',
+);
+
+const generatedHtml = ['ggn.html', 'index.html'].map((name) => ({
+  name,
+  content: fs.readFileSync(path.join(root, 'docs', 'play', name), 'utf8'),
+}));
+generatedHtml.forEach(({ name, content }) => {
+  assert.match(content, /id=(?:"ggn-fullscreen-button"|ggn-fullscreen-button)/, `${name} should contain the fullscreen toggle`);
+  assert.ok(content.includes('requestFullscreen||root.webkitRequestFullscreen'), `${name} should contain fullscreen entry logic`);
+  assert.ok(content.includes('navigationUI:"hide"'), `${name} should request hidden browser navigation`);
+  assert.ok(content.includes('apple-mobile-web-app-capable'), `${name} should contain the iOS app-mode metadata`);
+  assert.ok(content.includes('このブラウザでは全画面表示を利用できません'), `${name} should contain the unsupported-browser guidance`);
+  assert.ok(!content.includes('&#25147;&#12377;'), `${name} script labels should not contain undecoded HTML entities`);
+});
+assert.equal(generatedHtml[0].content, generatedHtml[1].content, 'ggn.html and index.html should stay identical');
+
+const fullscreenScriptMatch = generatedHtml[0].content.match(
+  /<script>(\(function\(\)\{var b=document\.getElementById\("ggn-fullscreen-button"\).*?\}\)\(\);)<\/script>/s,
+);
+assert.ok(fullscreenScriptMatch, 'the generated fullscreen controller should be executable in isolation');
+const fullscreenEventHandlers = {};
+const fullscreenButtonHandlers = {};
+const fullscreenButton = {
+  textContent: '全画面',
+  attributes: {},
+  addEventListener(type, handler) { fullscreenButtonHandlers[type] = handler; },
+  setAttribute(name, value) { this.attributes[name] = value; },
+};
+const fullscreenDocument = {
+  fullscreenElement: null,
+  webkitFullscreenElement: null,
+  documentElement: {},
+  getElementById(id) { return id === 'ggn-fullscreen-button' ? fullscreenButton : null; },
+  addEventListener(type, handler) {
+    fullscreenEventHandlers[type] = fullscreenEventHandlers[type] || [];
+    fullscreenEventHandlers[type].push(handler);
+  },
+};
+const dispatchFullscreenEvent = (type) => (fullscreenEventHandlers[type] || []).forEach((handler) => handler({ type }));
+let requestedFullscreenOptions = null;
+let periodicFullscreenSync = null;
+let fullscreenFallbackMessage = null;
+fullscreenDocument.documentElement.requestFullscreen = (options) => {
+  requestedFullscreenOptions = options;
+  fullscreenDocument.fullscreenElement = fullscreenDocument.documentElement;
+  dispatchFullscreenEvent('fullscreenchange');
+};
+fullscreenDocument.exitFullscreen = () => {
+  fullscreenDocument.fullscreenElement = null;
+  dispatchFullscreenEvent('fullscreenchange');
+};
+new Function('document', 'alert', 'setTimeout', 'setInterval', fullscreenScriptMatch[1])(
+  fullscreenDocument,
+  (message) => { fullscreenFallbackMessage = message; },
+  (callback) => { callback(); return 1; },
+  (callback) => { periodicFullscreenSync = callback; return 1; },
+);
+const fullscreenClickEvent = { preventDefault() {}, stopPropagation() {} };
+fullscreenButtonHandlers.click(fullscreenClickEvent);
+assert.deepEqual(requestedFullscreenOptions, { navigationUI: 'hide' }, 'fullscreen entry should hide browser navigation');
+assert.equal(fullscreenButton.textContent, '戻す', 'the fullscreen button should become an exit control');
+assert.equal(fullscreenButton.attributes['aria-pressed'], 'true', 'fullscreen entry should update pressed state');
+fullscreenButtonHandlers.click(fullscreenClickEvent);
+assert.equal(fullscreenButton.textContent, '全画面', 'the exit control should restore the entry label');
+assert.equal(fullscreenButton.attributes['aria-pressed'], 'false', 'fullscreen exit should clear pressed state');
+fullscreenDocument.fullscreenElement = fullscreenDocument.documentElement;
+periodicFullscreenSync();
+assert.equal(fullscreenButton.textContent, '戻す', 'periodic sync should detect external fullscreen entry');
+fullscreenDocument.fullscreenElement = null;
+periodicFullscreenSync();
+assert.equal(fullscreenButton.textContent, '全画面', 'periodic sync should detect external fullscreen exit');
+assert.equal(fullscreenFallbackMessage, null, 'supported fullscreen flows should not show fallback guidance');
 
 const expectedActionIndices = {
   attack: 0,
