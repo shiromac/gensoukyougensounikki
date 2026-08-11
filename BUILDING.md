@@ -79,10 +79,11 @@ To verify source selection without Emscripten installed:
 powershell -ExecutionPolicy Bypass -File .\tools\build-web.ps1 -GenerateOnly
 ```
 
-To run the browser touch-control layout unit test:
+To run the browser touch-control layout and audio lifecycle unit tests:
 
 ```powershell
 node .\tools\test-web-touch-layout.js
+node .\tools\test-web-audio-lifecycle.js
 ```
 
 The script reads `laug_th.vcxproj`, resolves the existing Lua 5.1, luabind 0.9.1, and Boost 1.46.1-style dependency roots, prepends `source\web_compat` for browser-only compatibility headers, excludes the Win32-only input, Wiimote, DirectSound, precompiled-header, and old platform entry sources, and writes response files under `web-build\`. That directory is generated output and is ignored by Git.
