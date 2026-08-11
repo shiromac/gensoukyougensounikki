@@ -120,6 +120,18 @@ assert.ok(
   buildScript.includes('window.dispatchEvent(new Event("blur"))'),
   'hiding touch controls should release any held input',
 );
+assert.ok(
+  buildScript.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
+  'portrait controls should use the wider four-column layout',
+);
+assert.ok(
+  buildScript.includes('--ggn-portrait-row:clamp(54px,8.5dvh,64px)'),
+  'portrait controls should keep a meaningful minimum height outside fullscreen',
+);
+assert.ok(
+  buildScript.includes('#ggn-btn-step{grid-column:2;grid-row:3}'),
+  'portrait step control should occupy a full-size center cell',
+);
 
 const generatedHtml = ['ggn.html', 'index.html'].map((name) => ({
   name,
@@ -139,6 +151,8 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(content.includes('align-items:center;padding-left:0;padding-right:0'), `${name} should remove hidden landscape gutters`);
   assert.ok(content.includes('ggn-controls-hidden #ggn-fullscreen-button'), `${name} should hide utility controls except restore`);
   assert.ok(content.includes('ggn-touch-controls-hidden'), `${name} should persist hidden mode`);
+  assert.ok(content.includes('grid-template-columns:repeat(4,minmax(0,1fr))'), `${name} should contain the wider portrait control grid`);
+  assert.ok(content.includes('--ggn-portrait-row:clamp(54px,8.5dvh,64px)'), `${name} should enforce the portrait button height`);
   assert.ok(!content.includes('&#25147;&#12377;'), `${name} script labels should not contain undecoded HTML entities`);
 });
 assert.equal(generatedHtml[0].content, generatedHtml[1].content, 'ggn.html and index.html should stay identical');
@@ -278,6 +292,10 @@ const EDGE = 8;
 const SIDE_GAP = 8;
 const MIN_LANDSCAPE_CELL = 18;
 const MAX_CELL = 28;
+const MIN_PORTRAIT_ROW = 54;
+const MAX_PORTRAIT_ROW = 64;
+const PORTRAIT_ACTION_EXTRA = 14;
+const MAX_PORTRAIT_PANEL_WIDTH = 520;
 const MANUAL_LINK_WIDTH = 96;
 const MANUAL_LINK_HEIGHT = 32;
 
@@ -293,8 +311,8 @@ function panelHeight(cell) {
   return 10 * cell + 9 * GAP;
 }
 
-function portraitCell(width) {
-  return Math.min(MAX_CELL, (width - 66) / 12);
+function portraitRow(height) {
+  return clamp(height * 0.085, MIN_PORTRAIT_ROW, MAX_PORTRAIT_ROW);
 }
 
 function landscapeCell(width, height) {
@@ -330,7 +348,7 @@ function buttonGrid(pad, cell, name, col, row, colSpan, rowSpan) {
   );
 }
 
-function buttonRects(layout) {
+function landscapeButtonRects(layout) {
   const { leftPad, rightPad, cell } = layout;
   return [
     buttonGrid(leftPad, cell, 'map', 1, 1, 6, 2),
@@ -350,6 +368,40 @@ function buttonRects(layout) {
     buttonGrid(rightPad, cell, 'attack', 1, 5, 3, 3),
     buttonGrid(rightPad, cell, 'dash', 4, 5, 3, 3),
     buttonGrid(rightPad, cell, 'smartdash', 1, 8, 6, 2),
+  ];
+}
+
+function portraitButtonGrid(layout, name, col, row, colSpan = 1) {
+  const rowHeight = row === 5 ? layout.actionRow : layout.row;
+  const y = layout.controlPanel.y + (row - 1) * (layout.row + GAP);
+  return rect(
+    name,
+    layout.controlPanel.x + (col - 1) * (layout.column + GAP),
+    y,
+    colSpan * layout.column + (colSpan - 1) * GAP,
+    rowHeight,
+  );
+}
+
+function portraitButtonRects(layout) {
+  return [
+    portraitButtonGrid(layout, 'map', 1, 1, 2),
+    portraitButtonGrid(layout, 'menu', 3, 1, 2),
+    portraitButtonGrid(layout, 'up-left', 1, 2),
+    portraitButtonGrid(layout, 'up', 2, 2),
+    portraitButtonGrid(layout, 'up-right', 3, 2),
+    portraitButtonGrid(layout, 'turn', 4, 2),
+    portraitButtonGrid(layout, 'left', 1, 3),
+    portraitButtonGrid(layout, 'step', 2, 3),
+    portraitButtonGrid(layout, 'right', 3, 3),
+    portraitButtonGrid(layout, 'diag', 4, 3),
+    portraitButtonGrid(layout, 'down-left', 1, 4),
+    portraitButtonGrid(layout, 'down', 2, 4),
+    portraitButtonGrid(layout, 'down-right', 3, 4),
+    portraitButtonGrid(layout, 'shot', 4, 4),
+    portraitButtonGrid(layout, 'attack', 1, 5),
+    portraitButtonGrid(layout, 'dash', 2, 5),
+    portraitButtonGrid(layout, 'smartdash', 3, 5, 2),
   ];
 }
 
@@ -374,20 +426,27 @@ function assertNoOverlap(rects) {
 }
 
 function portraitLayout({ width, height, safeBottom = 0 }) {
-  const cell = portraitCell(width);
-  const panel = panelHeight(cell);
+  const row = portraitRow(height);
+  const actionRow = row + PORTRAIT_ACTION_EXTRA;
+  const panel = 4 * row + actionRow + 4 * GAP;
   const controlsHeight = panel + Math.max(12, safeBottom);
   const gameHeight = height - controlsHeight - 12;
   const canvasWidth = Math.min(width, gameHeight * 4 / 3);
   const canvasHeight = Math.min(gameHeight, width * 0.75);
-  const padW = padWidth(cell);
+  const panelWidth = Math.min(width - 2 * EDGE, MAX_PORTRAIT_PANEL_WIDTH);
+  const panelX = (width - panelWidth) / 2;
+  const controlPanel = rect('controlPanel', panelX, height - Math.max(12, safeBottom) - panel, panelWidth, panel);
   return {
-    cell,
+    cell: row,
+    row,
+    actionRow,
+    column: (panelWidth - 3 * GAP) / 4,
     viewport: rect('viewport', 0, 0, width, height),
     canvas: rect('canvas', (width - canvasWidth) / 2, gameHeight - canvasHeight, canvasWidth, canvasHeight),
     manualLink: rect('manualLink', width - EDGE - MANUAL_LINK_WIDTH, 4, MANUAL_LINK_WIDTH, MANUAL_LINK_HEIGHT),
-    leftPad: rect('leftPad', EDGE, height - Math.max(12, safeBottom) - panel, padW, panel),
-    rightPad: rect('rightPad', width - EDGE - padW, height - Math.max(12, safeBottom) - panel, padW, panel),
+    controlPanel,
+    leftPad: controlPanel,
+    rightPad: controlPanel,
     contentGap: 0,
   };
 }
@@ -422,27 +481,22 @@ function assertLayout(layout, orientation) {
   assertInside(layout.viewport, layout.manualLink);
   assertInside(layout.viewport, layout.leftPad);
   assertInside(layout.viewport, layout.rightPad);
-  assertNoOverlap([layout.leftPad, layout.rightPad]);
-
-  const buttons = buttonRects(layout);
-  const leftButtons = buttons.filter((button) => button.x < layout.rightPad.x);
-  const rightButtons = buttons.filter((button) => button.x >= layout.rightPad.x);
-  leftButtons.forEach((button) => assertInside(layout.leftPad, button));
-  rightButtons.forEach((button) => assertInside(layout.rightPad, button));
-  assertNoOverlap(leftButtons);
-  assertNoOverlap(rightButtons);
+  const buttons = orientation === 'portrait' ? portraitButtonRects(layout) : landscapeButtonRects(layout);
 
   buttons.forEach((button) => {
     assertInside(layout.viewport, button);
     assert.ok(button.width >= 40 || orientation === 'portrait', `${button.name} is too narrow for landscape touch`);
     assert.ok(button.height >= 40 || orientation === 'portrait' || button.name === 'step', `${button.name} is too short for landscape touch`);
-    if (orientation === 'portrait' && button.name !== 'step') {
-      assert.ok(button.width >= 48, `${button.name} is too narrow for portrait touch`);
-      assert.ok(button.height >= 48, `${button.name} is too short for portrait touch`);
+    if (orientation === 'portrait') {
+      assertInside(layout.controlPanel, button);
+      assert.ok(button.width >= 63, `${button.name} is too narrow for portrait touch`);
+      assert.ok(button.height >= 54, `${button.name} is too short for portrait touch`);
     }
   });
+  assertNoOverlap(buttons);
 
   if (orientation === 'landscape') {
+    assertNoOverlap([layout.leftPad, layout.rightPad]);
     assert.ok(layout.leftPad.right + layout.contentGap <= layout.canvas.x + 0.001, 'left pad overlaps canvas');
     assert.ok(layout.canvas.right + layout.contentGap <= layout.rightPad.x + 0.001, 'right pad overlaps canvas');
     assertInside(layout.rightPad, layout.manualLink);
@@ -458,6 +512,7 @@ function assertLayout(layout, orientation) {
 }
 
 [
+  { name: 'compact phone portrait', width: 320, height: 568 },
   { name: 'phone portrait', width: 390, height: 844 },
   { name: 'small phone portrait', width: 360, height: 640 },
   { name: 'large phone portrait', width: 412, height: 915, safeBottom: 24 },
@@ -465,6 +520,12 @@ function assertLayout(layout, orientation) {
 ].forEach((viewport) => {
   assertLayout(portraitLayout(viewport), 'portrait');
 });
+
+const narrowPortraitButtons = portraitButtonRects(portraitLayout({ width: 360, height: 640 }));
+assert.ok(
+  narrowPortraitButtons.every((button) => button.width >= 83 && button.height >= 54),
+  '360px portrait controls should remain substantially larger than the old 53px grid',
+);
 
 [
   { name: 'phone landscape', width: 844, height: 390 },
