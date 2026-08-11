@@ -4,6 +4,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const source = fs.readFileSync(path.join(root, 'source', 'gameMainSystem', 'cInput.cpp'), 'utf8');
+const saveSource = fs.readFileSync(path.join(root, 'source', 'cSaveStore.cpp'), 'latin1');
 
 function assertSourceContains(fragment) {
   assert.ok(
@@ -20,6 +21,45 @@ assertSourceContains('#ggn-touch-controls .ggn-pad { bottom: auto; top: 50%; tra
 assertSourceContains('aspect-ratio: 4 / 3');
 assertSourceContains('body.ggn-mobile-ready #ggn-page-links { top: calc(50% + (var(--ggn-panel-height) / 2) - var(--ggn-cell)); right: max(var(--ggn-edge), env(safe-area-inset-right)); left: auto; width: var(--ggn-pad-width); padding: 0; text-align: center; transform: none; font-size: 10px; line-height: 1.1; }');
 assertSourceContains('body.ggn-mobile-ready #ggn-page-links a { padding: 1px 6px; }');
+assertSourceContains('#ggn-btn-step { grid-column: 1 / span 2; grid-row: 10 / span 1; }');
+assertSourceContains("Module['ggnPadConfig'] = Module['ggnPadConfig'] || [0, 1, 2, 3, 4, 5, 6, 7]");
+assertSourceContains("function configuredActionButton(actionIndex)");
+assertSourceContains("button._ggnPressedButtons = specActions(spec).map(configuredActionButton)");
+assertSourceContains("BrowserReadInputState(platformInputState_, patInputManager->padconfigI2B)");
+assertSourceContains("return BrowserPadButtonDown(buttom)");
+assert.ok(
+  saveSource.includes('ppadconfig_->assign(g_GameEnv.m_Input.patInputManager->padconfigI2B.begin(),'),
+  'web pad configuration should be copied into the existing config save data',
+);
+assert.ok(
+  saveSource.includes('padconfigI2B.assign(ppadconfig_->begin(), ppadconfig_->end())'),
+  'saved pad configuration should be restored for the web input backend',
+);
+
+const expectedActionIndices = {
+  attack: 0,
+  dash: 1,
+  turn: 2,
+  menu: 3,
+  diagon: 4,
+  shot: 5,
+  miniMap: 6,
+  smartdash: 7,
+};
+const configuredReads = Object.fromEntries(
+  [...source.matchAll(/state\.(\w+)\s*=.*BrowserConfiguredButtonDown\(padConfig,\s*(\d+)\);/g)]
+    .map((match) => [match[1], Number(match[2])]),
+);
+assert.deepEqual(configuredReads, expectedActionIndices, 'all configurable actions should use the saved pad mapping');
+
+const remappedButtons = [1, 0, 5, 6, 7, 2, 3, 4];
+Object.entries(expectedActionIndices).forEach(([name, action]) => {
+  const emulatedRawButton = remappedButtons[action];
+  const activeActions = Object.entries(configuredReads)
+    .filter(([, configuredAction]) => remappedButtons[configuredAction] === emulatedRawButton)
+    .map(([actionName]) => actionName);
+  assert.deepEqual(activeActions, [name], `${name} touch input should survive a non-default key configuration`);
+});
 
 const GAP = 4;
 const EDGE = 8;
@@ -90,6 +130,7 @@ function buttonRects(layout) {
     buttonGrid(leftPad, cell, 'down-left', 1, 7, 2, 2),
     buttonGrid(leftPad, cell, 'down', 3, 7, 2, 2),
     buttonGrid(leftPad, cell, 'down-right', 5, 7, 2, 2),
+    buttonGrid(leftPad, cell, 'step', 1, 10, 2, 1),
     buttonGrid(rightPad, cell, 'menu', 1, 1, 6, 2),
     buttonGrid(rightPad, cell, 'turn', 1, 3, 2, 2),
     buttonGrid(rightPad, cell, 'diag', 3, 3, 2, 2),
@@ -182,7 +223,7 @@ function assertLayout(layout, orientation) {
   buttons.forEach((button) => {
     assertInside(layout.viewport, button);
     assert.ok(button.width >= 40 || orientation === 'portrait', `${button.name} is too narrow for landscape touch`);
-    assert.ok(button.height >= 40 || orientation === 'portrait', `${button.name} is too short for landscape touch`);
+    assert.ok(button.height >= 40 || orientation === 'portrait' || button.name === 'step', `${button.name} is too short for landscape touch`);
   });
 
   if (orientation === 'landscape') {

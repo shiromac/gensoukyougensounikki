@@ -625,9 +625,8 @@ void cSaveConfig::save()
 
 		pMapThickness_->at(0) = sg_pDungeonSystem->EV_mapThickness;
 
-#ifndef __EMSCRIPTEN__
-		*ppadconfig_ = g_GameEnv.m_Input.patInputManager->padconfigI2B;
-#endif
+		ppadconfig_->assign(g_GameEnv.m_Input.patInputManager->padconfigI2B.begin(),
+				g_GameEnv.m_Input.patInputManager->padconfigI2B.end());
 		saveclass_.save();
 	}
 }
@@ -641,16 +640,15 @@ void cSaveConfig::Init(cRenderDevice *pDev, tstring savefile)
 	saveclass_.Reserve(pMapThickness_);
 	saveclass_.Init(g_SaveDataPath(savefile));
 
-#ifndef __EMSCRIPTEN__
 	if(!ppadconfig_->empty())
 	{
-		 g_GameEnv.m_Input.patInputManager->padconfigI2B = *ppadconfig_;
+		g_GameEnv.m_Input.patInputManager->padconfigI2B.assign(ppadconfig_->begin(), ppadconfig_->end());
 	}
 	else
 	{
-		*ppadconfig_ = g_GameEnv.m_Input.patInputManager->padconfigI2B;
+		ppadconfig_->assign(g_GameEnv.m_Input.patInputManager->padconfigI2B.begin(),
+			g_GameEnv.m_Input.patInputManager->padconfigI2B.end());
 	}
-#endif
 	if(pSoundVolume_->size() < 2)
 	{
 		pSoundVolume_->resize(2);

@@ -16,6 +16,8 @@ namespace
 			if (Module['ggnInputInstalled']) return;
 			Module['ggnInputInstalled'] = true;
 			Module['ggnKeys'] = Module['ggnKeys'] || {};
+			Module['ggnPadButtons'] = Module['ggnPadButtons'] || {};
+			Module['ggnPadConfig'] = Module['ggnPadConfig'] || [0, 1, 2, 3, 4, 5, 6, 7];
 			Module['ggnShouldBlockKey'] = function(keyCode) {
 				switch (keyCode | 0) {
 				case 13: case 16: case 32:
@@ -43,13 +45,43 @@ namespace
 				setKey(code, count > 0);
 			}
 
+			function setTouchButton(buttonIndex, pressed) {
+				var button = buttonIndex | 0;
+				Module['ggnTouchButtonCounts'] = Module['ggnTouchButtonCounts'] || {};
+				var count = Module['ggnTouchButtonCounts'][button] | 0;
+				count += pressed ? 1 : -1;
+				if (count < 0) count = 0;
+				Module['ggnTouchButtonCounts'][button] = count;
+				Module['ggnPadButtons'][button] = count > 0 ? 1 : 0;
+			}
+
+			function configuredActionButton(actionIndex) {
+				var action = actionIndex | 0;
+				var config = Module['ggnPadConfig'] || [];
+				var button = config[action] | 0;
+				return button >= 0 && button < 32 ? button : action;
+			}
 			function clearInputKeys() {
 				Module['ggnKeys'] = {};
 				Module['ggnTouchKeyCounts'] = {};
+				Module['ggnPadButtons'] = {};
+				Module['ggnTouchButtonCounts'] = {};
 				var activeButtons = document.querySelectorAll('#ggn-touch-controls button.ggn-active');
 				for (var i = 0; i < activeButtons.length; ++i) { activeButtons[i].classList.remove('ggn-active'); activeButtons[i].setAttribute('aria-pressed', 'false'); }
 			}
 
+
+			Module['ggnSetPadConfig'] = function(config) {
+				var next = [];
+				for (var i = 0; i < 8; ++i) {
+					var button = config && config.length > i ? config[i] | 0 : i;
+					next[i] = button >= 0 && button < 32 ? button : i;
+				}
+				var current = Module['ggnPadConfig'] || [];
+				if (current.join(',') === next.join(',')) return;
+				clearInputKeys();
+				Module['ggnPadConfig'] = next;
+			};
 			window.addEventListener('keydown', function(e) {
 				setKey(e.keyCode | 0, true);
 				if (Module['ggnShouldBlockKey'](e.keyCode | 0)) e.preventDefault();
@@ -100,6 +132,7 @@ namespace
 					'#ggn-btn-up-left { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-up { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-up-right { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
 					'#ggn-btn-left { grid-column: 1 / span 2; grid-row: 5 / span 2; } #ggn-btn-right { grid-column: 5 / span 2; grid-row: 5 / span 2; }',
 					'#ggn-btn-down-left { grid-column: 1 / span 2; grid-row: 7 / span 2; } #ggn-btn-down { grid-column: 3 / span 2; grid-row: 7 / span 2; } #ggn-btn-down-right { grid-column: 5 / span 2; grid-row: 7 / span 2; }',
+					'#ggn-btn-step { grid-column: 1 / span 2; grid-row: 10 / span 1; }',
 					'#ggn-btn-menu { grid-column: 1 / span 6; grid-row: 1 / span 2; } #ggn-btn-smartdash { grid-column: 1 / span 6; grid-row: 8 / span 2; }',
 					'#ggn-btn-turn { grid-column: 1 / span 2; grid-row: 3 / span 2; } #ggn-btn-diag { grid-column: 3 / span 2; grid-row: 3 / span 2; } #ggn-btn-shot { grid-column: 5 / span 2; grid-row: 3 / span 2; }',
 					'#ggn-btn-attack { grid-column: 1 / span 3; grid-row: 5 / span 3; } #ggn-btn-dash { grid-column: 4 / span 3; grid-row: 5 / span 3; }',
@@ -123,7 +156,7 @@ namespace
 				controls.appendChild(right);
 				document.body.appendChild(controls);
 				var specs = [
-					{ parent: left, id: 'ggn-btn-map', key: 32, label: 'マップ', name: 'マップ表示', wide: true },
+					{ parent: left, id: 'ggn-btn-map', action: 6, label: 'マップ', name: 'マップ表示', wide: true },
 					{ parent: left, id: 'ggn-btn-up-left', keys: [38, 37], label: 'UL', name: 'Up left' },
 					{ parent: left, id: 'ggn-btn-up', key: 38, label: '^', name: 'Up' },
 					{ parent: left, id: 'ggn-btn-up-right', keys: [38, 39], label: 'UR', name: 'Up right' },
@@ -132,16 +165,21 @@ namespace
 					{ parent: left, id: 'ggn-btn-down-left', keys: [40, 37], label: 'DL', name: 'Down left' },
 					{ parent: left, id: 'ggn-btn-down', key: 40, label: 'v', name: 'Down' },
 					{ parent: left, id: 'ggn-btn-down-right', keys: [40, 39], label: 'DR', name: 'Down right' },
-					{ parent: right, id: 'ggn-btn-menu', key: 86, label: 'メニュー', name: 'メニュー', wide: true },
-					{ parent: right, id: 'ggn-btn-turn', key: 67, label: '振向き C', caption: ['振向き', 'C'], name: '振向き・方向転換', wide: true },
-					{ parent: right, id: 'ggn-btn-diag', key: 16, label: '\u659c\u3081', caption: ['\u659c\u3081', '\u4fbf\u5229'], name: '斜め固定', wide: true },
-					{ parent: right, id: 'ggn-btn-shot', key: 83, label: '弾幕', name: '装備弾幕を撃つ', wide: true },
-					{ parent: right, id: 'ggn-btn-attack', key: 90, label: '攻撃 Z', caption: ['攻撃', 'Z'], name: '攻撃・素振り', big: true },
-					{ parent: right, id: 'ggn-btn-dash', key: 88, label: 'ダッシュ X', caption: ['ダッシュ', 'X'], name: 'ダッシュ', big: true },
-					{ parent: right, id: 'ggn-btn-smartdash', key: 68, label: 'スマート', name: 'スマートダッシュ', wide: true, toggle: true }
+					{ parent: left, id: 'ggn-btn-step', actions: [0, 1], label: '\u8db3\u8e0f', name: '\u8db3\u8e0f\u307f' },
+					{ parent: right, id: 'ggn-btn-menu', action: 3, label: 'メニュー', name: 'メニュー', wide: true },
+					{ parent: right, id: 'ggn-btn-turn', action: 2, label: '振向き C', caption: ['振向き', 'C'], name: '振向き・方向転換', wide: true },
+					{ parent: right, id: 'ggn-btn-diag', action: 4, label: '\u659c\u3081', caption: ['\u659c\u3081', '\u4fbf\u5229'], name: '斜め固定', wide: true },
+					{ parent: right, id: 'ggn-btn-shot', action: 5, label: '弾幕', name: '装備弾幕を撃つ', wide: true },
+					{ parent: right, id: 'ggn-btn-attack', action: 0, label: '攻撃 Z', caption: ['攻撃', 'Z'], name: '攻撃・素振り', big: true },
+					{ parent: right, id: 'ggn-btn-dash', action: 1, label: 'ダッシュ X', caption: ['ダッシュ', 'X'], name: 'ダッシュ', big: true },
+					{ parent: right, id: 'ggn-btn-smartdash', action: 7, label: 'スマート', name: 'スマートダッシュ', wide: true, toggle: true }
 				];
 				function specKeys(spec) {
-					return spec.keys || [spec.key];
+					return spec.keys || (typeof spec.key === 'number' ? [spec.key] : []);
+				}
+
+				function specActions(spec) {
+					return spec.actions || (typeof spec.action === 'number' ? [spec.action] : []);
 				}
 
 				function setButtonActive(button, active) {
@@ -155,17 +193,27 @@ namespace
 						return;
 					}
 					if (button.classList.contains('ggn-active')) return;
-					specKeys(spec).forEach(function(key) {
+					button._ggnPressedKeys = specKeys(spec);
+					button._ggnPressedButtons = specActions(spec).map(configuredActionButton);
+					button._ggnPressedKeys.forEach(function(key) {
 						setTouchKey(key, true);
+					});
+					button._ggnPressedButtons.forEach(function(rawButton) {
+						setTouchButton(rawButton, true);
 					});
 					setButtonActive(button, true);
 				}
 
 				function releaseButton(button, spec) {
 					if (!button.classList.contains('ggn-active')) return;
-					specKeys(spec).forEach(function(key) {
+					(button._ggnPressedKeys || []).forEach(function(key) {
 						setTouchKey(key, false);
 					});
+					(button._ggnPressedButtons || []).forEach(function(rawButton) {
+						setTouchButton(rawButton, false);
+					});
+					button._ggnPressedKeys = [];
+					button._ggnPressedButtons = [];
 					setButtonActive(button, false);
 				}
 				specs.forEach(function(spec) {
@@ -226,17 +274,53 @@ namespace
 		}, keyCode);
 	}
 
-	void BrowserReadInputState(cInputState& state)
+	int BrowserPadButtonDown(int buttonIndex)
+	{
+		return EM_ASM_INT({
+			var buttons = Module['ggnPadButtons'];
+			return buttons && buttons[$0 | 0] ? 1 : 0;
+		}, buttonIndex);
+	}
+
+	int BrowserConfiguredButtonDown(const std::vector<int>& padConfig, int actionIndex)
+	{
+		if(actionIndex < 0 || actionIndex >= (int)padConfig.size()) return 0;
+		const int buttonIndex = padConfig[actionIndex];
+		if(buttonIndex < 0 || buttonIndex >= MAX_BUTTONS) return 0;
+		return BrowserPadButtonDown(buttonIndex);
+	}
+
+	void BrowserSyncPadConfig(const std::vector<int>& padConfig)
+	{
+		int config[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+		for(int i = 0; i < 8 && i < (int)padConfig.size(); ++i)
+		{
+			if(padConfig[i] >= 0 && padConfig[i] < MAX_BUTTONS) config[i] = padConfig[i];
+		}
+		EM_ASM({
+			var config = [];
+			config[0] = $0 | 0;
+			config[1] = $1 | 0;
+			config[2] = $2 | 0;
+			config[3] = $3 | 0;
+			config[4] = $4 | 0;
+			config[5] = $5 | 0;
+			config[6] = $6 | 0;
+			config[7] = $7 | 0;
+			if (Module['ggnSetPadConfig']) Module['ggnSetPadConfig'](config);
+		}, config[0], config[1], config[2], config[3], config[4], config[5], config[6], config[7]);
+	}
+	void BrowserReadInputState(cInputState& state, const std::vector<int>& padConfig)
 	{
 		state = cInputState();
-		state.attack = BrowserKeyDown(90);
-		state.dash = BrowserKeyDown(88);
-		state.turn = BrowserKeyDown(67);
-		state.menu = BrowserKeyDown(86) | BrowserKeyDown(65) | BrowserKeyDown(13);
-		state.diagon = BrowserKeyDown(16);
-		state.shot = BrowserKeyDown(83);
-		state.miniMap = BrowserKeyDown(32);
-		state.smartdash = BrowserKeyDown(68);
+		state.attack = BrowserKeyDown(90) | BrowserConfiguredButtonDown(padConfig, 0);
+		state.dash = BrowserKeyDown(88) | BrowserConfiguredButtonDown(padConfig, 1);
+		state.turn = BrowserKeyDown(67) | BrowserConfiguredButtonDown(padConfig, 2);
+		state.menu = BrowserKeyDown(86) | BrowserKeyDown(65) | BrowserKeyDown(13) | BrowserConfiguredButtonDown(padConfig, 3);
+		state.diagon = BrowserKeyDown(16) | BrowserConfiguredButtonDown(padConfig, 4);
+		state.shot = BrowserKeyDown(83) | BrowserConfiguredButtonDown(padConfig, 5);
+		state.miniMap = BrowserKeyDown(32) | BrowserConfiguredButtonDown(padConfig, 6);
+		state.smartdash = BrowserKeyDown(68) | BrowserConfiguredButtonDown(padConfig, 7);
 		state.ue = BrowserKeyDown(38) | BrowserKeyDown(73);
 		state.shita = BrowserKeyDown(40) | BrowserKeyDown(75);
 		state.hidari = BrowserKeyDown(37) | BrowserKeyDown(74);
@@ -354,7 +438,8 @@ int cInput::InitInput_WiiconDevice(HWND WindowHandle)
 void cInput::readPlatformInput(cInputState& state)
 {
 #ifdef __EMSCRIPTEN__
-	BrowserReadInputState(platformInputState_);
+	BrowserSyncPadConfig(patInputManager->padconfigI2B);
+	BrowserReadInputState(platformInputState_, patInputManager->padconfigI2B);
 	state = platformInputState_;
 #else
 	state.attack = patInputManager->GetState(0)->Button[0]
@@ -458,7 +543,8 @@ int cInput::setInputState(const cInputState& state)
 int cInput::getrawPadInput(int player, int buttom)
 {
 #ifdef __EMSCRIPTEN__
-	return 0;
+	if(player != 0 || buttom < 0 || buttom >= MAX_BUTTONS) return 0;
+	return BrowserPadButtonDown(buttom);
 #else
 	if(MAX_PLAYERS <= player || MAX_BUTTONS <= buttom) return 0;
 	return patInputManager->getrawPadInput(player,buttom);
