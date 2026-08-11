@@ -18,6 +18,39 @@ namespace
 			Module['ggnKeys'] = Module['ggnKeys'] || {};
 			Module['ggnPadButtons'] = Module['ggnPadButtons'] || {};
 			Module['ggnPadConfig'] = Module['ggnPadConfig'] || [0, 1, 2, 3, 4, 5, 6, 7];
+			Module['ggnGamepadDeadzone'] = 0.45;
+			Module['ggnGetGamepads'] = function() {
+				if (typeof Module['ggnGamepadProvider'] === 'function') {
+					return Module['ggnGamepadProvider']() || [];
+				}
+				if (typeof navigator === 'undefined' || typeof navigator.getGamepads !== 'function') return [];
+				try { return navigator.getGamepads() || []; } catch (ignore) { return []; }
+			};
+			Module['ggnGamepadButtonDown'] = function(buttonIndex) {
+				var index = buttonIndex | 0;
+				if (index < 0) return 0;
+				var pads = Module['ggnGetGamepads']();
+				for (var i = 0; i < pads.length; ++i) {
+					var pad = pads[i];
+					if (!pad || pad.connected === false || !pad.buttons || index >= pad.buttons.length) continue;
+					var button = pad.buttons[index];
+					if (typeof button === 'number' ? button > 0.5 : button && (button.pressed || button.value > 0.5)) return 1;
+				}
+				return 0;
+			};
+			Module['ggnGamepadDirectionDown'] = function(buttonIndex, axisIndex, axisSign) {
+				if (Module['ggnGamepadButtonDown'](buttonIndex)) return 1;
+				var pads = Module['ggnGetGamepads']();
+				var deadzone = Module['ggnGamepadDeadzone'];
+				for (var i = 0; i < pads.length; ++i) {
+					var pad = pads[i];
+					if (!pad || pad.connected === false || !pad.axes || axisIndex < 0 || axisIndex >= pad.axes.length) continue;
+					var value = Number(pad.axes[axisIndex]);
+					if (!isFinite(value)) continue;
+					if (axisSign < 0 ? value < -deadzone : value > deadzone) return 1;
+				}
+				return 0;
+			};
 			Module['ggnShouldBlockKey'] = function(keyCode) {
 				switch (keyCode | 0) {
 				case 13: case 16: case 32:
@@ -277,9 +310,17 @@ namespace
 	int BrowserPadButtonDown(int buttonIndex)
 	{
 		return EM_ASM_INT({
+			var index = $0 | 0;
 			var buttons = Module['ggnPadButtons'];
-			return buttons && buttons[$0 | 0] ? 1 : 0;
+			if (buttons && buttons[index]) return 1;
+			return Module['ggnGamepadButtonDown'] ? Module['ggnGamepadButtonDown'](index) : 0;
 		}, buttonIndex);
+	}
+	int BrowserGamepadDirectionDown(int buttonIndex, int axisIndex, int axisSign)
+	{
+		return EM_ASM_INT({
+			return Module['ggnGamepadDirectionDown'] ? Module['ggnGamepadDirectionDown']($0 | 0, $1 | 0, $2 | 0) : 0;
+		}, buttonIndex, axisIndex, axisSign);
 	}
 
 	int BrowserConfiguredButtonDown(const std::vector<int>& padConfig, int actionIndex)
@@ -321,10 +362,10 @@ namespace
 		state.shot = BrowserKeyDown(83) | BrowserConfiguredButtonDown(padConfig, 5);
 		state.miniMap = BrowserKeyDown(32) | BrowserConfiguredButtonDown(padConfig, 6);
 		state.smartdash = BrowserKeyDown(68) | BrowserConfiguredButtonDown(padConfig, 7);
-		state.ue = BrowserKeyDown(38) | BrowserKeyDown(73);
-		state.shita = BrowserKeyDown(40) | BrowserKeyDown(75);
-		state.hidari = BrowserKeyDown(37) | BrowserKeyDown(74);
-		state.migi = BrowserKeyDown(39) | BrowserKeyDown(76);
+		state.ue = BrowserKeyDown(38) | BrowserKeyDown(73) | BrowserGamepadDirectionDown(12, 1, -1);
+		state.shita = BrowserKeyDown(40) | BrowserKeyDown(75) | BrowserGamepadDirectionDown(13, 1, 1);
+		state.hidari = BrowserKeyDown(37) | BrowserKeyDown(74) | BrowserGamepadDirectionDown(14, 0, -1);
+		state.migi = BrowserKeyDown(39) | BrowserKeyDown(76) | BrowserGamepadDirectionDown(15, 0, 1);
 	}
 }
 #endif

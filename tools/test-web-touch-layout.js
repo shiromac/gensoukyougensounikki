@@ -24,10 +24,17 @@ assertSourceContains('body.ggn-mobile-ready #ggn-page-links { top: calc(50% + (v
 assertSourceContains('body.ggn-mobile-ready #ggn-page-links a { padding: 1px 6px; }');
 assertSourceContains('#ggn-btn-step { grid-column: 1 / span 2; grid-row: 10 / span 1; }');
 assertSourceContains("Module['ggnPadConfig'] = Module['ggnPadConfig'] || [0, 1, 2, 3, 4, 5, 6, 7]");
+assertSourceContains("typeof navigator.getGamepads !== 'function'");
+assertSourceContains("Module['ggnGamepadButtonDown'] = function(buttonIndex)");
+assertSourceContains("Module['ggnGamepadDirectionDown'] = function(buttonIndex, axisIndex, axisSign)");
 assertSourceContains("function configuredActionButton(actionIndex)");
 assertSourceContains("button._ggnPressedButtons = specActions(spec).map(configuredActionButton)");
 assertSourceContains("BrowserReadInputState(platformInputState_, patInputManager->padconfigI2B)");
 assertSourceContains("return BrowserPadButtonDown(buttom)");
+assertSourceContains('state.ue = BrowserKeyDown(38) | BrowserKeyDown(73) | BrowserGamepadDirectionDown(12, 1, -1)');
+assertSourceContains('state.shita = BrowserKeyDown(40) | BrowserKeyDown(75) | BrowserGamepadDirectionDown(13, 1, 1)');
+assertSourceContains('state.hidari = BrowserKeyDown(37) | BrowserKeyDown(74) | BrowserGamepadDirectionDown(14, 0, -1)');
+assertSourceContains('state.migi = BrowserKeyDown(39) | BrowserKeyDown(76) | BrowserGamepadDirectionDown(15, 0, 1)');
 assert.ok(
   saveSource.includes('ppadconfig_->assign(g_GameEnv.m_Input.patInputManager->padconfigI2B.begin(),'),
   'web pad configuration should be copied into the existing config save data',
@@ -36,6 +43,28 @@ assert.ok(
   saveSource.includes('padconfigI2B.assign(ppadconfig_->begin(), ppadconfig_->end())'),
   'saved pad configuration should be restored for the web input backend',
 );
+
+const gamepadHelperStart = source.indexOf("Module['ggnGamepadDeadzone'] = 0.45;");
+const gamepadHelperEnd = source.indexOf("Module['ggnShouldBlockKey']", gamepadHelperStart);
+assert.ok(gamepadHelperStart >= 0 && gamepadHelperEnd > gamepadHelperStart, 'gamepad helpers should be extractable');
+const gamepadModule = {};
+const gamepadButtons = Array.from({ length: 16 }, () => ({ pressed: false, value: 0 }));
+const testGamepad = { connected: true, buttons: gamepadButtons, axes: [0, 0] };
+gamepadModule.ggnGamepadProvider = () => [null, testGamepad];
+new Function('Module', 'navigator', source.slice(gamepadHelperStart, gamepadHelperEnd))(gamepadModule, {});
+
+gamepadButtons[2] = { pressed: true, value: 1 };
+assert.equal(gamepadModule.ggnGamepadButtonDown(2), 1, 'physical button input should be detected');
+assert.equal(gamepadModule.ggnGamepadButtonDown(3), 0, 'unpressed physical buttons should stay off');
+gamepadButtons[2] = { pressed: false, value: 0 };
+gamepadButtons[12] = { pressed: true, value: 1 };
+assert.equal(gamepadModule.ggnGamepadDirectionDown(12, 1, -1), 1, 'standard D-pad input should be detected');
+gamepadButtons[12] = { pressed: false, value: 0 };
+testGamepad.axes = [-0.7, 0.8];
+assert.equal(gamepadModule.ggnGamepadDirectionDown(14, 0, -1), 1, 'left-stick horizontal input should be detected');
+assert.equal(gamepadModule.ggnGamepadDirectionDown(13, 1, 1), 1, 'left-stick vertical input should be detected');
+testGamepad.axes = [0.2, -0.2];
+assert.equal(gamepadModule.ggnGamepadDirectionDown(12, 1, -1), 0, 'stick drift inside the deadzone should be ignored');
 assert.ok(
   buildScript.includes('$hashInput += (Get-FileHash -LiteralPath $dataChunk.FullName -Algorithm SHA256).Hash'),
   'web build id should include the compressed data package',
