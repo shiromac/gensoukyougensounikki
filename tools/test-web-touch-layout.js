@@ -103,6 +103,14 @@ assert.ok(
   buildScript.includes('html.ggn-controls-hidden body.ggn-mobile-ready div.emscripten_border'),
   'hidden mode should return the full viewport to the game canvas',
 );
+assert.ok(
+  buildScript.includes('align-items:center;padding-left:0;padding-right:0'),
+  'landscape hidden mode should remove the controller side gutters',
+);
+assert.ok(
+  buildScript.includes('html.ggn-controls-hidden #ggn-fullscreen-button,html.ggn-controls-hidden #ggn-page-links a{display:none!important}'),
+  'hidden mode should leave only the restore control visible beside an expanded canvas',
+);
 assert.ok(buildScript.includes('ggn-touch-controls-hidden'), 'hidden mode should persist across reloads');
 assert.ok(
   buildScript.includes('window.dispatchEvent(new Event("blur"))'),
@@ -121,6 +129,8 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(content.includes('このブラウザでは全画面表示を利用できません'), `${name} should contain the unsupported-browser guidance`);
   assert.match(content, /id=(?:"ggn-controls-toggle"|ggn-controls-toggle)/, `${name} should contain the touch-control toggle`);
   assert.ok(content.includes('ggn-controls-hidden #ggn-touch-controls'), `${name} should contain hidden-mode styling`);
+  assert.ok(content.includes('align-items:center;padding-left:0;padding-right:0'), `${name} should remove hidden landscape gutters`);
+  assert.ok(content.includes('ggn-controls-hidden #ggn-fullscreen-button'), `${name} should hide utility controls except restore`);
   assert.ok(content.includes('ggn-touch-controls-hidden'), `${name} should persist hidden mode`);
   assert.ok(!content.includes('&#25147;&#12377;'), `${name} script labels should not contain undecoded HTML entities`);
 });
