@@ -1,234 +1,166 @@
-# Portrait visual viewport fit
+# Portrait viewport fit with the author's original two-pad layout
 
-## Challenge / purpose / success
+## Authoritative decision (2026-09-03)
 
-- Challenge: mobile portrait controls can extend below the actually visible browser area when browser chrome reduces `window.visualViewport` without reducing the CSS layout viewport.
-- Purpose: keep every touch control visible and immediately tappable while retaining the enlarged portrait controls whenever space permits.
-- Success: all 17 portrait buttons, the 4:3 canvas, and page controls remain inside the actual visible viewport without overlap; landscape, fullscreen, hidden-controls, gamepad/key configuration, and audio lifecycle behavior remain unchanged.
+- Challenge: the portrait reflow replaced the author's two-pad design; the attempted restoration in `92bbbe4` still put turn and diagonal-lock controls on the left.
+- Purpose: restore the authored arrangement faithfully so movement and every right-hand action remain usable together.
+- Success: all 17 controls keep their original parent, grid position, span, hierarchy, and input semantics; both pads and the 4:3 canvas fit the visible viewport; landscape, fullscreen, hidden controls, key/gamepad configuration, and audio lifecycle do not regress.
+- Approval: the user explicitly required both turn and diagonal-lock on the right, then said: 「元の洗練された配置に戻してください。私がデザインしたものです」.
 
-## Authority and invariant
+This decision supersedes the four-column portrait reflow introduced in `e7d3a4b` and the one-column action rail in `92bbbe4`. The latter narrowed the user's restoration request to four combat actions and incorrectly treated that narrower interpretation as approved.
 
-`window.visualViewport` owns the visible top, bottom, and height. A small page synchronizer projects those values to CSS custom properties. When `VisualViewport` is unavailable, `window.innerHeight` is the fallback authority.
+## Sources and restored contract
 
-Invariant: in portrait mobile mode, the page controls, 4:3 canvas, and touch panel must all remain inside the visible viewport without overlap. The page-control strip is `max(40px, safe-area-top + 36px)` and a compact minimum game region is reserved before touch rows are scaled. Target row heights are preserved while they fit and are reduced only as much as required by the remaining visible height. The supported visual-height floor is 400px including representative 47px top and 34px bottom safe areas; at that boundary every control row remains at least 32px and the 4:3 game remains at least 80px high.
+- Authored refinement: `abe54d23b7db34ef8e093591932bd8da985808be` (`fix: refine mobile touch controls layout`, 2026-06-18).
+- Last layout before the portrait reflow: `0cfa1598295048a0bcd3dbfb9545f7ee18b3fde2` (parent of `e7d3a4b`).
+- The same original placement CSS and pad ownership still exist in `source/gameMainSystem/cInput.cpp`; no new placement design is needed.
+- Existing viewport-fit requirements: browser chrome and safe areas must not hide controls; reserve the page strip and a minimum 4:3 game region.
+- Later user-authoritative priority: restore the original arrangement and relative sizes, rather than preserve the 73/83px-wide cells from the rejected reflow. Those widths cannot coexist with the original two-pad topology on a 320/360px screen.
 
-```mermaid
-flowchart LR
-    Browser[Browser VisualViewport] --> Sync[Viewport synchronizer]
-    Sync --> Vars[CSS custom properties]
-    Vars --> PageControls[Page controls]
-    Vars --> Controls[Portrait touch controls]
-    Vars --> Canvas[4:3 game canvas]
-    Input[cInput.cpp control DOM] --> Controls
-```
+Each pad retains six columns and ten rows. Coordinates and spans below are local to the original parent pad.
 
-## Runtime sequences
+| Pad | Control | Column / span | Row / span |
+|---|---|---|---|
+| left | map | 1 / 6 | 1 / 2 |
+| left | up-left, up, up-right | 1 / 2, 3 / 2, 5 / 2 | 3 / 2 |
+| left | left, right | 1 / 2, 5 / 2 | 5 / 2 |
+| left | down-left, down, down-right | 1 / 2, 3 / 2, 5 / 2 | 7 / 2 |
+| left | step | 1 / 2 | 10 / 1 |
+| right | menu | 1 / 6 | 1 / 2 |
+| right | turn, diag, shot | 1 / 2, 3 / 2, 5 / 2 | 3 / 2 |
+| right | attack, dash | 1 / 3, 4 / 3 | 5 / 3 |
+| right | smartdash | 1 / 6 | 8 / 2 |
 
-```mermaid
-sequenceDiagram
-    participant Browser as Browser
-    participant Sync as Viewport synchronizer
-    participant CSS as CSS layout
-    Browser->>Sync: load / resize / scroll / orientation change
-    Sync->>Sync: sample visualViewport or innerHeight
-    Sync->>CSS: update visible top, bottom, height
-    CSS-->>Browser: controls and canvas fit visible area
-```
+The empty direction-cluster center, lower-left step, large adjacent attack/dash, and wide smartdash are preserved. The generator must not contain per-button placement selectors, redefine the pad grid tracks, or override touch-button typography/presentation. Original big/wide/caption flags, fonts, borders, gaps, and labels remain unchanged.
 
-Fallback path: if `window.visualViewport` is missing, the same synchronizer publishes `innerHeight` with zero visual offset. No domain entities or services are introduced; this is browser UI infrastructure only.
+## Viewport projection, not a second placement authority
 
-## Alternatives
+`cInput.cpp` owns the control DOM, parents, original grid, labels, typography, and semantic input mapping. The generator only publishes a visible-rectangle synchronizer and whole-pad scale projection. It never shrinks cell tracks independently of text/gaps.
 
-- CSS `svh` only: rejected because it cannot reliably represent `visualViewport.offsetTop` and OEM browser chrome behavior.
-- Always reduce the buttons: rejected because it regresses the requested portrait button size.
-- Scrollable controls: rejected because controls must stay simultaneously visible and immediately tappable.
-
-## Blast radius and verification
-
-- Generator: `tools/build-web.ps1`
-- Generated trial pages: `docs/play/ggn.html`, `docs/play/index.html`
-- Contract tests: `tools/test-web-touch-layout.js`
-- Regression checks: landscape and hidden-controls layout, fullscreen controller, gamepad/key configuration, and audio lifecycle tests
-
-## Portrait action-side restoration
-
-### Approved decision and requirements
-
-- New authoritative requirement: in portrait, the direction cluster stays on the left and the combat actions (`attack`, `dash`, `smartdash`, and `shot`) stay on the right so two-thumb movement-plus-action input is possible.
-- Approval record: after the introduction point and current layout were shown, the user stated that attack controls belong on the right and confirmed, “ここは元に戻すべきです”.
-- Preserved requirements: all 17 controls remain inside the visible viewport; 320px and 360px portrait buttons retain the enlarged minimum dimensions; landscape, hidden-controls, fullscreen, key configuration/gamepad mapping, and audio lifecycle behavior do not change.
-
-The portrait panel keeps four equal columns. In gameplay rows, columns 1–3 are the movement zone and column 4 is the combat-action rail. This retains 83px buttons at 360px and 73px at 320px. `smartdash` changes from a two-column positional projection to one column, but remains at or above the established enlarged minimum; this is the necessary spatial trade-off for the user-approved left/right separation. The utility row is not part of the simultaneous-input boundary, so `map` and `menu` retain their established two-column widths. Rows 2–4 use the existing action height for the direction cluster and `attack`/`dash`/`smartdash`; row 5 uses the main height for `turn`/`diag` and `shot`.
-
-At constrained visual heights, let `availableTracks = visibleHeight - pageStrip - minimumCanvas - (4 * 4px row gaps) - 12px canvas gap - max(12px, safeBottom)`. The allocation order is fixed: first reserve the target action extras, scale the base rows against the remainder using the existing 32px floor, then recover the largest equal extra that fits:
+Normal portrait dimensions retain the original 28px cell cap, 4px internal gaps, minimum 10px between pads, and 8px minimum outer edges. Base geometry continues to use the original layout-viewport width (the same width that owns CSS vw typography). Safe edges and reduced visible dimensions constrain one whole-pad scale, preserving all internal ratios:
 
 ```text
-targetExtra = 8
-baseBudget = max(0, availableTracks - 3 * targetExtra)
-(utility, main) = scaleExistingTargetsInto(baseBudget, floor = 32)
-actionExtra = clamp((availableTracks - utility - 4 * main) / 3, 0, targetExtra)
+leftEdge = max(8, safeLeft); rightEdge = max(8, safeRight)
+bottomEdge = max(12, safeBottom)
+pageStrip = max(40, safeTop + 36)
+minimumCanvas = clamp(visibleHeight * 0.2, 48, 96)
+baseCell = max(0, min(28, (layoutWidth - 66) / 12))
+basePadWidth = 6*baseCell + 5*4
+basePadHeight = 10*baseCell + 9*4
+widthScale = max(0, (visibleWidth - leftEdge - rightEdge - 10) / (2*basePadWidth))
+heightScale = max(0, (visibleHeight - pageStrip - minimumCanvas - 12 - bottomEdge) / basePadHeight)
+padScale = min(1, widthScale, heightScale)
+renderedPanelHeight = basePadHeight * padScale
+controlsReservedHeight = renderedPanelHeight + bottomEdge
 ```
 
-At the supported 400px boundary with 47px top and 34px bottom safe areas, `availableTracks = 175px`, `baseBudget = 151px`, `utility = main = 32px`, `actionExtra = 5px`, the three action rows are 37px, and the canvas remains 80px. The grid explicitly keeps `column-gap: 4px; row-gap: 4px`. In compact rows, two-line big-button text scales down with the available action-row height (15px floor) so text remains inside the hit target.
+Left and right pads anchor to their corresponding visible safe edges; both sit above the visible bottom safe edge. CSS transform origins are bottom-left and bottom-right respectively. Whole-pad transforms scale text, borders and gaps with the original buttons, so compact mode cannot create new label wrapping. At 320x568, scale = 1, baseCell = 21.1667px and direction width = 46.3333px. At 360x640, scale = 1, baseCell = 24.5px, direction width = 53px, and attack/dash width = 81.5px. At a 320x400 visible viewport with 47px top and 34px bottom safe areas, rendered pad height = 191px, scale = 191/247.6667, and canvas height remains 80px. These replace the rejected four-column minimum-size contract.
 
-| Row | Left movement/utility zone (columns 1–3) | Right action rail (column 4) | Track |
-|---|---|---|---|
-| 1 | `map` (span 2) | `menu` (columns 3–4, span 2) | utility |
-| 2 | `up-left`, `up`, `up-right` | `attack` | main + action extra |
-| 3 | `left`, `step`, `right` | `dash` | main + action extra |
-| 4 | `down-left`, `down`, `down-right` | `smartdash` | main + action extra |
-| 5 | `turn`, `diag`, empty | `shot` | main |
+Guarantee scope: visible width at least 320px, visible height at least 400px, and tested safe-area bounds top <=47px, bottom <=34px, left/right <=47px. Outside this scope the same projection is best-effort; `ggnVisualViewport.isWithinPortraitFitGuarantee` is false and tests must not classify zero-scale or out-of-scope geometry as a successful supported layout. No new input behavior or control-rearrangement fallback is introduced.
 
-### Alternatives and review correction
+Safe-area input is not provided by VisualViewport: four root CSS properties project `env(safe-area-inset-*)`, then the synchronizer reads them with getComputedStyle. It publishes root-only `--ggn-portrait-pad-scale` and `--ggn-portrait-panel-height`; portrait-only body CSS uses `--ggn-controls-height: calc(var(--ggn-portrait-panel-height, var(--ggn-panel-height)) + max(12px, env(safe-area-inset-bottom)))`, explicitly including bottomEdge in the canvas reservation. At the 400px boundary this reserves 191+34=225px. The runtime body `--ggn-cell` is never shadowed or replaced. Landscape consumes neither portrait binding nor transform.
 
-- Restore the pre-`e7d3a4b` two-pad dimensions exactly: rejected because it restores the small portrait button widths that prompted the enlargement work.
-- Four equal columns with a one-column action rail: selected after review; action-height tracks avoid shortening `attack`/`dash`, while one-column `smartdash` remains above the existing minimum.
-- Five equal semantic columns: rejected because a 320px viewport produces sub-63px cells.
-- Five asymmetric columns with two narrow action tracks: rejected after review because it adds a fifth selector track and special column gap for only about 3px of action width over the four-column rail.
+Fallback: without VisualViewport, use inner dimensions, then root client dimensions, with zero visual offsets. Fullscreen/rotation resample the same projection. Landscape retains its existing runtime sizing and original positions.
 
-### Module relationship — current and target
+## Alternatives / approval gate
 
-Current:
+1. Restore an entire old checkout: rejected; it would remove later viewport, audio, key configuration, and fullscreen work outside the placement request.
+2. Remove the portrait reflow and reuse original runtime placement/presentation, retaining whole-pad viewport scaling only: selected; it directly implements the user's explicit restoration request. Cell-only shrinking was rejected in design review because it changes text-to-button ratios and introduces wrapping.
+3. Add turn/diag to another new arrangement: rejected; that is another redesign, not restoration.
+
+No new abstraction, entity, public API, state owner, or input contract is introduced. The placement-authority correction is user-authorized above. DDD entity creation and Live/Replay/Prefetch are N/A: browser-only presentation infrastructure.
+
+## Module relationship — current to target delta
 
 ```mermaid
 flowchart LR
-    Spec[TouchControlSpec in cInput.cpp\nid to semantic action] -- "compiled JavaScript" --> Runtime[ggn.js web runtime]
-    Generator[build-web.ps1] -- "4-column id-to-position CSS" --> Pages
-    Viewport[VisualViewport synchronizer] -- "visible rect and row sizes" --> Browser[Browser layout]
-    Pages -- "loads CSS and runtime" --> Browser
-    Runtime -- "creates control DOM and input handlers" --> Browser
-    Browser -- "semantic action index" --> Mapping[configured action-index to raw-button mapping]
-    Mapping -- "raw button index" --> Browser
-    Browser -- "touch key/button writes" --> ModuleState[Module touch key/button state]
-    ModuleState -- "polled key/button state" --> GameInput[BrowserReadInputState]
+    Source[cInput.cpp] -- "original specs, grid, handlers" --> Runtime[ggn.js runtime]
+    Generator[build-web.ps1] -. "before: per-button reflow; after: viewport sizing only" .-> Pages[Trial HTML]
+    Pages -- "CSS" --> Layout[Browser layout]
+    Pages -- "viewport script" --> Sync[Viewport synchronizer]
+    Pages -- "four CSS env properties" --> SafeAreas[Computed root safe areas]
+    Viewport[Browser visible viewport] -- "visible and layout rectangles" --> Sync
+    SafeAreas -- "computed pixel insets" --> Sync
+    Sync -- "visible rectangle, whole-pad scale, rendered height" --> Layout
+    Runtime -- "original DOM, grid and handlers" --> Layout
+    Layout -- "independent pointer events" --> Runtime
 ```
 
-Target:
-
-```mermaid
-flowchart LR
-    Spec[TouchControlSpec in cInput.cpp\nid to semantic action] -- "compiled JavaScript" --> Runtime[ggn.js web runtime]
-    Generator[build-web.ps1] -- "4-column id-to-zone CSS" --> Pages[docs/play HTML]
-    Viewport[VisualViewport synchronizer] -- "visible rect, row sizes, action extra" --> Browser[Browser layout]
-    Pages -- "loads CSS and runtime" --> Browser
-    Runtime -- "creates control DOM and input handlers" --> Browser
-    Browser -- "semantic action index" --> Mapping[configured action-index to raw-button mapping]
-    Mapping -- "raw button index" --> Browser
-    Browser -- "independent touch key/button writes" --> ModuleState[Module touch key/button state]
-    ModuleState -- "polled key/button state" --> GameInput[BrowserReadInputState]
-    classDef changed stroke-dasharray: 5 5
-    class Generator,Viewport,Browser changed
-```
-
-### Representative sequences
-
-Build/load selector binding:
+## Representative sequences
 
 ```mermaid
 sequenceDiagram
-    participant Spec as TouchControlSpec
+    participant Source as cInput.cpp
     participant Runtime as ggn.js runtime
     participant Generator as build-web.ps1
-    participant Pages as docs/play HTML
-    participant Browser as Browser layout
-    Spec->>Runtime: compile ids and id-to-action handlers
-    Generator->>Pages: inject id-to-grid-zone CSS
-    Pages->>Browser: load page, CSS, and runtime
-    Runtime->>Browser: create matching DOM ids and handlers
+    participant Pages as Trial HTML
+    participant Sync as Viewport synchronizer
+    participant SafeAreas as Computed root safe areas
+    participant Layout as Browser layout
+    Source->>Runtime: compile original specs, grid and handlers
+    Generator->>Pages: emit viewport-only styles and script
+    Pages->>Layout: load styles without placement overrides
+    Pages->>SafeAreas: install four CSS env projections
+    Pages->>Sync: initialize viewport synchronizer
+    Runtime->>Layout: create original left/right pads and controls
 ```
-
-Main path — two independent pointers:
 
 ```mermaid
 sequenceDiagram
     actor Player
-    participant Browser as Browser handlers
-    participant Mapping as configured action mapping
-    participant ModuleState as Module touch state
-    participant GameInput as BrowserReadInputState
-    Player->>Browser: pointer 1 down on left direction
-    Browser->>ModuleState: capture pointer 1; setTouchKey(direction, true)
-    Player->>Browser: pointer 2 down on right attack or dash
-    Browser->>Mapping: configuredActionButton(semantic action)
-    Mapping-->>Browser: raw button index
-    Browser->>ModuleState: capture pointer 2; setTouchButton(raw button, true)
-    GameInput->>ModuleState: poll in the same frame
-    ModuleState-->>GameInput: direction and raw action are both active
-    Player->>Browser: pointer 2 up
-    Browser->>ModuleState: release action; keep pointer 1 direction active
-    Player->>Browser: pointer 1 up
-    Browser->>ModuleState: release remaining direction
+    participant Layout as Browser layout
+    participant Runtime as ggn.js runtime
+    Player->>Layout: hold left direction and right turn/diag/attack
+    Layout->>Runtime: independent pointer events to original handlers
+    Note over Runtime: original configured-action mapping and held-input lifecycle remain unchanged
 ```
-
-`dash` is covered by the attack flow because both are held actions with identical pointer lifecycle. `smartdash` is not: it toggles on a right-side pointerdown, remains active after pointerup, toggles off on the next pointerdown, and is cleared with all input state by blur/visibility/hidden-controls.
 
 ```mermaid
 sequenceDiagram
-    actor Player
-    participant Browser as Browser layout / input handlers
-    Player->>Browser: hold a left-side direction
-    Player->>Browser: pointerdown on right-side smartdash
-    Browser->>Browser: toggle action 7 on
-    Player->>Browser: pointerup on smartdash
-    Note over Browser: action 7 remains on; direction remains held
-    Player->>Browser: second pointerdown on smartdash
-    Browser->>Browser: toggle action 7 off
-    Player->>Browser: hide controls or page becomes hidden
-    Browser->>Browser: blur/visibility clears all input state
+    actor Host as Browser / OS chrome
+    participant Viewport as Browser visible viewport
+    participant SafeAreas as Computed root safe areas
+    participant Sync as Viewport synchronizer
+    participant Layout as Browser layout
+    Host->>Viewport: resize/scroll or rotation
+    Viewport->>Sync: visible and layout rectangles
+    SafeAreas->>Sync: computed CSS env pixel insets
+    Sync->>Sync: reserve page/canvas; compute one whole-pad scale
+    Sync->>Layout: update rectangle, scale, rendered height and anchors
+    Note over Layout: parents, rows, columns and spans never change
 ```
 
-Visual-viewport edge path:
-
-```mermaid
-sequenceDiagram
-    actor BrowserHost as Browser / OS chrome
-    participant Viewport as VisualViewport synchronizer
-    participant Browser as Browser layout
-    BrowserHost->>Viewport: resize or visual viewport offset change
-    Viewport->>Viewport: preserve row floors; reduce action extra if required
-    Viewport->>Browser: publish visible rect, row sizes, action extra
-    Browser->>Browser: recompute four columns and five rows
-    Note over Browser: all 17 controls remain inside the visible viewport;<br/>right-side action zone remains disjoint from movement
-```
-
-Fullscreen is covered by the same viewport-resync sequence. Landscape is N/A to the changed CSS because the selector is portrait-only and the existing landscape geometry suite remains the regression authority. Hidden-controls is N/A to placement because it removes the panel; its existing blur-release executable test remains the input-state authority. Gamepad input is N/A to pointer placement; existing saved-mapping and gamepad executable tests remain authoritative.
-
-### Class/component relationship
+## Class/component relationship
 
 ```mermaid
 classDiagram
-    class TouchControlSpec {
-        <<existing data objects>>
+    class OriginalTouchSpec {
+        <<existing data>>
+        parentPad
         id
-        semanticActionIndex
+        semanticAction
         pointerLifecycle
     }
-    class PortraitGridContract {
-        <<test data>>
-        id
-        column
-        span
-        row
-    }
-    class VisualViewportProjection {
-        <<browser projection>>
+    class ViewportProjection {
+        <<UI data>>
         visibleRect
-        rowSizes
-        actionExtra
-        compactActionFont
+        safeEdges
+        wholePadScale
+        renderedPanelHeight
     }
-    class ConfiguredActionMapping {
-        <<existing input component>>
-        actionIndexToRawButton
+    class ViewportSynchronizer {
+        <<existing browser function>>
+        sampleViewport()
+        publishProjection()
     }
-    PortraitGridContract ..> TouchControlSpec : same button ids
-    PortraitGridContract ..> VisualViewportProjection : computes rectangles
-    TouchControlSpec ..> ConfiguredActionMapping : semantic action index
+    ViewportSynchronizer ..> ViewportProjection : publishes to layout
 ```
 
-No domain data class, service, or entity is introduced. `TouchControlSpec` owns `id → semantic action index`; saved configuration owns `semantic action index → raw pad button`; CSS is only the `id → rectangle` projection. Contract tests bind all 17 unique CSS selectors to one geometry table, bind combat-control ids to their production semantic action indices, and assert zone separation, size, containment, non-overlap, the 400px `32px + 5px` compact-row boundary, and compact action-text fit at 320px, 360px, compact/safe-area, and landscape viewports.
+OriginalTouchSpec travels from source to runtime; ViewportProjection travels from synchronizer to layout. The historical grid contract is private test data, not runtime authority. Diagram exit check: changed generator/layout interactions are covered by load and resize sequences; data flow, procedures, and component relationships have no open item.
 
-### Blast-radius delta
+## Blast radius / recurrence prevention / verification
 
-- Changed: portrait-only CSS positions and action-extra projection in `tools/build-web.ps1`, generated trial HTML, and the portrait selector/geometry model in `tools/test-web-touch-layout.js`.
-- Unchanged by design: control DOM/input ownership in `source/gameMainSystem/cInput.cpp`, landscape CSS, fullscreen/hidden-controls behavior, saved key/gamepad configuration, and audio lifecycle.
+- Change: `tools/build-web.ps1`, generated `docs/play/ggn.html` and `docs/play/index.html`, `tools/test-web-touch-layout.js`.
+- Preserve: original placement/input code in `source/gameMainSystem/cInput.cpp`, compiled JS/WASM, landscape, hidden/fullscreen controller, gamepad/key mapping, audio lifecycle.
+- Prevention: a historical 17-control contract checks runtime CSS positions/spans, presentation flags and parent membership. Both orientations use it. Generator tests reject per-button overrides, touch-button presentation overrides and pad-grid redefinitions (including a mutation retaining the old font override). Every right-parent control, including turn/diag, must remain to the right of every left-parent control.
+- Verify runtime button and label rectangles at 320/360 portrait and 320/360/390/412 widths with reduced 400px visual height/safe areas, landscape and hidden controls; simultaneous direction plus turn/diag/attack; supported/unsupported classification; exact generated HTML synchronization; touch/audio suites; PowerShell syntax and diff checks; fresh team review against the author's original design.
