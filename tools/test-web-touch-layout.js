@@ -7,6 +7,83 @@ const source = fs.readFileSync(path.join(root, 'source', 'gameMainSystem', 'cInp
 const saveSource = fs.readFileSync(path.join(root, 'source', 'cSaveStore.cpp'), 'latin1');
 const buildScript = fs.readFileSync(path.join(root, 'tools', 'build-web.ps1'), 'utf8');
 
+const PORTRAIT_BUTTON_PLACEMENTS = Object.freeze({
+  map: { col: 1, row: 1, colSpan: 2 },
+  menu: { col: 3, row: 1, colSpan: 2 },
+  'up-left': { col: 1, row: 2 },
+  up: { col: 2, row: 2 },
+  'up-right': { col: 3, row: 2 },
+  attack: { col: 4, row: 2 },
+  left: { col: 1, row: 3 },
+  step: { col: 2, row: 3 },
+  right: { col: 3, row: 3 },
+  dash: { col: 4, row: 3 },
+  'down-left': { col: 1, row: 4 },
+  down: { col: 2, row: 4 },
+  'down-right': { col: 3, row: 4 },
+  smartdash: { col: 4, row: 4 },
+  turn: { col: 1, row: 5 },
+  diag: { col: 2, row: 5 },
+  shot: { col: 4, row: 5 },
+});
+
+const productionGapMatch = source.match(/--ggn-gap:\s*(\d+(?:\.\d+)?)px/);
+assert.ok(productionGapMatch, 'production touch styles should define --ggn-gap in pixels');
+const PRODUCTION_TOUCH_GAP = Number(productionGapMatch[1]);
+assert.equal(PRODUCTION_TOUCH_GAP, 4, 'portrait geometry contract should use the production 4px touch gap');
+
+const productionSpecsBlock = source.match(/var specs = \[([\s\S]*?)\n\s*\];/);
+assert.ok(productionSpecsBlock, 'production touch-control specs should be extractable');
+const productionTouchSpecs = [...productionSpecsBlock[1].matchAll(/^\s*\{ parent: (left|right), id: 'ggn-btn-([^']+)', (.*) \},?\s*$/gm)]
+  .map((match) => {
+    const [, parent, id, fields] = match;
+    const keys = fields.match(/keys:\s*\[([^\]]+)\]/);
+    const key = fields.match(/(?:^|, )key:\s*(\d+)/);
+    const actions = fields.match(/actions:\s*\[([^\]]+)\]/);
+    const action = fields.match(/(?:^|, )action:\s*(\d+)/);
+    return {
+      id,
+      parent,
+      keys: keys ? keys[1].split(',').map(Number) : key ? [Number(key[1])] : [],
+      actions: actions ? actions[1].split(',').map(Number) : action ? [Number(action[1])] : [],
+      toggle: /(?:^|, )toggle:\s*true/.test(fields),
+    };
+  });
+assert.equal(productionTouchSpecs.length, 17, 'production should define exactly 17 touch controls');
+assert.equal(new Set(productionTouchSpecs.map((spec) => spec.id)).size, 17, 'production touch-control ids should be unique');
+assert.deepEqual(
+  new Set(productionTouchSpecs.map((spec) => spec.id)),
+  new Set(Object.keys(PORTRAIT_BUTTON_PLACEMENTS)),
+  'production specs and portrait placement contract should cover the same 17 ids',
+);
+const expectedProductionTouchSpecs = {
+  map: { parent: 'left', actions: [6] },
+  'up-left': { parent: 'left', keys: [38, 37] },
+  up: { parent: 'left', keys: [38] },
+  'up-right': { parent: 'left', keys: [38, 39] },
+  left: { parent: 'left', keys: [37] },
+  right: { parent: 'left', keys: [39] },
+  'down-left': { parent: 'left', keys: [40, 37] },
+  down: { parent: 'left', keys: [40] },
+  'down-right': { parent: 'left', keys: [40, 39] },
+  step: { parent: 'left', actions: [0, 1] },
+  menu: { parent: 'right', actions: [3] },
+  turn: { parent: 'right', actions: [2] },
+  diag: { parent: 'right', actions: [4] },
+  shot: { parent: 'right', actions: [5] },
+  attack: { parent: 'right', actions: [0] },
+  dash: { parent: 'right', actions: [1] },
+  smartdash: { parent: 'right', actions: [7], toggle: true },
+};
+Object.entries(expectedProductionTouchSpecs).forEach(([id, expected]) => {
+  const actual = productionTouchSpecs.find((spec) => spec.id === id);
+  assert.ok(actual, `production touch specs should contain ${id}`);
+  assert.equal(actual.parent, expected.parent, `${id} should remain in the ${expected.parent} production pad`);
+  assert.deepEqual(actual.keys, expected.keys || [], `${id} should retain its production key semantics`);
+  assert.deepEqual(actual.actions, expected.actions || [], `${id} should retain its production action semantics`);
+  assert.equal(actual.toggle, expected.toggle || false, `${id} should retain its production toggle semantics`);
+});
+
 function assertSourceContains(fragment) {
   assert.ok(
     source.includes(fragment),
@@ -180,8 +257,8 @@ assert.ok(
   'portrait utility controls should remain comfortably touchable',
 );
 assert.ok(
-  buildScript.includes('#ggn-touch-controls button.ggn-big{font-size:clamp(20px,6vw,26px)}'),
-  'portrait action labels should scale with the larger buttons',
+  buildScript.includes('#ggn-touch-controls button.ggn-big{font-size:clamp(15px,min(6vw,calc((var(--ggn-portrait-action-row) - 4px)/2.1)),26px)}'),
+  'portrait action labels should scale with the action row without overflowing compact mode',
 );
 assert.ok(
   buildScript.includes('canvas.emscripten{box-sizing:border-box;width:min(100%,calc((100vh - var(--ggn-controls-height) - 12px) * 1.333333))'),
@@ -206,6 +283,26 @@ const expectedInjectedStyle = [
   'hiddenCanvasStyle',
   'visualViewportPositionStyle',
 ].map(assignedPowerShellString).join('');
+const portraitControlCss = assignedPowerShellString('portraitControlStyle');
+assert.ok(
+  portraitControlCss.includes('column-gap:var(--ggn-gap);row-gap:var(--ggn-gap)'),
+  'portrait CSS should use the production touch gap for both grid axes',
+);
+const portraitSelectorIds = [...portraitControlCss.matchAll(/#ggn-btn-([a-z-]+)\{/g)].map((match) => match[1]);
+assert.equal(portraitSelectorIds.length, 17, 'portrait CSS should place exactly 17 button selectors');
+assert.equal(new Set(portraitSelectorIds).size, 17, 'portrait CSS button selectors should be unique');
+assert.deepEqual(
+  new Set(portraitSelectorIds),
+  new Set(Object.keys(PORTRAIT_BUTTON_PLACEMENTS)),
+  'portrait CSS and the geometry contract should cover the same button ids',
+);
+Object.entries(PORTRAIT_BUTTON_PLACEMENTS).forEach(([id, placement]) => {
+  const declaration = portraitControlCss.match(new RegExp(`#ggn-btn-${id}\\{([^}]*)\\}`));
+  assert.ok(declaration, `portrait CSS should contain #ggn-btn-${id}`);
+  const column = `${placement.col}${placement.colSpan ? `/span ${placement.colSpan}` : ''}`;
+  assert.ok(declaration[1].includes(`grid-column:${column}`), `${id} should use portrait grid column ${column}`);
+  assert.ok(declaration[1].includes(`grid-row:${placement.row}`), `${id} should use portrait grid row ${placement.row}`);
+});
 const expectedInjectedBody = [
   'audioLifecycleScript',
   'visualViewportScript',
@@ -290,6 +387,7 @@ assert.equal(viewportValues.get('--ggn-visual-viewport-bottom'), '120px', 'hidde
 assert.equal(viewportValues.get('--ggn-visual-viewport-center-x'), '180px', 'portrait controls should center in the visible viewport');
 assert.equal(viewportValues.get('--ggn-synced-portrait-utility-row'), '56px', 'toolbar reduction should retain useful utility button height');
 assert.equal(viewportValues.get('--ggn-synced-portrait-main-row'), '66px', 'toolbar reduction should retain useful gameplay button height');
+assert.equal(viewportValues.get('--ggn-synced-portrait-action-extra'), '8px', 'normal portrait height should retain the enlarged action-row extra');
 mockVisualViewport.width = 336;
 mockVisualViewport.offsetLeft = 12;
 mockVisualViewport.offsetTop = 32;
@@ -317,7 +415,67 @@ assert.equal(animationFrames.length, 1, 'viewport bursts should be coalesced int
 animationFrames.shift()();
 assert.equal(viewportValues.get('--ggn-visual-viewport-bottom'), '0px', 'expanded browser chrome should remove the bottom compensation');
 assert.equal(viewportValues.get('--ggn-synced-portrait-main-row'), '72px', 'full-height portrait should retain the enlarged gameplay buttons');
+assert.equal(viewportValues.get('--ggn-synced-portrait-action-extra'), '8px', 'full-height portrait should retain the full action-row extra');
 assert.ok(viewportWindowHandlers.resize && viewportWindowHandlers.orientationchange, 'window resize and rotation should also resync the viewport');
+
+viewportSafeAreas['--ggn-safe-area-top'] = '47px';
+viewportSafeAreas['--ggn-safe-area-bottom'] = '34px';
+mockVisualViewport.height = 400;
+visualViewportHandlers.resize();
+animationFrames.shift()();
+assert.equal(viewportValues.get('--ggn-synced-portrait-utility-row'), '32px', 'supported compact boundary should use the utility-row floor');
+assert.equal(viewportValues.get('--ggn-synced-portrait-main-row'), '32px', 'supported compact boundary should use the main-row floor');
+assert.equal(viewportValues.get('--ggn-synced-portrait-action-extra'), '5px', 'supported compact boundary should distribute the remaining 15px over three action rows');
+
+function runVisualViewportFallback({ innerWidth, innerHeight, clientWidth, clientHeight }) {
+  const values = new Map();
+  const handlers = {};
+  const fallbackRoot = {
+    clientWidth,
+    clientHeight,
+    style: { setProperty(name, value) { values.set(name, value); } },
+  };
+  const fallbackWindow = {
+    innerWidth,
+    innerHeight,
+    addEventListener(type, handler) { handlers[type] = handler; },
+  };
+  new Function('window', 'document', 'getComputedStyle', 'setTimeout', visualViewportScriptMatch[1])(
+    fallbackWindow,
+    { documentElement: fallbackRoot },
+    () => ({ getPropertyValue: () => '0px' }),
+    (callback) => { callback(); return 1; },
+  );
+  return { values, handlers };
+}
+
+const innerViewportFallback = runVisualViewportFallback({
+  innerWidth: 390,
+  innerHeight: 700,
+  clientWidth: 375,
+  clientHeight: 667,
+});
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-width'), '390px', 'fallback should use window.innerWidth without VisualViewport');
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-height'), '700px', 'fallback should use window.innerHeight without VisualViewport');
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-left'), '0px', 'fallback viewport should start at the layout origin');
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-top'), '0px', 'fallback viewport should start at the layout origin');
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-right'), '0px', 'fallback should not invent a right inset');
+assert.equal(innerViewportFallback.values.get('--ggn-visual-viewport-bottom'), '0px', 'fallback should not invent a bottom inset');
+assert.equal(innerViewportFallback.values.get('--ggn-synced-portrait-main-row'), '76px', 'fallback should still publish portrait row sizing');
+assert.ok(innerViewportFallback.handlers.resize && innerViewportFallback.handlers.orientationchange, 'fallback should retain window resize/orientation listeners');
+
+const clientViewportFallback = runVisualViewportFallback({
+  innerWidth: 0,
+  innerHeight: 0,
+  clientWidth: 320,
+  clientHeight: 568,
+});
+assert.equal(clientViewportFallback.values.get('--ggn-visual-viewport-width'), '320px', 'fallback should use root.clientWidth when innerWidth is unavailable');
+assert.equal(clientViewportFallback.values.get('--ggn-visual-viewport-height'), '568px', 'fallback should use root.clientHeight when innerHeight is unavailable');
+assert.equal(clientViewportFallback.values.get('--ggn-visual-viewport-center-x'), '160px', 'root-client fallback should center portrait controls');
+assert.equal(clientViewportFallback.values.get('--ggn-synced-portrait-utility-row'), '56px', 'root-client fallback should publish utility-row sizing');
+assert.equal(clientViewportFallback.values.get('--ggn-synced-portrait-main-row'), '66px', 'root-client fallback should publish main-row sizing');
+assert.equal(clientViewportFallback.values.get('--ggn-synced-portrait-action-extra'), '8px', 'root-client fallback should publish action-row sizing');
 
 const fullscreenScriptMatch = generatedHtml[0].content.match(
   /<script>(\(function\(\)\{var b=document\.getElementById\("ggn-fullscreen-button"\).*?\}\)\(\);)<\/script>/s,
@@ -449,7 +607,7 @@ Object.entries(expectedActionIndices).forEach(([name, action]) => {
   assert.deepEqual(activeActions, [name], `${name} touch input should survive a non-default key configuration`);
 });
 
-const GAP = 4;
+const GAP = PRODUCTION_TOUCH_GAP;
 const EDGE = 8;
 const SIDE_GAP = 8;
 const MIN_LANDSCAPE_CELL = 18;
@@ -465,6 +623,25 @@ const MIN_SUPPORTED_VISUAL_HEIGHT = 400;
 const MAX_PORTRAIT_PANEL_WIDTH = 520;
 const MANUAL_LINK_WIDTH = 96;
 const MANUAL_LINK_HEIGHT = 32;
+
+const pageControlCss = assignedPowerShellString('pageControlStyle');
+const baseToolbarRule = pageControlCss.match(/#ggn-page-links\{([^}]*)\}/);
+const mobileToolbarRule = pageControlCss.match(/@media \(pointer:coarse\),\(max-width:900px\)\{#ggn-page-links\{([^}]*)\}#ggn-page-links a,#ggn-page-links button\{([^}]*)\}/);
+assert.ok(baseToolbarRule && mobileToolbarRule, 'generated desktop and mobile toolbar rules should be extractable');
+const baseToolbarFont = baseToolbarRule[1].match(/font:[^;]*?(\d+(?:\.\d+)?)px\/(\d+(?:\.\d+)?)/);
+const mobileToolbarFontSize = mobileToolbarRule[1].match(/font-size:(\d+(?:\.\d+)?)px/);
+const mobileToolbarPadding = mobileToolbarRule[2].match(/padding:(\d+(?:\.\d+)?)px\s+(\d+(?:\.\d+)?)px/);
+const toolbarButtonRule = pageControlCss.match(/#ggn-page-links a,#ggn-page-links button\{([^}]*)\}/);
+const toolbarButtonBorder = toolbarButtonRule && toolbarButtonRule[1].match(/border:(\d+(?:\.\d+)?)px/);
+assert.ok(baseToolbarFont && mobileToolbarFontSize && mobileToolbarPadding && toolbarButtonBorder, 'generated toolbar dimensions should be extractable from production CSS');
+const GENERATED_MOBILE_TOOLBAR_HEIGHT = Number(mobileToolbarFontSize[1]) * Number(baseToolbarFont[2])
+  + 2 * Number(mobileToolbarPadding[1]) + 2 * Number(toolbarButtonBorder[1]);
+assert.ok(
+  source.includes('body.ggn-mobile-ready #ggn-page-links { position: fixed; top: max(4px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); width: auto; margin: 0; z-index: 30; }'),
+  'runtime mobile CSS should remove generated toolbar margins and fix it to the visual viewport',
+);
+assert.ok(Math.abs(GENERATED_MOBILE_TOOLBAR_HEIGHT - 33.6) < 0.001, 'production mobile toolbar should render at 33.6px high');
+assert.ok(GENERATED_MOBILE_TOOLBAR_HEIGHT <= PORTRAIT_PAGE_CONTROLS_HEIGHT, 'rendered mobile toolbar should fit the reserved 36px portrait strip');
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -491,11 +668,12 @@ function portraitRows(visibleHeight, safeBottom = 0, safeTop = 0) {
   let mainRow = portraitMainRow(visibleHeight);
   const pageStrip = Math.max(MIN_PORTRAIT_PAGE_STRIP, safeTop + PORTRAIT_PAGE_CONTROLS_HEIGHT);
   const minimumCanvas = clamp(visibleHeight * 0.2, 48, 96);
-  const rowBudget = Math.max(
+  const availableTracks = Math.max(
     0,
     visibleHeight - pageStrip - minimumCanvas
-      - 4 * GAP - PORTRAIT_ACTION_EXTRA - 12 - Math.max(12, safeBottom),
+      - 4 * GAP - 12 - Math.max(12, safeBottom),
   );
+  const rowBudget = Math.max(0, availableTracks - 3 * PORTRAIT_ACTION_EXTRA);
   const rowTotal = utilityRow + 4 * mainRow;
   if (rowTotal > rowBudget && rowBudget > 0) {
     const scale = rowBudget / rowTotal;
@@ -506,7 +684,8 @@ function portraitRows(visibleHeight, safeBottom = 0, safeTop = 0) {
       mainRow = Math.max(32, (rowBudget - utilityRow) / 4);
     }
   }
-  return { utilityRow, mainRow, pageStrip };
+  const actionExtra = clamp((availableTracks - utilityRow - 4 * mainRow) / 3, 0, PORTRAIT_ACTION_EXTRA);
+  return { utilityRow, mainRow, actionExtra, pageStrip };
 }
 
 function landscapeCell(width, height) {
@@ -566,7 +745,7 @@ function landscapeButtonRects(layout) {
 }
 
 function portraitButtonGrid(layout, name, col, row, colSpan = 1) {
-  const rowHeights = [layout.utilityRow, layout.mainRow, layout.mainRow, layout.mainRow, layout.actionRow];
+  const rowHeights = [layout.utilityRow, layout.actionRow, layout.actionRow, layout.actionRow, layout.mainRow];
   const rowHeight = rowHeights[row - 1];
   const y = layout.controlPanel.y + rowHeights.slice(0, row - 1).reduce((total, value) => total + value, 0) + (row - 1) * GAP;
   return rect(
@@ -579,25 +758,9 @@ function portraitButtonGrid(layout, name, col, row, colSpan = 1) {
 }
 
 function portraitButtonRects(layout) {
-  return [
-    portraitButtonGrid(layout, 'map', 1, 1, 2),
-    portraitButtonGrid(layout, 'menu', 3, 1, 2),
-    portraitButtonGrid(layout, 'up-left', 1, 2),
-    portraitButtonGrid(layout, 'up', 2, 2),
-    portraitButtonGrid(layout, 'up-right', 3, 2),
-    portraitButtonGrid(layout, 'turn', 4, 2),
-    portraitButtonGrid(layout, 'left', 1, 3),
-    portraitButtonGrid(layout, 'step', 2, 3),
-    portraitButtonGrid(layout, 'right', 3, 3),
-    portraitButtonGrid(layout, 'diag', 4, 3),
-    portraitButtonGrid(layout, 'down-left', 1, 4),
-    portraitButtonGrid(layout, 'down', 2, 4),
-    portraitButtonGrid(layout, 'down-right', 3, 4),
-    portraitButtonGrid(layout, 'shot', 4, 4),
-    portraitButtonGrid(layout, 'attack', 1, 5),
-    portraitButtonGrid(layout, 'dash', 2, 5),
-    portraitButtonGrid(layout, 'smartdash', 3, 5, 2),
-  ];
+  return Object.entries(PORTRAIT_BUTTON_PLACEMENTS).map(([name, placement]) => (
+    portraitButtonGrid(layout, name, placement.col, placement.row, placement.colSpan)
+  ));
 }
 
 function overlaps(a, b) {
@@ -622,9 +785,9 @@ function assertNoOverlap(rects) {
 
 function portraitLayout({ width, height, safeTop = 0, safeBottom = 0, visualViewport = null }) {
   const visible = visualViewport || { x: 0, y: 0, width, height };
-  const { utilityRow, mainRow, pageStrip } = portraitRows(visible.height, safeBottom, safeTop);
-  const actionRow = mainRow + PORTRAIT_ACTION_EXTRA;
-  const panel = utilityRow + 3 * mainRow + actionRow + 4 * GAP;
+  const { utilityRow, mainRow, actionExtra, pageStrip } = portraitRows(visible.height, safeBottom, safeTop);
+  const actionRow = mainRow + actionExtra;
+  const panel = utilityRow + 4 * mainRow + 3 * actionExtra + 4 * GAP;
   const controlsHeight = panel + Math.max(12, safeBottom);
   const gameHeight = visible.height - pageStrip - controlsHeight - 12;
   const canvasWidth = Math.min(visible.width, gameHeight * 4 / 3);
@@ -642,6 +805,7 @@ function portraitLayout({ width, height, safeTop = 0, safeBottom = 0, visualView
     cell: mainRow,
     utilityRow,
     mainRow,
+    actionExtra,
     actionRow,
     column: (panelWidth - 3 * GAP) / 4,
     viewport: rect('viewport', 0, 0, width, height),
@@ -653,8 +817,8 @@ function portraitLayout({ width, height, safeTop = 0, safeBottom = 0, visualView
       canvasWidth,
       canvasHeight,
     ),
-    manualLink: rect('manualLink', visible.x + visible.width - EDGE - MANUAL_LINK_WIDTH, visible.y + Math.max(4, safeTop), MANUAL_LINK_WIDTH, MANUAL_LINK_HEIGHT),
-    pageControls: rect('pageControls', visible.x + EDGE, visible.y + Math.max(4, safeTop), visible.width - 2 * EDGE, MANUAL_LINK_HEIGHT),
+    manualLink: rect('manualLink', visible.x + visible.width - EDGE - MANUAL_LINK_WIDTH, visible.y + Math.max(4, safeTop), MANUAL_LINK_WIDTH, PORTRAIT_PAGE_CONTROLS_HEIGHT),
+    pageControls: rect('pageControls', visible.x + EDGE, visible.y + Math.max(4, safeTop), visible.width - 2 * EDGE, PORTRAIT_PAGE_CONTROLS_HEIGHT),
     controlPanel,
     leftPad: controlPanel,
     rightPad: controlPanel,
@@ -746,6 +910,24 @@ assert.ok(
 assert.ok(narrowPortraitButtons.find((button) => button.name === 'up').height >= 72, '360px direction buttons should be visibly taller');
 assert.ok(narrowPortraitButtons.find((button) => button.name === 'attack').height >= 80, '360px action buttons should be visibly taller');
 
+function assertPortraitControlZones(layout) {
+  const buttons = Object.fromEntries(portraitButtonRects(layout).map((button) => [button.name, button]));
+  const actionRailX = layout.controlPanel.x + 3 * (layout.column + GAP);
+  ['up-left', 'up', 'up-right', 'left', 'step', 'right', 'down-left', 'down', 'down-right'].forEach((id) => {
+    assert.ok(buttons[id].right <= actionRailX - GAP + 0.001, `${id} should stay left of the portrait action rail`);
+  });
+  ['attack', 'dash', 'smartdash', 'shot'].forEach((id) => {
+    assert.equal(buttons[id].x, actionRailX, `${id} should stay in the right-side portrait action rail`);
+    assert.equal(buttons[id].width, layout.column, `${id} should occupy exactly one full-size action column`);
+  });
+  assert.equal(buttons.attack.y, portraitButtonGrid(layout, 'expected', 4, 2).y, 'attack should align with the upper direction row');
+  assert.equal(buttons.dash.y, portraitButtonGrid(layout, 'expected', 4, 3).y, 'dash should align with the middle direction row');
+  assert.equal(buttons.smartdash.y, portraitButtonGrid(layout, 'expected', 4, 4).y, 'smartdash should align with the lower direction row');
+}
+
+assertPortraitControlZones(portraitLayout({ width: 320, height: 568 }));
+assertPortraitControlZones(portraitLayout({ width: 360, height: 640 }));
+
 const toolbarReducedLayout = portraitLayout({
   width: 360,
   height: 640,
@@ -790,6 +972,15 @@ const minimumSupportedLayout = portraitLayout({
 });
 assertLayout(minimumSupportedLayout, 'portrait', { allowCompactPortrait: true });
 assert.ok(minimumSupportedLayout.canvas.height >= 80, 'minimum supported visual height should retain the compact canvas floor');
+assert.equal(minimumSupportedLayout.utilityRow, 32, 'minimum supported visual height should use the 32px utility floor');
+assert.equal(minimumSupportedLayout.mainRow, 32, 'minimum supported visual height should use the 32px main floor');
+assert.equal(minimumSupportedLayout.actionExtra, 5, 'minimum supported visual height should allocate a 5px action extra');
+assert.equal(minimumSupportedLayout.actionRow, 37, 'minimum supported visual height should produce a 37px action row');
+const compactBigButtonContentHeight = 2 * 15 * 1.05 + 2 + 2;
+assert.ok(
+  compactBigButtonContentHeight <= minimumSupportedLayout.actionRow,
+  'compact two-line action labels should fit inside the 37px action row',
+);
 
 [
   { name: 'phone landscape', width: 844, height: 390 },
