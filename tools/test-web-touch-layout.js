@@ -120,6 +120,53 @@ assert.ok(
   buildScript.includes('window.dispatchEvent(new Event("blur"))'),
   'hiding touch controls should release any held input',
 );
+assert.ok(buildScript.includes('id="ggn-visual-viewport"'), 'the web page should install a visual viewport synchronizer');
+assert.ok(
+  buildScript.includes('viewport.addEventListener("resize",schedule,false)')
+    && buildScript.includes('viewport.addEventListener("scroll",schedule,false)'),
+  'the visual viewport synchronizer should follow browser chrome and viewport movement',
+);
+assert.ok(
+  buildScript.includes('window.innerHeight||root.clientHeight'),
+  'browsers without VisualViewport should fall back to the window dimensions',
+);
+assert.ok(
+  buildScript.includes('bottom:calc(var(--ggn-visual-viewport-bottom,0px) + max(12px,env(safe-area-inset-bottom)))'),
+  'portrait controls should be raised above hidden layout-viewport space and the safe area',
+);
+assert.ok(
+  buildScript.includes('width:min(calc(var(--ggn-visual-viewport-width,100vw) - 16px),520px)'),
+  'portrait controls should fit the actually visible viewport width',
+);
+assert.ok(
+  buildScript.includes('html.ggn-controls-hidden body.ggn-mobile-ready canvas.emscripten{width:min(var(--ggn-visual-viewport-width,100vw),calc(var(--ggn-visual-viewport-height,100dvh) * 1.333333))'),
+  'hidden mode should expand the game canvas into the actual visible viewport',
+);
+assert.ok(
+  buildScript.includes('#ggn-page-links{top:calc(var(--ggn-visual-viewport-top,0px) + max(4px,env(safe-area-inset-top)))'),
+  'portrait page controls should follow the visible viewport top',
+);
+assert.ok(
+  buildScript.includes('top:calc(var(--ggn-visual-viewport-top,0px) + var(--ggn-portrait-page-strip,40px))'),
+  'portrait canvas should start below the safe-area-aware page-control strip',
+);
+assert.ok(
+  buildScript.includes('pageStrip=Math.max(40,safeTop+36)')
+    && buildScript.includes('minimumCanvas=clamp(height*.2,48,96)'),
+  'adaptive control sizing should reserve a compact game canvas',
+);
+assert.ok(
+  buildScript.includes('$pageControlStyle + $portraitControlStyle + $portraitCanvasStyle + $visualViewportStyle + $hiddenCanvasStyle + $visualViewportPositionStyle'),
+  'the real patcher should concatenate every generated style in contract order',
+);
+assert.ok(
+  buildScript.includes('"<body>" + $audioLifecycleScript + $visualViewportScript + $pageControls'),
+  'the real patcher should concatenate every generated body control in contract order',
+);
+assert.ok(
+  buildScript.includes('$content.Replace("</head>", $mobileAppMeta + "</head>")'),
+  'the real patcher should inject the complete mobile metadata block',
+);
 assert.ok(
   buildScript.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
   'portrait controls should use the wider four-column layout',
@@ -145,6 +192,27 @@ assert.ok(
   'portrait step control should occupy a full-size center cell',
 );
 
+function assignedPowerShellString(name) {
+  const match = buildScript.match(new RegExp(`^\\s*\\$${name}\\s*=\\s*'([^\\r\\n]*)'\\s*$`, 'm'));
+  assert.ok(match, `tools\\build-web.ps1 should assign $${name} on one line`);
+  return match[1].replace(/''/g, "'");
+}
+
+const expectedInjectedStyle = [
+  'pageControlStyle',
+  'portraitControlStyle',
+  'portraitCanvasStyle',
+  'visualViewportStyle',
+  'hiddenCanvasStyle',
+  'visualViewportPositionStyle',
+].map(assignedPowerShellString).join('');
+const expectedInjectedBody = [
+  'audioLifecycleScript',
+  'visualViewportScript',
+  'pageControls',
+].map(assignedPowerShellString).join('');
+const expectedMobileAppMeta = assignedPowerShellString('mobileAppMeta');
+
 const generatedHtml = ['ggn.html', 'index.html'].map((name) => ({
   name,
   content: fs.readFileSync(path.join(root, 'docs', 'play', name), 'utf8'),
@@ -163,6 +231,13 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(content.includes('align-items:center;padding-left:0;padding-right:0'), `${name} should remove hidden landscape gutters`);
   assert.ok(content.includes('ggn-controls-hidden #ggn-fullscreen-button'), `${name} should hide utility controls except restore`);
   assert.ok(content.includes('ggn-touch-controls-hidden'), `${name} should persist hidden mode`);
+  assert.ok(content.includes('id="ggn-visual-viewport"'), `${name} should contain the visual viewport synchronizer`);
+  assert.ok(content.includes('--ggn-visual-viewport-bottom'), `${name} should contain visual viewport bottom compensation`);
+  assert.ok(content.includes('--ggn-synced-portrait-main-row'), `${name} should contain adaptive portrait row sizing`);
+  assert.ok(content.includes('html.ggn-controls-hidden body.ggn-mobile-ready canvas.emscripten'), `${name} should expand the hidden-mode canvas`);
+  assert.equal(content.split(expectedInjectedStyle).length - 1, 1, `${name} should contain exactly the generated style block`);
+  assert.equal(content.split(expectedInjectedBody).length - 1, 1, `${name} should contain exactly the generated body controls`);
+  assert.equal(content.split(expectedMobileAppMeta).length - 1, 1, `${name} should contain exactly the generated mobile metadata`);
   assert.ok(content.includes('grid-template-columns:repeat(4,minmax(0,1fr))'), `${name} should contain the wider portrait control grid`);
   assert.ok(content.includes('--ggn-portrait-main-row:clamp(66px,11.25dvh,76px)'), `${name} should enforce the main portrait button height`);
   assert.ok(content.includes('--ggn-portrait-utility-row:clamp(56px,8dvh,64px)'), `${name} should enforce the utility portrait button height`);
@@ -170,6 +245,79 @@ generatedHtml.forEach(({ name, content }) => {
   assert.ok(!content.includes('&#25147;&#12377;'), `${name} script labels should not contain undecoded HTML entities`);
 });
 assert.equal(generatedHtml[0].content, generatedHtml[1].content, 'ggn.html and index.html should stay identical');
+
+const visualViewportScriptMatch = generatedHtml[0].content.match(
+  /<script id="ggn-visual-viewport">([\s\S]*?)<\/script>/,
+);
+assert.ok(visualViewportScriptMatch, 'the generated visual viewport synchronizer should be executable in isolation');
+const viewportValues = new Map();
+const visualViewportHandlers = {};
+const viewportWindowHandlers = {};
+const animationFrames = [];
+const viewportRoot = {
+  clientWidth: 360,
+  clientHeight: 640,
+  style: {
+    setProperty(name, value) { viewportValues.set(name, value); },
+  },
+};
+const mockVisualViewport = {
+  width: 360,
+  height: 520,
+  offsetLeft: 0,
+  offsetTop: 0,
+  addEventListener(type, handler) { visualViewportHandlers[type] = handler; },
+};
+const viewportWindow = {
+  innerWidth: 360,
+  innerHeight: 640,
+  visualViewport: mockVisualViewport,
+  requestAnimationFrame(callback) { animationFrames.push(callback); return animationFrames.length; },
+  addEventListener(type, handler) { viewportWindowHandlers[type] = handler; },
+};
+const viewportSafeAreas = {
+  '--ggn-safe-area-top': '0px',
+  '--ggn-safe-area-bottom': '0px',
+};
+new Function('window', 'document', 'getComputedStyle', 'setTimeout', visualViewportScriptMatch[1])(
+  viewportWindow,
+  { documentElement: viewportRoot },
+  () => ({ getPropertyValue: (name) => viewportSafeAreas[name] || '0px' }),
+  (callback) => { animationFrames.push(callback); return animationFrames.length; },
+);
+assert.equal(viewportValues.get('--ggn-visual-viewport-height'), '520px', 'the visible height should come from VisualViewport');
+assert.equal(viewportValues.get('--ggn-visual-viewport-bottom'), '120px', 'hidden layout-viewport space should become a bottom inset');
+assert.equal(viewportValues.get('--ggn-visual-viewport-center-x'), '180px', 'portrait controls should center in the visible viewport');
+assert.equal(viewportValues.get('--ggn-synced-portrait-utility-row'), '56px', 'toolbar reduction should retain useful utility button height');
+assert.equal(viewportValues.get('--ggn-synced-portrait-main-row'), '66px', 'toolbar reduction should retain useful gameplay button height');
+mockVisualViewport.width = 336;
+mockVisualViewport.offsetLeft = 12;
+mockVisualViewport.offsetTop = 32;
+visualViewportHandlers.scroll();
+assert.equal(animationFrames.length, 1, 'visual viewport movement should schedule a layout update');
+animationFrames.shift()();
+assert.equal(viewportValues.get('--ggn-visual-viewport-left'), '12px', 'horizontal visual offset should be published');
+assert.equal(viewportValues.get('--ggn-visual-viewport-top'), '32px', 'vertical visual offset should be published');
+assert.equal(viewportValues.get('--ggn-visual-viewport-right'), '12px', 'the opposite horizontal inset should be published');
+assert.equal(viewportValues.get('--ggn-visual-viewport-bottom'), '88px', 'bottom compensation should account for visual offsetTop');
+viewportSafeAreas['--ggn-safe-area-top'] = '47px';
+viewportSafeAreas['--ggn-safe-area-bottom'] = '34px';
+visualViewportHandlers.resize();
+animationFrames.shift()();
+assert.equal(viewportValues.get('--ggn-portrait-page-strip'), '83px', 'notched devices should reserve safe top plus the page-control row');
+viewportSafeAreas['--ggn-safe-area-top'] = '0px';
+viewportSafeAreas['--ggn-safe-area-bottom'] = '0px';
+mockVisualViewport.width = 360;
+mockVisualViewport.height = 640;
+mockVisualViewport.offsetLeft = 0;
+mockVisualViewport.offsetTop = 0;
+visualViewportHandlers.resize();
+visualViewportHandlers.scroll();
+assert.equal(animationFrames.length, 1, 'viewport bursts should be coalesced into one animation frame');
+animationFrames.shift()();
+assert.equal(viewportValues.get('--ggn-visual-viewport-bottom'), '0px', 'expanded browser chrome should remove the bottom compensation');
+assert.equal(viewportValues.get('--ggn-synced-portrait-main-row'), '72px', 'full-height portrait should retain the enlarged gameplay buttons');
+assert.ok(viewportWindowHandlers.resize && viewportWindowHandlers.orientationchange, 'window resize and rotation should also resync the viewport');
 
 const fullscreenScriptMatch = generatedHtml[0].content.match(
   /<script>(\(function\(\)\{var b=document\.getElementById\("ggn-fullscreen-button"\).*?\}\)\(\);)<\/script>/s,
@@ -311,6 +459,9 @@ const MAX_PORTRAIT_UTILITY_ROW = 64;
 const MIN_PORTRAIT_MAIN_ROW = 66;
 const MAX_PORTRAIT_MAIN_ROW = 76;
 const PORTRAIT_ACTION_EXTRA = 8;
+const MIN_PORTRAIT_PAGE_STRIP = 40;
+const PORTRAIT_PAGE_CONTROLS_HEIGHT = 36;
+const MIN_SUPPORTED_VISUAL_HEIGHT = 400;
 const MAX_PORTRAIT_PANEL_WIDTH = 520;
 const MANUAL_LINK_WIDTH = 96;
 const MANUAL_LINK_HEIGHT = 32;
@@ -333,6 +484,29 @@ function portraitUtilityRow(height) {
 
 function portraitMainRow(height) {
   return clamp(height * 0.1125, MIN_PORTRAIT_MAIN_ROW, MAX_PORTRAIT_MAIN_ROW);
+}
+
+function portraitRows(visibleHeight, safeBottom = 0, safeTop = 0) {
+  let utilityRow = portraitUtilityRow(visibleHeight);
+  let mainRow = portraitMainRow(visibleHeight);
+  const pageStrip = Math.max(MIN_PORTRAIT_PAGE_STRIP, safeTop + PORTRAIT_PAGE_CONTROLS_HEIGHT);
+  const minimumCanvas = clamp(visibleHeight * 0.2, 48, 96);
+  const rowBudget = Math.max(
+    0,
+    visibleHeight - pageStrip - minimumCanvas
+      - 4 * GAP - PORTRAIT_ACTION_EXTRA - 12 - Math.max(12, safeBottom),
+  );
+  const rowTotal = utilityRow + 4 * mainRow;
+  if (rowTotal > rowBudget && rowBudget > 0) {
+    const scale = rowBudget / rowTotal;
+    utilityRow = Math.max(32, utilityRow * scale);
+    mainRow = Math.max(32, mainRow * scale);
+    if (utilityRow + 4 * mainRow > rowBudget) {
+      utilityRow = Math.max(32, Math.min(utilityRow, rowBudget / 5));
+      mainRow = Math.max(32, (rowBudget - utilityRow) / 4);
+    }
+  }
+  return { utilityRow, mainRow, pageStrip };
 }
 
 function landscapeCell(width, height) {
@@ -446,18 +620,24 @@ function assertNoOverlap(rects) {
   }
 }
 
-function portraitLayout({ width, height, safeBottom = 0 }) {
-  const utilityRow = portraitUtilityRow(height);
-  const mainRow = portraitMainRow(height);
+function portraitLayout({ width, height, safeTop = 0, safeBottom = 0, visualViewport = null }) {
+  const visible = visualViewport || { x: 0, y: 0, width, height };
+  const { utilityRow, mainRow, pageStrip } = portraitRows(visible.height, safeBottom, safeTop);
   const actionRow = mainRow + PORTRAIT_ACTION_EXTRA;
   const panel = utilityRow + 3 * mainRow + actionRow + 4 * GAP;
   const controlsHeight = panel + Math.max(12, safeBottom);
-  const gameHeight = height - controlsHeight - 12;
-  const canvasWidth = Math.min(width, gameHeight * 4 / 3);
-  const canvasHeight = Math.min(gameHeight, width * 0.75);
-  const panelWidth = Math.min(width - 2 * EDGE, MAX_PORTRAIT_PANEL_WIDTH);
-  const panelX = (width - panelWidth) / 2;
-  const controlPanel = rect('controlPanel', panelX, height - Math.max(12, safeBottom) - panel, panelWidth, panel);
+  const gameHeight = visible.height - pageStrip - controlsHeight - 12;
+  const canvasWidth = Math.min(visible.width, gameHeight * 4 / 3);
+  const canvasHeight = Math.min(gameHeight, visible.width * 0.75);
+  const panelWidth = Math.min(visible.width - 2 * EDGE, MAX_PORTRAIT_PANEL_WIDTH);
+  const panelX = visible.x + (visible.width - panelWidth) / 2;
+  const controlPanel = rect(
+    'controlPanel',
+    panelX,
+    visible.y + visible.height - Math.max(12, safeBottom) - panel,
+    panelWidth,
+    panel,
+  );
   return {
     cell: mainRow,
     utilityRow,
@@ -465,8 +645,16 @@ function portraitLayout({ width, height, safeBottom = 0 }) {
     actionRow,
     column: (panelWidth - 3 * GAP) / 4,
     viewport: rect('viewport', 0, 0, width, height),
-    canvas: rect('canvas', (width - canvasWidth) / 2, gameHeight - canvasHeight, canvasWidth, canvasHeight),
-    manualLink: rect('manualLink', width - EDGE - MANUAL_LINK_WIDTH, 4, MANUAL_LINK_WIDTH, MANUAL_LINK_HEIGHT),
+    visualViewport: rect('visualViewport', visible.x, visible.y, visible.width, visible.height),
+    canvas: rect(
+      'canvas',
+      visible.x + (visible.width - canvasWidth) / 2,
+      visible.y + pageStrip + gameHeight - canvasHeight,
+      canvasWidth,
+      canvasHeight,
+    ),
+    manualLink: rect('manualLink', visible.x + visible.width - EDGE - MANUAL_LINK_WIDTH, visible.y + Math.max(4, safeTop), MANUAL_LINK_WIDTH, MANUAL_LINK_HEIGHT),
+    pageControls: rect('pageControls', visible.x + EDGE, visible.y + Math.max(4, safeTop), visible.width - 2 * EDGE, MANUAL_LINK_HEIGHT),
     controlPanel,
     leftPad: controlPanel,
     rightPad: controlPanel,
@@ -498,7 +686,7 @@ function landscapeLayout({ width, height, safeLeft = 0, safeRight = 0 }) {
   };
 }
 
-function assertLayout(layout, orientation) {
+function assertLayout(layout, orientation, { allowCompactPortrait = false } = {}) {
   assert.ok(layout.cell >= 0, 'cell size should be non-negative');
   assertInside(layout.viewport, layout.canvas);
   assertInside(layout.viewport, layout.manualLink);
@@ -513,7 +701,7 @@ function assertLayout(layout, orientation) {
     if (orientation === 'portrait') {
       assertInside(layout.controlPanel, button);
       assert.ok(button.width >= 63, `${button.name} is too narrow for portrait touch`);
-      assert.ok(button.height >= 56, `${button.name} is too short for portrait touch`);
+      assert.ok(button.height >= (allowCompactPortrait ? 32 : 56), `${button.name} is too short for portrait touch`);
     }
   });
   assertNoOverlap(buttons);
@@ -530,6 +718,11 @@ function assertLayout(layout, orientation) {
     assert.ok(layout.canvas.width >= 180, 'landscape canvas became too narrow');
     assert.ok(layout.canvas.height >= 135, 'landscape canvas became too short');
   } else {
+    assertInside(layout.visualViewport, layout.canvas);
+    assertInside(layout.visualViewport, layout.controlPanel);
+    assertInside(layout.visualViewport, layout.pageControls);
+    buttons.forEach((button) => assertInside(layout.visualViewport, button));
+    assert.ok(!overlaps(layout.pageControls, layout.canvas), 'portrait page controls overlap canvas');
     assert.ok(layout.canvas.bottom <= layout.leftPad.y - 12 + 0.001, 'portrait controls overlap canvas');
     assert.ok(Math.abs(layout.canvas.width / layout.canvas.height - 4 / 3) < 0.001, 'portrait canvas lost its 4:3 aspect ratio');
   }
@@ -552,6 +745,51 @@ assert.ok(
 );
 assert.ok(narrowPortraitButtons.find((button) => button.name === 'up').height >= 72, '360px direction buttons should be visibly taller');
 assert.ok(narrowPortraitButtons.find((button) => button.name === 'attack').height >= 80, '360px action buttons should be visibly taller');
+
+const toolbarReducedLayout = portraitLayout({
+  width: 360,
+  height: 640,
+  visualViewport: { x: 0, y: 0, width: 360, height: 520 },
+});
+assertLayout(toolbarReducedLayout, 'portrait');
+assert.equal(portraitButtonRects(toolbarReducedLayout).length, 17, 'all portrait controls should remain visible with browser chrome');
+
+const offsetVisualViewportLayout = portraitLayout({
+  width: 360,
+  height: 640,
+  visualViewport: { x: 12, y: 32, width: 336, height: 520 },
+});
+assertLayout(offsetVisualViewportLayout, 'portrait');
+
+const notchedReducedLayout = portraitLayout({
+  width: 390,
+  height: 640,
+  safeTop: 47,
+  safeBottom: 34,
+  visualViewport: { x: 0, y: 0, width: 390, height: 520 },
+});
+assertLayout(notchedReducedLayout, 'portrait', { allowCompactPortrait: true });
+assert.ok(!overlaps(notchedReducedLayout.pageControls, notchedReducedLayout.canvas), 'notched page controls should stay above the canvas');
+
+const veryShortVisibleLayout = portraitLayout({
+  width: 360,
+  height: 640,
+  visualViewport: { x: 0, y: 0, width: 360, height: 320 },
+});
+const veryShortButtons = portraitButtonRects(veryShortVisibleLayout);
+assertLayout(veryShortVisibleLayout, 'portrait', { allowCompactPortrait: true });
+assert.ok(veryShortVisibleLayout.canvas.height >= 64, 'very short portrait should retain a useful game canvas');
+assert.ok(veryShortVisibleLayout.mainRow < MIN_PORTRAIT_MAIN_ROW, 'rows should shrink only when the visible viewport cannot fit the targets');
+
+const minimumSupportedLayout = portraitLayout({
+  width: 320,
+  height: 640,
+  safeTop: 47,
+  safeBottom: 34,
+  visualViewport: { x: 0, y: 0, width: 320, height: MIN_SUPPORTED_VISUAL_HEIGHT },
+});
+assertLayout(minimumSupportedLayout, 'portrait', { allowCompactPortrait: true });
+assert.ok(minimumSupportedLayout.canvas.height >= 80, 'minimum supported visual height should retain the compact canvas floor');
 
 [
   { name: 'phone landscape', width: 844, height: 390 },
